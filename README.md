@@ -14,7 +14,7 @@ P: Este é o GDE "de verdade"?
 R: Sim e não: Esta é a versão 2.5 do GDE, atualmente a versão "em produção" é a 2.3.  
   
 P: Qual a diferença entre a versão 2.3 e a 2.5?  
-R: Em termos de funcionalidades nenhuma, a diferença está no backend. A versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, as vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 está tudo sendo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/ "Doctrine").  
+R: Em termos de funcionalidades: "fóruns" e "grupos" foram removidos (não eram utilizadeos). Em termos de backend: a versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, as vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 está tudo sendo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/ "Doctrine").  
   
 P: Já foi tudo reescrito?  
 R: Não, esse é um processo lento e trabalhoso, e infelizmente estou fazendo tudo sozinho.  
@@ -28,9 +28,13 @@ R: Gostaria de dar um prazo, mas isso é impossível. Quero concluir o mais ráp
 P: O que já funciona nesta versão e o que não funciona?  
 R: Segue a lista que vou manter atualizada:  
 
-Funciona:
+Funcionam as páginas:
 
- - Página inicial
+ - Login
+ - Inicial
+ - Disciplina
+ - Oferecimento
+ - Sala
 
 Ainda não funciona:
 
