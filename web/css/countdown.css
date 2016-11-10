@@ -1,0 +1,141 @@
+
+#t7_timer { 
+	width: 300px; 
+	height: 55px; 
+	position: relative;
+}
+
+#t7_timer_over { 
+	width: 300px; 
+	height: 55px; 
+	background-image: url(../images/Countdown-over.gif);
+	background-repeat: no-repeat;
+	position: absolute;
+	top: 0px;
+	left: 1px;
+	margin: 0px;
+	padding: : 0px;
+}
+
+
+#t7_vals {
+	width: 100%;
+	clear:both;
+	margin: 0px auto;
+}
+
+.t7_numbs {
+	font-size: 28px;
+	font-family: Arial, sans-serif;
+	font-weight: bold;
+	text-align: left;
+	color: #ffffff;
+}
+
+#t7_y {
+	background-image: url(../images/Countdown2.png);
+	background-repeat: no-repeat;
+	float:left;
+	width: 48px;
+	height:35px;
+	background-color:#ffffff;
+	padding: 0px 0px 0px 3px;
+	margin: 1px;
+	letter-spacing: 7px;
+}
+#t7_d {
+	background-image: url(../images/Countdown3.png);
+	background-repeat: no-repeat;
+	float:left;
+	width: 71px;
+	height:35px;
+	background-color:#ffffff;
+	padding: 0px 0px 0px 3px;
+	margin: 1px;
+	letter-spacing: 7px;
+}
+#t7_h {
+	background-image: url(../images/Countdown2.png);
+	background-repeat: no-repeat;
+	float:left;
+	width: 48px;
+	height:35px;
+	background-color:#ffffff;
+	padding: 0px 0px 0px 3px;
+	margin: 1px;
+	letter-spacing: 7px;
+}
+#t7_m {
+	background-image: url(../images/Countdown2.png);
+	background-repeat: no-repeat;
+	float:left;
+	width: 47px;
+	height:35px;
+	background-color:#ffffff;
+	padding: 0px 0px 0px 3px;
+	margin: 1px;
+	letter-spacing: 7px;
+}
+#t7_s {
+	background-image: url(../images/Countdown2-nc.png);
+	background-repeat: no-repeat;
+	float:left;
+	width: 42px;
+	height:35px;
+	background-color:#ffffff;
+	padding: 0px 0px 0px 3px;
+	margin: 1px;
+	letter-spacing: 7px;
+}
+
+#t7_labels {
+	width: 100%;
+	clear:both;
+	margin: 0px auto;
+}
+
+.t7_labs {
+	font-size: 9px;
+	font-family: Verdana, Arial, sans-serif;
+	font-weight: bold;
+	text-align: center;
+	color: #000000;
+}
+#t7_yl {
+	float:left;
+	width: 51px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_dl {
+	float:left;
+	width: 74px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_hl {
+	float:left;
+	width: 54px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_ml {
+	float:left;
+	width: 55px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_sl {
+	float:left;
+	width: 46px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+
+
+#defaultCountdown { width: 300px; height: 55px; text-align: center;}

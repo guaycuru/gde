@@ -1,0 +1,57 @@
+/* ================================================================ 
+This copyright notice must be untouched at all times.
+
+The original version of this stylesheet and the associated (x)html
+is available at http://www.cssplay.co.uk/menus/final_drop.html
+Copyright (c) 2005-2008 Stu Nicholls. All rights reserved.
+This stylesheet and the associated (x)html may be modified in any 
+way to fit your requirements.
+=================================================================== */
+
+.menu {position: relative; z-index: 100;}
+/* remove all the bullets, borders and padding from the default list styling */
+.menu ul {padding: 0; margin: 0; list-style-type: none;}
+/*.menu ul ul {width:149px;}*/
+/* float the list to make it horizontal and a relative positon so that you can control the dropdown menu positon */
+.menu li {float: left; position: relative; /*padding: 0 25px;*/}
+
+/* style the links for the top level */
+.menu ul a { display: block; font-size: 16px !important; text-decoration: none !important; color: #FFFFFF !important;/*color: #737373 !important;*/ /*background: #FFFFFF;*/ padding: 0 25px; line-height: 39px; font-weight: bold !important; }
+.menu ul a:first-letter { color: #D2E7ED; }
+/** html .menu a, * html .menu a:visited {width:149px;}*/
+/* style the top level hover */
+.menu a:hover, .menu ul ul a:hover{ /*color: #FFFFFF !important; background: #036DAB;*/ color: #737373 !important; background: #D2E7ED; }
+.menu :hover > a, .menu :hover > a:first-letter, .menu ul ul :hover > a { /*color: #FFFFFF !important; background: #036DAB;*/ color: #737373 !important; background: #D2E7ED; }
+
+/* style the second level background */
+.menu ul ul a.drop { background: #E7F7FB; }
+.menu ul ul a:first-letter { color: #737373; }
+/* style the second level links */
+.menu ul ul a { background: #E7F7FB; color: #737373 !important; font-size: 12px !important; height: auto; line-height: 1em; padding: 5px 10px; width: 138px; border: 1px solid #80bdc8; border-width: 0 1px 1px 1px; }
+/** html .menu ul ul a {width:150px;}*/
+/* style the second level hover */
+.menu ul ul a.drop:hover{ background: #036DAB; }
+.menu ul ul :hover > a.drop { background: #036DAB; }
+/* style the third level background */
+.menu ul ul ul a { background: #E7F7FB; }
+/* style the third level hover */
+.menu ul ul ul a:hover { background: #036DAB; }
+
+
+/* hide the sub levels and give them a positon absolute so that they take up no room */
+.menu ul ul { visibility: hidden; position: absolute; height: 0; top: 39px; left: 0; width: 128px; }
+* html .menu ul ul { top:30px;}
+
+/* position the third level flyout menu */
+.menu ul ul ul{ left:128px; top:-1px; width:128px;}
+
+/* position the third level flyout menu for a left flyout */
+.menu ul ul ul.left { left:-128px;}
+
+/* make the second level visible when hover on first level list OR link */
+.menu ul li:hover ul,
+.menu ul a:hover ul{ visibility: visible;}
+/* keep the third level hidden when you hover on first level list OR link */
+.menu ul :hover ul ul{ visibility: hidden;}
+/* make the third level visible when you hover over second level list OR link */
+.menu ul :hover ul :hover ul{ visibility: visible;}

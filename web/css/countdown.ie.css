@@ -1,0 +1,46 @@
+#t7_timer_over { 
+	width: 300px; 
+	height: 55px; 
+	background: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	margin: 0px;
+	padding: : 0px;
+}
+#t7_yl {
+	float:left;
+	width: 51px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_dl {
+	float:left;
+	width: 74px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_hl {
+	float:left;
+	width: 44px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_ml {
+	float:left;
+	width: 55px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+#t7_sl {
+	float:left;
+	width: 42px;
+	height:15px;
+	padding:0px;
+	margin: 0px;
+}
+

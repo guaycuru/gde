@@ -1,0 +1,108 @@
+/* ---------->>> jtip <<<---------------------------------------------------------------*/
+
+.formInfo a, .formInfo a:active, formInfo a:visited{
+	background-color:#036DAB;
+	font-size: 1.3em;
+	font-weight:bold;
+	padding:1px 2px;
+	margin-left:5px;
+	color:#FFFFFF;
+	text-decoration: none;
+	cursor:help;
+}
+
+.formInfo a:hover{
+	color:#000000;
+	text-decoration: none;
+	cursor:help;
+}
+
+.JT_close_left, .JT_close_right{
+	font-size: 1.1em;
+}
+
+.JT_copy p, .JT_copy ul{
+	font-size: 1.1em;
+	padding-left: 20px;
+	padding-right: 5px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.JT_arrow_left{
+	background-image: url(../images/arrow_left.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	position: absolute;
+	z-index:1301;
+	left:-12px;
+	height:23px;
+	width:10px;
+    top:-3px;
+}
+
+.JT_arrow_right{
+	background-image: url(../images/arrow_right.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	position: absolute;
+	z-index:1301;
+	height:23px;
+	width:11px;
+    top:-2px;
+}
+
+.JT {
+	position: absolute;
+	z-index:1300;
+	border: 2px solid #CCCCCC;
+	background-color: #fff;
+}
+
+.JT_copy{
+	padding:0px 0px 0px 0px;
+	color:#333333;
+}
+
+.JT_loader{
+	background-image: url(../images/loader.gif);
+	background-repeat: no-repeat;
+	background-position: center center;
+	width:100%;
+	height:12px;
+}
+
+.JT_close_left{
+	background-color: #CCCCCC;
+	text-align: left;
+	padding-left: 8px;
+	padding-bottom: 5px;
+	padding-top: 2px;
+	font-weight:bold;
+}
+
+.JT_close_right{
+	background-color: #CCCCCC;
+	text-align: left;
+	padding-left: 8px;
+	padding-bottom: 5px;
+	padding-top: 2px;
+	font-weight:bold;
+}
+
+.JT_copy p{
+	margin:3px 0;
+}
+
+.JT_copy img{
+	padding: 1px;
+	border: 1px solid #CCCCCC;
+}
+
+.jTip{
+	cursor:help;
+}
+
+#jHelperTipContainer {
+	z-index: 1300;
+}

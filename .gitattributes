@@ -1,0 +1,16 @@
+# Set default behaviour, in case users don't have core.autocrlf set.
+* text=auto
+
+# Store some files with LF always
+*.php text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+*.less text eol=lf
+*.sh text eol=lf
+*.pem text eol=lf
+
+# Binary files
+*.svg binary
+*.ttf binary
+*.woff binary
+*.mp3 binary

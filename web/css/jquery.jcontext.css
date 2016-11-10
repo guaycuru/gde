@@ -1,0 +1,40 @@
+.RMenu {
+background:#FFF;
+border:1px solid #444;
+display:none;
+color:#000;
+font:12px Tahoma;
+font-style:italic;
+}
+ 
+.RMenu ul, .RMenu ul * {
+padding:0;
+margin:0;
+}
+ 
+.RMenu ul li{
+list-style:none;
+border:1px solid #444;
+padding: 5px;
+display:block;
+}
+ 
+.RMenu ul li:hover{
+background:#666;
+color:#FFF;
+}
+ 
+.RMenu ul li:hover span{
+color:#FFF;
+}
+ 
+.RMenu li:hover a{
+color:#FFF;
+}
+ 
+.RMenu a{
+color:#000;
+font:11px Tahoma;
+font-weight:bold;
+text-decoration:none;
+}
