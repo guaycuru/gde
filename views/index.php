@@ -8,7 +8,7 @@ require_once('../common/common.inc.php');
 
 $Amigos = $_Usuario->Amigos();
 $Recomendacoes = $_Usuario->Amigos_Recomendacoes(2, 15);
-$Autorizacoes = $_Usuario->Amigos_Pendentes(true);
+$Autorizacoes = $_Usuario->Amigos_Pendentes();
 
 if(!isset($_SESSION['atualizacoes_last_id']))
 	$_SESSION['atualizacoes_last_id'] = 0; //Acontecimento::Ultimo_Id_Por_Data($_SESSION['ultimo_acesso']);
@@ -374,9 +374,9 @@ $(document).ready(function() {
 		<div id="amizades_pendentes">
 			<?php foreach($Autorizacoes as $Auth) { ?>
 			<div class="div_menu_requisicoes_linha" id="requisicao_amizade_<?= $Auth->getAmigo()->getID(); ?>">
-				<div class="requisicao_foto"><img src="<?= $Auth->getAmigo()->getFoto(true, true); ?>" /></div>
-				<div class="requisicao_nome"><a href="<?= CONFIG_URL; ?>perfil/?l=<?= $Auth->getAmigo()->getLogin(); ?>"><strong><?= $Auth->getAmigo()->getNome_Completo(true); ?></strong></a><br />
-					<a href="#" class="amizade_aceitar" id="amizade_aceitar_<?= $Auth->getAmigo()->getID(); ?>"><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_<?= $Auth->getAmigo()->getID(); ?>"><i>Ignorar</i></a>
+				<div class="requisicao_foto"><img src="<?= $Auth->getUsuario()->getFoto(true, true); ?>" /></div>
+				<div class="requisicao_nome"><a href="<?= CONFIG_URL; ?>perfil/?l=<?= $Auth->getUsuario()->getLogin(); ?>"><strong><?= $Auth->getUsuario()->getNome_Completo(true); ?></strong></a><br />
+					<a href="#" class="amizade_aceitar" id="amizade_aceitar_<?= $Auth->getUsuario()->getID(); ?>"><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_<?= $Auth->getUsuario()->getID(); ?>"><i>Ignorar</i></a>
 				</div>
 			</div>
 			<?php } ?>
