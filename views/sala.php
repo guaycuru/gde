@@ -2,8 +2,10 @@
 
 namespace GDE;
 
-if(isset($_GET['cm']))
-	die("<img src='".CONFIG_URL."web/images/loading.gif' /> Carregando Mapa...");
+if(isset($_GET['cm'])) {
+	require_once('../common/config.inc.php');
+	die("<img src='" . CONFIG_URL . "web/images/loading.gif' /> Carregando Mapa...");
+}
 
 define('TITULO', 'Sala');
 
@@ -21,7 +23,7 @@ $Predio = new Instituto();
 $Unidade = new Instituto();
 if($Sala->getID_Predio() != null) {
 	$Predio = Instituto::Por_ID_Unidade($Sala->getID_Predio());
-	$link = $Predio->getLinkMapa();
+	$link = $Predio->getLink_Mapa();
 }
 
 if($Sala->getID_Unidade() != null) {
@@ -102,8 +104,6 @@ else
 						</tr>
 						<tr>
 							<td width="25%"><b>Informa&ccedil;&otilde;es:</b></td>
-
-
 							<td><a href="http://salas.basico.unicamp.br/salas/buscasala.xhtml?busca=<?= $Sala->getNome(true); ?>" target="_blank">Link</a></td>
 						</tr>
 						<tr>
@@ -143,6 +143,4 @@ else
 		</div>
 	</div>
 </div>
-<?php
-echo $FIM;
-?>
+<?= $FIM; ?>

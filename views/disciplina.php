@@ -230,6 +230,4 @@ if(isset($_GET['m'])) {
 	</div>
 </div>
 
-<?php
-echo $FIM;
-?>
+<?= $FIM; ?>
