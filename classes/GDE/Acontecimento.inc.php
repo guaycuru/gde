@@ -160,9 +160,9 @@ class Acontecimento extends Base {
 		if(($this->getOrigem() !== null) || ($this->getGrupo_Origem() !== null))
 			return ($this->getOrigem() !== null) ? $this->getOrigem()->getFoto(true, $th) : $this->getGrupo_Origem()->getFoto(true, $th);
 		elseif($this->tipo == 'ga')
-			return ($th) ? "../web/images/gde_th.gif" : "../web/images/gde.gif";
+			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
 		elseif($this->tipo == 'gc')
-			return ($th) ? "../web/images/gde_th.gif" : "../web/images/gde.gif";
+			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
 	}
 
 	public function Pode_Responder(Usuario $Usuario) {

@@ -2,8 +2,8 @@ Options -MultiViews
 RewriteEngine On
 
 # Add trailing slash
-RewriteCond %{REQUEST_URI} !(/$|\.) 
-RewriteRule (.*) %{REQUEST_URI}/ [R=301,L]
+# RewriteCond %{REQUEST_URI} !(/$|\.)
+# RewriteRule (.*) %{REQUEST_URI}/ [R=301,L]
 
 # Force HTTPS
 RewriteCond %{HTTP:X-Forwarded-Proto} !https
@@ -19,9 +19,9 @@ RewriteRule ^$ views/index.php [L,QSA]
 # Rewrite views
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
-RewriteRule ^([^\/\.]+)/$ views/$1.php [L,QSA]
+RewriteRule ^([^\/\.]+)/?$ views/$1.php [L,QSA]
 
 # Rewrite views with ID
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
-RewriteRule ^([^\/\.]+)/([^\/\.\?\&]+)/$ views/$1.php?id=$2 [L,QSA]
+RewriteRule ^([^\/\.]+)/([^\/\.\?\&]+)/?$ views/$1.php?id=$2 [L,QSA]

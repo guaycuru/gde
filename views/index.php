@@ -14,13 +14,13 @@ if(!isset($_SESSION['atualizacoes_last_id']))
 	$_SESSION['atualizacoes_last_id'] = 0; //Acontecimento::Ultimo_Id_Por_Data($_SESSION['ultimo_acesso']);
 	
 ?>
-<script type="text/javascript" src="../web/js/gde.amizades.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.atualizacoes.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.calendario.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.favoritos.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.notas.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.aviso.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="../web/js/gde.grupos.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.amizades.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.atualizacoes.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.calendario.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.favoritos.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.notas.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.aviso.js?<?= REVISION; ?>"></script>
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.grupos.js?<?= REVISION; ?>"></script>
 <script type="text/javascript">
 // <![CDATA[
 var carregou_horario = false;
@@ -33,7 +33,7 @@ var status_padrao = 'Definir status...';
 var procurando_amigo = [];
 var Cardapio_Muda = function(id) {
 	$("#cardapio_conteudo").Carregando('Carregando Card&aacute;pio...<br /><br /><br /><br /><br />');
-	$.post("../ajax/cardapio.php", { c: id }, function(data) {
+	$.post("<?= CONFIG_URL; ?>ajax/cardapio.php", { c: id }, function(data) {
 		if(data) {
 			$("#cardapio_conteudo").html(data);
 			$("a#cardapio_semana").fancybox({
@@ -70,9 +70,9 @@ var Atualizar_Status = function() {
 	$("#atualizar_status").unbind('click');
 	$("#atualizar_status").text('Salvando...');
 	$("#meu_status").addClass('enviando');
-	$.post('../ajax/ax_acontecimento.php', {tp: 'us', txt: status}, function(data) {
+	$.post('<?= CONFIG_URL; ?>ajax/ax_acontecimento.php', {tp: 'us', txt: status}, function(data) {
 		if(data != 0) {
-			$("#meu_status_atual").load('../ajax/ax_status.php', {q: 'carregar'});
+			$("#meu_status_atual").load('<?= CONFIG_URL; ?>ajax/ax_status.php', {q: 'carregar'});
 			$("#limpar_status").show();
 			$("#meu_status").Padrao();
 			Adicionar_Atualizacao('', data);
@@ -86,7 +86,7 @@ var Atualizar_Status = function() {
 
 var Limpar_Status = function() {
 	$("#limpar_status").text('Removendo...');
-	$.post('../ajax/ax_status.php', {q: 'limpar_status'}, function(data) {
+	$.post('<?= CONFIG_URL; ?>ajax/ax_status.php', {q: 'limpar_status'}, function(data) {
 		if(data != 0) {
 			$("#meu_status_atual").html('');
 			$("#limpar_status").hide();
@@ -97,7 +97,7 @@ var Limpar_Status = function() {
 }
 
 var Adicionar_Amigo_Sugestao = function(id) {
-	$.post('../ajax/ax_amigo.php', {i: id, tipo: 'a'}, function(data) {
+	$.post('<?= CONFIG_URL; ?>ajax/ax_amigo.php', {i: id, tipo: 'a'}, function(data) {
 		$.guaycuru.confirmacao("Foi enviado um pedido de autoriza&ccedil;&atilde;o!", null);
 		$("#amigo_"+id).hide();
 	});
@@ -144,7 +144,7 @@ $(document).ready(function() {
 	
 	$("span.ui-icon").css({'display': 'none'});
 	
-	/*$.post('../ajax/ax_previsao.php', {}, function(data){
+	/*$.post('<?= CONFIG_URL; ?>ajax/ax_previsao.php', {}, function(data){
 		$("#previsao_tempo").html(data);
 	});*/
 	
@@ -203,23 +203,23 @@ $(document).ready(function() {
 		$("#limpar_status").hide();
 	$("img.nota_botao_x").live('hover', function(e) {
 		if(e.type == 'mouseenter') {
-			$(this).attr('src', '../web/images/CancelON.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/CancelON.png');
 		} else {
-			$(this).attr('src', '../web/images/CancelOFF.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/CancelOFF.png');
 		}
 	});
 	$("img.nota_botao_lapis").live('hover', function(e) {
 		if(e.type == 'mouseenter') {
-			$(this).attr('src', '../web/images/EditON.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/EditON.png');
 		} else {
-			$(this).attr('src', '../web/images/EditOFF.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/EditOFF.png');
 		}
 	});
 	$("img.nota_botao_save").live('hover', function(e) {
 		if(e.type == 'mouseenter') {
-			$(this).attr('src', '../web/images/SaveON.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/SaveON.png');
 		} else {
-			$(this).attr('src', '../web/images/SaveOFF.png');
+			$(this).attr('src', '<?= CONFIG_URL; ?>web/images/SaveOFF.png');
 		}
 	});
 	$('#periodo_horario').live('change', function() {
@@ -245,7 +245,7 @@ $(document).ready(function() {
 	});
 	$("input.tipo_calendario").click(function() {
 		$("div."+$(this).attr('id')).toggle();
-		$.post('../ajax/ax_opcao_calendario.php', {c: $(this).attr('id'), v: ($(this).is(":checked") ? 1 : 0)});
+		$.post('<?= CONFIG_URL; ?>ajax/ax_opcao_calendario.php', {c: $(this).attr('id'), v: ($(this).is(":checked") ? 1 : 0)});
 	});
 	$("#toggle_menu_requisicoes").click(Amizade_Requisicoes_Toggle);
 	$("a.amizade_aceitar").click(Amizade_Aceitar);
@@ -302,14 +302,14 @@ $(document).ready(function() {
 				<div id="perfil_mensagem">
 					<textarea class="arredondado-all" id="meu_status" name="status" rows="1" cols="50"></textarea> <a href="#" id="atualizar_status" class="perfil_link_enviar">Salvar</a>
 					<div id="cardapio">
-						<div id="cardapio_botao"><img src="../web/images/cardapio_icone.gif" alt="Cardapio" /></div>
+						<div id="cardapio_botao"><img src="<?= CONFIG_URL; ?>web/images/cardapio_icone.gif" alt="Cardapio" /></div>
 					</div>
 					<div id="cardapio_conteudo" style="width: 260px; float: left; margin-left: 10px"></div>
 					<!--<div id="previsao_tempo" style="float: left; margin-left: 20px"></div> -->
 				</div>
 			</div>
 		</div>
-		<!-- <div class="tip" id="perfil_tip" style="text-align: center;"><strong>Ajude a escolher o futuro do GDE.</strong> Clique <a href="../ajax/ax_enquete.php?id=5" id="enquete">aqui</a> e d&ecirc; sua opini&atilde;o!</div> -->
+		<!-- <div class="tip" id="perfil_tip" style="text-align: center;"><strong>Ajude a escolher o futuro do GDE.</strong> Clique <a href="<?= CONFIG_URL; ?>ajax/ax_enquete.php?id=5" id="enquete">aqui</a> e d&ecirc; sua opini&atilde;o!</div> -->
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>
@@ -398,7 +398,7 @@ $(document).ready(function() {
 						</a>
 					</div>
 					<div class="amigo_nome">
-						<img src="../web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
+						<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
 						<a href="Perfil.php?l=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= Util::Limita($Amigo->getApelido(true), 10); ?></a>
 					</div>
 				</div>
@@ -423,7 +423,7 @@ $(document).ready(function() {
 						</a>
 					</div>
 					<div class="amigo_nome">
-						<img src="../web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getID(); ?>" alt="?" />
+						<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getID(); ?>" alt="?" />
 						<a href="Perfil.php?l=<?= $Amigo->getLogin(); ?>" class="amigo" title="<?= $Amigo->getNome_Completo(true); ?>"><?= $Amigo->getNome(true); ?></a>
 					</div>
 				</div>
@@ -433,8 +433,4 @@ $(document).ready(function() {
 		<div id="lista_grupos" ><img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando...</div>
 	</div>
 </div>
-<?php 
-
-echo $FIM;
-
-?>
+<?= $FIM; ?>

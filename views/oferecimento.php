@@ -33,7 +33,7 @@ if($oferecimento_pagina == null) {
 	$html_oferecimento_pagina = "<a href='".$oferecimento_pagina."' target='_blank'>".$oferecimento_pagina."</a>"; //.' <a href="#" id="pagina_reclamar" class="link_reclamar">Reclamar</a>';
 
 ?>
-	<!-- <script type="text/javascript" src="../web/js/gde.forum.js?<?= REVISION; ?>"></script> -->
+	<!-- <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.forum.js?<?= REVISION; ?>"></script> -->
 	<script type="text/javascript">
 		// <![CDATA[
 		var carregou_informacoes = false;
@@ -162,7 +162,7 @@ if($oferecimento_pagina == null) {
 						</table>
 					</div>
 					<div id="tab_disciplina" class="tab_content">
-						<img src="../web/images/loading.gif" alt="..." /> Carregando dados da disciplina...
+						<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando dados da disciplina...
 					</div>
 					<div id="tab_horario" class="tab_content">
 						<table cellspacing="0" class="tabela_bonyta_branca">
@@ -181,7 +181,7 @@ if($oferecimento_pagina == null) {
 						</table>
 					</div>
 					<!-- <div id="tab_forum" class="tab_content">
-						<img src="../web/images/loading.gif" alt="..." /> Carregando F&oacute;rum...
+						<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando F&oacute;rum...
 					</div> -->
 				</div>
 			</div>
@@ -196,7 +196,7 @@ if($oferecimento_pagina == null) {
 					<input type="radio" id="apenas_amigos" name="filtro_amigos" class="tipo_atualizacoes"><label for="apenas_amigos">Apenas Amigos</label>
 				</div><br />
 				<input type="text" class="busca_simples" id="filtro_nome" />
-				<div id="lista_alunos"><img src="../web/images/loading.gif" alt="..." /></div>
+				<div id="lista_alunos"><img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /></div>
 			</td></tr>
 	</table>
 

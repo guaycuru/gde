@@ -12,7 +12,7 @@ var Atualizar_Atualizacoes = function(id, tp, mais, novas) {
 			var args = {i: id, st: 0, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: atualizacao_maior_id, nvs: 1};
 		else
 			var args = {g: id, st: 0, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: atualizacao_maior_id, nvs: 1};
-		$.post('../ajax/acontecimentos.php', args, function(data) {
+		$.post(CONFIG_URL + 'ajax/acontecimentos.php', args, function(data) {
 			if(data) {
 				$("#div_tem_atualizacoes").remove();
 				$("div.atualizacao_nova_escondida").remove();
@@ -21,12 +21,12 @@ var Atualizar_Atualizacoes = function(id, tp, mais, novas) {
 			}
 		});
 	} else if(mais) {
-		$("#atualizacoes_mais").before('<div id="carregando_mais_atualizacoes"><img src="../web/images/loading.gif" />Carregando...</div>');
+		$("#atualizacoes_mais").before('<div id="carregando_mais_atualizacoes"><img src="' + CONFIG_URL + 'web/images/loading.gif" />Carregando...</div>');
 		if(tp == 'u')
 			var args = {i: id, st: $("div.atualizacao:visible").length, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: atualizacao_maior_id, pp: atualizacao_por_pagina, mais: 1};
 		else
 			var args = {g: id, st: $("div.atualizacao:visible").length, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: atualizacao_maior_id, pp: atualizacao_por_pagina, mais: 1};
-		$.post('../ajax/acontecimentos.php', args, function(data) {
+		$.post(CONFIG_URL + 'ajax/acontecimentos.php', args, function(data) {
 			var mais = $(data).find(".atualizacao");
 			if(mais.length == 0)
 				$("#atualizacoes_mais").remove();
@@ -51,8 +51,8 @@ var Atualizar_Atualizacoes = function(id, tp, mais, novas) {
 			var args = {i: id, st: 0, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: -1, pp: atualizacao_por_pagina};
 		else
 			var args = {g: id, st: 0, msg: msg, min: min, am: am, gr: gr, gde: gde, ultimo: -1, pp: atualizacao_por_pagina};
-		$("#tab_atualizacoes_conteudo").load('../ajax/acontecimentos.php', args, function() {
-			//$.post('../ajax/acontecimentos.php', {ui: 1}, function(data) {
+		$("#tab_atualizacoes_conteudo").load(CONFIG_URL + 'ajax/acontecimentos.php', args, function() {
+			//$.post(CONFIG_URL + 'ajax/acontecimentos.php', {ui: 1}, function(data) {
 				atualizacao_maior_id = parseInt($("#atualizacao_maior_id").html());
 			//});
 			$("#tab_atualizacoes_conteudo").append('<div id="atualizacoes_mais"><a href="#" id="atualizacoes_mais_link">Mais...</a></div>');
@@ -65,7 +65,7 @@ var Remover_Atualizacao = function() {
 	var id = ids[1];
 	var tmp = $("#remover_"+id).html();
 	$("#remover_"+id).html('Aguarde');
-	$.post('../ajax/ax_acontecimento.php', {tp: 'x', id: id}, function(data) {
+	$.post(CONFIG_URL + 'ajax/ax_acontecimento.php', {tp: 'x', id: id}, function(data) {
 		if(data != 0) {
 			$("#atualizacao_"+id).hide("slow");
 			$("#respostas_"+id).hide("slow");
@@ -96,9 +96,9 @@ var Responder_Atualizacao_Enviar = function() {
 	if((txt == null) || (txt == 'Responder...'))
 		return false;
 	$("#input_responder_"+id+"_"+original).addClass('enviando');
-	$.post('../ajax/ax_acontecimento.php', {tp: 'um', txt: $("#input_responder_"+id+"_"+original).val(), ori: original}, function(data) {
+	$.post(CONFIG_URL + 'ajax/ax_acontecimento.php', {tp: 'um', txt: $("#input_responder_"+id+"_"+original).val(), ori: original}, function(data) {
 		if(data != 0) {
-			$("#respostas_"+original).load('../ajax/acontecimentos.php div.atualizacao_resposta', {o: original, ultimo: atualizacao_maior_id}, function() {
+			$("#respostas_"+original).load(CONFIG_URL + 'ajax/acontecimentos.php div.atualizacao_resposta', {o: original, ultimo: atualizacao_maior_id}, function() {
 				// Remove o link de exibir todas as respostas (porque depois que respondo, ja carrego todas
 				$("#div_responder_"+id).remove();
 				$('#todas_respostas_'+original).parent().remove();
@@ -120,7 +120,7 @@ var Responder_Atualizacao_Cancelar = function() {
 }
 
 var Adicionar_Atualizacao = function(i, o) {
-	$.post('../ajax/acontecimentos.php', {i: i, o: o}, function(data) {
+	$.post(CONFIG_URL + 'ajax/acontecimentos.php', {i: i, o: o}, function(data) {
 		$("#tab_atualizacoes_conteudo").prepend(data);
 	});
 }
@@ -131,7 +131,7 @@ var Todas_Respostas_Atualizacao = function() {
 	var id = ids[2];
 	var old = $(this).html();
 	$(this).text('Aguarde...');
-	$.post('../ajax/acontecimentos.php', {o: id, ultimo: atualizacao_maior_id, rt: 1}, function(data) {
+	$.post(CONFIG_URL + 'ajax/acontecimentos.php', {o: id, ultimo: atualizacao_maior_id, rt: 1}, function(data) {
 		if(data) {
 			$('#'+idf).parent().remove();
 			$("#respostas_"+id).html($(data).find('div.atualizacao_resposta'));

@@ -3,7 +3,7 @@
 namespace GDE;
 
 if(isset($_GET['cm']))
-	die("<img src='../web/images/loading.gif' /> Carregando Mapa...");
+	die("<img src='".CONFIG_URL."web/images/loading.gif' /> Carregando Mapa...");
 
 define('TITULO', 'Sala');
 

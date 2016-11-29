@@ -61,7 +61,7 @@ var Atualizar_Coisas = function(atualiza_chat) {
 				}
 				
 				// Arrumar icones de status pela pagina inteira
-				$("img.status_icone_"+id).attr("src", "../web/images/status_" + status + ".png");
+				$("img.status_icone_"+id).attr("src", CONFIG_URL + "web/images/status_" + status + ".png");
 				
 				if(status == "d" || status == "x" || status == "o")
 					nAmigosOn++;
@@ -72,8 +72,8 @@ var Atualizar_Coisas = function(atualiza_chat) {
 				if((n_requisicao == 1) || (amigos_status[id] != status)) {
 					if(status == "d" || status == "x") { // Amigos disponiveis
 						if(n_requisicao == 1) {
-							chatAmigosOnHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"../web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
-							$("#chat_header_nome_" + id + " img").attr("src", "../web/images/status_"+status+".png");
+							chatAmigosOnHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"" + CONFIG_URL + "web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
+							$("#chat_header_nome_" + id + " img").attr("src", CONFIG_URL + "web/images/status_"+status+".png");
 						}
 						if(amigos_status[id] != status)
 							$("#chat_amigos_lista_on_body").append($("#chat_amigo_" + id));
@@ -83,8 +83,8 @@ var Atualizar_Coisas = function(atualiza_chat) {
 							$("#amigos_on_3").before($("#amigocomum_"+id));
 					} else if(status == "o") { // Amigos ocupados
 						if(n_requisicao == 1) {
-							chatAmigosOcupadosHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"../web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
-							$("#chat_header_nome_" + id + " img").attr("src", "../web/images/status_"+status+".png");
+							chatAmigosOcupadosHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"" + CONFIG_URL + "web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
+							$("#chat_header_nome_" + id + " img").attr("src", CONFIG_URL + "web/images/status_"+status+".png");
 						}
 						if(amigos_status[id] != status)
 							$("#chat_amigos_lista_on_body").append($("#chat_amigo_" + id));
@@ -94,8 +94,8 @@ var Atualizar_Coisas = function(atualiza_chat) {
 							$("#amigos_on_3").before($("#amigocomum_"+id));
 					} else { // Amigos off
 						if(n_requisicao == 1) {
-							chatAmigosOffHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"../web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
-							$("#chat_header_nome_" + id + " img").attr("src", "../web/images/status_"+status+".png");
+							chatAmigosOffHtml += "<div class=\"chat_amigos_lista\" id=\"chat_amigo_" + id + "\" title=\"" + nome_completo + "\"><img src=\"" + CONFIG_URL + "web/images/status_" + status + ".png\" class=\"status_icone status_icone_" + id + "\" alt=\"" + status + "\" />" + nick + "</div>";
+							$("#chat_header_nome_" + id + " img").attr("src", CONFIG_URL + "web/images/status_"+status+".png");
 						}
 						if(amigos_status[id] != status)
 							$("#chat_amigos_lista_off_body").append($("#chat_amigo_" + id));
@@ -111,12 +111,12 @@ var Atualizar_Coisas = function(atualiza_chat) {
 			$("#linkChat").text("Chat (" + nAmigosOn + ")");
 			
 			if(n_requisicao == 1) {
-				chatAmigosHtml += "<div id=\"chat_amigos_lista_on\"><div id=\"chat_amigos_lista_on_header\"><a href=\"#\" id=\"chat_amigos_lista_on_toggle\"><img id=\"chat_amigos_lista_on_img\" src=\"../web/images/botao_menos.png\" alt=\"-\" /> Online (<span id=\"chat_numero_amigos_on\">" + nAmigosOn + "</span>):</a></div><div id=\"chat_amigos_lista_on_body\">";
+				chatAmigosHtml += "<div id=\"chat_amigos_lista_on\"><div id=\"chat_amigos_lista_on_header\"><a href=\"#\" id=\"chat_amigos_lista_on_toggle\"><img id=\"chat_amigos_lista_on_img\" src=\"" + CONFIG_URL + "web/images/botao_menos.png\" alt=\"-\" /> Online (<span id=\"chat_numero_amigos_on\">" + nAmigosOn + "</span>):</a></div><div id=\"chat_amigos_lista_on_body\">";
 				chatAmigosHtml += chatAmigosOnHtml;
 				chatAmigosHtml += chatAmigosOcupadosHtml;
 				chatAmigosHtml += "</div></div>";
 				chatAmigosHtml += "<div id=\"chat_amigos_lista_separador\" style=\"margin-bottom: 8px;\"></div>";
-				chatAmigosHtml += "<div id=\"chat_amigos_lista_off\"><div id=\"chat_amigos_lista_off_header\"><a href=\"#\" id=\"chat_amigos_lista_off_toggle\"><img id=\"chat_amigos_lista_off_img\" src=\"../web/images/botao_menos.png\" alt=\"-\" /> Offline (<span id=\"chat_numero_amigos_off\">" + nAmigosOff + "</span>):</a></div><div id=\"chat_amigos_lista_off_body\">";
+				chatAmigosHtml += "<div id=\"chat_amigos_lista_off\"><div id=\"chat_amigos_lista_off_header\"><a href=\"#\" id=\"chat_amigos_lista_off_toggle\"><img id=\"chat_amigos_lista_off_img\" src=\"" + CONFIG_URL + "web/images/botao_menos.png\" alt=\"-\" /> Offline (<span id=\"chat_numero_amigos_off\">" + nAmigosOff + "</span>):</a></div><div id=\"chat_amigos_lista_off_body\">";
 				chatAmigosHtml += chatAmigosOffHtml;
 				chatAmigosHtml += "</div></div>";
 				
@@ -124,23 +124,23 @@ var Atualizar_Coisas = function(atualiza_chat) {
 				
 				if(!mostra_online) {
 					$("#chat_amigos_lista_on_body").hide();
-					$("#chat_amigos_lista_on_img").attr('alt', '+').attr('src', '../web/images/botao_mais.png');
+					$("#chat_amigos_lista_on_img").attr('alt', '+').attr('src', CONFIG_URL + 'web/images/botao_mais.png');
 				} else
-					$("#chat_amigos_lista_on_img").attr('alt', '-').attr('src', '../web/images/botao_menos.png');
+					$("#chat_amigos_lista_on_img").attr('alt', '-').attr('src', CONFIG_URL + 'web/images/botao_menos.png');
 				
 				if(!mostra_offline) {
 					$("#chat_amigos_lista_off_body").hide();
-					$("#chat_amigos_lista_off_img").attr('alt', '+').attr('src', '../web/images/botao_mais.png');
+					$("#chat_amigos_lista_off_img").attr('alt', '+').attr('src', CONFIG_URL + 'web/images/botao_mais.png');
 				} else
-					$("#chat_amigos_lista_off_img").attr('alt', '-').attr('src', '../web/images/botao_menos.png');
+					$("#chat_amigos_lista_off_img").attr('alt', '-').attr('src', CONFIG_URL + 'web/images/botao_menos.png');
 				
 				$("#chat_amigos_lista_on_toggle").click(function() {
 					$("#chat_amigos_lista_on_body").toggle();
 					mostra_online = !mostra_online;
 					if(mostra_online)
-						$("#chat_amigos_lista_on_img").attr('alt', '-').attr('src', '../web/images/botao_menos.png');
+						$("#chat_amigos_lista_on_img").attr('alt', '-').attr('src', CONFIG_URL + 'web/images/botao_menos.png');
 					else
-						$("#chat_amigos_lista_on_img").attr('alt', '+').attr('src', '../web/images/botao_mais.png');
+						$("#chat_amigos_lista_on_img").attr('alt', '+').attr('src', CONFIG_URL + 'web/images/botao_mais.png');
 					Atualizar_Chat();
 					return false;
 				});
@@ -149,9 +149,9 @@ var Atualizar_Coisas = function(atualiza_chat) {
 					$("#chat_amigos_lista_off_body").toggle();
 					mostra_offline = !mostra_offline;
 					if(mostra_offline)
-						$("#chat_amigos_lista_off_img").attr('alt', '-').attr('src', '../web/images/botao_menos.png');
+						$("#chat_amigos_lista_off_img").attr('alt', '-').attr('src', CONFIG_URL + 'web/images/botao_menos.png');
 					else
-						$("#chat_amigos_lista_off_img").attr('alt', '+').attr('src', '../web/images/botao_mais.png');
+						$("#chat_amigos_lista_off_img").attr('alt', '+').attr('src', CONFIG_URL + 'web/images/botao_mais.png');
 					Atualizar_Chat();
 					return false;
 				});
@@ -268,8 +268,8 @@ var Cria_Chat = function(id) {
 	chat_html += $("#chat_amigo_"+id).html();
 	chat_html += "</div>";
 	chat_html += "<div id=\"chat_header_botoes_" + id + "\" class=\"chat_header_botoes\">";
-	chat_html += "<a href=\"#\" id=\"chat_botao_minimizar_" + id + "\" class=\"chat_botao_minimizar\"><img src=\"../web/images/chat_minimizar.png\" alt=\"_\" title=\"Minimizar\" /></a> ";  // Botao minimizar
-	chat_html += "<a href=\"#\" id=\"chat_botao_fechar_" + id + "\" class=\"chat_botao_fechar\"><img src=\"../web/images/chat_fechar.png\" alt=\"X\" title=\"Fechar\" /></a>";  // Botao fechar
+	chat_html += "<a href=\"#\" id=\"chat_botao_minimizar_" + id + "\" class=\"chat_botao_minimizar\"><img src=\"" + CONFIG_URL + "web/images/chat_minimizar.png\" alt=\"_\" title=\"Minimizar\" /></a> ";  // Botao minimizar
+	chat_html += "<a href=\"#\" id=\"chat_botao_fechar_" + id + "\" class=\"chat_botao_fechar\"><img src=\"" + CONFIG_URL + "web/images/chat_fechar.png\" alt=\"X\" title=\"Fechar\" /></a>";  // Botao fechar
 	chat_html += "</div>"
 	chat_html += "</div>";
 	chat_html += "<div id=\"chat_body_" + id + "\" class=\"chat_body\">";
@@ -301,7 +301,7 @@ var Cria_Chat = function(id) {
 		if($("#chat_" + id).length > 0) {
 			$("#chat_" + id).hide();
 			status_janelas[id] = "c";
-			$.post("../ajax/ax_chat.php", {tipo: 'ws', id: id, status: 'c'});
+			$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'ws', id: id, status: 'c'});
 			Atualizar_Chat();
 		}
 		return false;
@@ -355,13 +355,13 @@ var Minimizar_Restaurar_Chat = function(id) {
 	}
 	
 	status_janelas[id] = status;
-	$.post("../ajax/ax_chat.php", {tipo: 'ws', id: id, status: status});
+	$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'ws', id: id, status: status});
 	Atualizar_Chat();
 	return false;
 }
 
 var Mensagem_Enviar = function(id, id_usuario_destino, mensagem) {
-	$.post("../ajax/ax_chat.php", {tipo: 'i', id: id, id_usuario_destino: id_usuario_destino, mensagem: mensagem}, function (data) {
+	$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'i', id: id, id_usuario_destino: id_usuario_destino, mensagem: mensagem}, function (data) {
 		var resposta = data.split('#');
 		var id_novo = resposta[0];
 		var hora = resposta[1];
@@ -375,7 +375,7 @@ var Mensagem_Enviar = function(id, id_usuario_destino, mensagem) {
 			$("#chat_mensagem_" + id).attr('id', 'chat_mensagem_' + id_novo);
 			$.guaycuru.tooltip("chat_mensagem_" + id_novo, hora, "", {fixed: false, width: 74});
 		} else {
-			$("#chat_mensagem_" + id + " img.enviando").attr('src', '../web/images/CancelON.png');
+			$("#chat_mensagem_" + id + " img.enviando").attr('src', CONFIG_URL + 'web/images/CancelON.png');
 		}
 		$("#chat_body_"+id_usuario_destino).scrollTop($("#chat_body_"+id_usuario_destino).outerHeight());
 	});
@@ -393,7 +393,7 @@ var Mensagem_Chat = function(id, id_destino, nome_usuario, mensagem, hora, direc
 			var cria_div = false;
 			
 			if(hora == null)
-				hora = "<img src=\"../web/images/loading.gif\" class=\"chat_enviando\" alt=\"...\" />";
+				hora = "<img src=\"" + CONFIG_URL + "web/images/loading.gif\" class=\"chat_enviando\" alt=\"...\" />";
 			else
 				cria_div = true;
 				
@@ -478,9 +478,9 @@ var Change_Chat_Image = function(status) {
 		$("#chatOpcoesLink > img").attr("title", "Ocupado").attr("alt", "Ocupado");
 	else if (status == "off")
 		$("#chatOpcoesLink > img").attr("title", "Invisivel").attr("alt", "Invisivel");
-	$("#chatOpcoesLink > img").attr("src", "../web/images/status_"+status+".png");
+	$("#chatOpcoesLink > img").attr("src", CONFIG_URL + "web/images/status_"+status+".png");
 	$("img.status_icone_"+meu_id).each(function() {
-		$(this).attr("src", "../web/images/status_" + status + ".png");
+		$(this).attr("src", CONFIG_URL + "web/images/status_" + status + ".png");
 	});
 }
 
@@ -492,8 +492,8 @@ $(document).ready(function(){
 	
 	$("div.chatStatusSelect > a").click(function() {
 		var status = ($(this).attr("id").split("_"))[2];
-		$("#chatOpcoesLink > img").attr("src", "../web/images/loading.gif");
-		$.post("../ajax/ax_chat_status.php", {set_chat_status: status});
+		$("#chatOpcoesLink > img").attr("src", CONFIG_URL + "web/images/loading.gif");
+		$.post(CONFIG_URL + "ajax/ax_chat_status.php", {set_chat_status: status});
 		$("#chatStatus").animate({left: 'toggle'}, 1000);
 		Change_Chat_Image(status);
 		return false;
@@ -512,7 +512,7 @@ $(document).ready(function(){
 		var id_destino = ($(this).attr("id").split("_"))[2];
 		Mensagem_Chat(null, id_destino, null, null, null, null, false);
 		$("#chat_input_"+id_destino).focus();
-		$.post("../ajax/ax_chat.php", {tipo: 'ws', id: id_destino, status: 'o'}, function (data) {
+		$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'ws', id: id_destino, status: 'o'}, function (data) {
 		});
 		status_janelas[id_destino] = "o";
 	
@@ -528,7 +528,7 @@ $(document).ready(function(){
 			if ($("#chat_"+id).length > 0) {
 				$("#chat_"+id).hide();
 				status_janelas[id] = "c";
-				$.post("../ajax/ax_chat.php", {tipo: 'ws', id: id, status: 'c'});
+				$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'ws', id: id, status: 'c'});
 				Atualizar_Chat();
 			}
 			return false;

@@ -132,7 +132,7 @@ if(isset($_GET['m'])) {
 					<table id="tabela_informacoes" cellspacing="0" class="tabela_bonyta_branca">
 						<tr>
 							<td width="25%"><b>Sigla:</b></td>
-							<td><?= ((isset($_GET['of']))?'<a href="<?= CONFIG_URL; ?>disciplina/?id='.$Disciplina->getSigla(true).'">':null).$Disciplina->getSigla(true).((isset($_GET['of']))?'</a>':null); ?></td>
+							<td><?= ((isset($_GET['of']))?'<a href="'.CONFIG_URL.'disciplina/'.$Disciplina->getSigla(true).'">':null).$Disciplina->getSigla(true).((isset($_GET['of']))?'</a>':null); ?></td>
 						</tr>
 						<tr>
 							<td width="25%"><b>Nome:</b></td>
