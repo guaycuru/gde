@@ -216,7 +216,7 @@ $(document).ready(function(){
 							<li><a href="<?= CONFIG_URL; ?>visoes/Arvore.php">&Aacute;rvore / Integraliza&ccedil;&atilde;o</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Avaliar.php">Avaliar Professores</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Eliminador.php">Eliminar Disciplinas</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Mapa.php">Mapa do Campus</a></li>
+							<li><a href="<?= CONFIG_URL; ?>mapa/">Mapa do Campus</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Planejador.php">Planejador</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Rankings.php">Rankings</a></li>
 						</ul>
@@ -226,18 +226,18 @@ $(document).ready(function(){
 							<li><a href="<?= CONFIG_URL; ?>visoes/EditarPerfil.php">Editar Perfil</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Configuracoes.php">Configura&ccedil;&otilde;es da Conta</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Amigos.php">Meus Amigos</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Recomendar.php">Convidar um Amigo</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/CadastroGrupo.php">Criar Grupo</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Grupos.php">Meus Grupos</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>recomendar/">Convidar um Amigo</a></li>
+							<!-- <li><a href="<?= CONFIG_URL; ?>visoes/CadastroGrupo.php">Criar Grupo</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Grupos.php">Meus Grupos</a></li> -->
 						</ul>
 					</li>
 					<li><a href="#" onclick="return false;">Ajuda</a>
 						<ul>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Contato.php">Contato</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Estatisticas.php">Estat&iacute;sticas</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/FAQ.php">Perguntas Frequentes</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Sobre.php">Sobre o GDE</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Termos.php">Termos de Uso</a></li>
+							<li><a href="<?= CONFIG_URL; ?>contato/">Contato</a></li>
+							<li><a href="<?= CONFIG_URL; ?>estatisticas/">Estat&iacute;sticas</a></li>
+							<li><a href="<?= CONFIG_URL; ?>faq/">Perguntas Frequentes</a></li>
+							<li><a href="<?= CONFIG_URL; ?>sobre/">Sobre o GDE</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>termos/">Termos de Uso</a></li>
 						</ul>
 					</li>
 					<li><a href="#" onclick="Logout(); return false;">Sair</a></li>

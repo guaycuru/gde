@@ -3,6 +3,14 @@
 namespace GDE;
 
 class Util {
+	public static function Code($nc, $a='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+		$l = strlen($a) - 1;
+		$r='';
+		while($nc-->0)
+			$r .= $a{mt_rand(0,$l)};
+		return $r;
+	}
+
 	public static function Limita($texto, $tamanho) {
 		return (strlen($texto) <= $tamanho) ? $texto : substr($texto, 0, $tamanho-3).'...';
 	}

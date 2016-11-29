@@ -237,5 +237,11 @@ class Dado extends Base {
 	 */
 	protected $max_online_ts;
 
+	public static function Pega_Dados() {
+		$Dados = self::Load(1);
+		if($Dados === null)
+			return array();
+		return get_object_vars($Dados);
+	}
 
 }
