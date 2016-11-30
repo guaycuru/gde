@@ -92,7 +92,7 @@ class Cardapio extends Base {
 	 */
 	protected $ultima_atualizacao;
 
-	public function Atual() {
+	public static function Atual() {
 		$hora = date('H');
 		$dia = date('d');
 		$sem = date('w');
