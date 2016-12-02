@@ -21,18 +21,30 @@ class Planejado extends Base {
 	protected $id_planejado;
 
 	/**
-	 * @var integer
+	 * @var Usuario
 	 *
-	 * @ORM\Column(name="id_periodo", type="smallint", nullable=false)
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
+	 * })
 	 */
-	protected $id_periodo;
+	protected $usuario;
 
 	/**
-	 * @var integer
+	 * @var Periodo
 	 *
-	 * @ORM\Column(name="id_periodo_atual", type="smallint", nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Periodo")
+	 * @ORM\JoinColumn(name="id_periodo", referencedColumnName="id_periodo")
 	 */
-	protected $id_periodo_atual;
+	protected $periodo;
+
+	/**
+	 * @var Periodo
+	 *
+	 * @ORM\ManyToOne(targetEntity="Periodo")
+	 * @ORM\JoinColumn(name="id_periodo_atual", referencedColumnName="id_periodo")
+	 */
+	protected $periodo_atual;
 
 	/**
 	 * @var string
@@ -42,14 +54,22 @@ class Planejado extends Base {
 	protected $compartilhado = false;
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * Por_Usuario
 	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @param Usuario $Usuario
+	 * @param $periodo
+	 * @param bool $compartilhados
+	 * @return mixed
 	 */
-	protected $id_usuario;
+	public static function Por_Usuario(Usuario $Usuario, $periodo, $compartilhados = true) {
+		if($periodo instanceof Periodo)
+			$periodo = $periodo->getPeriodo();
 
+		$params = array('usuario' => $Usuario->getID(), 'periodo' => $periodo);
+		if($compartilhados === true)
+			$params['compartilhado'] = true;
+
+		return self::FindBy($params, array('id_planejado' => 'ASC'));
+	}
 
 }

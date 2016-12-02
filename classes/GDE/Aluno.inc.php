@@ -2,7 +2,6 @@
 
 namespace GDE;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -100,6 +99,10 @@ class Aluno extends Base {
 	 * @ORM\Column(name="modalidade_pos", type="string", length=2, nullable=true)
 	 */
 	protected $modalidade_pos;
+
+	private static $_niveis = array('G' => 'Gradua&ccedil;&atilde;o', 'T' => 'Tecnologia', 'E' => 'Egressado', 'M' => 'Mestrado', 'D' => 'Doutorado', 'P' => 'Aluno Especial', 'S' => 'Mestrado Profissional');
+	private static $_niveis_grad = array('G' => 'Gradua&ccedil;&atilde;o', 'T' => 'Tecnologia', 'E' => 'Egressado');
+	private static $_niveis_pos = array('M' => 'Mestrado', 'D' => 'Doutorado', 'P' => 'Aluno Especial', 'E' => 'Egressado');
 
 	/**
 	 * Consultar
@@ -200,6 +203,16 @@ class Aluno extends Base {
 		if($start > -1)
 			$query->setFirstResult($start);
 		return $query->getResult();
+	}
+
+	/**
+	 * @param bool $nome
+	 * @return null|string
+	 */
+	public function getNivel($nome = false) {
+		if($this->nivel == null)
+			return null;
+		return (($nome) && (isset(self::$_niveis[$this->nivel]))) ? self::$_niveis[$this->nivel] : $this->nivel;
 	}
 
 	/**
@@ -380,13 +393,10 @@ class Aluno extends Base {
 	 * @return bool
 	 */
 	public function Cursou(Disciplina $Disciplina) {
-		/*foreach($this->getOferecimentos(null, null) as $Oferecimento)
-			if($Oferecimento->getSigla() == $Disciplina->getSigla())
-				return true;
-		return false;*/
-		$dql = 'SELECT COUNT(O.id) FROM GDE\\Aluno AS A '.
+		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
 			'INNER JOIN A.oferecimentos AS O '.
-			'WHERE A.ra = ?1 AND O.sigla = ?2';
+			'INNER JOIN O.disciplina AS D '.
+			'WHERE A.ra = ?1 AND D.sigla = ?2';
 
 		$query = self::_EM()->createQuery($dql)
 			->setParameter(1, $this->getRA(false))
@@ -404,17 +414,72 @@ class Aluno extends Base {
 	 * @return bool
 	 */
 	public function Trancou(Disciplina $Disciplina) {
-		/*foreach($this->getTrancadas(null) as $Oferecimento)
-			if($Oferecimento->getSigla() == $Disciplina->getSigla())
-				return true;
-		return false;*/
-		$dql = 'SELECT COUNT(O.id) FROM GDE\\Aluno AS A '.
+		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
 			'INNER JOIN A.trancadas AS O '.
-			'WHERE A.ra = ?1 AND O.sigla = ?2';
+			'INNER JOIN O.disciplina AS D '.
+			'WHERE A.ra = ?1 AND D.sigla = ?2';
 
 		$query = self::_EM()->createQuery($dql)
 			->setParameter(1, $this->getRA(false))
 			->setParameter(2, $Disciplina->getSigla());
+
+		return ($query->getSingleScalarResult() > 0);
+	}
+
+	/**
+	 * Cursou_Com
+	 *
+	 * Determina se este Aluno ja cursou com $Professor, opcionalmente $Disciplina
+	 *
+	 * @param Professor $Professor
+	 * @param Disciplina $Disciplina
+	 * @return bool
+	 */
+	public function Cursou_Com(Professor $Professor, Disciplina $Disciplina = null) {
+		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
+			'INNER JOIN A.oferecimentos AS O ';
+		if($Disciplina !== null)
+			$dql .= 'INNER JOIN O.disciplina AS D ';
+		$dql .= 'WHERE A.ra = ?1 AND O.professor = ?2';
+
+		if($Disciplina !== null)
+			$dql .= ' AND D.sigla = ?3';
+
+		$query = self::_EM()->createQuery($dql)
+			->setParameter(1, $this->getRA(false))
+			->setParameter(2, $Professor->getID());
+
+		if($Disciplina !== null)
+			$query->setParameter(3, $Disciplina->getSigla());
+
+		return ($query->getSingleScalarResult() > 0);
+	}
+
+	/**
+	 * Cursou_Com
+	 *
+	 * Determina se este Aluno ja cursou com $Professor, opcionalmente $Disciplina
+	 *
+	 * @param Professor $Professor
+	 * @param Disciplina $Disciplina
+	 * @return bool
+	 */
+	public function Trancou_Com(Professor $Professor, Disciplina $Disciplina = null) {
+		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
+			'INNER JOIN A.trancadas AS O ';
+		if($Disciplina !== null)
+			$dql .= 'INNER JOIN O.disciplina AS D ';
+		$dql .= 'WHERE A.ra = ?1 AND O.professor = ?2';
+
+		if($Disciplina !== null)
+			$dql .= ' AND D.sigla = ?3';
+
+		$query = self::_EM()->createQuery($dql)
+			->setParameter(1, $this->getRA(false))
+			->setParameter(2, $Professor->getID());
+
+		if($Disciplina !== null)
+			$query->setParameter(3, $Disciplina->getSigla());
 
 		return ($query->getSingleScalarResult() > 0);
 	}

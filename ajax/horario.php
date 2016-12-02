@@ -126,8 +126,8 @@ if($_tipo == 'A') {
 <?php } if($_tipo == 'P') {
 ?>
 	<tr>
-		<td colspan="2" style="padding: 10px 5px;"><strong>Disciplinas:</strong></td>
-		<td colspan="5" style="padding: 10px 5px;"><?=$Professor->getOferecimentos($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
+		<td colspan="2" style="padding: 10px 5px;"><strong>Oferecimentos:</strong></td>
+		<td colspan="5" style="padding: 10px 5px;"><?= $Professor->getOferecimentos($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
 	</tr>
 <?php } ?>
 </table>

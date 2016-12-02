@@ -5,12 +5,12 @@ namespace GDE;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UsuariosEmprego
+ * UsuarioEmprego
  *
  * @ORM\Table(name="gde_usuarios_empregos", indexes={@ORM\Index(name="id_usuario", columns={"id_usuario"})})
  * @ORM\Entity
  */
-class UsuariosEmprego extends Base {
+class UsuarioEmprego extends Base {
 	/**
 	 * @var integer
 	 *
@@ -19,6 +19,16 @@ class UsuariosEmprego extends Base {
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
 	protected $id_emprego;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
+	 * })
+	 */
+	protected $usuario;
 
 	/**
 	 * @var string
@@ -68,16 +78,5 @@ class UsuariosEmprego extends Base {
 	 * @ORM\Column(name="site", type="string", length=255, nullable=true)
 	 */
 	protected $site;
-
-	/**
-	 * @var \GDEGdeUsuarios
-	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
-	 */
-	protected $id_usuario;
-
 
 }

@@ -21,11 +21,34 @@ class AvaliacaoResposta extends Base {
 	protected $id_resposta;
 
 	/**
-	 * @var integer
+	 * @var AvaliacaoPergunta
 	 *
-	 * @ORM\Column(name="id_professor", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\ManyToOne(targetEntity="AvaliacaoPergunta")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_pergunta", referencedColumnName="id_pergunta")
+	 * })
 	 */
-	protected $id_professor;
+	protected $pergunta;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
+	 * })
+	 */
+	protected $usuario;
+
+	/**
+	 * @var Professor
+	 *
+	 * @ORM\ManyToOne(targetEntity="Professor")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
+	 * })
+	 */
+	protected $professor;
 
 	/**
 	 * @var string
@@ -37,7 +60,7 @@ class AvaliacaoResposta extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="resposta", type="boolean", nullable=false)
+	 * @ORM\Column(name="resposta", type="smallint", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $resposta;
 
@@ -47,26 +70,5 @@ class AvaliacaoResposta extends Base {
 	 * @ORM\Column(name="data", type="datetime", nullable=false)
 	 */
 	protected $data;
-
-	/**
-	 * @var \GDEGdeUsuarios
-	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
-	 */
-	protected $id_usuario;
-
-	/**
-	 * @var \GDEGdeAvaliacaoPerguntas
-	 *
-	 * @ORM\ManyToOne(targetEntity="AvaliacaoPergunta")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_pergunta", referencedColumnName="id_pergunta")
-	 * })
-	 */
-	protected $id_pergunta;
-
 
 }

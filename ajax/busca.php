@@ -514,7 +514,7 @@ if($qts['alunos'] != 0) {
 		foreach($Grupos as $Grupo) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>grupo/?l=<?= $Grupo->getApelido(); ?>"><?= $Grupo->getNome(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>grupo/<?= $Grupo->getApelido(); ?>"><?= $Grupo->getNome(); ?></a></td>
 		<td><?= $Grupo->getDescricao(); ?></td>
 	</tr>
 <?php

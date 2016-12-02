@@ -294,7 +294,7 @@ $(document).ready(function() {
 	<div id="coluna_esquerda">
 		<div id="perfil_cabecalho">
 			<div id="perfil_foto">
-				<a href="Perfil.php?l=<?= $_Usuario->getLogin(); ?>" class="link_foto"><img src="<?= $_Usuario->getFoto(true); ?>" alt="Foto" class="foto_perfil" /></a><br /><a href="EditarPerfil.php" class="link_foto" style="font-size: 14px">Editar Perfil</a>
+				<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $_Usuario->getLogin(); ?>" class="link_foto"><img src="<?= $_Usuario->getFoto(true); ?>" alt="Foto" class="foto_perfil" /></a><br /><a href="EditarPerfil.php" class="link_foto" style="font-size: 14px">Editar Perfil</a>
 			</div>
 			<div id="perfil_mensagem_botoes">
 				<div id="perfil_cabecalho_nome"><?= $_Usuario->getNome_Completo(true); ?></div>
@@ -375,7 +375,7 @@ $(document).ready(function() {
 			<?php foreach($Autorizacoes as $Auth) { ?>
 			<div class="div_menu_requisicoes_linha" id="requisicao_amizade_<?= $Auth->getAmigo()->getID(); ?>">
 				<div class="requisicao_foto"><img src="<?= $Auth->getUsuario()->getFoto(true, true); ?>" /></div>
-				<div class="requisicao_nome"><a href="<?= CONFIG_URL; ?>perfil/?l=<?= $Auth->getUsuario()->getLogin(); ?>"><strong><?= $Auth->getUsuario()->getNome_Completo(true); ?></strong></a><br />
+				<div class="requisicao_nome"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario()->getLogin(); ?>"><strong><?= $Auth->getUsuario()->getNome_Completo(true); ?></strong></a><br />
 					<a href="#" class="amizade_aceitar" id="amizade_aceitar_<?= $Auth->getUsuario()->getID(); ?>"><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_<?= $Auth->getUsuario()->getID(); ?>"><i>Ignorar</i></a>
 				</div>
 			</div>
@@ -393,13 +393,13 @@ $(document).ready(function() {
 				foreach($Amigos as $Amigo) { ?>
 				<div class="amigo" id="amigo_<?= $Amigo->getAmigo()->getID(); ?>">
 					<div class="amigo_foto">
-						<a href="<?= CONFIG_URL; ?>perfil/?l=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true) ?>">
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true) ?>">
 							<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
 						</a>
 					</div>
 					<div class="amigo_nome">
 						<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
-						<a href="Perfil.php?l=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= Util::Limita($Amigo->getApelido(true), 10); ?></a>
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= Util::Limita($Amigo->getApelido(true), 10); ?></a>
 					</div>
 				</div>
 			<?php } } ?>
@@ -418,13 +418,13 @@ $(document).ready(function() {
 						<a href="#" class="link_sem_decoracao">
 							<div class="sliding_top transparente ui-corner-bottom" id="div_<?= $Amigo->getID(); ?>"><span>Adicionar</span></div>
 						</a>
-						<a href="Perfil.php?l=<?= $Amigo->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getNome(true).' '.$Amigo->getSobrenome(true) ?>">
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getNome(true).' '.$Amigo->getSobrenome(true) ?>">
 							<img src="<?= $Amigo->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getNome(true) ?>" />
 						</a>
 					</div>
 					<div class="amigo_nome">
 						<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getID(); ?>" alt="?" />
-						<a href="Perfil.php?l=<?= $Amigo->getLogin(); ?>" class="amigo" title="<?= $Amigo->getNome_Completo(true); ?>"><?= $Amigo->getNome(true); ?></a>
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getLogin(); ?>" class="amigo" title="<?= $Amigo->getNome_Completo(true); ?>"><?= $Amigo->getNome(true); ?></a>
 					</div>
 				</div>
 			<?php } } ?>

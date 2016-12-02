@@ -5,7 +5,7 @@ var Carregar_Avaliacoes = function() {
 	if($(this).val() != '') {
 		var ids = $(this).attr('id').split('_');
 		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).Carregando();
-		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load('../ajax/ax_avaliacoes.php', {id_professor: ids[1], sigla: $(this).val()}, function() {
+		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load('../ajax/avaliacoes.php', {id_professor: ids[1], sigla: $(this).val()}, function() {
 			$("#div_avaliacoes_"+ids[1]+"_"+ids[2]+" div.nota_slider").each(function() {
 				Criar_Slider($(this));
 			});

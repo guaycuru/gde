@@ -140,7 +140,7 @@ class Acontecimento extends Base {
 
 	public function getLink() {
 		if(($this->getOrigem() !== null) || ($this->getGrupo_Origem() !== null))
-			return ($this->getOrigem() !== null) ? "Perfil.php?l=".$this->getOrigem()->getLogin() : "Grupo.php?l=".$this->getGrupo_Origem()->getApelido();
+			return ($this->getOrigem() !== null) ? CONFIG_URL."perfil/?usuario=".$this->getOrigem()->getLogin() : CONFIG_URL."grupo/".$this->getGrupo_Origem()->getApelido();
 		else
 			return "";
 	}

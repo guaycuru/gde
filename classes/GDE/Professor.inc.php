@@ -21,6 +21,21 @@ class Professor extends Base {
 	protected $id_professor;
 
 	/**
+	 * @var Oferecimento
+	 *
+	 * @ORM\OneToMany(targetEntity="Oferecimento", mappedBy="professor")
+	 */
+	protected $oferecimentos;
+
+	/**
+	 * @var Instituto
+	 *
+	 * @ORM\ManyToOne(targetEntity="Instituto")
+	 * @ORM\JoinColumn(name="id_instituto", referencedColumnName="id_instituto")
+	 */
+	protected $instituto;
+
+	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(name="matricula", type="integer", options={"unsigned"=true}), nullable=true)
@@ -33,13 +48,6 @@ class Professor extends Base {
 	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
 	 */
 	protected $nome;
-
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(name="id_instituto", type="integer", options={"unsigned"=true}), nullable=true)
-	 */
-	protected $id_instituto;
 
 	/**
 	 * @var string
@@ -69,5 +77,27 @@ class Professor extends Base {
 	 */
 	protected $lattes;
 
+	public function getOferecimentos($periodo = null, $formatado = false, $links = true) {
+		if($formatado === false)
+			return parent::getOferecimentos();
+		else {
+			$lista = array();
+			foreach(parent::getOferecimentos() as $Oferecimento)
+				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
+			return (count($lista) > 0) ? implode(", ", $lista) : '-';
+		}
+	}
+
+	/**
+	 * @param null $periodo
+	 * @return array
+	 */
+	public function Monta_Horario($periodo = null) {
+		$Lista = array();
+		foreach($this->getOferecimentos($periodo) as $Oferecimento)
+			foreach($Oferecimento->getDimensoes() as $Dimensao)
+				$Lista[$Dimensao->getDia()][$Dimensao->getHorario()][] = array($Oferecimento, $Dimensao->getSala(true)->getNome());
+		return $Lista;
+	}
 
 }

@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,6 +39,17 @@ class Usuario extends Base {
 	 * @ORM\OneToMany(targetEntity="UsuarioAmigo", mappedBy="usuario")
 	 */
 	protected $amigos;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 *
+	 * @ORM\ManyToMany(targetEntity="Aluno")
+	 * @ORM\JoinTable(name="gde_r_usuarios_favoritos",
+	 *      joinColumns={@ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="ra", referencedColumnName="ra")}
+	 * )
+	 */
+	protected $favoritos;
 
 	/**
 	 * @var UsuarioConfig
@@ -78,6 +90,13 @@ class Usuario extends Base {
 	protected $eliminadas;
 
 	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 *
+	 * @ORM\OneToMany(targetEntity="UsuarioEmprego", mappedBy="usuario")
+	 */
+	protected $empregos;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(name="login", type="string", length=16, nullable=false)
@@ -94,14 +113,14 @@ class Usuario extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ra", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(name="ra", type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $ra;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="matricula", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(name="matricula", type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $matricula;
 
@@ -405,6 +424,9 @@ class Usuario extends Base {
 	const PASTA_FOTOS = '../web/fts/';
 	const URL_FOTOS = 'web/fts/';
 
+	// Estados Civis
+	private static $_estados_civis = array('0' => '', '1' => 'Prefiro N&atilde;o Opinar', '2' => 'Solteiro(a)', '3' => 'Enrolado(a)', '4' => 'Namorando', '5' => 'Noivo(a)', '6' => 'Casado(a)', '7' => 'Casamento Aberto', '8' => 'Relacionamento Liberal');
+
 	/**
 	 * Por_Unique
 	 *
@@ -413,11 +435,11 @@ class Usuario extends Base {
 	 * @param string $valor O valor a ser buscado
 	 * @param string $campo (Opcional) Determina qual o campo a ser usado na busca
 	 * @param bool|null $ativo (Opcional) Se nao for null, filtra pelo valor do campo $ativo
-	 * @return Usuario|false O Usuario encontrado, ou false se nada for encontrado
+	 * @return Usuario|null O Usuario encontrado, ou null se nada for encontrado
 	 */
 	public static function Por_Unique($valor, $campo = null, $ativo = null) {
 		if($valor == null) // Nao faz sentido procurar por um valor unico vazio
-			return false;
+			return null;
 		if($campo === null) { // Campo a ser determinado
 			if(strpos($valor, '@') !== false) // Email
 				$campo = 'email';
@@ -428,10 +450,25 @@ class Usuario extends Base {
 		}
 		$params = array($campo => $valor);
 		if($ativo !== null)
-			$params['ativo'] > $ativo;
+			$params['ativo'] = $ativo;
 		$Usuario = self::FindOneBy($params);
 		if($Usuario === null)
-			return false;
+			return null;
+		return $Usuario;
+	}
+
+	/**
+	 * Por_Login
+	 *
+	 * @param $login
+	 * @param bool $ativo
+	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
+	 * @return false|Usuario
+	 */
+	public static function Por_Login($login, $ativo = true, $vazio = false) {
+		$Usuario = self::Por_Unique($login, 'login', $ativo);
+		if($Usuario === null && $vazio === true)
+			return new self;
 		return $Usuario;
 	}
 
@@ -445,17 +482,42 @@ class Usuario extends Base {
 	 */
 	public static function Por_RA($ra, $ativo = true, $vazio = false) {
 		$Usuario = self::Por_Unique($ra, 'ra', $ativo);
-		if($Usuario === false && $vazio === true)
+		if($Usuario === null && $vazio === true)
 			return new self;
 		return $Usuario;
 	}
 
+	/**
+	 * Por_Matricula
+	 *
+	 * @param $matricula
+	 * @param bool $ativo
+	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
+	 * @return false|Usuario
+	 */
+	public static function Por_Matricula($matricula, $ativo = true, $vazio = false) {
+		$Usuario = self::Por_Unique($matricula, 'matricula', $ativo);
+		if($Usuario === null && $vazio === true)
+			return new self;
+		return $Usuario;
+	}
+
+	/**
+	 * @return bool
+	 */
 	public function Online() {
 		if($this->getUltimo_Acesso(false) === null)
 			return false;
 		return ((time() - $this->getUltimo_Acesso('U')) < CONFIG_ONLINE_TIMEOUT);
 	}
 
+	/**
+	 * @param $esta_online
+	 * @param $status
+	 * @param $admin
+	 * @param bool $puro
+	 * @return string
+	 */
 	public static function Trata_Chat_Status($esta_online, $status, $admin, $puro = false) {
 		$retorno = "off";
 		if($esta_online) {
@@ -467,6 +529,34 @@ class Usuario extends Base {
 				$retorno = $status;
 		}
 		return $retorno;
+	}
+
+	/**
+	 * @param bool $html
+	 * @param bool $artigo
+	 * @return string
+	 */
+	public function getSexo($html = false, $artigo = false) {
+		if($html === false)
+			return $this->sexo;
+		elseif($this->sexo == 'f')
+			return ($artigo) ? 'a' : 'Feminino';
+		elseif($this->sexo == 'm')
+			return ($artigo) ? 'o' : 'Masculino';
+		elseif($this->sexo == 'o')
+			return ($artigo) ? '*' : 'Outro';
+		else
+			return ($artigo) ? '*' : 'Desconhecido';
+	}
+
+	/**
+	 * @param bool $html
+	 * @return string
+	 */
+	public function getEstado_Civil($html = true) {
+		return ($html && isset(self::$_estados_civis[$this->estado_civil]))
+			? self::$_estados_civis[$this->estado_civil]
+			: $this->estado_civil;
 	}
 
 	/**
@@ -608,7 +698,7 @@ class Usuario extends Base {
 		// Verificar COOKIE
 		if(isset($_COOKIE[CONFIG_COOKIE_NOME])) {
 			$dados = self::Parsear_Cookie($_COOKIE[CONFIG_COOKIE_NOME]);
-			$Usuario = self::Carregar($dados['id']);
+			$Usuario = self::Load($dados['id']);
 			if($Usuario->getID() == null) // Usuario inexistente
 				$Usuario = self::Logout();
 			if($Usuario->Verificar_Senha($dados['senha'], true) === false) // Senha incorreta
@@ -638,7 +728,7 @@ class Usuario extends Base {
 	 */
 	public static function Verificar_Login($login, $senha, $lembrar = false, &$erro = false) {
 		$Usuario = self::Por_Unique($login, null);
-		if($Usuario === false) {
+		if($Usuario === null) {
 			$Usuario = self::Logout(null);
 			if($erro !== false)
 				$erro = self::ERRO_LOGIN_NAO_ENCONTRADO;
@@ -697,6 +787,8 @@ class Usuario extends Base {
 				default: // Outros (Funcionarios, etc)
 					return false;
 			}
+			if($Usuario === null)
+				return false;
 
 			// Salva o cookie do login
 			$Usuario->Salvar_Cookie(false);
@@ -791,6 +883,25 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * @param Usuario $Usuario
+	 * @return bool|Usuario
+	 */
+	public function Relacionamento(Usuario $Usuario) { // Este eh meio que um "Amigos em comum"... nao?
+		if($this->Amigo($Usuario) !== false)
+			return $Usuario;
+		else {
+			/*$res = self::$db->Execute("SELECT amigo FROM ".self::$tabela_r_amigos." WHERE ".self::$chave." = '".$this->getID()."' AND ativo = 't' AND amigo IN (SELECT ".self::$chave." FROM ".self::$tabela_r_amigos." WHERE amigo = '".$Usuario->getID()."' AND ativo = 't') LIMIT 1");
+			if($res->RecordCount() == 0) // Nao tem o "meio do caminho"
+				return false;
+			else // Retorna o "meio do caminho" encontrado
+				return new Usuario($res->fields['amigo'], self::$db);*/
+			if(count($this->Amigos_Em_Comum($Usuario)) == 0)
+				return false;
+			return $this->Amigos_Em_Comum($Usuario)->first();
+		}
+	}
+
+	/**
 	 * @param bool|false $live
 	 * @return int
 	 */
@@ -810,6 +921,25 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * Amigos_Em_Comum
+	 *
+	 * @param Usuario $Usuario
+	 * @param int $total
+	 * @return ArrayCollection
+	 */
+	public function Amigos_Em_Comum(Usuario $Usuario, &$total = 0) {
+		$Lista = array();
+		$ids_amigos = array();
+		foreach($Usuario->getAmigos() as $Amigo)
+			$ids_amigos[$Amigo->getAmigo()->getID()] = true;
+		foreach($this->getAmigos() as $Amigo) // Pego do meu, pq tem os MEUS apelidos!
+			if(isset($ids_amigos[$Amigo->getAmigo()->getID()]))
+				$Lista[] = $Amigo;
+		$total = count($Lista);
+		return new ArrayCollection($Lista);
+	}
+
+	/**
 	 * @param string $minimo
 	 * @param string $limite
 	 * @param string $start
@@ -822,6 +952,30 @@ class Usuario extends Base {
 		foreach($res as $linha)
 			$Lista[] = new Usuario($linha['amigo'], self::$db);*/
 		return $Lista;
+	}
+
+	/**
+	 * getQuase_Amigos
+	 *
+	 * Retorna a lista de amigos que ainda nao aceitaram o pedido de amizade
+	 *
+	 * @return ArrayCollection
+	 */
+	public function getQuase_Amigos() {
+		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", false));
+		$criteria->andWhere(Criteria::expr()->eq("usuario", $this));
+		return $this->getAmigos()->matching($criteria);
+	}
+
+	/**
+	 * @param Usuario $Usuario
+	 * @return bool
+	 */
+	public function Quase_Amigo(Usuario $Usuario) { // Se eu to esperando autorizacao dele...
+		foreach($this->getQuase_Amigos() as $Amigo)
+			if($Amigo->getAmigo()->getID() == $Usuario->getID())
+				return $Amigo;
+		return false;
 	}
 
 	/**
@@ -884,6 +1038,18 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * Favorito
+	 *
+	 * Determina se o $Aluno esta na lista de favoritos deste usuario
+	 *
+	 * @param Aluno $Aluno
+	 * @return bool
+	 */
+	public function Favorito(Aluno $Aluno) {
+		return $this->getFavoritos()->contains($Aluno);
+	}
+
+	/**
 	 * Cursando
 	 *
 	 * Retorna true se este Usuario esta cursando a Disciplina / Oferecimento passado
@@ -900,6 +1066,31 @@ class Usuario extends Base {
 			// Erro!
 			return false;
 		}
+	}
+
+	/**
+	 * Tem_Dimensao
+	 *
+	 * Determina se o aluno deste usuario possui a dimensao do periodo em questao
+	 *
+	 * @param $Dimensao_dimensoes
+	 * @param Periodo $Periodo
+	 * @return bool
+	 */
+	public function Tem_Dimensao($Dimensao_dimensoes, Periodo $Periodo) {
+		$dim = $Dimensao_dimensoes instanceof Dimensao;
+		if(!$dim && $Dimensao_dimensoes[0] == '????') {
+			return false;
+		}
+		$Atuais = $this->getAluno(true)->getOferecimentos($Periodo->getID());
+		foreach($Atuais as $Atual) {
+			foreach($Atual->getDimensoes() as $Dimens) {
+				if(($dim && $Dimens->getID() == $Dimensao_dimensoes->getID()) || (!$dim && (($Dimens->getSala()->getNome(false) == $Dimensao_dimensoes[0]) && ($Dimens->getDia() == $Dimensao_dimensoes[1]) && ($Dimens->getHorario() == $Dimensao_dimensoes[2])))) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

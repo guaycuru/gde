@@ -129,15 +129,23 @@ class Disciplina extends Base {
 	 *
 	 * @param $sigla
 	 * @param string|null $nivel
+	 * @param bool $vazio
 	 * @return self
 	 */
-	public static function Por_Sigla($sigla, $nivel = null) {
+	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
 		if($nivel != null)
 			// Se temos nivel podemos fazer a busca por unique
 			return self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
-		else
+		else {
 			// Se o nivel nao foi fornecido, pegamos a primeira encontrada
-			return array_pop(self::FindBy(array('sigla' => $sigla)));
+			$Disciplinas = self::FindBy(array('sigla' => $sigla));
+			if(count($Disciplinas) > 0)
+				return array_pop($Disciplinas);
+			elseif($vazio == true)
+				return new self;
+			else
+				return null;
+		}
 	}
 
 	public static function Organiza(Disciplina $A, Disciplina $B) {

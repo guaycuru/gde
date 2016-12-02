@@ -37,7 +37,7 @@ div.TabView div.Tabs a:hover, div.TabView div.Tabs a.Active {
 .ui-tabs .ui-tabs-nav {
 	list-style: none;
 	position: relative;
-	padding: .2em 5px 0 5px;
+	padding: .2em 4px 0 4px;
 }
 
 .ui-tabs .ui-tabs-nav li {

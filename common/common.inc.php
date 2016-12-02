@@ -302,7 +302,7 @@ $(document).ready(function(){
 					<div style=\"width: 210px; height: 42px; margin: auto;\">
 						<a href=\"http://www.guaycuru.net\" title=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" target=\"_blank\" style=\"float: left; margin-top: 10px;\"><img src=\"".CONFIG_URL."web/images/logo_guaycuru.gif\" border=\"0\" alt=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" width=\"100\" height=\"21\" /></a>
 					</div>
-					<!-- <br /><div style=\"width: 125px; margin: auto;\"><a href=\"http://validator.w3.org/check?uri=referer\" target=\"_blank\"><img src=\"<?= CONFIG_URL; ?>web/images/w3c_xhtml.gif\" border=\"0\" alt=\"Valid XHTML 1.0 Transitional !\" width=\"60\" height=\"21\" /></a> <a href=\"http://jigsaw.w3.org/css-validator/check/referer\" target=\"_blank\"><img src=\"<?= CONFIG_URL; ?>web/images/w3c_css.gif\" alt=\"Valid CSS !\" width=\"60\" height=\"21\" /></a></div>-->
+					<!-- <br /><div style=\"width: 125px; margin: auto;\"><a href=\"http://validator.w3.org/check?uri=referer\" target=\"_blank\"><img src=\"".CONFIG_URL."web/images/w3c_xhtml.gif\" border=\"0\" alt=\"Valid XHTML 1.0 Transitional !\" width=\"60\" height=\"21\" /></a> <a href=\"http://jigsaw.w3.org/css-validator/check/referer\" target=\"_blank\"><img src=\"".CONFIG_URL."web/images/w3c_css.gif\" alt=\"Valid CSS !\" width=\"60\" height=\"21\" /></a></div>-->
 				</div>
 			</div>
 		</div>
