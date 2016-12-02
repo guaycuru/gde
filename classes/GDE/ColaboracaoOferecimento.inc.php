@@ -26,7 +26,7 @@ class ColaboracaoOferecimento extends Base {
 	 * @var Oferecimento
 	 *
 	 * @ORM\ManyToOne(targetEntity="Oferecimento")
-	 * @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento)
+	 * @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")
 	 */
 	protected $oferecimento;
 
@@ -66,7 +66,9 @@ class ColaboracaoOferecimento extends Base {
 	 */
 	protected $data;
 
-	const STATUS_RECUSADO = 'r';
+	const STATUS_AUTORIZADA = 'a';
+	const STATUS_PENDENTE = 'p';
+	const STATUS_RECUSADA = 'r';
 
 	/**
 	 * @param $id_oferecimento
@@ -80,35 +82,9 @@ class ColaboracaoOferecimento extends Base {
 		$query = self::_EM()->createQuery($dql)
 			->setParameter(1, $id_oferecimento)
 			->setParameter(2, $campo)
-			->setParameter(3, self::STATUS_RECUSADO);
+			->setParameter(3, self::STATUS_RECUSADA);
 
 		return ($query->getSingleScalarResult() > 0);
-	}
-
-	/**
-	 * @param $id_oferecimento
-	 * @param $campo
-	 * @param bool $vazio
-	 * @return ColaboracaoOferecimento|null
-	 */
-	public static function Pega_Colaboracao($id_oferecimento, $campo, $vazio = true) {
-		$dql = 'SELECT COUNT(C.id_colaboracao) FROM GDE\\ColaboracaoOferecimento AS C '.
-			'WHERE C.oferecimento = ?1 AND C.campo = ?2 AND C.status != ?3';
-
-		$query = self::_EM()->createQuery($dql)
-			->setParameter(1, $id_oferecimento)
-			->setParameter(2, $campo)
-			->setParameter(3, self::STATUS_NOVA)
-			->setMaxResults(1);
-
-		$Colaboracao = $query->getOneOrNullResult();
-
-		if($Colaboracao !== null)
-			return $Colaboracao;
-		elseif($vazio === true)
-			return new self;
-		else
-			return null;
 	}
 
 }

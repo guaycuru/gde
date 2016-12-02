@@ -96,7 +96,6 @@ if($_tipo == 'A') {
 			$html_professor_instituto .= '</select>';
 			$html_professor_instituto .= '<a href="#" id="instituto_colaborar" class="link_colaborar">Colaborar</a>';
 		} else {  // Ja existe colaboracao pendente
-			$tmp = ColaboracaoProfessor::Pega_Colaboracao($_matricula, 'instituto');
 			$html_professor_instituto = 'Colabora&ccedil;&atilde;o pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
 		}
 	} else  // Ja existe colaboracao autorizada
@@ -106,7 +105,6 @@ if($_tipo == 'A') {
 		if(ColaboracaoProfessor::Existe_Colaboracao($_matricula, 'sala') == false) {
 			$html_professor_sala = '<input id="sala_valor" type="text" class="valor_colaborar"><a href="#" id="sala_colaborar" class="link_colaborar">Colaborar</a>';
 		} else {
-			$tmp = ColaboracaoProfessor::Pega_Colaboracao($_matricula, 'sala');
 			$html_professor_sala = 'Colaboracao pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
 		}
 	} else
@@ -116,7 +114,6 @@ if($_tipo == 'A') {
 		if(ColaboracaoProfessor::Existe_Colaboracao($_matricula, 'email') == false) {
 			$html_professor_email = '<input id="email_valor" type="text" class="valor_colaborar"><a href="#" id="email_colaborar" class="link_colaborar">Colaborar</a>';
 		} else {
-			$tmp = ColaboracaoProfessor::Pega_Colaboracao($_matricula, 'email');
 			$html_professor_email = 'Colaboracao pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
 		}
 	} else
@@ -126,7 +123,6 @@ if($_tipo == 'A') {
 		if(ColaboracaoProfessor::Existe_Colaboracao($_matricula, 'pagina') == false) {
 			$html_professor_pagina = '<input id="pagina_valor" type="text" class="valor_colaborar"><a href="#" id="pagina_colaborar" class="link_colaborar">Colaborar</a>';
 		} else {
-			$tmp = ColaboracaoProfessor::Pega_Colaboracao($_matricula, 'pagina');
 			$html_professor_pagina = 'Colaboracao pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
 		}
 	} else
@@ -136,7 +132,6 @@ if($_tipo == 'A') {
 		if(ColaboracaoProfessor::Existe_Colaboracao($_matricula, 'lattes') == false) {
 			$html_professor_lattes = '<input id="lattes_valor" type="text" class="valor_colaborar"><a href="#" id="lattes_colaborar" class="link_colaborar">Colaborar</a>';
 		} else {
-			$tmp = ColaboracaoProfessor::Pega_Colaboracao($_matricula, 'lattes');
 			$html_professor_lattes = 'Colaboracao pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
 		}
 	} else
@@ -172,7 +167,7 @@ if($_tipo == 'A') {
 		esconde = $.guaycuru.aguarde();
 		$("#planejado_compartilhado").load("<?= CONFIG_URL; ?>ajax/planejado_compartilhado.php", { id: id }, function() { esconde(); } );
 		return false;
-	}
+	};
 	<?php } ?>
 	var Atualizar_Horario = function(matricula, tipo, periodo, nivel) {
 		if(!periodo)
@@ -185,7 +180,7 @@ if($_tipo == 'A') {
 			if(data)
 				$("#tab_horario").html(data);
 		});
-	}
+	};
 	<?php if($Usr !== null) { ?>
 	var Enviar_Mensagem = function() {
 		var mensagem = $("#mensagem").val();
@@ -202,7 +197,7 @@ if($_tipo == 'A') {
 			$("#enviar_mensagem").show();
 		});
 		return false;
-	}
+	};
 	<?php } ?>
 	$(document).ready(function() {
 		<?php if(($Usr !== null) && ($Usr->Quase_Amigo($_Usuario)) !== false) { ?>

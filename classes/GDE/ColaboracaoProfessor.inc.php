@@ -66,8 +66,9 @@ class ColaboracaoProfessor extends Base {
 	 */
 	protected $data;
 
-	const STATUS_NOVA = 'n';
-	const STATUS_RECUSADO = 'r';
+	const STATUS_AUTORIZADA = 'a';
+	const STATUS_PENDENTE = 'p';
+	const STATUS_RECUSADA = 'r';
 
 	/**
 	 * @param $id_professor
@@ -81,35 +82,9 @@ class ColaboracaoProfessor extends Base {
 		$query = self::_EM()->createQuery($dql)
 			->setParameter(1, $id_professor)
 			->setParameter(2, $campo)
-			->setParameter(3, self::STATUS_RECUSADO);
+			->setParameter(3, self::STATUS_RECUSADA);
 
 		return ($query->getSingleScalarResult() > 0);
-	}
-
-	/**
-	 * @param $id_professor
-	 * @param $campo
-	 * @param bool $vazio
-	 * @return ColaboracaoProfessor|null
-	 */
-	public static function Pega_Colaboracao($id_professor, $campo, $vazio = true) {
-		$dql = 'SELECT COUNT(C.id_colaboracao) FROM GDE\\ColaboracaoProfessor AS C '.
-			'WHERE C.professor = ?1 AND C.campo = ?2 AND C.status != ?3';
-
-		$query = self::_EM()->createQuery($dql)
-			->setParameter(1, $id_professor)
-			->setParameter(2, $campo)
-			->setParameter(3, self::STATUS_NOVA)
-			->setMaxResults(1);
-
-		$Colaboracao = $query->getOneOrNullResult();
-
-		if($Colaboracao !== null)
-			return $Colaboracao;
-		elseif($vazio === true)
-			return new self;
-		else
-			return null;
 	}
 
 }

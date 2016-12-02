@@ -913,10 +913,13 @@ class Usuario extends Base {
 		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM GDE\\Usuario U WHERE U.ultimo_acesso >= ?1')
 			->setParameter(1, $Data)
 			->getSingleScalarResult();
-		// ToDo
-		/*$recorde = $db->Execute("SELECT max_online FROM gde_dados WHERE id = 1");
-		if($recorde->fields['max_online'] < $online)
-			$db->Execute("UPDATE gde_dados SET max_online = '".$online."', max_online_ts = '".$db->BindTimeStamp(time())."' WHERE id = 1");*/
+		// Recorde
+		$Dados = Dado::Load(1);
+		if($Dados->getMax_Online(false) < $online) {
+			$Dados->setMax_Online($online);
+			$Dados->setMax_Online_TS();
+			$Dados->Salvar(true);
+		}
 		return $online;
 	}
 

@@ -22,13 +22,11 @@ $oferecimento_pagina = $Oferecimento->getPagina();
 $html_oferecimento_pagina = '';
 
 if($oferecimento_pagina == null) {
-	// ToDo
-	/*if(ColaboracaoOferecimento::Existe_Colaboracao($Oferecimento->getID(), 'pagina') == false) {
+	if(ColaboracaoOferecimento::Existe_Colaboracao($Oferecimento->getID(), 'pagina') == false) {
 		$html_oferecimento_pagina = '<input id="pagina_valor" type="text" class="valor_colaborar"><a href="#" id="pagina_colaborar" class="link_colaborar">Colaborar</a>';
 	} else {
-		$tmp = ColaboracaoOferecimento::Pega_Colaboracao($Oferecimento->getID(), 'pagina');
 		$html_oferecimento_pagina = 'Colaboracao pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.';
-	}*/
+	}
 } else
 	$html_oferecimento_pagina = "<a href='".$oferecimento_pagina."' target='_blank'>".$oferecimento_pagina."</a>"; //.' <a href="#" id="pagina_reclamar" class="link_reclamar">Reclamar</a>';
 
@@ -45,7 +43,7 @@ if($oferecimento_pagina == null) {
 
 		var Informacoes = function() {
 			$("#tab_disciplina").load('<?= CONFIG_URL; ?>disciplina/?id=<?= urlencode($Oferecimento->getSigla()); ?>&of #tabela_informacoes');
-		}
+		};
 
 		var Carrega = function(tp, pg) {
 			$("#lista_alunos").Carregando();
@@ -57,14 +55,14 @@ if($oferecimento_pagina == null) {
 			tipo = tp;
 			paginacao = pg;
 			Lista_Alunos();
-		}
+		};
 
 		var Lista_Alunos = function() {
 			$("#lista_alunos").Carregando();
 			var filtro = (!$("#filtro_nome").hasClass('padrao'));
 			var amigos = ($("#apenas_amigos").is(':checked') > 0)?'t':'f';
 			$("#lista_alunos").load("<?= CONFIG_URL; ?>ajax/busca.php", {t: 'alunos', nome: ((filtro) ? $("#filtro_nome").val() : ''), amigos: amigos, id_oferecimento: '<?= $Oferecimento->getID(); ?>', tpres: tipo, p: paginacao, buscar: ''});
-		}
+		};
 
 		$(document).ready(function() {
 			$("#tabs").tabs({
@@ -73,10 +71,6 @@ if($oferecimento_pagina == null) {
 						Informacoes();
 						carregou_informacoes = true;
 					}
-					/*if((ui.panel.id == 'tab_forum') && (!carregou_forum)) {
-						Atualizar_Forum('<?= $_GET['id'] ?>', 'o');
-						carregou_forum = true;
-					}*/
 				},
 				select: function(event, ui) {
 					window.location.hash = ui.tab.hash;

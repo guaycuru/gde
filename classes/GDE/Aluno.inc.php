@@ -100,9 +100,30 @@ class Aluno extends Base {
 	 */
 	protected $modalidade_pos;
 
-	private static $_niveis = array('G' => 'Gradua&ccedil;&atilde;o', 'T' => 'Tecnologia', 'E' => 'Egressado', 'M' => 'Mestrado', 'D' => 'Doutorado', 'P' => 'Aluno Especial', 'S' => 'Mestrado Profissional');
-	private static $_niveis_grad = array('G' => 'Gradua&ccedil;&atilde;o', 'T' => 'Tecnologia', 'E' => 'Egressado');
-	private static $_niveis_pos = array('M' => 'Mestrado', 'D' => 'Doutorado', 'P' => 'Aluno Especial', 'E' => 'Egressado');
+	const NIVEL_EGRESSADO = 'E';
+	const NIVEL_GRAD = 'G';
+	const NIVEL_POS = 'P';
+
+	private static $_niveis = array(
+		'G' => 'Gradua&ccedil;&atilde;o',
+		'T' => 'Tecnologia',
+		self::NIVEL_EGRESSADO => 'Egressado',
+		'M' => 'Mestrado',
+		'D' => 'Doutorado',
+		'P' => 'Aluno Especial',
+		'S' => 'Mestrado Profissional'
+	);
+	private static $_niveis_grad = array(
+		'G' => 'Gradua&ccedil;&atilde;o',
+		'T' => 'Tecnologia',
+		//self::NIVEL_EGRESSADO => 'Egressado'
+	);
+	private static $_niveis_pos = array(
+		'M' => 'Mestrado',
+		'D' => 'Doutorado',
+		'P' => 'Aluno Especial',
+		//self::NIVEL_EGRESSADO => 'Egressado'
+	);
 
 	/**
 	 * Consultar
@@ -210,9 +231,25 @@ class Aluno extends Base {
 	 * @return null|string
 	 */
 	public function getNivel($nome = false) {
-		if($this->nivel == null)
+		$nivel = parent::getNivel(false);
+		if($nivel == null)
 			return null;
-		return (($nome) && (isset(self::$_niveis[$this->nivel]))) ? self::$_niveis[$this->nivel] : $this->nivel;
+		return (($nome) && (isset(self::$_niveis[$nivel])))
+			? self::$_niveis[$nivel]
+			: $nivel;
+	}
+
+	/**
+	 * @param bool $nome
+	 * @return null|string
+	 */
+	public function getNivel_Pos($nome = false) {
+		$nivel = parent::getNivel_Pos(false);
+		if($nivel == null)
+			return null;
+		return (($nome) && (isset(self::$_niveis[$nivel])))
+			? self::$_niveis[$nivel]
+			: $nivel;
 	}
 
 	/**
@@ -227,8 +264,8 @@ class Aluno extends Base {
 	 * @return string
 	 */
 	public function getOferecimentos($periodo = null, $niveis = array(), $formatado = false, $links = true) {
-		if($niveis == 'G')
-			$niveis = array('G', 'T');
+		if($niveis == self::NIVEL_GRAD)
+			$niveis = array_keys(self::$_niveis_grad);
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
@@ -279,8 +316,8 @@ class Aluno extends Base {
 	 * @return string
 	 */
 	public function getTrancadas($periodo = null, $niveis = array(), $formatado = false) {
-		if($niveis == 'G')
-			$niveis = array('G', 'T');
+		if($niveis == self::NIVEL_GRAD)
+			$niveis = array_keys(self::$_niveis_grad);
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
@@ -327,8 +364,8 @@ class Aluno extends Base {
 	 * @return array
 	 */
 	public function Monta_Horario($periodo = null, $niveis = array()) {
-		if($niveis == 'G')
-			$niveis = array('G', 'T');
+		if($niveis == self::NIVEL_GRAD)
+			$niveis = array_keys(self::$_niveis_grad);
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 		$Lista = array();

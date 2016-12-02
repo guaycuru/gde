@@ -35,8 +35,8 @@ if($Periodos !== null) {
 }
 
 if($_tipo == 'A') {
-	$Aluno = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Aluno::Load(intval($_POST['ra'])) : $_Usuario->getAluno(true);
-	$Usuario = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Usuario::Por_RA(intval($_POST['ra']), false, true) : $_Usuario;
+	$Aluno = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Aluno::Load($_POST['ra']) : $_Usuario->getAluno(true);
+	$Usuario = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Usuario::Por_RA($_POST['ra'], false, true) : $_Usuario;
 	/* if(($Usuario === false) && ($_Usuario->getCompartilha('horario') != 't') && ($_Usuario->getAdmin() === false))
 		die("Voc&ecirc; n&atilde;o pode ver o Hor&aacute;rio deste(a) Aluno(a) devido &agrave;s suas configura&ccedil;&otilde;es de compartilhamento de hor&aacute;rio.");
 	elseif($Usuario !== false) { */
@@ -44,10 +44,10 @@ if($_tipo == 'A') {
 		if($pode_ver[0] === false)
 			die("Voc&ecirc; n&atilde;o pode ver o Hor&aacute;rio deste(a) Aluno(a) devido &agrave;s ".(($pode_ver[1] == 1) ? "suas" : "")." configura&ccedil;&otilde;es de compartilhamento de hor&aacute;rio".(($pode_ver[1] == 2) ? " dele(a)" : "")."! Para mais informa&ccedil;&otilde;es, consulte o site da DAC.");
 	//}
-	$tem_grad = ($Aluno->getNivel() != null);
-	$tem_pos = ($Aluno->getNivel_Pos() != null);
-	if((!isset($_POST['n'])) || ($_POST['n'] == null)) {
-		$nivel = (($tem_pos) && ($Aluno->getNivel_Pos() != 'E') && (($Aluno->getNivel() == 'E') || ($Aluno->getNivel() == null))) ? 'P' : 'G';
+	$tem_grad = ($Aluno->getNivel(false) != null);
+	$tem_pos = ($Aluno->getNivel_Pos(false) != null);
+	if(empty($_POST['n'])) {
+		$nivel = (($tem_pos) && ($Aluno->getNivel_Pos(false) != Aluno::NIVEL_EGRESSADO) && (($Aluno->getNivel(false) == Aluno::NIVEL_EGRESSADO) || ($Aluno->getNivel(false) == null))) ? Aluno::NIVEL_POS : Aluno::NIVEL_GRAD;
 	} else
 		$nivel = $_POST['n'][0];
 	$Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $nivel);

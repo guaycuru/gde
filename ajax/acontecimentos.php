@@ -26,16 +26,16 @@ if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) ||
 	$grupos = ((isset($_POST['gr'])) && ($_POST['gr'] != null));
 	$gde = ((isset($_POST['gde'])) && ($_POST['gde'] != null));
 	$todas_respostas = ((isset($_POST['rt']) && ($_POST['rt'] == 1)));
-	// ToDo: Fix salvar
-	/*if(!isset($_POST['o'])) {
+	// ToDo: Testar salvar
+	if(!isset($_POST['o'])) {
 		$Usuario_Config = $_Usuario->getConfig(true);
 		$Usuario_Config->setAcontecimentos_Mensagens($mensagens);
 		$Usuario_Config->setAcontecimentos_Minhas($minhas);
 		$Usuario_Config->setAcontecimentos_Amigos($amigos);
 		$Usuario_Config->setAcontecimentos_Grupos($grupos);
 		$Usuario_Config->setAcontecimentos_GDE($gde);
-		$Usuario_Config->Salvar();
-	}*/
+		$Usuario_Config->Salvar(true);
+	}
 	$Usr = $_Usuario;
 	$Grupo = null;
 } elseif(isset($_POST['i'])) {
