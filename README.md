@@ -30,11 +30,18 @@ R: Segue a lista que vou manter atualizada:
 
 Funcionam as páginas:
 
+ - Contato (não testada)
+ - Convidar um Amigo (não testada)
+ - Disciplina
+ - Estatísticas (parcial)
  - Login
  - Inicial
- - Disciplina
+ - Mapa do Campus
  - Oferecimento
+ - Perfil (Usuário, Aluno e Professor)
+ - Perguntas Frequentes (FAQ)
  - Sala
+ - Sobre o GDE
 
 Ainda não funciona:
 
