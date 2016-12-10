@@ -1,19 +1,23 @@
 <?php
 
+// Dev Mode
+define('CONFIG_DEV_MODE', true);
+
+// DB
 define('CONFIG_DB_TYPE', 'mysqli');
-
 define('CONFIG_DB_HOST', '127.0.0.1');
-
 define('CONFIG_DB_USER', 'Web');
-
 define('CONFIG_DB_PASS', '');
-
 define('CONFIG_DB_NAME', 'gde');
+
+// Redis (desnecessario em Dev Mode)
+define('CONFIG_REDIS_HOST', '');
+define('CONFIG_REDIS_PORT', '');
 
 // URL base do sistema, tem que ter trailing slash
 define('CONFIG_URL', 'http://localhost/Web/gde/');
-
 define('CONFIG_URL_LOGIN', 'login/');
+define('CONFIG_URL_LOGIN_DAC', 'https://www.daconline.unicamp.br/pckAcadGDE/AppAcadGDE.jsp');
 
 // Tempo em segundos entre atualizacoes do ultimo acesso do usuario
 define('CONFIG_ACESSSO_ATUALIZAR', 300);
