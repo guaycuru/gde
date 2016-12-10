@@ -495,7 +495,7 @@ abstract class Base {
 										$value->{$_association['mappedBy']} = $this;
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY: // OneToMany
-									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof Doctrine\Common\Collections\ArrayCollection))))
+									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if(!empty($_association['mappedBy'])) {
@@ -504,7 +504,7 @@ abstract class Base {
 									}
 									// Convert value from array to ArrayCollection
 									if(is_array($value))
-										$value = new Doctrine\Common\Collections\ArrayCollection($value);
+										$value = new \Doctrine\Common\Collections\ArrayCollection($value);
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE: // ManyToOne
 									if((!is_object($value)) && (!is_null($value)))
@@ -515,7 +515,7 @@ abstract class Base {
 											$value->{'add'.$_association['inversedBy']}($this);
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
-									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof Doctrine\Common\Collections\ArrayCollection))))
+									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if(!empty($_association['mappedBy'])) {
@@ -526,7 +526,7 @@ abstract class Base {
 									}
 									// Convert value from array to ArrayCollection
 									if(is_array($value))
-										$value = new Doctrine\Common\Collections\ArrayCollection($value);
+										$value = new \Doctrine\Common\Collections\ArrayCollection($value);
 									break;
 							}
 						} else { // Scalar Property

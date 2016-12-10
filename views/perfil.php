@@ -53,8 +53,8 @@ if($Usr !== null) {
 }
 
 if($_tipo == 'A') {
-	$dados = Dado::Pega_Dados();
-	$Planejado_Proximo = ((($dados['planejador_periodo_proximo'] != null)) && (($Meu_Amigo !== false) || ($_Usuario->getAdmin() === true))) ? Periodo::Load($dados['planejador_periodo_proximo']) : false;
+	$planejador_periodo_proximo = Dado::Pega_Dados('planejador_periodo_proximo');
+	$Planejado_Proximo = ((($planejador_periodo_proximo != null)) && (($Meu_Amigo !== false) || ($_Usuario->getAdmin() === true))) ? Periodo::Load($planejador_periodo_proximo) : false;
 } elseif($_tipo == 'P') {
 	$Planejado_Proximo = false;
 

@@ -16,7 +16,6 @@ $Disciplina = Disciplina::Por_Sigla($_GET['id']);
 if($Disciplina === null)
 	die("Disciplina não encontrada!".$FIM);
 
-$pode = $_Usuario->Pode_Cursar($Disciplina);
 $cursada = $_Usuario->Eliminou($Disciplina);
 $eliminada = $_Usuario->Eliminada($Disciplina, true, true);
 
@@ -68,10 +67,6 @@ if(isset($_GET['m'])) {
 					Atualizar_Oferecimentos();
 					carregou_oferecimentos = true;
 				}
-				/*if((ui.panel.id == 'tab_forum') && (!carregou_forum)) {
-					Atualizar_Forum('<?= $Disciplina->getSigla(true); ?>', 'd');
-					carregou_forum = true;
-				}*/
 			},
 			select: function(event, ui) {
 				window.location.hash = ui.tab.hash;

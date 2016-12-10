@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -41,5 +42,21 @@ class Curso extends Base {
 	 */
 	protected $nome;
 
+	/**
+	 * Listar
+	 *
+	 * @param array $niveis
+	 * @return ArrayCollection
+	 */
+	public static function Listar($niveis = array()) {
+		$dql = 'SELECT C FROM GDE\\Curso C ';
+		if(count($niveis) > 0)
+			$dql .= 'WHERE C.nivel IN (?1) ';
+		$dql .= 'ORDER BY C.nome ASC';
+		$query = self::_EM()->createQuery($dql);
+		if(count($niveis) > 0)
+			$query->setParameter(1, $niveis);
+		return $query->getResult();
+	}
 
 }

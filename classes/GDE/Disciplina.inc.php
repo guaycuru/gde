@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -122,6 +123,11 @@ class Disciplina extends Base {
 	 */
 	protected $max_reprovacoes = '0';
 
+	const NIVEL_GRAD = 'G';
+	const NIVEL_POS = 'P';
+	const NIVEL_S = 'S';
+	const NIVEL_TEC = 'T';
+
 	/**
 	 * Por_Sigla
 	 *
@@ -133,10 +139,13 @@ class Disciplina extends Base {
 	 * @return self
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
-		if($nivel != null)
+		if($nivel != null) {
 			// Se temos nivel podemos fazer a busca por unique
-			return self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
-		else {
+			$Disciplina = self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
+			if(($Disciplina === null) && ($vazio === true))
+				return new self;
+			return $Disciplina;
+		} else {
 			// Se o nivel nao foi fornecido, pegamos a primeira encontrada
 			$Disciplinas = self::FindBy(array('sigla' => $sigla));
 			if(count($Disciplinas) > 0)
@@ -186,7 +195,7 @@ class Disciplina extends Base {
 		$de_pos = in_array($this->getNivel(false), array('M', 'D', 'S'));
 
 		if($formatado === false) { // Se nao eh formatado, retorna soh os do Catalogo do Usuario
-			$catalogo = ($de_pos) ? 'P' : $Usuario->getCatalogo(false);
+			$catalogo = ($de_pos) ? self::NIVEL_POS : $Usuario->getCatalogo(false);
 			// Carrega apenas os Conjuntos do Catalogo em questao
 			$criteria = Criteria::create()->where(Criteria::expr()->eq("catalogo", $catalogo));
 			$organizados = self::Organiza_Pre_Conjuntos($this->getPre_Conjuntos()->matching($criteria));
@@ -205,7 +214,7 @@ class Disciplina extends Base {
 						$url_sigla = htmlspecialchars($pre[2])." (?)";
 					} else {
 						$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
-						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla() . "\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
+						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
 					}
 					if($pre[1] === true)
 						$pres[$n][] = "*".$url_sigla;

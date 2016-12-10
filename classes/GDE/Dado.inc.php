@@ -237,11 +237,29 @@ class Dado extends Base {
 	 */
 	protected $max_online_ts;
 
-	public static function Pega_Dados() {
+	/**
+	 * @param null $campo
+	 * @return array|null
+	 */
+	public static function Pega_Dados($campo = null) {
 		$Dados = self::Load(1);
 		if($Dados === null)
 			return array();
-		return get_object_vars($Dados);
+		$array = get_object_vars($Dados);
+		if($campo == null)
+			return $array;
+		return (isset($array[$campo])) ? $array[$campo] : null;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function Limites_Catalogo() {
+		$Dados = self::Load(1);
+		return array(
+			'min' => $Dados->getMin_Catalogo(false),
+			'max' => $Dados->getMax_Catalogo(false)
+		);
 	}
 
 }

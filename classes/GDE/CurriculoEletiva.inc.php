@@ -1,0 +1,146 @@
+<?php
+
+namespace GDE;
+
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * CurriculosEletiva
+ *
+ * @ORM\Table(name="gde_curriculos_eletivas")
+ * @ORM\Entity
+ */
+class CurriculoEletiva extends Base {
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="id_eletivas", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Id
+	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 */
+	protected $id_eletivas;
+
+	/**
+	 * @var CurriculoEletivaConjunto
+	 *
+	 * @ORM\OneToMany(targetEntity="CurriculoEletivaConjunto", mappedBy="eletiva")
+	 */
+	protected $conjuntos;
+
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="curso", type="smallint", nullable=false)
+	 */
+	protected $curso;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(name="modalidade", type="string", length=2, nullable=true)
+	 */
+	protected $modalidade;
+
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="catalogo", type="smallint", options={"unsigned"=true}), nullable=false)
+	 */
+	protected $catalogo;
+
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(name="creditos", type="smallint", options={"unsigned"=true}), nullable=false)
+	 */
+	protected $creditos;
+
+	const TIPO_FECHADA = 1;
+	const TIPO_SEMI_LIVRE = 2;
+	const TIPO_LIVRE = 3;
+
+	/**
+	 * Consultar
+	 *
+	 * @param $param
+	 * @return mixed
+	 */
+	public static function Consultar($param) {
+		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C ';
+		if($param['curso'] == 51) {
+			$dql .= 'WHERE C.curso = 28 AND C.semestre < 4 ';
+		} else
+			$dql .= 'WHERE C.curso = :curso ';
+		if(empty($param['modalidade'])) {
+			$dql .= 'AND C.modalidade IS NULL ';
+			unset($param['modalidade']);
+		} else
+			$dql .= 'AND C.modalidade = :modalidade ';
+		$dql .= 'AND C.catalogo = :catalogo ';
+		$dql .= 'ORDER BY C.id_eletivas ASC';
+		return self::_EM()->createQuery($dql)
+			->setParameters($param)
+			->getResult();
+	}
+
+	/**
+	 * Bate_Eletiva
+	 *
+	 * Determina se uma $sigla pode ser contada para $eletiva
+	 *
+	 * @param $eletiva
+	 * @param $sigla
+	 * @param string $semi
+	 * @return bool
+	 */
+	public static function Bate_Eletiva($eletiva, $sigla, $semi = '?') {
+		if($semi === '?')
+			$semi = (strpos($eletiva, '-') !== false);
+		if($semi === false)
+			return ($sigla == $eletiva);
+		$len = strlen($eletiva);
+		for($i = 0; $i < $len; $i++) {
+			if($eletiva[$i] == '-')
+				continue;
+			if($eletiva[$i] != $sigla[$i])
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * getCOnjuntos
+	 *
+	 * @param bool $vazio
+	 * @return ArrayCollection
+	 */
+	public function getConjuntos($vazio = false) {
+		$Conjuntos = parent::getConjuntos();
+		if(($Conjuntos->isEmpty() === false) || ($vazio === false))
+			return $Conjuntos;
+		$Conjunto = new CurriculoEletivaConjunto();
+		$Conjunto->setSigla('-----');
+		return new ArrayCollection(array($Conjunto));
+	}
+
+	/**
+	 * getTipo
+	 *
+	 * Determina se eh uma eletiva fechada, livre ou semi livre
+	 *
+	 * @return int
+	 */
+	public function getTipo() {
+		if($this->getConjuntos()->isEmpty() === false) {
+			foreach($this->getConjuntos() as $Conjunto) {
+				if(strpos($Conjunto->getSigla(false), '-') !== false)
+					return self::TIPO_SEMI_LIVRE;
+			}
+			return self::TIPO_FECHADA;
+		} else {
+			return self::TIPO_LIVRE;
+		}
+	}
+
+}

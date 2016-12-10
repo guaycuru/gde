@@ -1106,8 +1106,41 @@ class Usuario extends Base {
 	 * @return bool
 	 */
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
-		// ToDo
-		return true;
+		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!
+		if(($this->Eliminada($Disciplina, false) !== false) && ($Disciplina->getNivel(false) != Disciplina::NIVEL_POS)) {
+			if($obs !== false)
+				$obs = 'ja_cursou';
+			return false;
+		}
+		$Pre = $Disciplina->getPre_Requisitos($this);
+		if(count($Pre) == 0)
+			return true;
+		$soh_aa200 = false;
+		foreach($Pre as $conjunto) {
+			$sobrou = false;
+			foreach($conjunto as $pre) {
+				$aa200 = false;
+				if($this->Eliminou($pre[0], $pre[1]) === false) {
+					$sobrou = true;
+					break; // Vai pro proximo conjunto, este esta incompleto!
+				} elseif($pre[0]->getSigla(false) == 'AA200')
+					$aa200 = true;
+			}
+			if($sobrou === false) { // Nao sobrou pre requisito
+				if($aa200 === false)
+					return true;
+				else
+					$soh_aa200 = true;
+			}
+		}
+		if($soh_aa200) { // Nao sobrou pre requisito, mas tinha AA200
+			if($obs !== false)
+				$obs = 'AA200';
+			return true;
+		}
+		if($obs !== false)
+			$obs = 'falta_pre';
+		return false;
 	}
 
 	/**
@@ -1127,12 +1160,24 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
 	 * @param bool $novo_formato
-	 * @return bool
+	 * @return UsuarioEliminada|false
 	 */
 	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false) {
 		if($Disciplina->getID() == null)
 			return false;
-		// ToDo
+
+		$criteria = Criteria::create()->where(Criteria::expr()->eq("disciplina", $Disciplina));
+		$criteria->setMaxResults(1);
+
+		$Eliminadas = $this->getEliminadas()->matching($criteria);
+		$Eliminada = ($Eliminadas->isEmpty()) ? null : $Eliminadas->first();
+		if(
+			($Eliminada !== null) &&
+			(($parcial === true) ||	($Eliminada->getParcial(false) === false))
+		)
+			return ($novo_formato)
+				? $Eliminada
+				: $Eliminada->toOld();
 		return false;
 	}
 
@@ -1143,12 +1188,26 @@ class Usuario extends Base {
 	 *
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
-	 * @return bool
+	 * @return array|false
 	 */
-	public function Eliminou(Disciplina $Disciplina, $parcial = false) { // array(array(array(Disc, proficiencia), array(Disc, proficiencia)), equivalencia)
+	public function Eliminou(Disciplina $Disciplina, $parcial = false) {
 		if($Disciplina->getID() == null)
 			return false;
-		// ToDo
+		// array(array(array(Disc, proficiencia), array(Disc, proficiencia)), equivalencia)
+		$eliminada = $this->Eliminada($Disciplina, $parcial, false);
+		if($eliminada !== false)
+			return array(array($eliminada), false);
+		$Equivalentes = $Disciplina->getEquivalentes(false);
+		foreach($Equivalentes as $conjunto) {
+			$ret = array();
+			foreach($conjunto as $Disc) {
+				$eliminada = $this->Eliminada($Disc, $parcial, false);
+				if($eliminada !== false)
+					$ret[] = $eliminada;
+			}
+			if(count($ret) == count($conjunto))
+				return array($ret, true);
+		}
 		return false;
 	}
 

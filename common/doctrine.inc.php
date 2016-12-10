@@ -17,14 +17,20 @@ $loader->register();
 unset($loader);
 
 // Initialize the caching mechanism
-if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === true))
-	$_cache = new \Doctrine\Common\Cache\ArrayCache;
-else {
+$arrayCache = new \Doctrine\Common\Cache\ArrayCache;
+if((defined('CONFIG_DEV_MODE')) && (CONFIG_DEV_MODE === false)) {
 	$redis = new Redis();
 	$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
-	$_cache = new \Doctrine\Common\Cache\RedisCache;
-	$_cache->setRedis($redis);
-}
+	$redisCache = new \Doctrine\Common\Cache\RedisCache;
+	$redisCache->setRedis($redis);
+	$_cache = new \Doctrine\Common\Cache\ChainCache([
+		$arrayCache,
+		$redisCache
+	]);
+	unset($redisCache);
+} else
+	$_cache = $arrayCache;
+unset($arrayCache);
 
 // Load Annotation Registry
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
@@ -47,7 +53,7 @@ $annotationDriver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
 
 // Create a driver chain for metadata reading
 $driver = new Doctrine\ORM\Mapping\Driver\DriverChain();
-	
+
 // Register annotation driver for our application Entity namespace
 $driver->addDriver($annotationDriver, $_namespace);
 unset($annotationDriver);
@@ -62,7 +68,7 @@ $config->setProxyDir(__DIR__.'/../proxies');
 $config->setProxyNamespace('Proxies');
 
 // Set the appropriated Proxy auto-generating method
-if((defined('CONFIG_DEV_MODE')) && (CONFIG_DEV_MODE === true))
+if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === true))
 	$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_ALWAYS);
 else
 	$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
@@ -84,7 +90,8 @@ $connection = array(
 $_EM = EntityManager::create($connection, $config);
 
 // Set the Entity Manager in the Base class
-GDE\Base::_EM($_EM);
+$_Base = ($_namespace != null) ? '\\'.$_namespace.'\\Base' : 'Base';
+$_Base::_EM($_EM);
 
 // Unset non-global variables
 unset($config, $driver, $connection);

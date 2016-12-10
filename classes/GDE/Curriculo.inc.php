@@ -21,9 +21,10 @@ class Curriculo extends Base {
 	protected $id_curriculo;
 
 	/**
-	 * @var boolean
+	 * @var Curso
 	 *
-	 * @ORM\Column(name="curso", type="boolean", nullable=false)
+	 * @ORM\ManyToOne(targetEntity="Curso")
+	 * @ORM\JoinColumn(name="id_curso", referencedColumnName="id_curso")
 	 */
 	protected $curso;
 
@@ -49,11 +50,61 @@ class Curriculo extends Base {
 	protected $sigla;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
-	 * @ORM\Column(name="semestre", type="boolean", nullable=false)
+	 * @ORM\Column(name="semestre", type="smallint", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $semestre;
 
+	/**
+	 * @param $param
+	 * @return mixed
+	 */
+	public static function Consultar($param) {
+		$dql = 'SELECT C FROM GDE\\Curriculo C INNER JOIN C.curso U ';
+		if($param['curso'] == 51) {
+			$dql .= 'WHERE U.numero = 28 AND C.semestre < 4 ';
+		} else
+			$dql .= 'WHERE U.numero = :curso ';
+		if(empty($param['modalidade'])) {
+			$dql .= 'AND C.modalidade IS NULL ';
+			unset($param['modalidade']);
+		} else
+			$dql .= 'AND C.modalidade = :modalidade ';
+		$dql .= 'AND C.catalogo = :catalogo ';
+		$dql .= 'ORDER BY C.semestre ASC';
+		return self::_EM()->createQuery($dql)
+			->setParameters($param)
+			->getResult();
+	}
 
+	/**
+	 * @param $curso
+	 * @param $modalidade
+	 * @param $catalogo
+	 * @return bool
+	 */
+	public static function Existe($curso, $modalidade, $catalogo) {
+		// Se for cursao, utilizar o curriculo da matematica aplicada
+		if($curso == 51)
+			$curso = 28;
+		$dql = 'SELECT COUNT(C) FROM GDE\\Curriculo C INNER JOIN C.curso U '.
+			'WHERE U.numero = ?1 '.
+			'AND C.modalidade '.(($modalidade == null) ? 'IS NULL ' : '= ?2 ').
+			'AND C.catalogo = ?3';
+		$query = self::_EM()->createQuery($dql);
+		$query->setParameter(1, $curso);
+		$query->setParameter(3, $catalogo);
+		if($modalidade != null)
+			$query->setParameter(2, $modalidade);
+		return ($query->getSingleScalarResult() > 0);
+	}
+
+	/**
+	 * @param bool $vazio
+	 * @return Disciplina
+	 */
+	public function getDisciplina($vazio = false) {
+		return Disciplina::Por_Sigla($this->getSigla(false), $this->getCurso(true)->getNivel(false), $vazio);
+	}
 }

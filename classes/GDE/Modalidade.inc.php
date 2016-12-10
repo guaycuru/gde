@@ -56,5 +56,18 @@ class Modalidade extends Base {
 	 */
 	protected $nome;
 
+	public static function Listar($nivel, $curso, $catalogo = null) {
+		$dql = 'SELECT M FROM GDE\\Modalidade M INNER JOIN M.curso C '.
+			'WHERE M.nivel = ?1 AND C.numero = ?2 ';
+		if($catalogo != null)
+			$dql .= 'AND M.catalogo = ?3 ';
+		$dql .= 'GROUP BY M.sigla ORDER BY M.sigla ASC';
+		$query = self::_EM()->createQuery($dql);
+			$query->setParameter(1, $nivel);
+			$query->setParameter(2, $curso);
+		if($catalogo != null)
+			$query->setParameter(3, $catalogo);
+		return $query->getResult();
+	}
 
 }
