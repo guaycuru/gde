@@ -59,8 +59,8 @@ define('CONFIG_CHAT_SLEEPN', 15); // 15 -> 20
 // Periodo de espera antes que uma mensagem seja considerada offline (a.k.a. no limbo)
 define('CONFIG_TIMEOUT_MSG', 30);
 
-// Periodo de vida do Usuario na Session
-define('CONFIG_USUARIO_RELOAD', 180);
+// Chat ativo?
+define('CONFIG_CHAT_ATIVO', false);
 
 // Multiplicador do M
 define('CONFIG_AVALIACAO_M_MUL', 0.001);
@@ -68,7 +68,5 @@ define('CONFIG_AVALIACAO_M_MUL', 0.001);
 define('CONFIG_AVALIACAO_MINIMO', 3);
 
 define('CONFIG_NIVEL_LOG', 3);
-
-define('CONFIG_CHAT_ATIVO', true);
 
 define('CONFIG_FT_MIN_LENGTH', 3);
