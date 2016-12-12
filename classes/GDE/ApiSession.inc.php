@@ -14,7 +14,7 @@ class ApiSession extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="code", type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,42 +23,42 @@ class ApiSession extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="app", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $app;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sym_key", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $sym_key;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sym_iv", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $sym_iv;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sid", type="string", length=32, nullable=true)
+	 * @ORM\Column(type="string", length=32, nullable=true)
 	 */
 	protected $sid;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_usuario;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="rand", type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, nullable=false)
 	 */
 	protected $rand;
 

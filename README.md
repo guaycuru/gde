@@ -38,6 +38,7 @@ Funcionam as páginas:
  - Oferecimento
  - Perfil (Usuário, Aluno e Professor)
  - Perguntas Frequentes (FAQ)
+ - Planejador (pouco testado)
  - Sala
  - Sobre o GDE
 

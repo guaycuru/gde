@@ -14,7 +14,7 @@ class Enquete extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_enquete", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,35 +23,35 @@ class Enquete extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pergunta", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $pergunta;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="date", nullable=false)
+	 * @ORM\Column(type="date", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ativa", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativa = false;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="max_votos", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $max_votos = '1';
 

@@ -16,7 +16,7 @@ class ColaboracaoProfessor extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_colaboracao", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -41,28 +41,28 @@ class ColaboracaoProfessor extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="campo", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $campo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="valor", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $valor;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="status", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $status;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 

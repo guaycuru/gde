@@ -19,7 +19,7 @@ class CurriculoEletivaConjunto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -36,7 +36,7 @@ class CurriculoEletivaConjunto extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=5, nullable=false)
+	 * @ORM\Column(type="string", length=5, nullable=false)
 	 */
 	protected $sigla;
 
@@ -53,6 +53,17 @@ class CurriculoEletivaConjunto extends Base {
 			$Disciplina->setSigla($this->getSigla(false));
 			return $Disciplina;
 		}
+	}
+
+	/**
+	 * Fechada
+	 *
+	 * Retorna true se esta for uma disciplina fechada (sem - na sigla)
+	 *
+	 * @return bool
+	 */
+	public function Fechada() {
+		return (strpos($this->getSigla(false), '-') === false);
 	}
 
 }

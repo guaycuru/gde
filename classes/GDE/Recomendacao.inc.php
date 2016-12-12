@@ -14,7 +14,7 @@ class Recomendacao extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="chave", type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,14 +23,14 @@ class Recomendacao extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ra", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $ra;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="email", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $email;
 

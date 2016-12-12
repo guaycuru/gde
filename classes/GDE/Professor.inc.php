@@ -14,7 +14,7 @@ class Professor extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_professor", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -38,42 +38,42 @@ class Professor extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="matricula", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $matricula;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sala", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $sala;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="email", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $email;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pagina", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $pagina;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="lattes", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $lattes;
 

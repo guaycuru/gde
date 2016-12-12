@@ -14,7 +14,7 @@ class UsuarioEliminada extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_eliminada", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -49,21 +49,21 @@ class UsuarioEliminada extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="parcial", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $parcial = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="proficiencia", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $proficiencia = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $tipo;
 
@@ -108,11 +108,13 @@ class UsuarioEliminada extends Base {
 		$creditos = 0;
 		$ret = array('creditos' => 0, 'diff_creditos' => 0, 'siglas' => array());
 		foreach($Faltantes as $c => $Faltante) {
+			// Cria (ou usa uma copia anterior) desta CurriculoEletiva
+			$Faltantes[$c] = $Faltante = $Faltante->Copia();
 			$Conjunto = $Faltante->getConjuntos(true);
 			foreach($Conjunto as $indice => $Bloco) {
 				$sigla = $Bloco->getSigla(false);
 				$Disciplina = $Bloco->getDisciplina(true);
-				if(strpos($sigla, '-') === false) { // Fechada
+				if($Bloco->Fechada() === true) { // Fechada
 					$Eliminadas = $this->Elimina($Disciplina, $Possiveis);
 					if($Eliminadas !== false) {
 						foreach($Eliminadas as $Eli) {
@@ -128,7 +130,7 @@ class UsuarioEliminada extends Base {
 							unset($Faltantes[$c]);
 						else {
 							$Conjunto->remove($indice);
-							$Faltantes[$c]->setConjunto($Conjunto);
+							$Faltantes[$c]->setConjuntos($Conjunto);
 							$Faltantes[$c]->setCreditos($creditos);
 						}
 						$ret['eliminada'] = $sigla;

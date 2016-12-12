@@ -14,7 +14,7 @@ class GuruPergunta extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_pergunta", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,21 +23,21 @@ class GuruPergunta extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pergunta", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $pergunta;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="resposta", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $resposta;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="hora", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $hora;
 

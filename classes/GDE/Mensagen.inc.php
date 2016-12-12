@@ -14,7 +14,7 @@ class Mensagen extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_mensagem", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,14 +23,14 @@ class Mensagen extends Base {
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="texto", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $texto;
 

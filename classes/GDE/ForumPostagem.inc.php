@@ -14,7 +14,7 @@ class ForumPostagem extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_postagem", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,56 +23,56 @@ class ForumPostagem extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="titulo", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $titulo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="corpo", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $corpo;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_topico", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_topico;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_autor", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_autor;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_forum", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_forum;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="votos_pos", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $votos_pos = '0';
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="votos_neg", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $votos_neg = '0';
 

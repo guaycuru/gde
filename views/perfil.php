@@ -637,7 +637,7 @@ if($Usr !== null) {
 								</tr>
 								<tr>
 									<td width="30%"><strong>Modalidade:</strong></td>
-									<td><?= $Aluno->getModalidade(true)->getSigla(true); ?> - <?= $Aluno->getModalidade(true)->getNome(true); ?></td>
+									<td><?= $Aluno->getModalidade(true); ?></td>
 								</tr>
 								<tr>
 									<td width="30%"><strong>&Aacute;rvore / Integraliza&ccedil;&atilde;o:</strong></td>

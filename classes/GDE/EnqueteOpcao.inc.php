@@ -14,7 +14,7 @@ class EnqueteOpcao extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_opcao", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,14 +23,14 @@ class EnqueteOpcao extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="opcao", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $opcao;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ativa", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativa = false;
 

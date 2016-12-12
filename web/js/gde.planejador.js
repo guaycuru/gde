@@ -44,7 +44,7 @@ var InicializarPlanejador = function(id) {
 		leftEvent: 'mouseup',
 		query: "#hmenu_all"
 	});
-	$.post('../ajax/ax_planejador.php', {id: id, a: 'c', c: c, pp: periodo, pa: periodo_atual}, function(data) {
+	$.post(CONFIG_URL + 'ajax/planejador.php', {id: id, a: 'c', c: c, pp: periodo, pa: periodo_atual}, function(data) {
 		if(data == false) {
 			document.location = 'Planejador.php?id='+id;
 			return;
@@ -228,7 +228,7 @@ var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflit
 var PlanejadorAdicionarOferecimento = function(Oferecimento, sources, salvar) {
 	if(salvar) {
 		var tmp = $("#planejador_matriculas").CarregandoL();
-		$.post('../ajax/ax_planejador.php', {a: 'a', id: id_planejado, o: Oferecimento.id}, function(res) {
+		$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'a', id: id_planejado, o: Oferecimento.id}, function(res) {
 			tmp.remove();
 			if(res.ok == false) {
 				//PlanejadorRemoverOferecimento(Oferecimento, true, false);
@@ -268,7 +268,7 @@ var PlanejadorAdicionarOferecimento = function(Oferecimento, sources, salvar) {
 var PlanejadorRemoverOferecimento = function(Oferecimento, sources, salvar, automatico) {
 	if(salvar) {
 		var tmp = $("#planejador_matriculas").CarregandoL();
-		$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'r', o: Oferecimento.id}, function(res) {
+		$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'r', o: Oferecimento.id}, function(res) {
 			tmp.remove();
 			if(res.ok == false) {
 				//PlanejadorAdicionarOferecimento(Oferecimento, true, false);
@@ -351,7 +351,7 @@ var PlanejadorAdicionarExtraPopUpFechar = function(botao) {
 				var e = PlanejadorCriarNovoExtra($("#extra_novo_nome").val());
 			else
 				var e = $("#extra_lista_nomes").val();
-			$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'ae', c: Extras[e].cor, nome: Extras[e].nome, dia: $("#extra_dia_da_semana").val(), inicio: $("#extra_horario1").val()+':00', fim: $("#extra_horario2").val()+':00'}, function(res) {
+			$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ae', c: Extras[e].cor, nome: Extras[e].nome, dia: $("#extra_dia_da_semana").val(), inicio: $("#extra_horario1").val()+':00', fim: $("#extra_horario2").val()+':00'}, function(res) {
 				if(res !== false) 
 					PlanejadorAdicionarExtra(res);
 			});
@@ -388,7 +388,7 @@ var PlanejadorAdicionarEletiva = function(sigla, after) {
 		return;
 	esconde = $.guaycuru.aguarde();
 	$("#sigla_eletiva").val("");
-	$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'c', c: c, s: sigla}, function(data) {
+	$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'c', c: c, s: sigla}, function(data) {
 		if(data == false) {
 			window.location.reload();
 			return;
@@ -398,7 +398,7 @@ var PlanejadorAdicionarEletiva = function(sigla, after) {
 			after();
 		esconde();
 	});
-}
+};
 var PlanejadorBindMostrarInfo = function(elemento, Oferecimento) {
 	var DivTip = $("#planejador_divtip");
 	elemento.bind({
@@ -409,7 +409,7 @@ var PlanejadorBindMostrarInfo = function(elemento, Oferecimento) {
 			if(Oferecimento.total == '-1') {
 				Oferecimento.total = '?';
 				var qts_amigos = '?';
-				$.post('../ajax/ax_planejador.php', {a: 'cd', id: id_planejado, oid: Oferecimento.id}, function(data) {
+				$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'cd', id: id_planejado, oid: Oferecimento.id}, function(data) {
 					Oferecimento.total = data.total;
 					Oferecimento.Amigos = data.Amigos;
 					$("#divtip_amigos").html(Oferecimento.Amigos.length);
@@ -481,7 +481,7 @@ $(document).ready(function() {
 				var Oferecimento = $("#li_oferecimento_"+event.id).data('Oferecimento');
 				PlanejadorRemoverOferecimento(Oferecimento, true, true, false);
 			} else {
-				$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 're', ide: event.id.replace('extra_', '')}, function(res) {
+				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 're', ide: event.id.replace('extra_', '')}, function(res) {
 					if(res !== false)
 						PlanejadorRemoverExtra(event);
 				});
@@ -491,7 +491,7 @@ $(document).ready(function() {
 			if(($.fullCalendar.formatDate(event.start, 'd') != $.fullCalendar.formatDate(event.end, 'd')) && ($.fullCalendar.formatDate(event.end, 'H') != 0))
 				revertFunc();
 			else {
-				$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'r', dd: dayDelta, md: minuteDelta}, function(res) {
+				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'r', dd: dayDelta, md: minuteDelta}, function(res) {
 					if(res === false)
 						revertFunc();
 				});
@@ -501,7 +501,7 @@ $(document).ready(function() {
 			if(($.fullCalendar.formatDate(event.start, 'd') != $.fullCalendar.formatDate(event.end, 'd')) && ($.fullCalendar.formatDate(event.end, 'H') != 0))
 				revertFunc();
 			else {
-				$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'd', dd: dayDelta, md: minuteDelta}, function(res) {
+				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'd', dd: dayDelta, md: minuteDelta}, function(res) {
 					if(res === false)
 						revertFunc();
 				});
@@ -596,7 +596,7 @@ $(document).ready(function() {
 		$(this).find("input.configurar_parcial:checked").each(function(i, e) {
 			parciais[p++] = $(e).val();
 		});
-		$.post('../ajax/ax_planejador.php', {a: 'f', id: id_planejado, 'conf[]': config, 'parciais[]': parciais}, function(data) {
+		$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'f', id: id_planejado, 'conf[]': config, 'parciais[]': parciais}, function(data) {
 			window.location.reload();
 		})
 		return false;
@@ -604,7 +604,7 @@ $(document).ready(function() {
 	$("#compartilhado_t, #compartilhado_f").click(function() {
 		var v = $(this).val();
 		var tmp = $(this).CarregandoL();
-		$.post('../ajax/ax_planejador.php', {id: id_planejado, a: 'm', v: v}, function(res) {
+		$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'm', v: v}, function(res) {
 			if(res == false)
 				$("#compartilhado_"+((v == 'f')?'t':'f')).attr('checked', 'checked');
 			tmp.remove();
@@ -631,7 +631,7 @@ $(document).ready(function() {
 			$("#extra_novo_nome").hide();
 	});
 	$("#sigla_eletiva").Valor_Padrao('Digite a sigla ou o nome da disciplina.', 'padrao').Autocompletar({
-		json: '../ajax/ax_disciplinas.php',
+		json: CONFIG_URL + 'ajax/disciplinas.php',
 		data: {tp: 3},
 		idField: 'sigla',
 		valField: 'nome',
@@ -663,7 +663,7 @@ $(document).ready(function() {
 		var aguarde = $.guaycuru.aguarde();
 		var id = $(this).val();
 		if(id == 'n') {
-			$.post('../ajax/ax_planejador.php', {a: 'n', pp: periodo, pa: periodo_atual}, function(res) {
+			$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'n', pp: periodo, pa: periodo_atual}, function(res) {
 				if(res.ok === false)
 					window.location.reload();
 				else
@@ -674,7 +674,7 @@ $(document).ready(function() {
 	});
 	$(".planejador_excluir").click(function() {
 		$.guaycuru.simnao('Tem certeza que deseja excluir esta op&ccedil;&atilde;o?', function() {
-			$.post('../ajax/ax_planejador.php', {a: 'x', id: id_planejado}, function(res) {
+			$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'x', id: id_planejado}, function(res) {
 				if(res.ok === false)
 					window.location.reload();
 				else

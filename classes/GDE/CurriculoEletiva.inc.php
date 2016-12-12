@@ -15,7 +15,7 @@ class CurriculoEletiva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_eletivas", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -31,30 +31,33 @@ class CurriculoEletiva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="curso", type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 */
 	protected $curso;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="modalidade", type="string", length=2, nullable=true)
+	 * @ORM\Column(type="string", length=2, nullable=true)
 	 */
 	protected $modalidade;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="catalogo", type="smallint", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $catalogo;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="creditos", type="smallint", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $creditos;
+
+	// Determina se esta eh uma copia da entidade original, que pode ser modificada
+	private $_copia = false;
 
 	const TIPO_FECHADA = 1;
 	const TIPO_SEMI_LIVRE = 2;
@@ -132,8 +135,8 @@ class CurriculoEletiva extends Base {
 	 * @return int
 	 */
 	public function getTipo() {
-		if($this->getConjuntos()->isEmpty() === false) {
-			foreach($this->getConjuntos() as $Conjunto) {
+		if($this->getConjuntos(false)->isEmpty() === false) {
+			foreach($this->getConjuntos(false) as $Conjunto) {
 				if(strpos($Conjunto->getSigla(false), '-') !== false)
 					return self::TIPO_SEMI_LIVRE;
 			}
@@ -141,6 +144,21 @@ class CurriculoEletiva extends Base {
 		} else {
 			return self::TIPO_LIVRE;
 		}
+	}
+
+	/**
+	 * Copia
+	 *
+	 * Se esta ja eh uma copia, retorna-a, caso contraria, cria uma copia e retorna-a
+	 *
+	 * @return $this|CurriculoEletiva
+	 */
+	public function Copia() {
+		if($this->_copia === true)
+			return $this;
+		$Copia = clone $this;
+		$Copia->_copia = true;
+		return $Copia;
 	}
 
 }

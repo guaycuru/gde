@@ -14,7 +14,7 @@ class ChatConversa extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_chat_conversa", type="bigint", nullable=false)
+	 * @ORM\Column(type="bigint", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,28 +23,28 @@ class ChatConversa extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario_origem", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_usuario_origem;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario_destino", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_usuario_destino;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="session_usuario_origem", type="string", length=27, nullable=true)
+	 * @ORM\Column(type="string", length=27, nullable=true)
 	 */
 	protected $session_usuario_origem;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="session_usuario_destino", type="string", length=27, nullable=true)
+	 * @ORM\Column(type="string", length=27, nullable=true)
 	 */
 	protected $session_usuario_destino;
 

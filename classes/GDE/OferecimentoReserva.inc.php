@@ -14,7 +14,7 @@ class OferecimentoReserva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_reserva", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -39,7 +39,7 @@ class OferecimentoReserva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="catalogo", type="smallint", nullable=true)
+	 * @ORM\Column(type="smallint", nullable=true)
 	 */
 	protected $catalogo;
 

@@ -25,8 +25,8 @@ if(version_compare(PHP_VERSION, '5.5.0') < 0)
 // ToDo: Remover isto, usado soh para dev
 error_reporting(E_ALL & ~E_STRICT);
 
-/*session_name('GDE');
-session_start();*/
+session_name('GDES');
+session_start();
 
 if((defined('JSON')) && (JSON === true)) {
 	define('AJAX', true);
@@ -217,7 +217,7 @@ $(document).ready(function(){
 							<li><a href="<?= CONFIG_URL; ?>visoes/Avaliar.php">Avaliar Professores</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Eliminador.php">Eliminar Disciplinas</a></li>
 							<li><a href="<?= CONFIG_URL; ?>mapa/">Mapa do Campus</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Planejador.php">Planejador</a></li>
+							<li><a href="<?= CONFIG_URL; ?>planejador/">Planejador</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Rankings.php">Rankings</a></li>
 						</ul>
 					</li>

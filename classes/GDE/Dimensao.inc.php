@@ -14,7 +14,7 @@ class Dimensao extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_dimensao", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -38,14 +38,14 @@ class Dimensao extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="dia", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $dia;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="horario", type="smallint", options={"unsigned"=true}, nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $horario;
 

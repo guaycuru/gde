@@ -14,7 +14,7 @@ class Aluno extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ra", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 */
 	protected $ra;
@@ -65,38 +65,39 @@ class Aluno extends Base {
 	protected $curso_pos;
 
 	/**
-	 * @var Modalidade
-	 *
-	 * @ORM\ManyToOne(targetEntity="Modalidade")
-	 * @ORM\JoinColumn(name="id_modalidade", referencedColumnName="id_modalidade")
-	 */
-	protected $modalidade;
-
-	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nivel", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $nivel;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nivel_pos", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $nivel_pos;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="modalidade_pos", type="string", length=2, nullable=true)
+	 * Nao podemos utilizar uma Relation com Modalidade pois Aluno nao tem Catalogo
+	 *
+	 * @ORM\Column(type="string", length=32, nullable=false)
+	 */
+	protected $modalidade;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", length=32, nullable=true)
 	 */
 	protected $modalidade_pos;
 

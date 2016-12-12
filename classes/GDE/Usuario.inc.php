@@ -27,7 +27,7 @@ class Usuario extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -99,259 +99,259 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="login", type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, nullable=false)
 	 */
 	protected $login;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="senha", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $senha;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ra", type="integer", unique=true, options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $ra;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="matricula", type="integer", unique=true, options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $matricula;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sobrenome", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $sobrenome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome_completo", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $nome_completo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="email", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $email;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nivel", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $nivel;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="catalogo", type="smallint", nullable=true)
+	 * @ORM\Column(type="smallint", nullable=true)
 	 */
 	protected $catalogo;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ingresso", type="smallint", nullable=true)
+	 * @ORM\Column(type="smallint", nullable=true)
 	 */
 	protected $ingresso;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sexo", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $sexo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="foto", type="string", length=16, nullable=true)
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	protected $foto;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data_nascimento", type="date", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $data_nascimento;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="apelido", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $apelido;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="status", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $status;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="orkut", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $orkut;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="gtalk", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $gtalk;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="msn", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $msn;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="blog", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $blog;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="facebook", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $facebook;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="twitter", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $twitter;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="cidade", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $cidade;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="estado", type="string", length=2, nullable=true)
+	 * @ORM\Column(type="string", length=2, nullable=true)
 	 */
 	protected $estado;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="estado_civil", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $estado_civil;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="mais", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $mais;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="compartilha_arvore", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $compartilha_arvore = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="procurando_emprego", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $procurando_emprego = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="exp_profissionais", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $exp_profissionais;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="hab_pessoais", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $hab_pessoais;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="esp_tecnicas", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $esp_tecnicas;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="info_profissional", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $info_profissional;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="compartilha_horario", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $compartilha_horario = true;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="mudanca_horario", type="date", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $mudanca_horario;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="ultimo_acesso", type="datetime", nullable=true)
+	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $ultimo_acesso;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data_cadastro", type="datetime", nullable=true)
+	 * @ORM\Column(type="datetime", nullable=true)
 	 */
 	protected $data_cadastro;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="email_validado", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $email_validado = false;
 
@@ -359,28 +359,28 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="chat_status", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $chat_status = 'd';
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ativo", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativo = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="admin", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $admin = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="beta", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $beta = true;
 
@@ -413,6 +413,9 @@ class Usuario extends Base {
 	 * )
 	 */
 	protected $id_postagem;
+
+	// Determina se esta eh uma copia da entidade original, que pode ser modificada
+	private $_copia;
 
 	// Erros de login
 	const ERRO_LOGIN_NAO_ENCONTRADO = 1; // Usuario nao encontrado
@@ -500,6 +503,21 @@ class Usuario extends Base {
 		if($Usuario === null && $vazio === true)
 			return new self;
 		return $Usuario;
+	}
+
+	/**
+	 * Copia
+	 *
+	 * Se esta ja eh uma copia, retorna-a, caso contraria, cria uma copia e retorna-a
+	 *
+	 * @return $this|Usuario
+	 */
+	public function Copia() {
+		if($this->_copia === true)
+			return $this;
+		$Copia = clone $this;
+		$Copia->_copia = true;
+		return $Copia;
 	}
 
 	/**
@@ -1019,9 +1037,6 @@ class Usuario extends Base {
 	 * @return ArrayColection Autorizacoes de amizades pendentes
 	 */
 	public function Amigos_Pendentes() {
-		/*$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", false));
-		$criteria->andWhere(Criteria::expr()->eq("amigo", $this));
-		return $this->getAmigos()->matching($criteria);*/
 		return UsuarioAmigo::FindBy(array('amigo' => $this->getID(), 'ativo' => false));
 	}
 
@@ -1166,19 +1181,21 @@ class Usuario extends Base {
 		if($Disciplina->getID() == null)
 			return false;
 
-		$criteria = Criteria::create()->where(Criteria::expr()->eq("disciplina", $Disciplina));
-		$criteria->setMaxResults(1);
+		$dql = 'SELECT E FROM GDE\\UsuarioEliminada E WHERE E.usuario = ?1 AND E.disciplina = ?2';
+		$Eliminada = self::_EM()->createQuery($dql)
+			->setParameter(1, $this->getID())
+			->setParameter(2, $Disciplina->getID())
+			->getOneOrNullResult();
 
-		$Eliminadas = $this->getEliminadas()->matching($criteria);
-		$Eliminada = ($Eliminadas->isEmpty()) ? null : $Eliminadas->first();
 		if(
 			($Eliminada !== null) &&
 			(($parcial === true) ||	($Eliminada->getParcial(false) === false))
-		)
+		) {
 			return ($novo_formato)
 				? $Eliminada
 				: $Eliminada->toOld();
-		return false;
+		} else
+			return false;
 	}
 
 	/**
@@ -1306,6 +1323,18 @@ class Usuario extends Base {
 			return implode("<br />", $formatado);
 		} else
 			return "-";
+	}
+
+	// Soh pra Planejador... Nao salva!
+	public function Adicionar_Oferecimentos($Oferecimentos = array()) {
+		foreach($Oferecimentos as $Oferecimento)
+			$this->getAluno()->addOferecimentos($Oferecimento);
+	}
+
+	// Soh pra Planejador... Nao salva!
+	public function Remover_Oferecimentos($Oferecimentos = array()) {
+		foreach($Oferecimentos as $Oferecimento)
+			$this->getAluno()->removeOferecimentos($Oferecimento);
 	}
 
 }

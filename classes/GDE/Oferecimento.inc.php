@@ -14,7 +14,7 @@ class Oferecimento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_oferecimento", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -79,28 +79,28 @@ class Oferecimento extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="turma", type="string", length=2, nullable=false)
+	 * @ORM\Column(type="string", length=2, nullable=false)
 	 */
 	protected $turma;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="vagas", type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 */
 	protected $vagas = '0';
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="fechada", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $fechada = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pagina", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $pagina;
 
@@ -126,7 +126,7 @@ class Oferecimento extends Base {
 			if(strlen($param['sigla']) == 5) {
 				$qrs[] = "DI.sigla = :sigla";
 			} else {
-				$qrs[] = "M.sigla LIKE :sigla";
+				$qrs[] = "O.sigla LIKE :sigla";
 				$param['sigla'] = '%'.$param['sigla'].'%';
 			}
 		if(!empty($param['periodo'])) {
@@ -223,7 +223,7 @@ class Oferecimento extends Base {
 	public function Monta_Horario() {
 		$Lista = array();
 		foreach($this->getDimensoes() as $Dimensao)
-			$Lista[$Dimensao->getDia()][$Dimensao->getHorario()] = $Dimensao->getSala()->getNome(true);
+			$Lista[$Dimensao->getDia()][$Dimensao->getHorario()] = $Dimensao->getSala(true)->getNome(true);
 		return $Lista;
 	}
 
@@ -238,7 +238,7 @@ class Oferecimento extends Base {
 	public function Lista_Horarios($cru = false) {
 		$Lista = array();
 		foreach($this->getDimensoes() as $Dimensao)
-			$Lista[] = ($cru) ? $Dimensao->getDia().sprintf("%02d", $Dimensao->getHorario()) : array($Dimensao->getDia(), $Dimensao->getHorario(), $Dimensao->getSala()->getNome(true));
+			$Lista[] = ($cru) ? $Dimensao->getDia().sprintf("%02d", $Dimensao->getHorario()) : array($Dimensao->getDia(), $Dimensao->getHorario(), $Dimensao->getSala(true)->getNome(true));
 		return $Lista;
 	}
 
@@ -254,6 +254,31 @@ class Oferecimento extends Base {
 	 */
 	public static function Formata_Horario($Horario, $dia, $horario) {
 		return (isset($Horario[$dia][$horario])) ? (($Horario[$dia][$horario] != '????') ? "<a href=\"".CONFIG_URL."sala/".$Horario[$dia][$horario]."\">".$Horario[$dia][$horario]."</a>" : $Horario[$dia][$horario]) : "-";
+	}
+
+	/**
+	 * Viola_Reserva
+	 *
+	 * Determina se $Usuario cursar este Oferecimento violaria alguma reserva
+	 *
+	 * @param Usuario $Usuario
+	 * @return bool
+	 */
+	public function Viola_Reserva(Usuario $Usuario) {
+		if(count($this->getReservas()) == 0)
+			return false;
+		foreach($this->getReservas() as $Reserva) {
+			if(
+				($Reserva->getCurso(false) === null) ||
+				(
+					($Reserva->getCurso(true)->getID() == $Usuario->getCurso(true)->getID()) &&
+					(($Reserva->getCatalogo(false) == null) || ($Reserva->getCatalogo(false) == $Usuario->getCatalogo(false)))
+				)
+			) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
@@ -276,6 +301,43 @@ class Oferecimento extends Base {
 	 */
 	public function Desistencias() {
 		return $this->getAlunos_Trancadas()->count();
+	}
+
+	/**
+	 * @param bool $agrupar
+	 * @return array
+	 */
+	public function Eventos($agrupar = false) {
+		$Lista = array();
+		$fh = $lh = null;
+		$Horarios = $this->Monta_Horario();
+		ksort($Horarios);
+		foreach($Horarios as $dia => $Resto) {
+			ksort($Resto);
+			$horarios = array_keys($Resto);
+			sort($horarios);
+			$ch = count($horarios);
+			$fh = $lh = $horarios[0];
+			$sala = $salan = strtoupper($Resto[$horarios[0]]);
+			$j = 1;
+			for($i = 1; $i < $ch; $i++) {
+				if(($horarios[$i] == $fh + $j) && (($agrupar === true) || (strtoupper($Resto[$horarios[$i]]) == $sala))) {
+					if(strtoupper($Resto[$horarios[$i]]) != $sala) {
+						$sala = strtoupper($Resto[$horarios[$i]]);
+						$salan .= '/'.$sala;
+					}
+					$lh = $horarios[$i];
+					$j++;
+				} else {
+					$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');
+					$fh = $lh = $horarios[$i];
+					$j = 1;
+					$sala = strtoupper($Resto[$horarios[$i]]);
+				}
+			}
+			$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');
+		}
+		return $Lista;
 	}
 
 }

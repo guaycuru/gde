@@ -14,7 +14,7 @@ class UsuariosToken extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_token", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,14 +23,14 @@ class UsuariosToken extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="token", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $token;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data_criacao", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data_criacao;
 

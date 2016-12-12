@@ -14,7 +14,7 @@ class UsuarioConfig extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_config", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -31,49 +31,49 @@ class UsuarioConfig extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="avisos_aniversario", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $avisos_aniversario = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="avisos_forum", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $avisos_forum = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="acontecimentos_mensagens", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_mensagens = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="acontecimentos_minhas", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_minhas = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="acontecimentos_amigos", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_amigos = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="acontecimentos_grupos", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_grupos = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="acontecimentos_gde", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_gde = true;
 

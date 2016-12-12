@@ -14,7 +14,7 @@ class Aviso extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_aviso", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -43,49 +43,49 @@ class Aviso extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_postagem", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_postagem;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="titulo", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $titulo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $tipo;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="aba", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $aba = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="email", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $email = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="lido", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $lido = false;
 

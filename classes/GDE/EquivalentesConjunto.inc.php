@@ -14,7 +14,7 @@ class EquivalentesConjunto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_equivalente_conjunto", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -33,7 +33,7 @@ class EquivalentesConjunto extends Base {
 	 *
 	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas equivalentes que nao temos em nosso DB
 	 *
-	 * @ORM\Column(name="sigla", type="string", nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	protected $sigla;
 

@@ -15,7 +15,7 @@ class AvaliacaoPergunta extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_pergunta", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -31,14 +31,14 @@ class AvaliacaoPergunta extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pergunta", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $pergunta;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $tipo;
 
@@ -50,8 +50,11 @@ class AvaliacaoPergunta extends Base {
 	 * @param $tipo
 	 * @return mixed
 	 */
-	public static function Listar($tipo) {
-		return self::FindBy(array('tipo' => $tipo));
+	public static function Listar($tipo = null) {
+		$params = array();
+		if($tipo != null)
+			$params[] = array('tipo' => $tipo);
+		return self::FindBy($params);
 	}
 
 	public function getMedia($id_professor = null, $sigla = null, $cache = true) {

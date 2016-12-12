@@ -14,7 +14,7 @@ class SalasFoto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_sala_foto", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,14 +23,14 @@ class SalasFoto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_sala", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_sala;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="foto", type="string", length=100, nullable=false)
+	 * @ORM\Column(type="string", length=100, nullable=false)
 	 */
 	protected $foto;
 

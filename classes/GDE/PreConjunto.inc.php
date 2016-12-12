@@ -14,7 +14,7 @@ class PreConjunto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_conjunto", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -39,14 +39,14 @@ class PreConjunto extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=5, nullable=false)
+	 * @ORM\Column(type="string", length=5, nullable=false)
 	 */
 	protected $sigla;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="catalogo", type="string", length=4, nullable=false)
+	 * @ORM\Column(type="string", length=4, nullable=false)
 	 */
 	protected $catalogo;
 

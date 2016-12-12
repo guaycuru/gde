@@ -15,9 +15,8 @@ class Disciplina extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=5, nullable=false)
+	 * @ORM\Column(type="string", length=5, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
 	protected $sigla;
 
@@ -49,77 +48,77 @@ class Disciplina extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $nome;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="creditos", type="smallint", options={"unsigned"=true}, nullable=true)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=true)
 	 */
 	protected $creditos;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nivel", type="string", length=1, nullable=true)
+	 * @ORM\Column(type="string", length=1, nullable=true)
 	 */
 	protected $nivel;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="periodicidade", type="smallint", nullable=true)
+	 * @ORM\Column(type="smallint", nullable=true)
 	 */
 	protected $periodicidade;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="parte", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $parte = '0';
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ementa", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $ementa;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="bibliografia", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $bibliografia;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="quinzenal", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $quinzenal = false;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="cursacoes", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $cursacoes = '0';
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="reprovacoes", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $reprovacoes = '0';
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="max_reprovacoes", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $max_reprovacoes = '0';
 
@@ -155,6 +154,50 @@ class Disciplina extends Base {
 			else
 				return null;
 		}
+	}
+
+	public static function Consultar($param, $ordem = null, &$total = 0, $limit = '-1', $start = '-1', $tipo = 'AND') {
+		$qrs = $jns = array();
+		if($ordem == null)
+			$ordem = "D.sigla ASC";
+		if(isset($param['sigla'])) {
+			if(strlen($param['sigla']) == 5)
+				$qrs[] = "D.sigla = :sigla";
+			else {
+				$qrs[] = "D.sigla LIKE :sigla";
+				$param['sigla'] = '%'.$param['sigla'].'%';
+			}
+		}
+		if(isset($param['nome']))
+			$qrs[] = "D.nome LIKE :nome";
+		if(isset($param['nivel']))
+			$qrs[] = "D.nivel ".((is_array($param['nivel'])) ? "IN ('".implode("','", $param['nivel'])."')" : "= '".$param['nivel'][0]."'")."";
+		if(isset($param['instituto'])) {
+			$jns[] = "D.instituto AS I";
+			$qrs[] = "INNER JOIN I.id_instituto = :instituto";
+		}
+		if(isset($param['creditos']))
+			$qrs[] = "D.creditos = :creditos";
+		if(isset($param['periodicidade']))
+			$qrs[] = "D.periodicidade = :periodicidade";
+		if(isset($param['ementa'])) {
+			$qrs[] = "D.ementa LIKE :ementa";
+			$param['ementa'] = '%'.$param['ementa'].'%';
+		}
+		$where = (count($qrs) > 0) ? " WHERE ".implode(" ".$tipo." ", $qrs) : "";
+		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
+
+		if($total !== null) {
+			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM GDE\\Disciplina AS D ".$joins.$where;
+			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+		}
+		$dql = "SELECT DISTINCT D FROM GDE\\Disciplina AS D ".$joins.$where." ORDER BY ".$ordem;
+		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		if($limit > 0)
+			$query->setMaxResults($limit);
+		if($start > -1)
+			$query->setFirstResult($start);
+		return $query->getResult();
 	}
 
 	public static function Organiza(Disciplina $A, Disciplina $B) {

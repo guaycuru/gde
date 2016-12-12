@@ -14,7 +14,7 @@ class AvaliacaoRanking extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_ranking", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,42 +23,42 @@ class AvaliacaoRanking extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_pergunta", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_pergunta;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_professor", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_professor;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=5, nullable=true)
+	 * @ORM\Column(type="string", length=5, nullable=true)
 	 */
 	protected $sigla;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="ranking", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $ranking;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nota", type="decimal", precision=11, scale=10, nullable=false)
+	 * @ORM\Column(type="decimal", precision=11, scale=10, nullable=false)
 	 */
 	protected $nota;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="votos", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $votos;
 

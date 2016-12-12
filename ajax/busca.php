@@ -307,7 +307,7 @@ if($qts['alunos'] != 0) {
 				</tr>
 				<tr>
 					<td width="25%" height="20%"><strong>Modalidade:</strong></td>
-					<td height="20%"><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade()->getSigla(true)." - ".$Aluno->getModalidade()->getNome(true) : '-'; ?></td>
+					<td height="20%"><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade(true) : '-'; ?></td>
 				</tr>
 				<tr>
 					<td width="25%" height="20%"><strong>Curso P&oacute;s:</strong></td>
@@ -348,7 +348,7 @@ if($qts['alunos'] != 0) {
 		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"<strong>":null).$Aluno->getNome(true).(($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"</strong>":null) : $Aluno->getNome(true); ?></a></td>
 		<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true)." (".$Aluno->getCurso()->getNUmero(true).")" : '-'; ?></td>
-		<td><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade()->getSigla(true)." - ".$Aluno->getModalidade()->getNome(true) : '-'; ?></td>
+		<td><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade(true) : '-'; ?></td>
 		<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true)." (".$Aluno->getCurso_Pos()->getNumero(true).")" : '-'; ?></td>
 		<td><?= ($Aluno->getModalidade_Pos(false) !== null) ? $Aluno->getModalidade_Pos(true) : '-'; ?></td>
 	</tr>

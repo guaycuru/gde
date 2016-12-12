@@ -14,7 +14,7 @@ class Equivalente extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_equivalente", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */

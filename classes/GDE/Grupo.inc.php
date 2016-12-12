@@ -14,7 +14,7 @@ class Grupo extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_grupo", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,70 +23,70 @@ class Grupo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="apelido", type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, nullable=false)
 	 */
 	protected $apelido;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="descricao", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $descricao;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $tipo = 't';
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="foto", type="string", length=16, nullable=true)
+	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	protected $foto;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="site", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $site;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="facebook", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $facebook;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="orkut", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $orkut;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="twitter", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $twitter;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ativo", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativo = false;
 

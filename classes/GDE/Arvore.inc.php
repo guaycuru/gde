@@ -207,11 +207,12 @@ class Arvore {
 
 			// Verifica quais das possiveis eletivas sao realmente eletivas
 			foreach($Possiveis_Eletivas as $sigla => $Eliminada) {
+				//echo "<br />\n".$sigla." possivel eletiva (".count($Possiveis_Eletivas)." restantes): ";
 				if(in_array($sigla, $this->siglas_eletivas))
 					continue;
 				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas);
 				if($Elimina !== false) {
-					//echo "<br />Eletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
+					//echo "<br />\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
 					$this->siglas_eletivas = array_merge($this->siglas_eletivas, $Elimina['siglas']);
 					$this->creditos_eletivas_eliminados += $Elimina['creditos'];
 					// Se foram eliminados mais creditos do que eram necessarios, soma creditos nos creditos totais e evita que a arvore fique incorreta
@@ -220,7 +221,8 @@ class Arvore {
 						$this->creditos_totais += $Elimina['diff_creditos'];
 						$volta_eletivas += $Elimina['diff_creditos'];
 					}
-				}
+				} /*else
+					echo "Nao eliminada!";*/
 			}
 
 			// Adiciona ao numero de creditos cursados os creditos das eletivas cursadas
@@ -303,8 +305,6 @@ class Arvore {
 		$pr_x = $x2 + ($consts['largura'] / 2);
 		$pr_y = $y2 - 2;
 		imagelinethick($image, $de_x, $de_y, $de_x, $de_y+$altura_l1, $cor, 2);
-		//if($image2 != null)
-		//imagelinethick($image2, $de_x, $de_y, $de_x, $de_y+$altura_l1, $cor2, 2);
 
 		$at_x = $de_x;
 		$at_y = $de_y+$altura_l1;
@@ -339,8 +339,6 @@ class Arvore {
 			$at_y = $de_y+$altura_l1;
 			$altura_l2 = $pr_y - $altura_l1;
 			imagelinethick($image, $at_x, $at_y, $at_x, $altura_l2, $cor, 2); // Desce
-			//if($image2 != null)
-			//imagelinethick($image2, $at_x, $at_y, $at_x, $altura_l2, $cor2, 2);
 
 			$at_x = $at_x;
 			$at_y = $altura_l2;
@@ -789,7 +787,10 @@ class Arvore {
 		if($this->ingresso == null)
 			return false;
 		$maximo_semestres = ceil($this->numero_semestres * 1.5);
-		$semestres = floor((($this->creditos_totais - $this->creditos_proficiencia) * $maximo_semestres) / $this->creditos_totais);
+		if($this->creditos_totais > 0)
+			$semestres = floor((($this->creditos_totais - $this->creditos_proficiencia) * $maximo_semestres) / $this->creditos_totais);
+		else
+			$semestres = 5;
 		if($semestres < 5) $semestres = 5;
 		$limite_ano = floor($this->ingresso + ($semestres / 2) - 0.5);
 		$limite_sem = ($semestres % 2 == 0) ? 2 : 1;

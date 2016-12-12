@@ -14,7 +14,7 @@ class Log extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_log", type="bigint", nullable=false)
+	 * @ORM\Column(type="bigint", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,35 +23,35 @@ class Log extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_usuario;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="descricao", type="text", nullable=false)
+	 * @ORM\Column(type="text", nullable=false)
 	 */
 	protected $descricao;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=31, nullable=false)
+	 * @ORM\Column(type="string", length=31, nullable=false)
 	 */
 	protected $tipo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ip", type="string", length=15, nullable=false)
+	 * @ORM\Column(type="string", length=15, nullable=false)
 	 */
 	protected $ip;
 

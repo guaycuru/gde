@@ -14,7 +14,7 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_emprego", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -33,49 +33,49 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $tipo = 'e';
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="inicio", type="date", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $inicio;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="fim", type="date", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $fim;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="atual", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $atual = false;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="cargo", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $cargo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="site", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $site;
 

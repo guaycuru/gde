@@ -23,7 +23,7 @@ class UsuarioAmigo extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_amizade", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -32,14 +32,14 @@ class UsuarioAmigo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="apelido", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $apelido;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="ativo", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativo = false;
 

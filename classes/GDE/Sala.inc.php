@@ -14,7 +14,7 @@ class Sala extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_sala", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,49 +23,49 @@ class Sala extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=6, nullable=false)
+	 * @ORM\Column(type="string", length=6, nullable=false)
 	 */
 	protected $nome;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="lugares", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $lugares;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_predio", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_predio;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="andar", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $andar;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_unidade", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_unidade;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="topologia", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $topologia;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="utilizacoes", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $utilizacoes;
 

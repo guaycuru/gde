@@ -15,7 +15,7 @@ class Acontecimento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_acontecimento", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -25,42 +25,42 @@ class Acontecimento extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=2, nullable=false)
+	 * @ORM\Column(type="string", length=2, nullable=false)
 	 */
 	protected $tipo;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_grupo_origem", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $grupo_origem;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_grupo_destino", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $grupo_destino;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="texto", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $texto;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="numero_respostas", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $numero_respostas = '0';
 

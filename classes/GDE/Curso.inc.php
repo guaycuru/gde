@@ -15,7 +15,7 @@ class Curso extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_curso", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -24,21 +24,21 @@ class Curso extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="numero", type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 */
 	protected $numero;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nivel", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $nivel;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $nome;
 

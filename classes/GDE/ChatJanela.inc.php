@@ -14,7 +14,7 @@ class ChatJanela extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")
 	 */
@@ -23,7 +23,7 @@ class ChatJanela extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_usuario_janela", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="NONE")
 	 */
@@ -32,7 +32,7 @@ class ChatJanela extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="status", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $status;
 

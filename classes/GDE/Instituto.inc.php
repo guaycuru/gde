@@ -14,7 +14,7 @@ class Instituto extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="id_instituto", type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,28 +23,28 @@ class Instituto extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=10, nullable=false)
+	 * @ORM\Column(type="string", length=10, nullable=false)
 	 */
 	protected $sigla;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $nome;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_unidade", type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_unidade;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="link_mapa", type="text", nullable=true)
+	 * @ORM\Column(type="text", nullable=true)
 	 */
 	protected $link_mapa;
 

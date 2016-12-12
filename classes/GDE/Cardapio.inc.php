@@ -14,7 +14,7 @@ class Cardapio extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_cardapio", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,7 +23,7 @@ class Cardapio extends Base {
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="date", nullable=false)
+	 * @ORM\Column(type="date", nullable=false)
 	 */
 	protected $data;
 
@@ -32,63 +32,63 @@ class Cardapio extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $tipo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="principal", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $principal;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="vegetariano", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $vegetariano;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="guarnicao", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $guarnicao;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="pts", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $pts;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="salada", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $salada;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sobremesa", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $sobremesa;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="suco", type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $suco;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="ultima_atualizacao", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $ultima_atualizacao;
 

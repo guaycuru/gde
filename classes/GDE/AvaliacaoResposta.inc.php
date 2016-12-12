@@ -14,7 +14,7 @@ class AvaliacaoResposta extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_resposta", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -53,21 +53,21 @@ class AvaliacaoResposta extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=5, nullable=true)
+	 * @ORM\Column(type="string", length=5, nullable=true)
 	 */
 	protected $sigla;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(name="resposta", type="smallint", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $resposta;
 
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(name="data", type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $data;
 

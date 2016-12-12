@@ -14,7 +14,7 @@ class Nota extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_nota", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
@@ -23,28 +23,28 @@ class Nota extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_oferecimento", type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
 	 */
 	protected $id_oferecimento;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="sigla", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $sigla;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nota", type="decimal", precision=4, scale=2, nullable=false)
+	 * @ORM\Column(type="decimal", precision=4, scale=2, nullable=false)
 	 */
 	protected $nota;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="peso", type="decimal", precision=10, scale=5, nullable=false)
+	 * @ORM\Column(type="decimal", precision=10, scale=5, nullable=false)
 	 */
 	protected $peso = '1.00000';
 

@@ -15,7 +15,7 @@ class Periodo extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(name="id_periodo", type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 * @ORM\Id
 	 */
 	protected $id_periodo;
@@ -23,7 +23,7 @@ class Periodo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="nome", type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $nome;
 
@@ -33,7 +33,7 @@ class Periodo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(name="tipo", type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, nullable=false)
 	 */
 	protected $tipo = self::TIPO_NORMAL;
 
