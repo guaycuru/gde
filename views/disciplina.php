@@ -44,7 +44,6 @@ if(isset($_GET['m'])) {
 <script type="text/javascript">
 	// <![CDATA[
 	var carregou_oferecimentos = false;
-	var carregou_forum = false;
 
 	var Atualizar_Oferecimentos = function(periodo) {
 		if(!periodo)
@@ -54,7 +53,7 @@ if(isset($_GET['m'])) {
 			if(data)
 				$("#tab_oferecimentos").html(data);
 		});
-	}
+	};
 
 	$(document).ready(function() {
 		$('#periodo_horario').live('change', function() {

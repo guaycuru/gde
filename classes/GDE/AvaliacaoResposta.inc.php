@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AvaliacaoResposta
  *
- * @ORM\Table(name="gde_avaliacao_respostas", indexes={@ORM\Index(name="id_professor", columns={"id_professor"}), @ORM\Index(name="sigla", columns={"sigla"}), @ORM\Index(name="id_usuario", columns={"id_usuario"}), @ORM\Index(name="id_pergunta", columns={"id_pergunta", "id_usuario"}), @ORM\Index(name="IDX_F1D22D1542919D01", columns={"id_pergunta"})})
+ * @ORM\Table(name="gde_avaliacao_respostas", indexes={@ORM\Index(name="sigla", columns={"sigla"}), @ORM\Index(name="id_pergunta_usuario", columns={"id_pergunta", "id_usuario"})})
  * @ORM\Entity
  */
 class AvaliacaoResposta extends Base {
@@ -58,7 +58,7 @@ class AvaliacaoResposta extends Base {
 	protected $sigla;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
 	 */

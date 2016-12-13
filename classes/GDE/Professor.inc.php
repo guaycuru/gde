@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Professore
  *
- * @ORM\Table(name="gde_professores", uniqueConstraints={@ORM\UniqueConstraint(name="matricula", columns={"matricula"})}, indexes={@ORM\Index(name="nome", columns={"nome"})})
+ * @ORM\Table(name="gde_professores", indexes={@ORM\Index(name="nome", columns={"nome"})})
  * @ORM\Entity
  */
 class Professor extends Base {
@@ -19,6 +19,13 @@ class Professor extends Base {
 	 * @ORM\GeneratedValue(strategy="IDENTITY")
 	 */
 	protected $id_professor;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\OneToOne(targetEntity="Usuario", mappedBy="professor")
+	 */
+	protected $usuario;
 
 	/**
 	 * @var Oferecimento
@@ -38,7 +45,7 @@ class Professor extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $matricula;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UsuarioEmprego
  *
- * @ORM\Table(name="gde_usuarios_empregos", indexes={@ORM\Index(name="id_usuario", columns={"id_usuario"})})
+ * @ORM\Table(name="gde_usuarios_empregos")
  * @ORM\Entity
  */
 class UsuarioEmprego extends Base {

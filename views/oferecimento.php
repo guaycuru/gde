@@ -35,7 +35,6 @@ if($oferecimento_pagina == null) {
 	<script type="text/javascript">
 		// <![CDATA[
 		var carregou_informacoes = false;
-		var carregou_forum = false;
 		var tipo = 1;
 		var paginacao = 1;
 		var colaborar_padrao = 'Colabore aqui';

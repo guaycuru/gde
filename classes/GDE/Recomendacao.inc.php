@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Recomendacao
  *
- * @ORM\Table(name="gde_recomendacoes", uniqueConstraints={@ORM\UniqueConstraint(name="ra", columns={"ra"}), @ORM\UniqueConstraint(name="email", columns={"email"})}, indexes={@ORM\Index(name="login", columns={"login"}), @ORM\Index(name="recomendado", columns={"recomendado"})})
+ * @ORM\Table(
+ *   name="gde_recomendacoes",
+ *   indexes={@ORM\Index(name="login", columns={"login"}), @ORM\Index(name="recomendado", columns={"recomendado"})}
+ * )
  * @ORM\Entity
  */
 class Recomendacao extends Base {
@@ -23,34 +26,28 @@ class Recomendacao extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=false)
 	 */
 	protected $ra;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
 	 */
 	protected $email;
 
 	/**
-	 * @var Usuario
+	 * @var string
 	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="login", referencedColumnName="login")
-	 * })
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $login;
 
 	/**
-	 * @var Usuario
+	 * @var string
 	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="recomendado", referencedColumnName="login")
-	 * })
+	 * @ORM\Column(type="string", length=255, nullable=false)
 	 */
 	protected $recomendado;
 

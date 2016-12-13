@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GuruPergunta
  *
- * @ORM\Table(name="gde_guru_perguntas", indexes={@ORM\Index(name="id_usuario", columns={"id_usuario"})})
+ * @ORM\Table(name="gde_guru_perguntas")
  * @ORM\Entity
  */
 class GuruPergunta extends Base {
@@ -42,14 +42,14 @@ class GuruPergunta extends Base {
 	protected $hora;
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 * })
 	 */
-	protected $id_usuario;
+	protected $usuario;
 
 
 }

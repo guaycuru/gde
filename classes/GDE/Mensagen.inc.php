@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Mensagen
  *
- * @ORM\Table(name="gde_mensagens", indexes={@ORM\Index(name="origem", columns={"origem"}), @ORM\Index(name="destino", columns={"destino"})})
+ * @ORM\Table(name="gde_mensagens")
  * @ORM\Entity
  */
 class Mensagen extends Base {
@@ -35,21 +35,21 @@ class Mensagen extends Base {
 	protected $texto;
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="origem", referencedColumnName="login")
+	 *   @ORM\JoinColumn(name="id_usuario_origem", referencedColumnName="id_usuario")
 	 * })
 	 */
 	protected $origem;
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="destino", referencedColumnName="login")
+	 *   @ORM\JoinColumn(name="id_usuario_destino", referencedColumnName="id_usuario")
 	 * })
 	 */
 	protected $destino;

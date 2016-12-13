@@ -211,7 +211,7 @@ var Atualizar_Coisas = function(atualiza_chat) {
 var Atualizar_Chat = function() {
 	$("#chatAmigos").height(300);
 	var top = ($(window).height() - (($("#chatAmigos").is(":visible")) ? $("#chatAmigos").outerHeight(true) : 0) - $("#chatOpcoes").outerHeight(true));
-	if(top < 10)  // Deixa pelo menos 10 pixels de espa�o acima da lista de amigos
+	if(top < 10)  // Deixa pelo menos 10 pixels de espaco acima da lista de amigos
 	{
 		top = 10;
 		$("#chatAmigos").css({

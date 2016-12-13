@@ -29,35 +29,28 @@ class UsuarioConfig extends Base {
 	protected $usuario;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $avisos_aniversario = true;
 
 	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="boolean", nullable=false)
-	 */
-	protected $avisos_forum = true;
-
-	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_mensagens = true;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $acontecimentos_minhas = true;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
@@ -71,7 +64,7 @@ class UsuarioConfig extends Base {
 	protected $acontecimentos_grupos = true;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */

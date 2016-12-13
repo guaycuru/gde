@@ -10,11 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *   name="gde_usuarios_amigos",
  *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="id_usuario", columns={"id_usuario", "id_amigo"})
- *   },
- *   indexes={
- *     @ORM\Index(name="id_amigo", columns={"id_amigo"}),
- *     @ORM\Index(name="IDX_1C2916CAFCF8192D", columns={"id_usuario"})
+ *     @ORM\UniqueConstraint(name="id_usuario_amigo", columns={"id_usuario", "id_amigo"})
  *   }
  * )
  * @ORM\Entity
@@ -37,7 +33,7 @@ class UsuarioAmigo extends Base {
 	protected $apelido;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */

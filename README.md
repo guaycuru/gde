@@ -27,6 +27,7 @@ R: Segue a lista que vou manter atualizada:
 
 Funcionam as páginas:
 
+ - Amigos
  - Árvore / Integralização (pouco testada)
  - Contato (não testada)
  - Convidar um Amigo (não testada)

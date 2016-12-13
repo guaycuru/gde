@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Instituto
  *
- * @ORM\Table(name="gde_institutos", uniqueConstraints={@ORM\UniqueConstraint(name="id_unidade", columns={"id_unidade"})})
+ * @ORM\Table(name="gde_institutos")
  * @ORM\Entity
  */
 class Instituto extends Base {
@@ -37,7 +37,7 @@ class Instituto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
 	 */
 	protected $id_unidade;
 

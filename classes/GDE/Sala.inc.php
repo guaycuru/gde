@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Sala
  *
- * @ORM\Table(name="gde_salas", uniqueConstraints={@ORM\UniqueConstraint(name="nome", columns={"nome"})})
+ * @ORM\Table(name="gde_salas")
  * @ORM\Entity
  */
 class Sala extends Base {
@@ -23,7 +23,7 @@ class Sala extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=6, nullable=false)
+	 * @ORM\Column(type="string", length=6, unique=true, nullable=false)
 	 */
 	protected $nome;
 

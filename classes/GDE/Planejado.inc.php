@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Planejado
  *
- * @ORM\Table(name="gde_planejados", indexes={@ORM\Index(name="compartilhado", columns={"compartilhado"}), @ORM\Index(name="id_usuario", columns={"id_usuario"})})
+ * @ORM\Table(name="gde_planejados", indexes={@ORM\Index(name="compartilhado", columns={"compartilhado"})})
  * @ORM\Entity
  */
 class Planejado extends Base {

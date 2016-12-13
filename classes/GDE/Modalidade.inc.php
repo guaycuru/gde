@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Modalidade
  *
- * @ORM\Table(name="gde_modalidades", uniqueConstraints={@ORM\UniqueConstraint(name="id_curso", columns={"id_curso", "nivel", "sigla", "catalogo"})})
+ * @ORM\Table(name="gde_modalidades", uniqueConstraints={@ORM\UniqueConstraint(name="curso_nivel_sigla_catalogo", columns={"id_curso", "nivel", "sigla", "catalogo"})})
  * @ORM\Entity
  */
 class Modalidade extends Base {

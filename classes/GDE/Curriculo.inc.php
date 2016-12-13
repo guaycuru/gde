@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Curriculo
  *
- * @ORM\Table(name="gde_curriculos", indexes={@ORM\Index(name="curso", columns={"curso", "modalidade", "catalogo"})})
+ * @ORM\Table(
+ *   name="gde_curriculos",
+ *   indexes={@ORM\Index(name="curso_modalidade_catalogo", columns={"id_curso", "modalidade", "catalogo"})}
+ * )
  * @ORM\Entity
  */
 class Curriculo extends Base {

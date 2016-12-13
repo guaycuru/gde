@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Nota
  *
- * @ORM\Table(name="gde_notas", indexes={@ORM\Index(name="id_usuario", columns={"id_usuario"}), @ORM\Index(name="id_materia", columns={"id_oferecimento"})})
+ * @ORM\Table(name="gde_notas")
  * @ORM\Entity
  */
 class Nota extends Base {
@@ -21,11 +21,12 @@ class Nota extends Base {
 	protected $id_nota;
 
 	/**
-	 * @var integer
+	 * @var Oferecimento
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\ManyToOne(targetEntity="Oferecimento")
+	 * @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")
 	 */
-	protected $id_oferecimento;
+	protected $oferecimento;
 
 	/**
 	 * @var string
@@ -49,14 +50,14 @@ class Nota extends Base {
 	protected $peso = '1.00000';
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 * })
 	 */
-	protected $id_usuario;
+	protected $usuario;
 
 
 }

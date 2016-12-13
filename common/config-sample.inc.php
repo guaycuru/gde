@@ -42,10 +42,10 @@ define('CONFIG_TIME_ONLINE', 600); // 600
 define('CONFIG_UPDATE_ONLINE', 60); // 60 -> 300
 
 // Periodo de atualizacao do ultimo acesso do usuario
-define('CONFIG_ONLINE_UPDATE', 10); // 10 -> 120
+define('CONFIG_ONLINE_UPDATE', 30); // 10 -> 120
 
 // Periodo de timeout do ultimo acesso (para ser considerado offline, geralmente 3x o anterior)
-define('CONFIG_ONLINE_TIMEOUT', 30); // 30 -> 180
+define('CONFIG_ONLINE_TIMEOUT', 90); // 30 -> 180
 
 // Periodo de espera por mensagens novas
 define('CONFIG_TIMEOUT_CHAT', 60);

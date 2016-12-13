@@ -38,10 +38,12 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Ret['id'] = Planejado::Algum($_Usuario, $Planejado->getPeriodo(true)->getID(), $Planejados, $Planejado->getPeriodo_Atual(true)->getID())->getID();
 } else {
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
-		$times = array();
+		$times = array('arvore1' => array(), 'arvore2' => array());
 		$times['start'] = microtime(true);
 		$tt = 0;
-	}
+	} else
+		$times = array('arvore1' => false, 'arvore2' => false);
+
 	$cores = Planejado::getCores();
 	$nc = count($cores);
 	$cores_extras = PlanejadoExtra::getCores();
@@ -116,7 +118,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			foreach($EliminadasAdd as $EAdd)
 				$Usr->addEliminadas($EAdd);
 			$Planejado->setUsuario($Usr);
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID(), $times['arvore1']);
 			$Disciplinas = $Disciplinas + $Arvore->getDisciplinas();
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -315,7 +317,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Usr->Adicionar_Oferecimentos($Adicionados);
 			
 			// Re-faz a arvore porque mudei as atuais
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID(), $times['arvore2']);
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['nova_arvore'] = microtime(true) - $times['start'] - $tt;
@@ -354,8 +356,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Ret['ce'] = $ce;
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
-				unset($times['start']);
-				asort($times);
+				$Ret['times_arvore1'] = $times['arvore1'];
+				$Ret['times_arvore2'] = $times['arvore2'];
+				unset($times['start'], $times['arvore1'], $times['arvore2']);
+				asort($times, SORT_NUMERIC);
 				$Ret['times'] = $times;
 			}
 		

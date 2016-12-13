@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EquivalentesConjunto
  *
- * @ORM\Table(name="gde_equivalentes_conjuntos", uniqueConstraints={@ORM\UniqueConstraint(name="id_conjunto_sigla", columns={"id_conjunto", "sigla"})})
+ * @ORM\Table(name="gde_equivalentes_conjuntos", uniqueConstraints={@ORM\UniqueConstraint(name="id_equivalente_sigla", columns={"id_equivalente", "sigla"})})
  * @ORM\Entity
  */
 class EquivalentesConjunto extends Base {

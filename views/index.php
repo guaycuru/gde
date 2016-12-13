@@ -8,8 +8,9 @@ require_once('../common/common.inc.php');
 
 $Amigos = $_Usuario->Amigos();
 $Recomendacoes = $_Usuario->Amigos_Recomendacoes(2, 15);
-$Autorizacoes = $_Usuario->Amigos_Pendentes();
+$Autorizacoes = $_Usuario->getAmigos_Pendentes();
 
+// ToDo ?
 if(!isset($_SESSION['atualizacoes_last_id']))
 	$_SESSION['atualizacoes_last_id'] = 0; //Acontecimento::Ultimo_Id_Por_Data($_SESSION['ultimo_acesso']);
 	
@@ -20,7 +21,6 @@ if(!isset($_SESSION['atualizacoes_last_id']))
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.favoritos.js?<?= REVISION; ?>"></script>
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.notas.js?<?= REVISION; ?>"></script>
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.aviso.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.grupos.js?<?= REVISION; ?>"></script>
 <script type="text/javascript">
 // <![CDATA[
 var carregou_horario = false;
@@ -109,15 +109,13 @@ $(document).ready(function() {
 	$("#atualizacoes_minhas").attr('checked', <?= ($_Usuario->getConfig(true)->getAcontecimentos_Minhas()) ? 'true' : 'false'; ?>);
 	$("#atualizacoes_amigos").attr('checked', <?= ($_Usuario->getConfig(true)->getAcontecimentos_Amigos()) ? 'true' : 'false'; ?>);
 	$("#atualizacoes_gde").attr('checked', <?= ($_Usuario->getConfig(true)->getAcontecimentos_GDE()) ? 'true' : 'false'; ?>);
-	$("#atualizacoes_grupos").attr('checked', <?= ($_Usuario->getConfig(true)->getAcontecimentos_Grupos()) ? 'true' : 'false'; ?>);
 	$("#calendarioOutro").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioOutro'])) || ($_SESSION['calendario']['calendarioOutro'])) ? 'true' : 'false'; ?>);
 	$("#calendarioTrabalho").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioTrabalho'])) || ($_SESSION['calendario']['calendarioTrabalho'])) ? 'true' : 'false'; ?>);
 	$("#calendarioProva").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioProva'])) || ($_SESSION['calendario']['calendarioProva'])) ? 'true' : 'false'; ?>);
 	$("#calendarioFeriado").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioFeriado'])) || ($_SESSION['calendario']['calendarioFeriado'])) ? 'true' : 'false'; ?>);
 	$("#calendarioAniversario").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioAniversario'])) || ($_SESSION['calendario']['calendarioAniversario'])) ? 'true' : 'false'; ?>);
 	$("#calendarioGraduacao").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioGraduacao'])) || ($_SESSION['calendario']['calendarioGraduacao'])) ? 'true' : 'false'; ?>);
-	$("#calendarioGrupos").attr('checked', <?= ((!isset($_SESSION['calendario']['calendarioGrupos'])) || ($_SESSION['calendario']['calendarioGrupos'])) ? 'true' : 'false'; ?>);
-	
+
 	$("#menuAccordion").accordion({
 		autoHeight: false,
 		navigation: true,
@@ -234,7 +232,6 @@ $(document).ready(function() {
 	});
 	Cardapio_Muda('-1');
 	Atualizar_Favoritos();
-	Carregar_Grupos(<?= $_Usuario->getID() ?>);
 	$("input.tipo_atualizacoes").click(function() {
 		var id = $(this).attr('id');
 		if(id == 'atualizacoes_todas')
@@ -328,7 +325,6 @@ $(document).ready(function() {
 						<input type="checkbox" id="atualizacoes_mensagens" class="tipo_atualizacoes" checked="checked" /><label for="atualizacoes_mensagens">Mensagens</label>
 						<input type="checkbox" id="atualizacoes_minhas" class="tipo_atualizacoes" checked="checked" /><label for="atualizacoes_minhas">Minhas Atual.</label>
 						<input type="checkbox" id="atualizacoes_amigos" class="tipo_atualizacoes" checked="checked" /><label for="atualizacoes_amigos">Atual. de Amigos</label>
-						<input type="checkbox" id="atualizacoes_grupos" class="tipo_atualizacoes" checked="checked" /><label for="atualizacoes_grupos">Atual. de Grupos</label>
 						<input type="checkbox" id="atualizacoes_gde" class="tipo_atualizacoes" checked="checked" /><label for="atualizacoes_gde">Atual. do GDE</label>
 					</div>
 					<div id="tab_atualizacoes_conteudo">
@@ -348,7 +344,6 @@ $(document).ready(function() {
 						<input type="checkbox" id="calendarioTrabalho" class="tipo_calendario" checked="checked" /><label for="calendarioTrabalho">Trabalho</label>
 						<input type="checkbox" id="calendarioOutro" class="tipo_calendario" checked="checked" /><label for="calendarioOutro">Outro</label>
 						<input type="checkbox" id="calendarioAniversario" class="tipo_calendario" checked="checked" /><label for="calendarioAniversario">Anivers&aacute;rio</label>
-						<input type="checkbox" id="calendarioGrupos" class="tipo_calendario" checked="checked" /><label for="calendarioGrupos">Grupos</label>
 					</div>
 					<div id="calendar"></div>
 					<div style="display: none;">
@@ -429,8 +424,6 @@ $(document).ready(function() {
 				</div>
 			<?php } } ?>
 		</div>
-		<h3 id="accordion_grupos"><a href='#' class='accordion_header'>Grupos (<span id="span_numero_grupos">?</span>):</a></h3>
-		<div id="lista_grupos" ><img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando...</div>
 	</div>
 </div>
 <?= $FIM; ?>

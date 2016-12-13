@@ -56,7 +56,10 @@ class Arvore {
 
 	static $consts = array("inicio_x" => 80, "inicio_y" => 50, "largura" => 90, "altura" => 30, "dist_x" => 55, "dist_y" => 75);
 
-	public function __construct(Usuario $Usuario, $completa = true, $periodo = null) {
+	public function __construct(Usuario $Usuario, $completa = true, $periodo = null, &$times = false) {
+		if($times !== false)
+			$times = array('start' => microtime(true));
+
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getRA(true);
 		$this->curso = $Usuario->getCurso(true)->getNumero(true);
@@ -70,10 +73,16 @@ class Arvore {
 		$this->Usuario = $Usuario;
 		//$this->Usuario->getEliminadas(false, false, $this->nivel); // Pra nao considerar a AA200
 
+		if($times !== false)
+			$times['usuario'] = microtime(true) - $times['start'];
+
 		$this->cp = 0;
 		$this->cpf = 0;
 		$this->Periodo = ($periodo != null) ? Periodo::Load($periodo) : Periodo::getAtual();
 		$this->periodo = $this->Periodo->getPeriodo();
+
+		if($times !== false)
+			$times['periodos'] = microtime(true) - $times['start'];
 
 		$this->Disciplinas = array(); // Disciplinas Faltantes por Semestre
 		$this->Pre_Requisitos = array(); // Pre-Requisitos faltantes para a Disciplina!
@@ -82,6 +91,9 @@ class Arvore {
 		$this->Eliminadas = array();
 		$this->Eletivas_Faltantes = $this->Eletivas;
 		$this->Atuais = $Usuario->getAluno(true)->getOferecimentos($this->periodo, $this->nivel);
+
+		if($times !== false)
+			$times['disciplina'] = microtime(true) - $times['start'];
 
 		$this->creditos_totais = 0;
 		$this->creditos_feitos = 0;
@@ -129,6 +141,8 @@ class Arvore {
 			uasort($this->Eliminadas, array("GDE\\UsuarioEliminada", "Ordenar_DAC"));
 			$this->Usuario->setEliminadas($this->Eliminadas);
 		}
+		if($times !== false)
+			$times['eliminadas'] = microtime(true) - $times['start'];
 
 		$maior_semestre = 1;
 
@@ -151,6 +165,9 @@ class Arvore {
 			}
 		}
 		$this->numero_semestres = $maior_semestre;
+
+		if($times !== false)
+			$times['curriculo'] = microtime(true) - $times['start'];
 
 		$equivalencias_adicionadas = array();
 
@@ -187,8 +204,14 @@ class Arvore {
 				}
 			}
 
+			if($times !== false)
+				$times['cursadas'] = microtime(true) - $times['start'];
+
 			// As siglas atuais sao as que vao ser eliminadas no proximo semestre, mas ainda nao foram neste!
 			$this->siglas_atuais = array_diff($this->siglas_todas_eliminadas, $siglas_old_eliminadas);
+
+			if($times !== false)
+				$times['siglas_atuais'] = microtime(true) - $times['start'];
 
 			// Percorre a lista de disciplinas eliminadas do usuario em busca de possiveis Eletivas
 			foreach($this->Eliminadas as $Eliminada) {
@@ -202,6 +225,9 @@ class Arvore {
 			usort($this->Eletivas_Faltantes, array("GDE\\Arvore", "OrdenaEletivas"));
 			// Organiza a lista de possiveis Eletivas em ordem decrescente de creditos e de periodos
 			uasort($Possiveis_Eletivas, array("GDE\\UsuarioEliminada", "Ordenar_Creditos"));
+
+			if($times !== false)
+				$times['possEletivas'] = microtime(true) - $times['start'];
 
 			$volta_eletivas = 0;
 
@@ -224,6 +250,9 @@ class Arvore {
 				} /*else
 					echo "Nao eliminada!";*/
 			}
+
+			if($times !== false)
+				$times['eletivasEliminadas'] = microtime(true) - $times['start'];
 
 			// Adiciona ao numero de creditos cursados os creditos das eletivas cursadas
 			$this->creditos_feitos += $this->creditos_eletivas_eliminados;
@@ -270,6 +299,9 @@ class Arvore {
 			if($this->cpf > 1)
 				$this->cpf = 1;
 
+			if($times !== false)
+				$times['cpecpf'] = microtime(true) - $times['start'];
+
 			// Remove os pre-requisitos do tipo AAnxx
 			for($i = 0.1; $i < 1; $i += 0.05) {
 				if($this->cp >= $i) {
@@ -285,6 +317,12 @@ class Arvore {
 				}
 			}
 			$this->Usuario->setEliminadas($this->Eliminadas);
+
+			if($times !== false) {
+				$times['setEliminadas'] = microtime(true) - $times['start'];
+				unset($times['start']);
+				asort($times, SORT_NUMERIC);
+			}
 		}
 	}
 

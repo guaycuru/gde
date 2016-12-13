@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Curso
  *
- * @ORM\Table(name="gde_cursos", uniqueConstraints={@ORM\UniqueConstraint(name="numero", columns={"numero", "nivel"})})
+ * @ORM\Table(name="gde_cursos", uniqueConstraints={@ORM\UniqueConstraint(name="numero_nivel", columns={"numero", "nivel"})})
  * @ORM\Entity
  */
 class Curso extends Base {
@@ -22,7 +22,7 @@ class Curso extends Base {
 	protected $id_curso;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", nullable=false)
 	 */

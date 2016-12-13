@@ -53,14 +53,13 @@ if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
 	$TS_INICIO = microtime(true);
 	if($_SESSION['admin']['debug'] >= 2)
 		error_reporting(E_ALL);
-	function Tempo_Geracao($inicio) {
+	register_shutdown_function(function ($inicio) {
 		if((!defined('NO_HTML')) || (NO_HTML === false))
 			echo "<hr />Tempo de Gera&ccedil;&atilde;o da P&aacute;gina: ".(microtime(true)-$inicio)." segundo(s)";
-	}
-	register_shutdown_function("Tempo_Geracao", $TS_INICIO);
+	}, $TS_INICIO);
 }
 
-$_Usuario = false;
+$_Usuario = null;
 
 //if((isset($_GET['w3c'])) && ($_GET['w3c'] == '17239853'))
 	//$_SESSION['id_usuario'] = 1;
@@ -80,7 +79,7 @@ if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 if((defined('NO_SESSION')) && (NO_SESSION === true))
 	session_write_close();
 
-/*if(($_Usuario == null) || ($_Usuario->getAdmin() === false))
+/*if(($_Usuario === null) || ($_Usuario->getAdmin() === false))
 	die("O GDE est&aacute; em Manuten&ccedil;&atilde;o, volte mais tarde...");*/
 
 //<meta name="robots" content="noindex, nofollow" />
@@ -116,7 +115,7 @@ if((!defined('HTML')) || (HTML === true)) {
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery.watcherkeys.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.common.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.42.js?<?= REVISION; ?>"></script>
-    <?php if(($_Usuario !== false) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?><script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.chat.js?<?= REVISION; ?>"></script><?php } ?>
+    <?php if(($_Usuario !== null) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?><script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.chat.js?<?= REVISION; ?>"></script><?php } ?>
 	<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-3315545-3']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/dropdown_menu.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
@@ -135,13 +134,13 @@ if((!defined('HTML')) || (HTML === true)) {
 <body id="page_bg">
 <?php
 	if((!defined('JUST_INC')) || (JUST_INC === false)) {
-		if($_Usuario !== false) {
+		if($_Usuario !== null) {
 ?>
 <script type="text/javascript">
 // <![CDATA[
 var CONFIG_URL = '<?= CONFIG_URL; ?>';
 // Informacoes para o chat
-<?php if(($_Usuario !== false) && (((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false)))) { ?>
+<?php if(($_Usuario !== null) && (((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false)))) { ?>
 var meu_id = '<?= $_Usuario->getID(); ?>';
 var meu_status = '<?= (CONFIG_CHAT_ATIVO) ? $_Usuario->getChat_Status(false, true) : 'z'; ?>';
 var minha_foto_th = '<?= $_Usuario->getFoto(true, true); ?>';
@@ -185,8 +184,8 @@ $(document).ready(function(){
 				<a href="<?=CONFIG_URL;?>index/" title="Home"><img src="<?= CONFIG_URL; ?>web/images/mini_logo.gif" alt="GDE" width="128" height="38" /></a>
 			</div> 
 	<?php
-	if($_Usuario != null) {
-		$ultima_atualizacao = '-';//$_GDE['DB']->UserDate($_GDE['DB']->Execute("SELECT ultima_atualizacao FROM gde_dados WHERE id = 1")->fields['ultima_atualizacao'], 'd/m/Y');
+	if($_Usuario !== null) {
+		$ultima_atualizacao = Dado::Pega_Dados('ultima_atualizacao')->format('d/m/Y');
 	?>
 			<div id="top_menu" class="menu ui-corner-bottom">
 				<ul>
@@ -225,10 +224,8 @@ $(document).ready(function(){
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>visoes/EditarPerfil.php">Editar Perfil</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Configuracoes.php">Configura&ccedil;&otilde;es da Conta</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Amigos.php">Meus Amigos</a></li>
+							<li><a href="<?= CONFIG_URL; ?>amigos/">Meus Amigos</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>recomendar/">Convidar um Amigo</a></li>
-							<!-- <li><a href="<?= CONFIG_URL; ?>visoes/CadastroGrupo.php">Criar Grupo</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Grupos.php">Meus Grupos</a></li> -->
 						</ul>
 					</li>
 					<li><a href="#" onclick="return false;">Ajuda</a>
@@ -270,7 +267,7 @@ $(document).ready(function(){
 	<div id="wrapper" class="center">
 		<div id="content_bg">
 			<div id="content">
-<?php if((CONFIG_CHAT_ATIVO) && ($_Usuario !== false) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?>
+<?php if((CONFIG_CHAT_ATIVO) && ($_Usuario !== null) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?>
 				<div id="chatMiguxo" class="chat_principal">
 					<div id="chatAmigos" class="chat_amigos ui-corner-top">
 					</div>

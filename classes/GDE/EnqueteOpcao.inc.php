@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EnqueteOpcao
  *
- * @ORM\Table(name="gde_enquetes_opcoes", indexes={@ORM\Index(name="id_enquete", columns={"id_enquete"})})
+ * @ORM\Table(name="gde_enquetes_opcoes")
  * @ORM\Entity
  */
 class EnqueteOpcao extends Base {
@@ -35,21 +35,21 @@ class EnqueteOpcao extends Base {
 	protected $ativa = false;
 
 	/**
-	 * @var \GDEGdeEnquetes
+	 * @var Enquete
 	 *
 	 * @ORM\ManyToOne(targetEntity="Enquete")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="id_enquete", referencedColumnName="id_enquete")
 	 * })
 	 */
-	protected $id_enquete;
+	protected $enquete;
 
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
 	 *
-	 * @ORM\ManyToMany(targetEntity="Usuario", mappedBy="id_opcao")
+	 * @ORM\ManyToMany(targetEntity="Usuario", mappedBy="enquetes_opcoes")
 	 */
-	protected $id_usuario;
+	protected $usuario;
 
 
 }

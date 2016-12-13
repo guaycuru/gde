@@ -5,12 +5,12 @@ namespace GDE;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * UsuariosToken
+ * UsuarioToken
  *
- * @ORM\Table(name="gde_usuarios_tokens", indexes={@ORM\Index(name="id_usuario", columns={"id_usuario"})})
+ * @ORM\Table(name="gde_usuarios_tokens")
  * @ORM\Entity
  */
-class UsuariosToken extends Base {
+class UsuarioToken extends Base {
 	/**
 	 * @var integer
 	 *
@@ -35,14 +35,14 @@ class UsuariosToken extends Base {
 	protected $data_criacao;
 
 	/**
-	 * @var \GDEGdeUsuarios
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
 	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 * })
 	 */
-	protected $id_usuario;
+	protected $usuario;
 
 
 }

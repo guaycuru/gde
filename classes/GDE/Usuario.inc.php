@@ -11,14 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *   name="gde_usuarios",
- *   uniqueConstraints={
- *     @ORM\UniqueConstraint(name="login", columns={"login"}),
- *     @ORM\UniqueConstraint(name="ra", columns={"ra"}),
- *     @ORM\UniqueConstraint(name="email", columns={"email"})
- *   },
  *   indexes={
  *     @ORM\Index(name="ativo", columns={"ativo"}),
- *     @ORM\Index(name="compartilha_arvore", columns={"compartilha_arvore"}), @ORM\Index(name="ultimo_acesso", columns={"ultimo_acesso"})
+ *     @ORM\Index(name="compartilha_arvore", columns={"compartilha_arvore"}),
+ *     @ORM\Index(name="ultimo_acesso", columns={"ultimo_acesso"})
  *   }
  * )
  * @ORM\Entity
@@ -67,6 +63,14 @@ class Usuario extends Base {
 	protected $aluno;
 
 	/**
+	 * @var Professor
+	 *
+	 * @ORM\OneToOne(targetEntity="Professor", inversedBy="usuario")
+	 * @ORM\JoinColumn(name="matricula", referencedColumnName="matricula")
+	 */
+	protected $professor;
+
+	/**
 	 * @var Curso
 	 *
 	 * @ORM\ManyToOne(targetEntity="Curso")
@@ -97,9 +101,20 @@ class Usuario extends Base {
 	protected $empregos;
 
 	/**
+	 * @var ArrayCollection
+	 *
+	 * @ORM\ManyToMany(targetEntity="EnqueteOpcao")
+	 * @ORM\JoinTable(name="gde_r_usuarios_enquetes_opcoes",
+	 *      joinColumns={@ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_opcao", referencedColumnName="id_opcao")}
+	 * )
+	 */
+	protected $enquetes_opcoes;
+
+	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=16, nullable=false)
+	 * @ORM\Column(type="string", length=16, unique=true, nullable=false)
 	 */
 	protected $login;
 
@@ -109,20 +124,6 @@ class Usuario extends Base {
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $senha;
-
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
-	 */
-	protected $ra;
-
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
-	 */
-	protected $matricula;
 
 	/**
 	 * @var string
@@ -148,7 +149,7 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", length=255, unique=true, nullable=true)
 	 */
 	protected $email;
 
@@ -279,14 +280,14 @@ class Usuario extends Base {
 	protected $mais;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $compartilha_arvore = true;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
@@ -349,7 +350,7 @@ class Usuario extends Base {
 	protected $data_cadastro;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
@@ -364,55 +365,25 @@ class Usuario extends Base {
 	protected $chat_status = 'd';
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $ativo = false;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $admin = false;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", nullable=false)
 	 */
 	protected $beta = true;
-
-	/**
-	 * @var \Doctrine\Common\Collections\Collection
-	 *
-	 * @ORM\ManyToMany(targetEntity="EnqueteOpcao", inversedBy="id_usuario")
-	 * @ORM\JoinTable(name="gde_r_usuarios_enquetes_opcoes",
-	 *   joinColumns={
-	 *	 @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 *   },
-	 *   inverseJoinColumns={
-	 *	 @ORM\JoinColumn(name="id_opcao", referencedColumnName="id_opcao")
-	 *   }
-	 * )
-	 */
-	protected $id_opcao;
-
-	/**
-	 * @var \Doctrine\Common\Collections\Collection
-	 *
-	 * @ORM\ManyToMany(targetEntity="ForumPostagem", inversedBy="id_usuario")
-	 * @ORM\JoinTable(name="gde_r_usuarios_postagens",
-	 *   joinColumns={
-	 *	 @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 *   },
-	 *   inverseJoinColumns={
-	 *	 @ORM\JoinColumn(name="id_postagem", referencedColumnName="id_postagem")
-	 *   }
-	 * )
-	 */
-	protected $id_postagem;
 
 	// Determina se esta eh uma copia da entidade original, que pode ser modificada
 	private $_copia;
@@ -717,7 +688,7 @@ class Usuario extends Base {
 		if(isset($_COOKIE[CONFIG_COOKIE_NOME])) {
 			$dados = self::Parsear_Cookie($_COOKIE[CONFIG_COOKIE_NOME]);
 			$Usuario = self::Load($dados['id']);
-			if($Usuario->getID() == null) // Usuario inexistente
+			if(($Usuario === null) || ($Usuario->getID() == null)) // Usuario inexistente
 				$Usuario = self::Logout();
 			if($Usuario->Verificar_Senha($dados['senha'], true) === false) // Senha incorreta
 				$Usuario = self::Logout();
@@ -739,7 +710,7 @@ class Usuario extends Base {
 	 * Aproveita e verifica se a hash da senha precisa ser atualizada
 	 *
 	 * @param string $login Login, RA ou email
-	 * @param strin $senha A senha fornecida pelo usuario
+	 * @param string $senha A senha fornecida pelo usuario
 	 * @param boolean $lembrar (Opcional) Se for true, ira definir a duracao do cookie
 	 * @param false|string $erro (Opcional) Se for passado, sera preenchido com o codigo de erro
 	 * @return Usuario
@@ -834,7 +805,7 @@ class Usuario extends Base {
 	 * Parseia os dados do cookie e os retorna
 	 *
 	 * @param string $cookie Os dados do cookie a serem parseados
-	 * @return array Uma array contendo o login e a senha
+	 * @return array|false Uma array contendo o login e a senha ou false
 	 */
 	public static function Parsear_Cookie($cookie) {
 		$dados = explode("*&/*", base64_decode($cookie));
@@ -908,11 +879,6 @@ class Usuario extends Base {
 		if($this->Amigo($Usuario) !== false)
 			return $Usuario;
 		else {
-			/*$res = self::$db->Execute("SELECT amigo FROM ".self::$tabela_r_amigos." WHERE ".self::$chave." = '".$this->getID()."' AND ativo = 't' AND amigo IN (SELECT ".self::$chave." FROM ".self::$tabela_r_amigos." WHERE amigo = '".$Usuario->getID()."' AND ativo = 't') LIMIT 1");
-			if($res->RecordCount() == 0) // Nao tem o "meio do caminho"
-				return false;
-			else // Retorna o "meio do caminho" encontrado
-				return new Usuario($res->fields['amigo'], self::$db);*/
 			if(count($this->Amigos_Em_Comum($Usuario)) == 0)
 				return false;
 			return $this->Amigos_Em_Comum($Usuario)->first();
@@ -1036,7 +1002,7 @@ class Usuario extends Base {
 	 *
 	 * @return ArrayColection Autorizacoes de amizades pendentes
 	 */
-	public function Amigos_Pendentes() {
+	public function getAmigos_Pendentes() {
 		return UsuarioAmigo::FindBy(array('amigo' => $this->getID(), 'ativo' => false));
 	}
 

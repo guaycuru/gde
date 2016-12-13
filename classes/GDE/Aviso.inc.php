@@ -41,13 +41,6 @@ class Aviso extends Base {
 	protected $usuario;
 
 	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
-	 */
-	protected $id_postagem;
-
-	/**
 	 * @var string
 	 *
 	 * @ORM\Column(type="string", length=255, nullable=false)

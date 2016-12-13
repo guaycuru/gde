@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Acontecimento
  *
- * @ORM\Table(name="gde_acontecimentos", indexes={@ORM\Index(name="tipo", columns={"tipo"}), @ORM\Index(name="id_origem", columns={"id_origem"}), @ORM\Index(name="id_destino", columns={"id_destino"}), @ORM\Index(name="id_original", columns={"id_original"}), @ORM\Index(name="id_grupo_origem", columns={"id_grupo_origem"}), @ORM\Index(name="id_grupo_destino", columns={"id_grupo_destino"})})
+ * @ORM\Table(name="gde_acontecimentos", indexes={@ORM\Index(name="tipo", columns={"tipo"})})
  * @ORM\Entity
  */
 class Acontecimento extends Base {
@@ -28,20 +28,6 @@ class Acontecimento extends Base {
 	 * @ORM\Column(type="string", length=2, nullable=false)
 	 */
 	protected $tipo;
-
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
-	 */
-	protected $grupo_origem;
-
-	/**
-	 * @var integer
-	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
-	 */
-	protected $grupo_destino;
 
 	/**
 	 * @var \DateTime
@@ -65,7 +51,7 @@ class Acontecimento extends Base {
 	protected $numero_respostas = '0';
 
 	/**
-	 * @var \GDE\Usuario
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
@@ -75,7 +61,7 @@ class Acontecimento extends Base {
 	protected $origem;
 
 	/**
-	 * @var \GDE\Usuario
+	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
 	 * @ORM\JoinColumns({
@@ -85,7 +71,7 @@ class Acontecimento extends Base {
 	protected $destino;
 
 	/**
-	 * @var \GDE\Acontecimento
+	 * @var Acontecimento
 	 *
 	 * @ORM\ManyToOne(targetEntity="Acontecimento")
 	 * @ORM\JoinColumns({
@@ -103,14 +89,14 @@ class Acontecimento extends Base {
 			return (!$meu)
 					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_GDE['Usuario']->Apelido_Ou_Nome($this->getDestino(), true)."."
 					: " agora &eacute; ".(($this->getOrigem()->getSexo() == 'f')?'sua amiga':'seu amigo').".";
-		// Mensagem, Status de Usuario ou de Grupo
+		// Mensagem, Status de Usuario
 		elseif(($this->getTipo() == 'um') || ($this->getTipo() == 'us') || ($this->getTipo() == 'rs')) {
 			if($this->getTipo() == 'us')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (status)</span>";
 			elseif($this->getTipo() == 'rs')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (an&uacute;ncio)</span>";
 			elseif(($this->getOriginal() !== null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
-				$texto_pre = " -> ".(($this->getDestino() !== null) ? $_Usuario->Apelido_Ou_Nome($this->getDestino(), true) : $this->getGrupo_Destino()->getNome());
+				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), true);
 			else
 				$texto_pre = "";
 			$texto_pre .= ": ";
@@ -124,41 +110,30 @@ class Acontecimento extends Base {
 		elseif($this->getTipo() == 'ga') {
 			return ": ".$this->texto;
 		}
-		// Entrada em Grupo
-		elseif($this->getTipo() == 'ra') {
-			return (!$meu)
-					? " entrou para o grupo ".$this->getGrupo_Destino()->getNome()."."
-					: " entrou para este grupo.";
-		}
-		// Novo moderador no Grupo
-		elseif($this->getTipo() == 'rm') {
-			return (!$meu)
-					? " virou moderador do grupo ".$this->getGrupo_Destino()->getNome()."."
-					: " virou moderador deste grupo.";
-		}
+		else
+			return "";
 	}
 
 	public function getLink() {
-		if(($this->getOrigem() !== null) || ($this->getGrupo_Origem() !== null))
-			return ($this->getOrigem() !== null) ? CONFIG_URL."perfil/?usuario=".$this->getOrigem()->getLogin() : CONFIG_URL."grupo/".$this->getGrupo_Origem()->getApelido();
+		if($this->getOrigem() !== null)
+			return CONFIG_URL."perfil/?usuario=".$this->getOrigem()->getLogin();
 		else
 			return "";
 	}
 
 	public function getNome($completo = false) {
 		global $_Usuario;
-		if(($this->getOrigem() !== null) || ($this->getGrupo_Origem() !== null)) {
-			if($this->getOrigem() !== null) // Usuario
-				return ($completo) ? $this->getOrigem()->getNome_Completo(true) : $_Usuario->Apelido_Ou_Nome($this->getOrigem(), true);
-			else // Grupo
-				return $this->getGrupo_Origem()->getNome();
-		} elseif($this->tipo == 'ga')
+		if($this->getOrigem() !== null)
+			return ($completo) ? $this->getOrigem()->getNome_Completo(true) : $_Usuario->Apelido_Ou_Nome($this->getOrigem(), true);
+		elseif($this->tipo == 'ga')
 			return "Atualiza&ccedil;&atilde;o do GDE";
+		else
+			return "";
 	}
 
 	public function getFoto($th = true) {
-		if(($this->getOrigem() !== null) || ($this->getGrupo_Origem() !== null))
-			return ($this->getOrigem() !== null) ? $this->getOrigem()->getFoto(true, $th) : $this->getGrupo_Origem()->getFoto(true, $th);
+		if($this->getOrigem() !== null)
+			return $this->getOrigem()->getFoto(true, $th);
 		elseif($this->tipo == 'ga')
 			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
 		elseif($this->tipo == 'gc')
@@ -171,8 +146,8 @@ class Acontecimento extends Base {
 		// Atualizacoes do GDE
 		if($this->getTipo() == 'ga')
 			return true;
-		// Status de Usuario ou Grupo
-		if(($this->getTipo() == 'us') || ($this->getTipo() == 'rs'))
+		// Status de Usuario
+		if($this->getTipo() == 'us')
 			return true;
 		// Mensagens pra mim ou minhas
 		if(($this->getTipo() == 'um') && (($this->getOrigem()->getID() == $Usuario->getID()) || ($this->getDestino()->getID() == $Usuario->getID())))
@@ -180,20 +155,13 @@ class Acontecimento extends Base {
 		return false;
 	}
 
-	public function Pode_Apagar($Quem) {
-		if(($Quem instanceof Usuario) && ($Quem->getAdmin()))
+	public function Pode_Apagar(Usuario $Quem) {
+		if($Quem->getAdmin())
 			return true;
-		if($Quem instanceof Usuario) {
-			if(($this->getOrigem() !== null) & ($Quem->getID() == $this->getOrigem()->getID()))
-				return true;
-			elseif(($this->getDestino() !== null) && ($Quem->getID() == $this->getDestino()->getID()))
-				return true;
-		} elseif($Quem instanceof Grupo) {
-			if(($this->getGrupo_Origem() !== null) & ($Quem->getID() == $this->getGrupo_Origem()->getID()))
-				return true;
-			elseif(($this->getGrupo_Destino() !== null) && ($Quem->getID() == $this->getGrupo_Destino()->getID()))
-				return true;
-		}
+		elseif(($this->getOrigem() !== null) & ($Quem->getID() == $this->getOrigem()->getID()))
+			return true;
+		elseif(($this->getDestino() !== null) && ($Quem->getID() == $this->getDestino()->getID()))
+			return true;
 		return false;
 	}
 
@@ -201,7 +169,7 @@ class Acontecimento extends Base {
 	 * @param Usuario|null $Usuario
 	 * @return mixed
 	 */
-	public function Listar_Respostas(Usuario $Usuario = null) { // Soh usada para Usuarios (Ajax) (pra grupos Usuario == null)
+	public function Listar_Respostas(Usuario $Usuario = null) { // Soh usada para Usuarios (Ajax)
 		//$Lista = array();
 		$todas = (
 			($Usuario === null) || (
@@ -268,12 +236,11 @@ class Acontecimento extends Base {
 	 * @param bool|false $amizades
 	 * @param bool|false $amigos
 	 * @param bool|false $gde
-	 * @param bool|false $grupos
 	 * @return ArrayCollection
 	 */
-	public static function Listar(Usuario $Usuario = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $amizades = false, $amigos = false, $gde = false, $grupos = false) {
+	public static function Listar(Usuario $Usuario = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $amizades = false, $amigos = false, $gde = false) {
 		$qrs = $qrsr = array();
-		if((!$mensagens) && (!$minhas) && (!$amigos) && (!$gde) && (!$grupos))
+		if((!$mensagens) && (!$minhas) && (!$amigos) && (!$gde))
 			return new ArrayCollection();
 		// Mensagens para mim
 		if($mensagens)
@@ -293,10 +260,6 @@ class Acontecimento extends Base {
 		// Atualizacoes do GDE
 		if($gde)
 			$qrs[] = "(O.tipo = 'ga')";
-		/*if($grupos) {
-			$GrupoMetaData = self::_EM()->getClassMetadata('GDE\Grupo');
-			$qrs[] = "(O.tipo = 'rs' AND O.id_grupo_origem IN (SELECT " . Grupo::$chave . " FROM " . Grupo_Usuario::$tabela . " WHERE " . Usuario::$chave . " = '" . $Usuario->getID() . "'))";
-		}*/
 		$qrs = implode(" OR ", $qrs);
 		//if(!$todas_respostas)
 		// Pego todas as respostas que sejam para o usuario ou que nao tenham sido enviadas pelo proprio usuario (qd eh US e id_destino eh NULL, eh broadcast...)
@@ -305,7 +268,7 @@ class Acontecimento extends Base {
 		if($maior_que)
 			$qrsr[] = "(R.id_acontecimento > :maior_que)";
 		$qrsr = (count($qrsr) > 0) ? " WHERE ".implode(" AND ", $qrsr) : "";
-		$qrd = "O.id_destino = :id_usuario OR (O.id_destino IS NULL AND O.id_grupo_destino IS NULL)";
+		$qrd = "O.id_destino = :id_usuario OR O.id_destino IS NULL";
 		$maior = ($maior_que) ? " AND O.id_acontecimento > '".intval($maior_que)."'" : "";
 		$originais = "(SELECT O.*, O.id_acontecimento AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY ordem DESC)";
 		$respostas = "(SELECT O.*, MAX(R.id_acontecimento) AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS R INNER JOIN "  . $AcontecimentoMetaData->getTableName() . " AS O ON (O.id_acontecimento = R.id_original AND (".$qrs.")) ".$qrsr." GROUP BY R.id_original ORDER BY ordem DESC)";
@@ -326,34 +289,6 @@ class Acontecimento extends Base {
 
 		return $query->getResult();
 	}
-
-	/*public static function Listar_Grupo(Grupo $Grupo = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $entradas = false) {
-		$Lista = $qrs = $qrsr = array();//$db->debug = true;
-		if((!$mensagens) && (!$minhas) && (!$entradas))
-			return $Lista;
-		// Mensagens para mim
-		if($mensagens)
-			$qrs[] = "(O.tipo = 'um')";
-		// Minhas Atualizacoes
-		if($minhas)
-			$qrs[] = "(O.tipo = 'rs' AND O.id_grupo_origem = '".$Grupo->getID()."')";
-		if($entradas)
-			$qrs[] = "(O.tipo IN ('ra', 'rm'))";
-		$qrs = implode(" OR ", $qrs);
-		// Pego todas as respostas que sejam para o grupo ou que nao tenham sido enviadas pelo proprio grupo (qd eh US e id_destino eh NULL, eh broadcast...)
-		$qrsr[] = "(R.id_grupo_destino = '".$Grupo->getID()."')"; // Acho que isto nao faz sentido -> OR (O.tipo = 'rs' AND R.id_grupo_origem != '".$Grupo->getID()."' AND R.id_grupo_destino IS NULL))";
-		if($maior_que)
-			$qrsr[] = "(R.".self::$chave." > '".intval($maior_que)."')";
-		$qrsr = (count($qrsr) > 0) ? " WHERE ".implode(" AND ", $qrsr) : "";
-		$qrd = "O.id_grupo_destino = '".$Grupo->getID()."' OR (O.id_destino IS NULL AND O.id_grupo_destino IS NULL)";
-		$maior = ($maior_que) ? " AND O.".self::$chave." > '".intval($maior_que)."'" : "";
-		$originais = "(SELECT O.".self::$chave." AS ".self::$chave.", O.".self::$chave." AS ordem FROM ".self::$tabela." AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY ordem DESC)";
-		$respostas = "(SELECT R.id_original AS ".self::$chave.", MAX(R.".self::$chave.") AS ordem FROM ".self::$tabela_respostas." AS R INNER JOIN gde_acontecimentos AS O ON (O.id_acontecimento = R.id_original AND (".$qrs.")) ".$qrsr." GROUP BY R.id_original ORDER BY ordem DESC)";
-		$resultado = $db->SelectLimit("SELECT ".self::$chave.", MAX(ordem) AS ordem FROM (".$originais." UNION ".$respostas.") AS A GROUP BY ".self::$chave." ORDER BY ordem DESC", $limit, $start);
-		foreach($resultado as $linha)
-			$Lista[] = new self($db, $linha[self::$chave]);
-		return $Lista;
-	}*/
 
 	/*public static function Consultar($param = array(), $orderby = null, &$total = 0, $limit = '-1', $start = '-1') {
 		$Lista = array();
