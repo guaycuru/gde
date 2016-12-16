@@ -4,14 +4,6 @@ define('TITULO', 'Amigos');
 
 require_once('../common/common.inc.php');
 
-function Compara_RA($a, $b) {
-	return $a->getRA() - $b->getRA();
-}
-
-function Compara_Nome($a, $b) {
-	return strcmp($a[0]->getNome_Completo(false), $b[0]->getNome_Completo(false));
-}
-
 $Quase_Amigos = $_Usuario->getQuase_Amigos();
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
 $Amigos = $_Usuario->getAmigos(true);

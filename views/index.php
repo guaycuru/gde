@@ -142,21 +142,17 @@ $(document).ready(function() {
 	
 	$("span.ui-icon").css({'display': 'none'});
 	
-	/*$.post('<?= CONFIG_URL; ?>ajax/ax_previsao.php', {}, function(data){
-		$("#previsao_tempo").html(data);
-	});*/
-	
 	$("#tabs").tabs({
 		show: function(event, ui) {
 			if(ui.panel.id == 'tab_atualizacoes') {
 				Atualizar_Atualizacoes('', 'u', false, false);
 			}
-<?php if(($_Usuario->getRA() > 0) || ($_Usuario->getMatricula() > 0)) { ?>
+<?php if(($_Usuario->getAluno(false) !== null) || ($_Usuario->getProfessor(false) !== null)) { ?>
 			else if((ui.panel.id == 'tab_horario') && (!carregou_horario)) {
 				Atualizar_Horario('');
 				carregou_horario = true;
 			}
-<?php } if($_Usuario->getRA() > 0) { ?>
+<?php } if($_Usuario->getAluno(false) !== null) { ?>
 			else if((ui.panel.id == 'tab_calendario') && (!carregou_calendario)) {
 				Atualizar_Calendario();
 				carregou_calendario = true;
@@ -311,9 +307,9 @@ $(document).ready(function() {
 			<div id="tabs">
 				<ul>
 					<li><a href="#tab_atualizacoes" class="ativo">Atualiza&ccedil;&otilde;es</a></li>
-<?php if(($_Usuario->getRA() > 0) || ($_Usuario->getMatricula() > 0)) { ?>
-					<li><a href="#tab_horario"><?= ($_Usuario->getRA() > 0) ? 'Matr&iacute;culas' : 'Hor&aacute;rio'; ?></a></li>
-<?php } if($_Usuario->getRA() > 0) { ?>
+<?php if(($_Usuario->getAluno(false) !== null) || ($_Usuario->getProfessor(false) !== null)) { ?>
+					<li><a href="#tab_horario"><?= ($_Usuario->getAluno(false) !== null) ? 'Matr&iacute;culas' : 'Hor&aacute;rio'; ?></a></li>
+<?php } if($_Usuario->getAluno(false) !== null) { ?>
 					<li><a href="#tab_calendario">Calend&aacute;rio</a></li>
 					<li><a href="#tab_notas">Notas</a></li>
 					<li><a href="#tab_avisos" id="link_avisos">Avisos</a></li>
@@ -331,11 +327,11 @@ $(document).ready(function() {
 						<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Atualiza&ccedil;&otilde;es...
 					</div>
 				</div>
-<?php if(($_Usuario->getRA() > 0) || ($_Usuario->getMatricula() > 0)) { ?>
+<?php if(($_Usuario->getAluno(false) !== null) || ($_Usuario->getProfessor(false) !== null)) { ?>
 				<div id="tab_horario" class="tab_content">
-					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando <?php if($_Usuario->getRA() > 0) echo 'Matr&iacute;culas e '; ?>Matr&iacute;culas...
+					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando <?php if($_Usuario->getAluno(false) !== null) echo 'Matr&iacute;culas e '; ?>Matr&iacute;culas...
 				</div>
-<?php } if($_Usuario->getRA() > 0) { ?>
+<?php } if($_Usuario->getAluno(false) !== null) { ?>
 				<div id="tab_calendario" class="tab_content">
 					<div id="opcaoCalendario" style="text-align: center; margin: 0px 0px 10px 0px">
 						<input type="checkbox" id="calendarioFeriado" class="tipo_calendario" checked="checked" /><label for="calendarioFeriado">Feriado</label>

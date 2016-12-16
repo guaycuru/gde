@@ -10,7 +10,7 @@ $Aluno = $Professor = null;
 if(!empty($_GET['ra'])) {
 	$_tipo = 'A';
 	$Usr = Usuario::Por_RA($_GET['ra']);
-	$Aluno = ($Usr !== null) ? $Usr->getAluno() : Aluno::Load($_GET['ra']);
+	$Aluno = ($Usr !== null) ? $Usr->getAluno(true) : Aluno::Load($_GET['ra']);
 	if($Aluno->getID() == null)
 		die('Aluno n&atilde;o encontrado...'.$FIM);
 	$_matricula = $Aluno->getRA();
@@ -19,17 +19,17 @@ if(!empty($_GET['ra'])) {
 	$Professor = Professor::Load($_GET['professor']);
 	if($Professor->getID() == null)
 		die('Professor n&atilde;o encontrado...'.$FIM);
-	$Usr = ($Professor->getMatricula() != null) ? Usuario::Por_Matricula($Professor->getMatricula()) : null;
+	$Usr = $Professor->getUsuario(false);
 	$_matricula = $Professor->getID();
 } else {
 	$Usr = (!empty($_GET['usuario'])) ? Usuario::Por_Login($_GET['usuario']) : $_Usuario;
 	if($Usr === null)
 		die('Usu&aacute;rio n&atilde;o encontrado...'.$FIM);
-	if($Usr->getRA() > 0) {
+	if($Usr->getAluno(false) !== null) {
 		$_tipo = 'A';
 		$Aluno = $Usr->getAluno();
 		$_matricula = $Aluno->getRA();
-	} elseif($Usr->getMatricula() > 0) {
+	} elseif($Usr->getProfessor(false) !== null) {
 		$_tipo = 'P';
 		$Professor = $Usr->getProfessor();
 		$_matricula = $Professor->getID();

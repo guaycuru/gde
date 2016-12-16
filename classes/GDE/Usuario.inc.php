@@ -66,7 +66,7 @@ class Usuario extends Base {
 	 * @var Professor
 	 *
 	 * @ORM\OneToOne(targetEntity="Professor", inversedBy="usuario")
-	 * @ORM\JoinColumn(name="matricula", referencedColumnName="matricula")
+	 * @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
 	 */
 	protected $professor;
 
@@ -421,7 +421,12 @@ class Usuario extends Base {
 				$campo = 'ra';
 			else // Login
 				$campo = 'login';
-		}
+		} elseif($campo == 'ra')
+			// Busca por RA deve buscar um aluno
+			$campo = 'aluno';
+		elseif($campo == 'matricula')
+			// Busca por matricula (professor) precisa ser feita via DQL
+			return self::Por_Matricula($valor, $ativo);
 		$params = array($campo => $valor);
 		if($ativo !== null)
 			$params['ativo'] = $ativo;
@@ -437,7 +442,7 @@ class Usuario extends Base {
 	 * @param $login
 	 * @param bool $ativo
 	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
-	 * @return false|Usuario
+	 * @return null|Usuario
 	 */
 	public static function Por_Login($login, $ativo = true, $vazio = false) {
 		$Usuario = self::Por_Unique($login, 'login', $ativo);
@@ -452,7 +457,7 @@ class Usuario extends Base {
 	 * @param $ra
 	 * @param bool $ativo
 	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
-	 * @return false|Usuario
+	 * @return null|Usuario
 	 */
 	public static function Por_RA($ra, $ativo = true, $vazio = false) {
 		$Usuario = self::Por_Unique($ra, 'ra', $ativo);
@@ -467,10 +472,18 @@ class Usuario extends Base {
 	 * @param $matricula
 	 * @param bool $ativo
 	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
-	 * @return false|Usuario
+	 * @return null|Usuario
 	 */
 	public static function Por_Matricula($matricula, $ativo = true, $vazio = false) {
-		$Usuario = self::Por_Unique($matricula, 'matricula', $ativo);
+		$dql = 'SELECT U FROM GDE\\Usuario U INNER JOIN GDE\\Professor P WHERE P.matricula = ?1';
+		if($ativo !== null)
+			$dql .= ' AND U.ativo = ?2';
+		$query = self::_EM()->createQuery($dql)
+			->setParameter(1, $matricula)
+			->setMaxResults(1);
+		if($ativo !== null)
+			$query->setParameter(2, $ativo);
+		$Usuario = $query->getOneOrNullResult();
 		if($Usuario === null && $vazio === true)
 			return new self;
 		return $Usuario;

@@ -15,9 +15,9 @@ elseif(isset($_POST['sala']))
 elseif(isset($_POST['professor']))
 	$_tipo = 'P';
 else { // Meu horario
-	if($_Usuario->getRA() > 0)
+	if($_Usuario->getAluno(false) !== null)
 		$_tipo = 'A';
-	elseif($_Usuario->getMatricula() > 0)
+	elseif($_Usuario->getProfessor(false) !== null)
 		$_tipo = 'P';
 	else
 		die('Eu sou uma sala! oO');
@@ -51,7 +51,7 @@ if($_tipo == 'A') {
 	} else
 		$nivel = $_POST['n'][0];
 	$Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $nivel);
-	$meu = ($_Usuario->getRA() == $Aluno->getRA());
+	$meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());
 } elseif($_tipo == 'S') {
 	$Sala = Sala::Load($_POST['sala']);
 	$Horario = $Sala->Monta_Horario($Periodo_Selecionado->getPeriodo());
@@ -61,7 +61,7 @@ if($_tipo == 'A') {
 } elseif($_tipo == 'P') {
 	$Professor = ((isset($_POST['professor'])) && ($_POST['professor'] > 0)) ? Professor::Load(intval($_POST['professor'])) : $_Usuario->getProfessor(true);
 	$Horario = $Professor->Monta_Horario($Periodo_Selecionado->getPeriodo());
-	$meu = (($_Usuario->getMatricula() != null) && ($_Usuario->getMatricula() == $Professor->getMatricula()));
+	$meu = (($_Usuario->getProfessor(false) !== null) && ($_Usuario->getProfessor()->getID() == $Professor->getID()));
 	$nivel = null;
 	$tem_grad = $tem_pos = false;
 }

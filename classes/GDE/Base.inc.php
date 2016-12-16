@@ -243,9 +243,6 @@ abstract class Base {
 		$Obj = self::_EM()->find(get_called_class(), intval($id));
 		return ($Obj !== null) ? $Obj : new static();
 	}
-	public static function Carregar($id = null) {
-		return static::Load($id);
-	}
 	
 	/** 
 	* StartTrans
@@ -335,9 +332,6 @@ abstract class Base {
 		
 		return true;
 	}
-	public function Salvar($flush = true) {
-		return static::Save($flush);
-	}
 	
 	/** 
 	* Delete
@@ -357,9 +351,6 @@ abstract class Base {
 			self::_EM()->flush();
 		
 		return true;
-	}
-	public function Excluir($flush = true) {
-		return static::Delete($flush);
 	}
 
 	/**
