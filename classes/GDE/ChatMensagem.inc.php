@@ -16,7 +16,7 @@ class ChatMensagem extends Base {
 	 *
 	 * @ORM\Column(type="bigint", nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_chat_mensagem;
 
@@ -44,14 +44,14 @@ class ChatMensagem extends Base {
 	/**
 	 * @var \DateTime
 	 *
-	 * @ORM\Column(type="datetime", nullable=false)
+	 * @ORM\Column(type="datetime", options={"default"=0}, nullable=false)
 	 */
-	protected $data = 'CURRENT_TIMESTAMP';
+	protected $data;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $recebida = false;
 

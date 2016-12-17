@@ -14,9 +14,9 @@ class PreLista extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_lista;
 
@@ -38,11 +38,11 @@ class PreLista extends Base {
 	protected $sigla;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
-	protected $parcial;
+	protected $parcial = false;
 
 
 }

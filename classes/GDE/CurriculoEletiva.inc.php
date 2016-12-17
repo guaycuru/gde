@@ -15,9 +15,9 @@ class CurriculoEletiva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_eletivas;
 
@@ -45,14 +45,14 @@ class CurriculoEletiva extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $catalogo;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="smallint", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $creditos;
 

@@ -14,9 +14,9 @@ class Modalidade extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_modalidade;
 

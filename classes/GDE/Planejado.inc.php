@@ -16,9 +16,9 @@ class Planejado extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_planejado;
 
@@ -76,7 +76,7 @@ class Planejado extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $compartilhado = false;
 

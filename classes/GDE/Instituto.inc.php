@@ -12,11 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Instituto extends Base {
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_instituto;
 
@@ -37,7 +37,7 @@ class Instituto extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}), nullable=true)
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}, nullable=true)
 	 */
 	protected $id_unidade;
 

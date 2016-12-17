@@ -14,9 +14,9 @@ class Enquete extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_enquete;
 
@@ -42,18 +42,18 @@ class Enquete extends Base {
 	protected $data;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $ativa = false;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="smallint", options={"default"=1}, nullable=false)
 	 */
-	protected $max_votos = '1';
+	protected $max_votos = 1;
 
 
 }

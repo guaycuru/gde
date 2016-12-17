@@ -74,11 +74,11 @@ class Disciplina extends Base {
 	protected $periodicidade;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="smallint", options={"default"=0}, nullable=false)
 	 */
-	protected $parte = '0';
+	protected $parte = 0;
 
 	/**
 	 * @var string
@@ -95,32 +95,32 @@ class Disciplina extends Base {
 	protected $bibliografia;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $quinzenal = false;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true, "default"=0}, nullable=false)
 	 */
-	protected $cursacoes = '0';
+	protected $cursacoes = 0;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true, "default"=0}, nullable=false)
 	 */
-	protected $reprovacoes = '0';
+	protected $reprovacoes = 0;
 
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true, "default"=0}, nullable=false)
 	 */
-	protected $max_reprovacoes = '0';
+	protected $max_reprovacoes = 0;
 
 	const NIVEL_GRAD = 'G';
 	const NIVEL_POS = 'P';

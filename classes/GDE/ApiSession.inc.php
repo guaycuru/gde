@@ -16,7 +16,7 @@ class ApiSession extends Base {
 	 *
 	 * @ORM\Column(type="string", length=16, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $code;
 
@@ -51,7 +51,7 @@ class ApiSession extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $id_usuario;
 

@@ -14,9 +14,9 @@ class Aviso extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_aviso;
 
@@ -64,21 +64,21 @@ class Aviso extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
 	 */
 	protected $aba = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
 	 */
 	protected $email = true;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $lido = false;
 

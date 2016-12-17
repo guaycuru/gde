@@ -14,11 +14,21 @@ class Nota extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_nota;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
+	 * })
+	 */
+	protected $usuario;
 
 	/**
 	 * @var Oferecimento
@@ -45,19 +55,9 @@ class Nota extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="decimal", precision=10, scale=5, nullable=false)
+	 * @ORM\Column(type="decimal", precision=10, scale=5, options={"default"="1.00000"}, nullable=false)
 	 */
 	protected $peso = '1.00000';
-
-	/**
-	 * @var Usuario
-	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
-	 */
-	protected $usuario;
 
 
 }

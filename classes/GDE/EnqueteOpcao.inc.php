@@ -14,25 +14,11 @@ class EnqueteOpcao extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_opcao;
-
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="string", length=255, nullable=false)
-	 */
-	protected $opcao;
-
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="boolean", nullable=false)
-	 */
-	protected $ativa = false;
 
 	/**
 	 * @var Enquete
@@ -50,6 +36,20 @@ class EnqueteOpcao extends Base {
 	 * @ORM\ManyToMany(targetEntity="Usuario", mappedBy="enquetes_opcoes")
 	 */
 	protected $usuario;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", length=255, nullable=false)
+	 */
+	protected $opcao;
+
+	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
+	 */
+	protected $ativa = false;
 
 
 }

@@ -15,7 +15,7 @@ class Periodo extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
 	 */
 	protected $id_periodo;
@@ -33,7 +33,7 @@ class Periodo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"="n"}, nullable=false)
 	 */
 	protected $tipo = self::TIPO_NORMAL;
 

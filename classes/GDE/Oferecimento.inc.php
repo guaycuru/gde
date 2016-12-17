@@ -16,9 +16,9 @@ class Oferecimento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_oferecimento;
 
@@ -88,14 +88,14 @@ class Oferecimento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="smallint", nullable=false)
+	 * @ORM\Column(type="smallint", options={"default"=0}, nullable=false)
 	 */
-	protected $vagas = '0';
+	protected $vagas = 0;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $fechada = false;
 

@@ -7,32 +7,44 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Evento
  *
- * @ORM\Table(name="gde_eventos", indexes={@ORM\Index(name="data_inicio", columns={"data_inicio", "data_fim"}), @ORM\Index(name="data_aviso", columns={"data_aviso"}), @ORM\Index(name="id_usuario", columns={"id_usuario"})})
+ * @ORM\Table(
+ *   name="gde_eventos",
+ *   indexes={
+ *     @ORM\Index(name="data_inicio", columns={"data_inicio", "data_fim"}),
+ *     @ORM\Index(name="data_aviso", columns={"data_aviso"})
+ *   }
+ * )
  * @ORM\Entity
  */
 class Evento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_evento;
 
 	/**
-	 * @var integer
+	 * @var Usuario
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
+	 * })
 	 */
-	protected $id_usuario;
+	protected $usuario;
 
 	/**
-	 * @var integer
+	 * @var Oferecimento
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Oferecimento")
+	 * @ORM\JoinColumns({
+	 *   @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")
+	 * })
 	 */
-	protected $id_oferecimento;
+	protected $oferecimento;
 
 	/**
 	 * @var string
@@ -77,9 +89,9 @@ class Evento extends Base {
 	protected $data_fim;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $dia_todo = false;
 

@@ -14,9 +14,9 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_emprego;
 
@@ -37,10 +37,11 @@ class UsuarioEmprego extends Base {
 	 */
 	protected $nome;
 
+	// ToDo: Constants
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"="e"}, nullable=false)
 	 */
 	protected $tipo = 'e';
 
@@ -61,7 +62,7 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $atual = false;
 

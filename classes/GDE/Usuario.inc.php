@@ -23,9 +23,9 @@ class Usuario extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}), nullable=false)
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue(strategy="IDENTITY")
+	 * @ORM\GeneratedValue
 	 */
 	protected $id_usuario;
 
@@ -282,14 +282,14 @@ class Usuario extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
 	 */
 	protected $compartilha_arvore = true;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $procurando_emprego = false;
 
@@ -322,9 +322,9 @@ class Usuario extends Base {
 	protected $info_profissional;
 
 	/**
-	 * @var string
+	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
 	 */
 	protected $compartilha_horario = true;
 
@@ -352,7 +352,7 @@ class Usuario extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $email_validado = false;
 
@@ -360,30 +360,30 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=1, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"="d"}, nullable=false)
 	 */
 	protected $chat_status = 'd';
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $ativo = false;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
 	protected $admin = false;
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
 	 */
-	protected $beta = true;
+	protected $beta = false;
 
 	// Determina se esta eh uma copia da entidade original, que pode ser modificada
 	private $_copia;
