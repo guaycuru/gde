@@ -5,7 +5,9 @@ define('CONFIG_DEV_MODE', true);
 
 // DB
 define('CONFIG_DB_TYPE', 'mysqli');
-define('CONFIG_DB_HOST', '127.0.0.1');
+define('CONFIG_DB_SOCKET', ''); // Usado se for definido
+define('CONFIG_DB_HOST', '127.0.0.1'); // Usado se nao for definido um socket
+define('CONFIG_DB_PORT', ''); // Padrao
 define('CONFIG_DB_USER', 'Web');
 define('CONFIG_DB_PASS', '');
 define('CONFIG_DB_NAME', 'gde');

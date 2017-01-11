@@ -76,7 +76,6 @@ else
 // DB connection options
 $connection = array(
 	'driver' => 'pdo_mysql',
-	'host' => CONFIG_DB_HOST,
 	'user' => CONFIG_DB_USER,
 	'password' => CONFIG_DB_PASS,
 	'dbname' => CONFIG_DB_NAME,
@@ -85,6 +84,13 @@ $connection = array(
 		1002 => 'SET NAMES utf8'
 	)
 );
+if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
+	$connection['unix_socket'] = CONFIG_DB_SOCKET;
+elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {
+	$connection['host'] = CONFIG_DB_HOST;
+	if((defined('CONFIG_DB_PORT')) && (!empty(CONFIG_DB_PORT)))
+		$connection['port'] = CONFIG_DB_PORT;
+}
 
 // Create the Entity Manager
 $_EM = EntityManager::create($connection, $config);
