@@ -272,10 +272,9 @@ class Acontecimento extends Base {
 		$maior = ($maior_que) ? " AND O.id_acontecimento > '".intval($maior_que)."'" : "";
 		$originais = "(SELECT O.*, O.id_acontecimento AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY ordem DESC)";
 		$respostas = "(SELECT O.*, MAX(R.id_acontecimento) AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS R INNER JOIN "  . $AcontecimentoMetaData->getTableName() . " AS O ON (O.id_acontecimento = R.id_original AND (".$qrs.")) ".$qrsr." GROUP BY R.id_original ORDER BY ordem DESC)";
-		$sql = "SELECT *, MAX(ordem) AS ordem FROM (".$originais." UNION ".$respostas.") AS A GROUP BY id_acontecimento ORDER BY ordem DESC LIMIT :limit OFFSET :offset";
+		// ToDo: Arrumar pra funcionar com MySQL Mode ONLY_FULL_GROUP_BY
+		$sql = "SELECT *, MAX(ordem) AS ordem FROM (".$originais." UNION ".$respostas.") AS A GROUP BY A.id_acontecimento ORDER BY ordem DESC LIMIT :limit OFFSET :offset";
 		//$sql = "SELECT O.* FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY id_acontecimento DESC LIMIT ? OFFSET ?";
-		//$params[] = $limit;
-		//$params[] = $start;
 
 		$rsm = new \Doctrine\ORM\Query\ResultSetMappingBuilder(self::_EM());
 		$rsm->addRootEntityFromClassMetadata('GDE\\Acontecimento', 'O');

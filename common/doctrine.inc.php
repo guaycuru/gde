@@ -81,7 +81,8 @@ $connection = array(
 	'dbname' => CONFIG_DB_NAME,
 	'charset' => 'utf8',
 	'driverOptions' => array(
-		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
+		// ToDo: Remover a mudanca do SQL Mode
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8,sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))'
 	)
 );
 if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
