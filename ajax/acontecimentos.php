@@ -34,7 +34,7 @@ if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) ||
 		$Usuario_Config->setAcontecimentos_Amigos($amigos);
 		$Usuario_Config->setAcontecimentos_Grupos($grupos);
 		$Usuario_Config->setAcontecimentos_GDE($gde);
-		$Usuario_Config->Salvar(true);
+		$Usuario_Config->Save(true);
 	}
 	$Usr = $_Usuario;
 	$Grupo = null;

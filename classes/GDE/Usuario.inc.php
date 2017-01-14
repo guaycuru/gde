@@ -418,7 +418,7 @@ class Usuario extends Base {
 			if(strpos($valor, '@') !== false) // Email
 				$campo = 'email';
 			elseif(preg_match('/^\d+$/i', $valor) > 0) // RA
-				$campo = 'ra';
+				$campo = 'aluno'; // Busca por RA deve buscar um aluno
 			else // Login
 				$campo = 'login';
 		} elseif($campo == 'ra')
@@ -915,7 +915,7 @@ class Usuario extends Base {
 		if($Dados->getMax_Online(false) < $online) {
 			$Dados->setMax_Online($online);
 			$Dados->setMax_Online_TS();
-			$Dados->Salvar(true);
+			$Dados->Save(true);
 		}
 		return $online;
 	}

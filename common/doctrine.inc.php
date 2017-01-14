@@ -81,7 +81,7 @@ $connection = array(
 	'dbname' => CONFIG_DB_NAME,
 	'charset' => 'utf8',
 	'driverOptions' => array(
-		1002 => 'SET NAMES utf8'
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8'
 	)
 );
 if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
