@@ -42,7 +42,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = clone $_Usuario;
 	if((!empty($_GET['curso'])) && (isset($_GET['modalidade']))) {
 		$curso = intval($_GET['curso']);
-		$Usr->setCurso($curso);
+		$Usr->setCurso(Curso::Load($curso));
 		$modalidade = (strlen($_GET['modalidade']) > 0) ? substr($_GET['modalidade'], 0, 2) : null;
 		$Usr->setModalidade($modalidade);
 	} else {
