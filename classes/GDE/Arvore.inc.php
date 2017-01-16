@@ -61,7 +61,7 @@ class Arvore {
 			$times = array('start' => microtime(true));
 
 		$this->nome = $Usuario->getNome_Completo(true);
-		$this->ra = $Usuario->getRA(true);
+		$this->ra = $Usuario->getAluno(true)->getRA(true);
 		$this->curso = $Usuario->getCurso(true)->getNumero(true);
 		$this->nome_curso = $Usuario->getCurso(true)->getNome(true);
 		$this->modalidade = $Usuario->getModalidade(true)->getSigla(true);
