@@ -42,9 +42,9 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = clone $_Usuario;
 	if((!empty($_GET['curso'])) && (isset($_GET['modalidade']))) {
 		$curso = intval($_GET['curso']);
-		$Usr->SetCurso($curso);
+		$Usr->setCurso($curso);
 		$modalidade = (strlen($_GET['modalidade']) > 0) ? substr($_GET['modalidade'], 0, 2) : null;
-		$Usr->SetModalidade($modalidade);
+		$Usr->setModalidade($modalidade);
 	} else {
 		$curso = $Usr->getCurso(true)->getNumero(true);
 		$modalidade = $Usr->getModalidade(true)->getSigla(true);
