@@ -56,18 +56,65 @@ class Modalidade extends Base {
 	 */
 	protected $nome;
 
+	/**
+	 * Listar
+	 *
+	 * @param string $nivel
+	 * @param integer $curso
+	 * @param integer $catalogo
+	 * @return ArrayCollection
+	 */
 	public static function Listar($nivel, $curso, $catalogo = null) {
 		$dql = 'SELECT M FROM GDE\\Modalidade M INNER JOIN M.curso C '.
-			'WHERE M.nivel = ?1 AND C.numero = ?2 ';
+			'WHERE M.nivel IN (?1) AND C.numero = ?2 ';
 		if($catalogo != null)
 			$dql .= 'AND M.catalogo = ?3 ';
 		$dql .= 'GROUP BY M.sigla ORDER BY M.sigla ASC';
 		$query = self::_EM()->createQuery($dql);
-			$query->setParameter(1, $nivel);
-			$query->setParameter(2, $curso);
+		if(!is_array($nivel))
+			$nivel = array($nivel);
+		$query->setParameter(1, $nivel);
+		$query->setParameter(2, $curso);
 		if($catalogo != null)
 			$query->setParameter(3, $catalogo);
 		return $query->getResult();
+	}
+
+	/**
+	 * Por_Unique
+	 *
+	 * @param string $nivel
+	 * @param integer $curso
+	 * @param string $sigla
+	 * @param integer $catalogo
+	 * @return self|null
+	 */
+	public static function Por_Unique($nivel, $curso, $sigla, $catalogo) {
+		return self::FindOneBy(array('nivel' => $nivel, 'curso' => $curso, 'sigla' => $sigla, 'catalogo' => $catalogo));
+	}
+
+	/**
+	 * Por_Curso_Sigla_Catalogo
+	 *
+	 * @param integer $curso
+	 * @param string $sigla
+	 * @param array $nivel
+	 * @param integer $catalogo
+	 * @return self|null
+	 */
+	public static function Por_Curso_Sigla_Catalogo($curso, $sigla, $nivel = array('G', 'T'), $catalogo = null) {
+		$dql = 'SELECT M FROM GDE\\Modalidade M INNER JOIN M.curso C '.
+			'WHERE M.nivel IN (?1) AND C.numero = ?2 ';
+		if($catalogo != null)
+			$dql .= 'AND M.catalogo = ?3 ';
+		$dql .= 'GROUP BY M.sigla ORDER BY M.sigla ASC';
+		$query = self::_EM()->createQuery($dql);
+		$query->setParameter(1, $nivel);
+		$query->setParameter(2, $curso);
+		if($catalogo != null)
+			$query->setParameter(3, $catalogo);
+		$query->setMaxResults(1);
+		return $query->getOneOrNullResult();
 	}
 
 }

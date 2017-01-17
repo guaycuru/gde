@@ -58,5 +58,24 @@ class Curso extends Base {
 			$query->setParameter(1, $niveis);
 		return $query->getResult();
 	}
+	
+	/**
+	 * Por_Numero
+	 *
+	 * @param integer $numero
+	 * @param array $niveis
+	 * @return self|null
+	 */
+	public static function Por_Numero($numero, $niveis = array('G', 'T')) {
+		$dql = 'SELECT C FROM GDE\\Curso C WHERE C.numero = ?1';
+		if(count($niveis) > 0)
+			$dql .= ' AND C.nivel IN (?2)';
+		$query = self::_EM()->createQuery($dql);
+		$query->setParameter(1, $numero);
+		if(count($niveis) > 0)
+			$query->setParameter(2, $niveis);
+		$query->setMaxResults(1);
+		return $query->getOneOrNullResult();
+	}
 
 }

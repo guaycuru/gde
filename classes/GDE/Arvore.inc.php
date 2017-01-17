@@ -329,6 +329,44 @@ class Arvore {
 	public static function OrdenaEletivas($a, $b) {
 		return ($a->getTipo() - $b->getTipo());
 	}
+	
+	private static function imagelinethick($image, $x1, $y1, $x2, $y2, $color, $thick = 1) {
+		/* this way it works well only for orthogonal lines
+		imagesetthickness($image, $thick);
+		return imageline($image, $x1, $y1, $x2, $y2, $color);
+		*/
+		if ($thick == 1) { // Linha normal
+			return imageline($image, $x1, $y1, $x2, $y2, $color);
+		}
+		$t = $thick / 2 - 0.5;
+		if ($x1 == $x2 || $y1 == $y2) { // Linha horizontal ou vertical
+			return imagefilledrectangle($image, round(min($x1, $x2) - $t), round(min($y1, $y2) - $t), round(max($x1, $x2) + $t), round(max($y1, $y2) + $t), $color);
+		}
+		$k = ($y2 - $y1) / ($x2 - $x1); //y = kx + q
+		$a = $t / sqrt(1 + pow($k, 2));
+		$points = array(
+			round($x1 - (1+$k)*$a), round($y1 + (1-$k)*$a),
+			round($x1 - (1-$k)*$a), round($y1 - (1+$k)*$a),
+			round($x2 + (1+$k)*$a), round($y2 - (1-$k)*$a),
+			round($x2 + (1-$k)*$a), round($y2 + (1+$k)*$a),
+		);
+		imagefilledpolygon($image, $points, 4, $color);
+		return imagepolygon($image, $points, 4, $color);
+	}
+
+	private static function imagelinedotted($im, $x1, $y1, $x2, $y2, $color, $dist) {
+		$transp = imagecolortransparent($im);
+
+		$style = array($color);
+
+		for ($i=0; $i<$dist; $i++) {
+			array_push($style, $transp); // Generate style array - loop needed for customisable distance between the dots
+		}
+
+		imagesetstyle($im, $style);
+		return (integer) imageline($im, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
+		// imagesetstyle($im, array($color)); // Reset style - just in case...
+	}
 
 	public static function LinhaEntreDois($image, $consts, $dados, $x1, $y1, $x2, $y2, $cor, $parcial, $largura_s1 = null) {
 		if($y1 >= $y2) // Evita problema de pre-requisito "circular"
@@ -342,7 +380,7 @@ class Arvore {
 		$de_y = $y1 + $consts['altura'];
 		$pr_x = $x2 + ($consts['largura'] / 2);
 		$pr_y = $y2 - 2;
-		imagelinethick($image, $de_x, $de_y, $de_x, $de_y+$altura_l1, $cor, 2);
+		self::imagelinethick($image, $de_x, $de_y, $de_x, $de_y+$altura_l1, $cor, 2);
 
 		$at_x = $de_x;
 		$at_y = $de_y+$altura_l1;
@@ -369,22 +407,22 @@ class Arvore {
 
 		if($y2 > $y1 + $consts['dist_y'] + $consts['altura'] + 1) { // Se tem que descer mais que um nivel...
 			$largura_l2 = $x2 + $consts['largura'] + ($consts['dist_x'] * (3/4) * (($dados['maximo_x'] - $qual_x_dif + 1) / $dados['maximo_x']));
-			imagelinethick($image, $at_x, $at_y, $largura_l2, $de_y+$altura_l1, $cor, 2); // Se prepara pra descer
+			self::imagelinethick($image, $at_x, $at_y, $largura_l2, $de_y+$altura_l1, $cor, 2); // Se prepara pra descer
 			//if($image2 != null)
-			//imagelinethick($image2, $at_x, $at_y, $largura_l2, $de_y+$altura_l1, $cor2, 2);
+			//self::imagelinethick($image2, $at_x, $at_y, $largura_l2, $de_y+$altura_l1, $cor2, 2);
 
 			$at_x = $largura_l2;
 			$at_y = $de_y+$altura_l1;
 			$altura_l2 = $pr_y - $altura_l1;
-			imagelinethick($image, $at_x, $at_y, $at_x, $altura_l2, $cor, 2); // Desce
+			self::imagelinethick($image, $at_x, $at_y, $at_x, $altura_l2, $cor, 2); // Desce
 
 			$at_x = $at_x;
 			$at_y = $altura_l2;
 		}
-		imagelinethick($image, $at_x, $at_y, $largura_s1, $at_y, $cor, 2); // Vai ate a seta
+		self::imagelinethick($image, $at_x, $at_y, $largura_s1, $at_y, $cor, 2); // Vai ate a seta
 
 		$at_x = $largura_s1;
-		imagelinethick($image, $at_x, $at_y, $largura_s1, $pr_y-8, $cor, 2); // Desce pra seta
+		self::imagelinethick($image, $at_x, $at_y, $largura_s1, $pr_y-8, $cor, 2); // Desce pra seta
 
 		if($parcial === false)
 			imagefilledpolygon($image, array($largura_s1-4, $pr_y-8, $largura_s1+5, $pr_y-8, $largura_s1, $pr_y), 3, $cor); // A seta (integral)
@@ -793,8 +831,8 @@ class Arvore {
 				$i = 0;
 				//$ret .= "\r\n  OBTER  ".(($creditos<10)?' ':null).$creditos." CREDITO(S) DENTRE";
 				$ret .= "  Obter ".(($creditos<10)?' ':null).$creditos." Cr&eacute;dito(s) dentre a(s) seguinte(s) disciplina(s): ";
-				foreach($Elet->getConjunto() as $Falta) {
-					$ret .= "  <a href=\"".CONFIG_URL."disciplina/".$Falta->getSigla(true)."\" class=\"sigla\" title=\"".$Falta->getNome(true)."\">".$Falta->getSigla(true)."</a>(".(($Falta->getCreditos() > 0)?(sprintf("%02d", $Falta->getCreditos(false))):'??').")";
+				foreach($Elet->getConjuntos() as $Falta) {
+					$ret .= "  <a href=\"".CONFIG_URL."disciplina/".$Falta->getSigla(true)."\" class=\"sigla\" title=\"".$Falta->getDisciplina()->getNome(true)."\">".$Falta->getSigla(true)."</a>(".(($Falta->getDisciplina()->getCreditos() > 0)?(sprintf("%02d", $Falta->getDisciplina()->getCreditos(false))):'??').")";
 					$i++;
 					if($i % 5 == 0) $ret .= "\r\n                                                             ";
 				}

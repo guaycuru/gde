@@ -40,20 +40,26 @@ require_once('../common/common.inc.php');
 
 if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = clone $_Usuario;
-	if((!empty($_GET['curso'])) && (isset($_GET['modalidade']))) {
-		$curso = intval($_GET['curso']);
-		$Usr->setCurso(Curso::Load($curso));
-		$modalidade = (strlen($_GET['modalidade']) > 0) ? substr($_GET['modalidade'], 0, 2) : null;
-		$Usr->setModalidade($modalidade);
-	} else {
-		$curso = $Usr->getCurso(true)->getNumero(true);
-		$modalidade = $Usr->getModalidade(true)->getSigla(true);
-	}
 	if(isset($_GET['catalogo'])) {
 		$catalogo = intval($_GET['catalogo']);
 		$Usr->setCatalogo($catalogo);
 	} else
 		$catalogo = $Usr->getCatalogo();
+	if((!empty($_GET['curso'])) && (isset($_GET['modalidade']))) {
+		$curso = intval($_GET['curso']);
+		$Curso = Curso::Por_Numero($curso);
+		if($Curso === null)
+			die("<h2>Curso n&atilde;o encontrado!</h2>");
+		$Usr->setCurso($Curso);
+		$modalidade = (strlen($_GET['modalidade']) > 0) ? substr($_GET['modalidade'], 0, 2) : null;
+		$Modalidade = Modalidade::Por_Unique($Curso->getNivel(false), $Curso->getID(), $modalidade, $catalogo);
+		if($Modalidade === null)
+			die("<h2>Modalidade n&atilde;o encontrada!</h2>");
+		$Usr->setModalidade($Modalidade);
+	} else {
+		$curso = $Usr->getCurso(true)->getNumero(true);
+		$modalidade = $Usr->getModalidade(true)->getSigla(true);
+	}
 	$completa = ((isset($_GET['cp'])) && ($_GET['cp'] == 1));
 	$meu = true;
 } else {
