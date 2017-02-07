@@ -54,8 +54,6 @@ abstract class Base {
 	* __construct
 	*
 	* Constructor
-	*
-	* @return void
 	*/
 	public function __construct() {
 		$this->_meta = self::_EM()->getClassMetadata(get_class($this));
@@ -83,6 +81,7 @@ abstract class Base {
 	* Generates a random string
 	*
 	* @param integer $size The size of the random string
+	* @param string $chars Chars to be used
 	* @return string The random string
 	*/
 	public static function Random($size, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {

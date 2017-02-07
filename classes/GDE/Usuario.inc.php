@@ -698,12 +698,9 @@ class Usuario extends Base {
 			return $Usuario;
 
 		// Verificar COOKIE
-		if(isset($_COOKIE[CONFIG_COOKIE_NOME])) {
-			$dados = self::Parsear_Cookie($_COOKIE[CONFIG_COOKIE_NOME]);
-			$Usuario = self::Load($dados['id']);
-			if(($Usuario === null) || ($Usuario->getID() == null)) // Usuario inexistente
-				$Usuario = self::Logout();
-			if($Usuario->Verificar_Senha($dados['senha'], true) === false) // Senha incorreta
+		if(!empty($_COOKIE[CONFIG_COOKIE_NOME])) {
+			$Usuario = UsuarioToken::Verificar(trim($_COOKIE[CONFIG_COOKIE_NOME]));
+			if((!is_object($Usuario)) || ($Usuario->getID() == null)) // Usuario inexistente
 				$Usuario = self::Logout();
 			elseif($Usuario->getAtivo() === false) // Usuario inativo
 				$Usuario = self::Logout();
@@ -806,29 +803,10 @@ class Usuario extends Base {
 	 * @return string Os dados do cookie
 	 */
 	public function Gerar_Cookie() {
-		$iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC);
-		$iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-		$this->sid = base64_encode($iv);
-		return trim(base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, hash("SHA256", CONFIG_SALT, true), $this->getID()."*/*".$this->getSenha(), MCRYPT_MODE_CBC, $iv)."*&/*".$iv));
-	}
-
-	/**
-	 * Parsear_Cookie
-	 *
-	 * Parseia os dados do cookie e os retorna
-	 *
-	 * @param string $cookie Os dados do cookie a serem parseados
-	 * @return array|false Uma array contendo o login e a senha ou false
-	 */
-	public static function Parsear_Cookie($cookie) {
-		$dados = explode("*&/*", base64_decode($cookie));
-		if(count($dados) < 2) // Algo deu errado
+		$Token = UsuarioToken::Novo($this, true);
+		if($Token === false)
 			return false;
-		$iv = $dados[1];
-		$dados = explode("*/*", trim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, hash("SHA256", CONFIG_SALT, true), $dados[0], MCRYPT_MODE_CBC, $iv)));
-		if(count($dados) < 2) // Algo deu errado
-			return false;
-		return array('id' => $dados[0], 'senha' => $dados[1]);
+		return $Token->Em_String();
 	}
 
 	/**
