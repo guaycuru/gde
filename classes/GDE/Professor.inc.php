@@ -89,13 +89,17 @@ class Professor extends Base {
 	 */
 	protected $lattes;
 
+	// ToDo: Remover isso!
+	public static $ordens_nome = array('Relev&acirc;ncia', 'Nome');
+	public static $ordens_inte = array('rank', 'P.nome');
+
 	public function getOferecimentos($periodo = null, $formatado = false, $links = true) {
 		if($formatado === false)
 			return parent::getOferecimentos();
 		else {
 			$lista = array();
 			foreach(parent::getOferecimentos() as $Oferecimento)
-				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
+				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
 	}

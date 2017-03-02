@@ -83,16 +83,6 @@ $(document).ready(function(){
 	</div>
 </div>
 
-<div id="coluna_direita">
-	<div id="bemvindo">
-		<h1 style="text-align: center;">Bem vindo ao GDE!</h1>
-		<ul style="padding: 0px 15px 0px 25px" >
-			<li>Para conhecer mais sobre o sistema usado por mais de 10.000 usu&aacute;rios na Unicamp, <a href="Bemvindo.php">clique aqui</a>!</li>
-			<li>Se voc&ecirc; tem alguma sugest&atilde;o ou deseja levar o GDE para a sua universidade, envie um e-mail para gde ARROBA guaycuru PONTO net</li>
-		</ul>
-	</div>
-</div>
-
 <?php
 
 } elseif(!isset($_GET['token'])) {

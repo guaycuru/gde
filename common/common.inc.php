@@ -240,21 +240,21 @@ $(document).ready(function(){
 					<li><a href="#" onclick="Logout(); return false;">Sair</a></li>
 				</ul>
 			</div>
-			<form id="form_busca_universal" method="get" action="Busca.php">
+			<form id="form_busca_universal" method="get" action="<?= CONFIG_URL; ?>busca/">
 				<div id="top_busca_simples">
 					<input type="text" id="menu_input_busca" name="q" />
 				</div>
 				<div id="top_botoes_busca">
 					<input type="submit" id="botao_busca_universal" name="buscar" value="OK" />
 					<div id="busca_avancada_wrapper">
-						<a href="Busca.php" title="Busca Avan&ccedil;ada" id="toggle_menu_busca_avancada"><img id="botao_busca_avancada" src="<?= CONFIG_URL; ?>web/images/menu-avancado.png" alt="+" width="11" height="38" /></a>
+						<a href="<?= CONFIG_URL; ?>busca/" title="Busca Avan&ccedil;ada" id="toggle_menu_busca_avancada"><img id="botao_busca_avancada" src="<?= CONFIG_URL; ?>web/images/menu-avancado.png" alt="+" width="11" height="38" /></a>
 						<div id="div_menu_busca_avancada">
-							<a href="Busca.php#tab_alunos">Buscar Alunos</a>
-							<a href="Busca.php#tab_professores">Buscar Professores</a>
-							<a href="Busca.php#tab_disciplinas">Buscar Disciplinas</a>
-							<a href="Busca.php#tab_oferecimentos">Buscar Oferecimentos</a>
-							<a href="Busca.php#tab_salas">Buscar Salas</a>
-							<a href="Busca.php#tab_grupos">Buscar Grupos</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_alunos">Buscar Alunos</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_professores">Buscar Professores</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_disciplinas">Buscar Disciplinas</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_oferecimentos">Buscar Oferecimentos</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_salas">Buscar Salas</a>
+							<a href="<?= CONFIG_URL; ?>busca/#tab_grupos">Buscar Grupos</a>
 						</div>
 					</div>
 				</div>

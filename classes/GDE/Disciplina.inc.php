@@ -122,10 +122,49 @@ class Disciplina extends Base {
 	 */
 	protected $max_reprovacoes = 0;
 
+	// Niveis
 	const NIVEL_GRAD = 'G';
 	const NIVEL_POS = 'P';
 	const NIVEL_S = 'S';
 	const NIVEL_TEC = 'T';
+	private static $_niveis = array(
+		self::NIVEL_TEC => 'Tecnologia',
+		self::NIVEL_GRAD => 'Gradua&ccedil;&atilde;o',
+		self::NIVEL_POS => 'P&oacute;s-Gradua&ccedil;&atilde;o',
+		self::NIVEL_S => 'Mestrado Profissional'
+	);
+
+	// Periodicidades
+	const PERIODICIDADE_DESCONHECIDA = 0;
+	const PERIODICIDADE_PRIMEIRO = 1;
+	const PERIODICIDADE_SEGUNDO = 2;
+	const PERIODICIDADE_AMBOS = 5;
+	const PERIODICIDADE_CRITERIO = 6;
+	private static $_periodicidades = array(
+		self::PERIODICIDADE_DESCONHECIDA => "Desconhecido",
+		self::PERIODICIDADE_PRIMEIRO => "Primeiro Semestre do Ano",
+		self::PERIODICIDADE_SEGUNDO => "Segundo Semestre do Ano",
+		self::PERIODICIDADE_AMBOS => "Os Dois Semestres do Ano",
+		self::PERIODICIDADE_CRITERIO => "A Crit&eacute;rio do Instituto"
+	);
+
+	// ToDo: Remover isto!
+	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla', 'Nome', 'Cr&eacute;ditos');
+	static $ordens_inte = array('rank', 'D.sigla', 'D.nome', 'D.creditos');
+
+	/**
+	 * @return array
+	 */
+	public static function Listar_Periodicidades() {
+		return self::$_periodicidades;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function Listar_Niveis() {
+		return self::$_niveis;
+	}
 
 	/**
 	 * Por_Sigla
@@ -156,6 +195,15 @@ class Disciplina extends Base {
 		}
 	}
 
+	/**
+	 * @param $param
+	 * @param null $ordem
+	 * @param int $total
+	 * @param string $limit
+	 * @param string $start
+	 * @param string $tipo
+	 * @return mixed
+	 */
 	public static function Consultar($param, $ordem = null, &$total = 0, $limit = '-1', $start = '-1', $tipo = 'AND') {
 		$qrs = $jns = array();
 		if($ordem == null)
@@ -200,10 +248,19 @@ class Disciplina extends Base {
 		return $query->getResult();
 	}
 
+	/**
+	 * @param Disciplina $A
+	 * @param Disciplina $B
+	 * @return int
+	 */
 	public static function Organiza(Disciplina $A, Disciplina $B) {
 		return strnatcasecmp($A->getSigla(), $B->getSigla());
 	}
 
+	/**
+	 * @param $Conjuntos
+	 * @return array
+	 */
 	private static function Organiza_Pre_Conjuntos($Conjuntos) {
 		$Pre_Requisitos = array();
 		foreach($Conjuntos as $Conjunto) {
@@ -217,6 +274,10 @@ class Disciplina extends Base {
 		return $Pre_Requisitos;
 	}
 
+	/**
+	 * @param $Conjuntos
+	 * @return string
+	 */
 	public static function Formata_Conjuntos($Conjuntos) {
 		if(count($Conjuntos) == 0)
 			return "-";
@@ -227,13 +288,40 @@ class Disciplina extends Base {
 				if($Equivalente === null)
 					$siglas[] = htmlspecialchars($sigla)." (?)";
 				else
-					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Equivalente->getSigla(true)."\" title=\"".$Equivalente->getNome()."\">".$Equivalente->getSigla()."</a> (".(($Equivalente->getCreditos() > 0)?$Equivalente->getCreditos():'?').")";
+					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Equivalente->getSigla(true)."/\" title=\"".$Equivalente->getNome()."\">".$Equivalente->getSigla()."</a> (".(($Equivalente->getCreditos() > 0)?$Equivalente->getCreditos():'?').")";
 			}
 			$ret[] = implode(" e ", $siglas);
 		}
 		return implode(" ou<br />", $ret);
 	}
 
+	/**
+	 * @param bool $nome
+	 * @return mixed|string
+	 */
+	public function getNivel($nome = false) {
+		if($this->nivel == null)
+			return ($nome) ? 'Desconhecido' : '';
+		return (($nome) && (isset(self::$_niveis[$this->nivel]))) ? self::$_niveis[$this->nivel] : $this->nivel;
+	}
+
+	/**
+	 * @param bool $nome
+	 * @return bool|mixed|null
+	 */
+	public function getPeriodicidade($nome = false) {
+		if($this->periodicidade == null)
+			return ($nome) ? self::$_periodicidades[0] : null;
+		else
+			return (($nome) && (isset(self::$_periodicidades[$this->periodicidade]))) ? self::$_periodicidades[$this->periodicidade] : $this->periodicidade;
+	}
+
+	/**
+	 * @param $Usuario
+	 * @param bool $formatado
+	 * @param null $catalogo
+	 * @return array|mixed|string
+	 */
 	public function getPre_Requisitos($Usuario, $formatado = false, $catalogo = null) {
 		$de_pos = in_array($this->getNivel(false), array('M', 'D', 'S'));
 
@@ -257,7 +345,7 @@ class Disciplina extends Base {
 						$url_sigla = htmlspecialchars($pre[2])." (?)";
 					} else {
 						$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
-						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
+						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
 					}
 					if($pre[1] === true)
 						$pres[$n][] = "*".$url_sigla;
@@ -279,7 +367,7 @@ class Disciplina extends Base {
 							$url_sigla = htmlspecialchars($pre[2])." (?)";
 						} else {
 							$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
-							$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos(false) > 0) ? $pre[0]->getCreditos(true) : '?') . ")";
+							$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos(false) > 0) ? $pre[0]->getCreditos(true) : '?') . ")";
 						}
 						if($pre[1] === true)
 							$pres[$catalogo][$n][] = "*".$url_sigla;
@@ -318,6 +406,10 @@ class Disciplina extends Base {
 		}
 	}
 
+	/**
+	 * @param bool $formatado
+	 * @return array|string
+	 */
 	public function getEquivalentes($formatado = false) {
 		$Lista = array();
 		foreach(parent::getEquivalentes() as $Equivalente) {

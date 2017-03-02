@@ -399,7 +399,30 @@ class Usuario extends Base {
 	const URL_FOTOS = 'web/fts/';
 
 	// Estados Civis
-	private static $_estados_civis = array('0' => '', '1' => 'Prefiro N&atilde;o Opinar', '2' => 'Solteiro(a)', '3' => 'Enrolado(a)', '4' => 'Namorando', '5' => 'Noivo(a)', '6' => 'Casado(a)', '7' => 'Casamento Aberto', '8' => 'Relacionamento Liberal');
+	const ESTADO_CIVIL_VAZIO = 0;
+	const ESTADO_CIVIL_NAO_OPINAR = 1;
+	const ESTADO_CIVIL_SOLTEIRO = 2;
+	const ESTADO_CIVIL_ENROLADO = 3;
+	const ESTADO_CIVIL_NAMORANDO = 4;
+	const ESTADO_CIVIL_NOIVO = 5;
+	const ESTADO_CIVIL_CASADO = 6;
+	const ESTADO_CIVIL_CASAMENTO_ABERTO = 7;
+	const ESTADO_CIVIL_LIBERAL = 8;
+	private static $_estados_civis = array(
+		self::ESTADO_CIVIL_VAZIO => '',
+		self::ESTADO_CIVIL_NAO_OPINAR => 'Prefiro N&atilde;o Opinar',
+		self::ESTADO_CIVIL_SOLTEIRO => 'Solteiro(a)',
+		self::ESTADO_CIVIL_ENROLADO => 'Enrolado(a)',
+		self::ESTADO_CIVIL_NAMORANDO => 'Namorando',
+		self::ESTADO_CIVIL_NOIVO => 'Noivo(a)',
+		self::ESTADO_CIVIL_CASADO => 'Casado(a)',
+		self::ESTADO_CIVIL_CASAMENTO_ABERTO => 'Casamento Aberto',
+		self::ESTADO_CIVIL_LIBERAL => 'Relacionamento Liberal'
+	);
+
+	public static function Listar_Estados_Civis() {
+		return self::$_estados_civis;
+	}
 
 	/**
 	 * Por_Unique
@@ -1255,7 +1278,7 @@ class Usuario extends Base {
 		foreach($Horario[$dia][$hora] as $Oferecimento) {
 			$strong_oferecimento = ((!$meu) && ($Periodo !== null) && ($this->Cursando($Oferecimento[0])));
 			$strong_sala = ((!$meu) && ($Periodo !== null) && ($this->Tem_Dimensao(array($Oferecimento[1], $dia, $hora), $Periodo)));
-			$formatado[] = (($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento[0]->getID()."\" title=\"".$Oferecimento[0]->getDisciplina()->getNome()."\">":null).(($strong_oferecimento)?"<strong>":null).$Oferecimento[0]->getSigla().$Oferecimento[0]->getTurma().(($strong_oferecimento)?"</strong>":null).(($links)?"</a>":null).((($links) && ($Oferecimento[1] != '????'))?"/<a href=\"".CONFIG_URL."sala/".$Oferecimento[1]."\">":"/").(($strong_sala)?"<strong>":null).$Oferecimento[1].(($strong_sala)?"</strong>":null).(($links)?"</a>":null);
+			$formatado[] = (($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento[0]->getID()."/\" title=\"".$Oferecimento[0]->getDisciplina()->getNome()."\">":null).(($strong_oferecimento)?"<strong>":null).$Oferecimento[0]->getSigla().$Oferecimento[0]->getTurma().(($strong_oferecimento)?"</strong>":null).(($links)?"</a>":null).((($links) && ($Oferecimento[1] != '????'))?"/<a href=\"".CONFIG_URL."sala/".$Oferecimento[1]."/\">":"/").(($strong_sala)?"<strong>":null).$Oferecimento[1].(($strong_sala)?"</strong>":null).(($links)?"</a>":null);
 		}
 		return implode("<br />", $formatado);
 	}
@@ -1275,7 +1298,7 @@ class Usuario extends Base {
 		if(isset($Horario[$dia][$hora])) {
 			foreach($Horario[$dia][$hora] as $Oferecimento) {
 				$strong = $this->Cursando($Oferecimento);
-				$formatado[] = "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."\">".(($strong) ? "<strong>" : "").$Oferecimento->getSigla().$Oferecimento->getTurma().(($strong) ? "</strong>" : "")."</a>";
+				$formatado[] = "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\">".(($strong) ? "<strong>" : "").$Oferecimento->getSigla().$Oferecimento->getTurma().(($strong) ? "</strong>" : "")."</a>";
 			}
 			return implode("<br />", $formatado);
 		} else

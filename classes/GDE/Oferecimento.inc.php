@@ -106,6 +106,10 @@ class Oferecimento extends Base {
 	 */
 	protected $pagina;
 
+	// ToDo: Remover isto!
+	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor', 'Per&iacute;odo');
+	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.periodo');
+
 	/**
 	 * Consultar
 	 *
@@ -255,7 +259,7 @@ class Oferecimento extends Base {
 	 * @return string
 	 */
 	public static function Formata_Horario($Horario, $dia, $horario) {
-		return (isset($Horario[$dia][$horario])) ? (($Horario[$dia][$horario] != '????') ? "<a href=\"".CONFIG_URL."sala/".$Horario[$dia][$horario]."\">".$Horario[$dia][$horario]."</a>" : $Horario[$dia][$horario]) : "-";
+		return (isset($Horario[$dia][$horario])) ? (($Horario[$dia][$horario] != '????') ? "<a href=\"".CONFIG_URL."sala/".$Horario[$dia][$horario]."/\">".$Horario[$dia][$horario]."</a>" : $Horario[$dia][$horario]) : "-";
 	}
 
 	/**

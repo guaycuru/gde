@@ -69,6 +69,10 @@ class Sala extends Base {
 	 */
 	protected $utilizacoes;
 
+	// ToDo: Remover isto!
+	public static $ordens_nome = array('Nome');
+	public static $ordens_inte = array('S.nome');
+
 	/**
 	 * Por_Nome
 	 *

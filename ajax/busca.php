@@ -10,7 +10,7 @@ require_once('../common/common.inc.php');
 
 if(isset($_POST['q'])) {
 	$simples = true;
-	$q = Limpa_Busca($_POST['q']);
+	$q = Util::Limpa_Busca($_POST['q']);
 	if(strlen($q) < 1)
 		exit();
 } elseif(isset($_POST['buscar']))
@@ -21,8 +21,8 @@ else
 $tp = (isset($_POST['t'])) ? str_replace('tab_', '', $_POST['t']) : 'tudo';
 
 $total = array();
-$total['tudo'] = $total['alunos'] = $total['professores'] = $total['disciplinas'] = $total['oferecimentos'] = $total['salas'] = $total['grupos'] = '?';
-$qts['tudo'] = $qts['alunos'] = $qts['professores'] = $qts['disciplinas'] = $qts['oferecimentos'] = $qts['salas'] = $qts['grupos'] = 0;
+$total['tudo'] = $total['alunos'] = $total['professores'] = $total['disciplinas'] = $total['oferecimentos'] = $total['salas'] = '?';
+$qts['tudo'] = $qts['alunos'] = $qts['professores'] = $qts['disciplinas'] = $qts['oferecimentos'] = $qts['salas'] = 0;
 
 if($tp == 'tudo') {
 	$qts['tudo'] = -1;
@@ -31,9 +31,8 @@ if($tp == 'tudo') {
 	$qts['disciplinas'] = 5;
 	$qts['oferecimentos'] = 10;
 	$qts['salas'] = 12;
-	$qts['grupos'] = 5;
 	$apg['tudo'] = 1;
-	$sta['tudo'] = $sta['alunos'] = $sta['professores'] = $sta['disciplinas'] = $sta['oferecimentos'] = $sta['salas'] = $sta['grupos'] = 0;
+	$sta['tudo'] = $sta['alunos'] = $sta['professores'] = $sta['disciplinas'] = $sta['oferecimentos'] = $sta['salas'] = 0;
 } else {
 	if(isset($_POST['resultados_pagina']))
 		$qts[$tp] = intval($_POST['resultados_pagina']);
@@ -50,15 +49,13 @@ if($simples) {
 	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s'])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
 	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s'])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
 	$ordem['salas'] = (isset($_POST['ord']['salas_s'])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'sala ASC';
-	$ordem['grupos'] = (isset($_POST['ord']['grupos_s'])) ? Grupo::$ordens_inte[$_POST['ord']['grupos_s']]." ".(($_POST['em']['grupos_s'] == 1) ? 'ASC' : 'DESC') : 'nome ASC';
-	
+
 	$start = microtime(true);
 	$Alunos = ($qts['alunos'] != 0) ? Aluno::Consultar_Simples($q, $ordem['alunos'], $total['alunos'], $qts['alunos'], $sta['alunos']) : array();
 	$Professores = ($qts['professores'] != 0) ? Professor::Consultar_Simples($q, $ordem['professores'], $total['professores'], $qts['professores'], $sta['professores']) : array();
 	$Disciplinas = ($qts['disciplinas'] != 0) ? Disciplina::Consultar_Simples($q, $ordem['disciplinas'], $total['disciplinas'], $qts['disciplinas'], $sta['disciplinas']) : array();
 	$Oferecimentos = ($qts['oferecimentos'] != 0) ? Oferecimento::Consultar_Simples($q, $ordem['oferecimentos'], $total['oferecimentos'], $qts['oferecimentos'], $sta['oferecimentos']) : array();
 	$Salas = ($qts['salas'] != 0) ? Sala::Consultar_Simples($q, $ordem['salas'], $total['salas'], $qts['salas'], $sta['salas']) : array();
-	$Grupos = ($qts['grupos'] != 0) ? Grupo::Consultar_Simples($q, $ordem['grupos'], $total['grupos'], $qts['grupos'], $sta['grupos']) : array();
 	$tempo = number_format(microtime(true) - $start, 3, ',', '.');
 } else {
 	$parametros = array();
@@ -66,28 +63,28 @@ if($simples) {
 	if($tp == 'alunos') {
 	
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
-			$parametros['nome'] = trim(Limpa_Busca($_POST['nome']));
+			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
 			
 		if((isset($_POST['ra'])) && ($_POST['ra'] != ''))
 			$parametros['ra'] = intval($_POST['ra']);
 			
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != ''))
-			$parametros['nivel'] = trim(Limpa_Busca($_POST['nivel']));
+			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
 			
 		if((isset($_POST['curso'])) && ($_POST['curso'] != '-1'))
 			$parametros['curso'] = intval($_POST['curso']);
 			
 		if((isset($_POST['modalidade'])) && ($_POST['modalidade'] != ''))
-			$parametros['modalidade'] = trim(Limpa_Busca($_POST['modalidade']));
+			$parametros['modalidade'] = trim(Util::Limpa_Busca($_POST['modalidade']));
 		
 		if((isset($_POST['nivel_pos'])) && ($_POST['nivel_pos'] != ''))
-			$parametros['nivel_pos'] = trim(Limpa_Busca($_POST['nivel_pos']));
+			$parametros['nivel_pos'] = trim(Util::Limpa_Busca($_POST['nivel_pos']));
 			
 		if((isset($_POST['curso_pos'])) && ($_POST['curso_pos'] != '-1'))
 			$parametros['curso_pos'] = intval($_POST['curso_pos']);
 			
 		if((isset($_POST['modalidade_pos'])) && ($_POST['modalidade_pos'] != ''))
-			$parametros['modalidade_pos'] = trim(Limpa_Busca($_POST['modalidade_pos']));
+			$parametros['modalidade_pos'] = trim(Util::Limpa_Busca($_POST['modalidade_pos']));
 		
 		if((isset($_POST['id_oferecimento'])) && ($_POST['id_oferecimento'] > 0))
 			$parametros['id_oferecimento'] = intval($_POST['id_oferecimento']);
@@ -97,7 +94,7 @@ if($simples) {
 			$parametros['oferecimentos'][1] = array();
 			foreach($_POST['cursando_sigla'] as $k => $sigla) {
 				if($sigla != '')
-					$parametros['oferecimentos'][1][] = array(Limpa_Busca($sigla), Limpa_Busca($_POST['cursando_turma'][$k]));
+					$parametros['oferecimentos'][1][] = array(Util::Limpa_Busca($sigla), Util::Limpa_Busca($_POST['cursando_turma'][$k]));
 			}
 		}
 		
@@ -114,10 +111,10 @@ if($simples) {
 			$parametros['relacionamento'] = intval($_POST['relacionamento']);
 		
 		if((isset($_POST['cidade'])) && ($_POST['cidade'] != ''))
-			$parametros['cidade'] = trim(Limpa_Busca($_POST['cidade']));
+			$parametros['cidade'] = trim(Util::Limpa_Busca($_POST['cidade']));
 		
 		if((isset($_POST['estado'])) && ($_POST['estado'] != ''))
-			$parametros['estado'] = trim(Limpa_Busca($_POST['estado']));
+			$parametros['estado'] = trim(Util::Limpa_Busca($_POST['estado']));
 		
 		if((isset($_POST['gde'])) && ($_POST['gde'] != ''))
 			$parametros['gde'] = $_POST['gde'][0];
@@ -141,13 +138,13 @@ if($simples) {
 	} elseif($tp == 'disciplinas') {
 	
 		if((isset($_POST['sigla'])) && ($_POST['sigla'] != ''))
-			$parametros['sigla'] = trim(Limpa_Busca($_POST['sigla']));
+			$parametros['sigla'] = trim(Util::Limpa_Busca($_POST['sigla']));
 			
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
-			$parametros['nome'] = trim(Limpa_Busca($_POST['nome']));
+			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
 			
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != '0'))
-			$parametros['nivel'] = trim(Limpa_Busca($_POST['nivel']));
+			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
 			
 		if((isset($_POST['instituto'])) && ($_POST['instituto'] != '0'))
 			$parametros['instituto'] = intval($_POST['instituto']);
@@ -159,7 +156,7 @@ if($simples) {
 			$parametros['periodicidade'] = intval($_POST['periodicidade']);
 			
 		if((isset($_POST['ementa'])) && ($_POST['ementa'] != ''))
-			$parametros['ementa'] = trim(Limpa_Busca($_POST['ementa']));
+			$parametros['ementa'] = trim(Util::Limpa_Busca($_POST['ementa']));
 		
 		if(isset($_POST['ord'][$tp.'_a'])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
@@ -178,16 +175,16 @@ if($simples) {
 			$parametros['periodo'] = intval($_POST['periodo']);
 		
 		if((isset($_POST['sigla'])) && ($_POST['sigla'] != ''))
-			$parametros['sigla'] = trim(Limpa_Busca($_POST['sigla']));
+			$parametros['sigla'] = trim(Util::Limpa_Busca($_POST['sigla']));
 			
 		if((isset($_POST['turma'])) && ($_POST['turma'] != ''))
-			$parametros['turma'] = trim(Limpa_Busca($_POST['turma']));
+			$parametros['turma'] = trim(Util::Limpa_Busca($_POST['turma']));
 			
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
-			$parametros['nome'] = trim(Limpa_Busca($_POST['nome']));
+			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
 			
 		if((isset($_POST['professor'])) && ($_POST['professor'] != ''))
-			$parametros['professor'] = trim(Limpa_Busca($_POST['professor']));
+			$parametros['professor'] = trim(Util::Limpa_Busca($_POST['professor']));
 			
 		if((isset($_POST['creditos'])) && ($_POST['creditos'] != ''))
 			$parametros['creditos'] = intval($_POST['creditos']);
@@ -196,7 +193,7 @@ if($simples) {
 			$parametros['instituto'] = intval($_POST['instituto']);
 		
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != '0'))
-			$parametros['nivel'] = trim(Limpa_Busca($_POST['nivel']));
+			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
 		
 		if((isset($_POST['dia'])) && ($_POST['dia'] != ''))
 			$parametros['dia'] = intval($_POST['dia']);
@@ -205,7 +202,7 @@ if($simples) {
 			$parametros['horario'] = intval($_POST['horario']);
 		
 		if((isset($_POST['sala'])) && ($_POST['sala'] != ''))
-			$parametros['sala'] = trim(Limpa_Busca($_POST['sala']));
+			$parametros['sala'] = trim(Util::Limpa_Busca($_POST['sala']));
 		
 		if(isset($_POST['ord'][$tp.'_a'])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
@@ -259,7 +256,7 @@ if($upper < $pgs - $range)
 	for($i = max($upper + 1, $pgs - $range, min($range + 1, $pgs) + 1); $i <= $pgs; $i++)
 		$paginas .= '<a href="#tab_'.$tp.'$'.$i.'" class="link_pagina">'.(($i-1 == $apg[$tp])?'<strong>'.$i.'</strong>':$i).'</a> ';
 
-$total['tudo'] = $total['alunos'] + $total['professores'] + $total['disciplinas'] + $total['oferecimentos'] + $total['salas'] + $total['grupos'];
+$total['tudo'] = intval($total['alunos']) + intval($total['professores']) + intval($total['disciplinas']) + intval($total['oferecimentos']) + intval($total['salas']);
 
 ?>
 <script type="text/javascript">
@@ -377,7 +374,7 @@ if($qts['alunos'] != 0) {
 		foreach($Professores as $Professor) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>perfil/?p=<?= $Professor->getID(); ?>"><?= $Professor->getNome(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>"><?= $Professor->getNome(); ?></a></td>
 		<td><?= ($Professor->getID_Instituto() == null) ? 'Desconhecido' : $Professor->getInstituto()->getSigla().' - '.$Professor->getInstituto()->getNome(); ?></td>
 	</tr>
 <?php
@@ -405,8 +402,8 @@ if($qts['alunos'] != 0) {
 		foreach($Disciplinas as $Disciplina) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>"><?= $Disciplina->getSigla(); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>"><?= $Disciplina->getNome(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>/"><?= $Disciplina->getSigla(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>/"><?= $Disciplina->getNome(); ?></a></td>
 		<td><?= $Disciplina->getCreditos(); ?></td>
 	</tr>
 <?php
@@ -451,9 +448,9 @@ if($qts['alunos'] != 0) {
 ?>
 	<tr>
 		<td><?= $nivel_of; ?></td>
-		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>"><?= $Oferecimento->getSigla()." ".$Oferecimento->getTurma(); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>"><?= $Oferecimento->getDisciplina()->getNome(); ?></a></td>
-		<td><?= ($Oferecimento->getProfessor() != null) ? '<a href="'.CONFIG_URL.'perfil/?p='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor()->getNome().'</a>' : 'Desconhecido'; ?></td>
+		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getSigla()." ".$Oferecimento->getTurma(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina()->getNome(); ?></a></td>
+		<td><?= ($Oferecimento->getProfessor() != null) ? '<a href="'.CONFIG_URL.'perfil/?professor='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor()->getNome().'</a>' : 'Desconhecido'; ?></td>
 		<td><?= $Oferecimento->getPeriodo()->getNome(); ?></td>
 		<td><?= $vagas; ?></td>
 		<td><?= $matriculados; ?></td>
@@ -484,7 +481,7 @@ if($qts['alunos'] != 0) {
 			if($s % 4 == 0)
 				echo "	<tr>";
 ?>
-		<td width="25%"><a href="<?= CONFIG_URL; ?>sala/<?= $Sala->getSala(); ?>"><?= $Sala->getSala(); ?></a></td>
+		<td width="25%"><a href="<?= CONFIG_URL; ?>sala/<?= $Sala->getSala(); ?>/"><?= $Sala->getSala(); ?></a></td>
 <?php
 		if($s % 4 == 3)
 			echo "	</tr>";
@@ -495,34 +492,6 @@ if($qts['alunos'] != 0) {
 
 </table>
 		<?= (($tp == 'tudo') && ($total['salas'] > $qts['salas'])) ? '<a href="#tab_salas" id="ir_tab_salas" class="ir_tab">Mais Salas...</a>' : $paginas; ?>
-<br />
-<?php
-	}
-} if($qts['grupos'] != 0) {
-	if($total['grupos'] == 0) {
-		if($tp != 'tudo')
-			echo '<br />Nenhum resultado encontrado!';
-	} else {
-		echo ($tp == 'tudo') ? '<h2>Grupos ('.$total['grupos'].'):</h2>' : '<span class="cabecalho_resultados_busca">Exibindo resultados '.($sta['grupos']+1).' - '.$fim['grupos'].' de '.$total['grupos'].' ('.$tempo.' segundos)</span>';
-?>
-<table border="1" width="100%" class="tabela_busca">
-	<tr>
-		<th align='center'>Nome</th>
-		<th align='center'>Descri&ccedil;&atilde;o</th>
-	</tr>
-<?php
-		foreach($Grupos as $Grupo) {
-?>
-	<tr>
-		<td><a href="<?= CONFIG_URL; ?>grupo/<?= $Grupo->getApelido(); ?>"><?= $Grupo->getNome(); ?></a></td>
-		<td><?= $Grupo->getDescricao(); ?></td>
-	</tr>
-<?php
-		}
-?>
-
-</table>
-	<?= (($tp == 'tudo') && ($total['grupos'] > $qts['grupos'])) ? '<a href="#tab_grupos" id="ir_tab_grupos" class="ir_tab">Mais Grupos...</a>' : $paginas; ?>
 <br />
 <?php
 	}

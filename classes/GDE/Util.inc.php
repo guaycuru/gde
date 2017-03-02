@@ -15,6 +15,10 @@ class Util {
 		return (strlen($texto) <= $tamanho) ? $texto : substr($texto, 0, $tamanho-3).'...';
 	}
 
+	public static function Limpa_Busca($str) {
+		return str_replace(array("\\", "/", "'", "%", "#", "\$"), null, $str);
+	}
+
 	public static function Fix_String_Aux($largeString){
 		// Se tem algum link na mensagem, nao quebra nenhuma parte dela, senao ele quebra o texto do link...
 		if(strpos($largeString, '<a href=') !== false)

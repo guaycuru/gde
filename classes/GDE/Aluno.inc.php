@@ -126,6 +126,31 @@ class Aluno extends Base {
 		//self::NIVEL_EGRESSADO => 'Egressado'
 	);
 
+	// ToDo: Remover isso!
+	public static $ordens_nome = array('Relev&acirc;ncia', 'RA', 'Nome', 'N&iacute;vel', 'Curso');
+	public static $ordens_inte = array('rank', 'A.ra', 'A.nome', 'A.nivel', 'A.curso');
+
+	/**
+	 * @return array
+	 */
+	public static function Listar_Niveis() {
+		return self::$_niveis;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function Listar_Niveis_Grad() {
+		return self::$_niveis_grad;
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function Listar_Niveis_Pos() {
+		return self::$_niveis_pos;
+	}
+
 	/**
 	 * Consultar
 	 *
@@ -198,7 +223,7 @@ class Aluno extends Base {
 				$qrs[] = "O.periodo = :periodo AND (".implode(" OR ", $mts).")";
 			}
 		}*/ // ToDo
-		unset($param['oferecimentos']);
+		unset($param['oferecimentos'], $param['periodo']);
 		if(!empty($param['amigos'])) {
 			$jns[] = " INNER JOIN U.amigos AS UA";
 			$qrs[] = " UA.amigo = :id_usuario";
@@ -298,7 +323,7 @@ class Aluno extends Base {
 			$lista = array();
 			foreach($Oferecimentos as &$Oferecimento) {
 				$lista[] = ($links)
-					? "<a href=\"" . CONFIG_URL . "oferecimento/" .$Oferecimento->getID() . "\" title=\"" . $Oferecimento->getDisciplina(true)->getNome(true) . "\">" .
+					? "<a href=\"" . CONFIG_URL . "oferecimento/" .$Oferecimento->getID() . "/\" title=\"" . $Oferecimento->getDisciplina(true)->getNome(true) . "\">" .
 						$Oferecimento->getSigla(true) . $Oferecimento->getTurma() . "</a> (" . $Oferecimento->getDisciplina(true)->getCreditos(true) . ")"
 					: $Oferecimento->getSigla(true) . $Oferecimento->getTurma(true) . " (" . $Oferecimento->getDisciplina(true)->getCreditos(true) . ")";
 			}
@@ -349,7 +374,7 @@ class Aluno extends Base {
 		else {
 			$lista = array();
 			foreach($Trancadas as $Trancada)
-				$lista[] = "<a href=\"".CONFIG_URL."oferecimento/".$Trancada->getID()."\" title=\"".$Trancada->getDisciplina(true)->getNome(true)."\">".
+				$lista[] = "<a href=\"".CONFIG_URL."oferecimento/".$Trancada->getID()."/\" title=\"".$Trancada->getDisciplina(true)->getNome(true)."\">".
 					$Trancada->getSigla(true).$Trancada->getTurma(true)."</a> (".$Trancada->getDisciplina()->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
