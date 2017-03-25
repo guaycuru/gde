@@ -483,7 +483,7 @@ if($qts['alunos'] != 0) {
 			if($s % 4 == 0)
 				echo "	<tr>";
 ?>
-		<td width="25%"><a href="<?= CONFIG_URL; ?>sala/<?= $Sala->getSala(); ?>/"><?= $Sala->getSala(); ?></a></td>
+		<td width="25%"><a href="<?= CONFIG_URL; ?>sala/<?= $Sala->getNome(true); ?>/"><?= $Sala->getNome(true); ?></a></td>
 <?php
 		if($s % 4 == 3)
 			echo "	</tr>";

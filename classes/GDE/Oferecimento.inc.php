@@ -109,7 +109,7 @@ class Oferecimento extends Base {
 
 	// ToDo: Remover isto!
 	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor', 'Per&iacute;odo');
-	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.periodo');
+	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.id_periodo');
 
 	/**
 	 * Consultar
