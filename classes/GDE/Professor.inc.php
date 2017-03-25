@@ -3,6 +3,7 @@
 namespace GDE;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Professore
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *   name="gde_professores",
  *   indexes={
- *     @ORM\Index(name="nome", columns={"nome"})
+ *     @ORM\Index(name="nome", columns={"nome"}, flags={"fulltext"})
  *   }
  * )
  * @ORM\Entity
@@ -126,6 +127,55 @@ class Professor extends Base {
 			foreach($Oferecimento->getDimensoes() as $Dimensao)
 				$Lista[$Dimensao->getDia()][$Dimensao->getHorario()][] = array($Oferecimento, $Dimensao->getSala(true)->getNome());
 		return $Lista;
+	}
+
+	/**
+	 * @param $q
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return Disciplina[]
+	 */
+	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		// ToDo: Pegar nome da tabela das annotations
+		if(strlen($q) < CONFIG_FT_MIN_LENGTH) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
+				$ordem = ($ordem != 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE P.`nome` LIKE :q";
+			$sql = "SELECT D.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$q = '%'.$q.'%';
+		} else {
+			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			if($ordem == null)
+				$ordem = 'rank DESC';
+			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$extra_select = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`";
+				if($ordem == 'rank ASC')
+					$ordem = '`rank` ASC, P.`nome` DESC';
+				else
+					$ordem = '`rank` DESC, P.`nome` ASC';
+			} else
+				$extra_select = "";
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE)";
+			$sql = "SELECT P.*".$extra_select." FROM `gde_professores` AS P WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		}
+
+		if($total !== null) {
+			$rsmt = new ResultSetMappingBuilder(self::_EM());
+			$rsmt->addScalarResult('total', 'total');
+			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+			$queryt->setParameter('q', $q);
+			$total = $queryt->getSingleScalarResult();
+		}
+
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata(get_class(), 'P');
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('q', $q);
+		return $query->getResult();
 	}
 
 }

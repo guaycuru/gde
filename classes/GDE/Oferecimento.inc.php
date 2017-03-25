@@ -3,6 +3,7 @@
 namespace GDE;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Oferecimento
@@ -167,15 +168,94 @@ class Oferecimento extends Base {
 		$where = (count($qrs) > 0) ? implode(" AND ", $qrs) : "TRUE";
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM GDE\\Oferecimento AS O ".$joins." WHERE ".$where;
+			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins." WHERE ".$where;
 			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT O FROM GDE\\Oferecimento AS O ".$joins." WHERE ".$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT O FROM ".get_class()." AS O ".$joins." WHERE ".$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
+		return $query->getResult();
+	}
+
+	/**
+	 * @param $q
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return Disciplina[]
+	 */
+	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		// ToDo: Pegar nome da tabela das annotations
+		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$extra_join = "";
+				$ordem = ($ordem != 'rank DESC')
+					? 'O.`id_periodo` ASC, O.`sigla` DESC, O.`turma` DESC'
+					: 'O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC';
+			} elseif($ordem == "DI.`nome` ASC" || $ordem == "DI.`nome` DESC")
+				$extra_join = " JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`) ";
+			elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC")
+				$extra_join = " JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
+			elseif(($ordem == "O.sigla ASC") || ($ordem == "O.sigla DESC")) {
+				$ordem = ($ordem != "O.`sigla` DESC")
+					? "O.`sigla` ASC, O.`turma` ASC"
+					: "O.`sigla` DESC, O.`turma` DESC";
+				$extra_join = "";
+			} else
+				$extra_join = "";
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O".$extra_join." WHERE O.`sigla` LIKE :q";
+			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O".$extra_join." WHERE O.`sigla` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$q = '%'.$q.'%';
+		} else {
+			//$q = preg_replace('/(\w+)/', '+$1*', $q);
+			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$ordem = ($ordem != 'rank DESC')
+					? "`rank` ASC, O.id_periodo ASC, O.`sigla` DESC, O.`turma` DESC"
+					: "`rank` DESC, O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC";
+				$extra_select1 = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`";
+				$extra_select2 = ", MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q) AS `rank`";
+				$extra_join1 = $extra_join2 = "";
+			} elseif($ordem == "DI.nome ASC" || $ordem == "DI.nome DESC") {
+				$extra_select1 = $extra_select2 = ", DI.`nome` AS `disciplina`";
+				$extra_join1 = "JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`) ";
+				$extra_join2 = "";
+				$ordem = ($ordem != "DI.nome DESC") ? "O.`disciplina` ASC" : "O.`disciplina` DESC";
+			} elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC") {
+				$extra_select1 = $extra_select2 = ", P.`nome` AS `professor`";
+				$extra_join1 = "";
+				$extra_join2 = "JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
+				$ordem = ($ordem != "P.nome DESC")
+					? "O.`professor` ASC" : "O.`professor` DESC";
+			} elseif(($ordem == "O.sigla ASC") || ($ordem == "O.sigla DESC")) {
+				$ordem = ($ordem != "O.`sigla` DESC")
+					? "O.`sigla` ASC, O.`turma` ASC"
+					: "O.`sigla` DESC, O.`turma` DESC";
+				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";
+			} else
+				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";
+			if($total !== null)
+				$sqlt = "SELECT A.`total` + B.`total` AS `total` FROM (SELECT COUNT(*) AS total FROM `gde_oferecimentos` AS O INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE)) AS A, (SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (DI.`sigla` = O.`sigla`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE)) AS B";
+			$sql = "SELECT O.* FROM ((SELECT O.*".$extra_select1." FROM `gde_oferecimentos` AS O ".$extra_join1."INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC) UNION ALL (SELECT O.*".$extra_select2." FROM `gde_oferecimentos` AS O ".$extra_join2."INNER JOIN `gde_disciplinas` AS DI ON (DI.`sigla` = O.`sigla`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC)) AS O ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		}
+
+		if($total !== null) {
+			$rsmt = new ResultSetMappingBuilder(self::_EM());
+			$rsmt->addScalarResult('total', 'total');
+			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+			$queryt->setParameter('q', $q);
+			$total = $queryt->getSingleScalarResult();
+		}
+
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata(get_class(), 'O');
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('q', $q);
 		return $query->getResult();
 	}
 

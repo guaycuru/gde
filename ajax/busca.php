@@ -375,7 +375,7 @@ if($qts['alunos'] != 0) {
 ?>
 	<tr>
 		<td><a href="<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>"><?= $Professor->getNome(); ?></a></td>
-		<td><?= ($Professor->getID_Instituto() == null) ? 'Desconhecido' : $Professor->getInstituto()->getSigla().' - '.$Professor->getInstituto()->getNome(); ?></td>
+		<td><?= ($Professor->getInstituto() === null) ? 'Desconhecido' : $Professor->getInstituto()->getSigla(true).' - '.$Professor->getInstituto()->getNome(true); ?></td>
 	</tr>
 <?php
 		}

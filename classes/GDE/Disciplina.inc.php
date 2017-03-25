@@ -249,10 +249,10 @@ class Disciplina extends Base {
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM GDE\\Disciplina AS D ".$joins.$where;
+			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM ".get_class()." AS D ".$joins.$where;
 			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT D FROM GDE\\Disciplina AS D ".$joins.$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT D FROM ".get_class()." AS D ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
@@ -270,18 +270,13 @@ class Disciplina extends Base {
 	 * @return Disciplina[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
-		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (strlen($q) < CONFIG_FT_MIN_LENGTH)) {
+		// ToDo: Pegar nome da tabela das annotations
+		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem != '`rank` DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
-			if($total !== null) {
+				$ordem = ($ordem != 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
+			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q";
-				$rsmt = new ResultSetMappingBuilder(self::_EM());
-				$rsmt->addScalarResult('total', 'total');
-				$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
-				$queryt->setParameter('q', $q);
-				$total = $queryt->getSingleScalarResult();
-			}
-			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.sigla LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
 			$q = '%'.$q.'%';
 		} else {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
@@ -290,28 +285,28 @@ class Disciplina extends Base {
 			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
 				$extra_select = ", MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q) AS `rank`";
 				if($ordem == 'rank ASC')
-					$ordem .= ', D.`sigla` DESC';
+					$ordem = '`rank` ASC, D.`sigla` DESC';
 				else
-					$ordem .= ', D.`sigla` ASC';
+					$ordem = '`rank` DESC, D.`sigla` ASC';
 			} else
 				$extra_select = "";
-			if($total !== null) {
+			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE)";
-				$rsmt = new ResultSetMappingBuilder(self::_EM());
-				$rsmt->addScalarResult('total', 'total');
-				$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
-				$queryt->setParameter('q', $q);
-				$total = $queryt->getSingleScalarResult();
-			}
 			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
 		}
 
-		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata('GDE\\Disciplina', 'D');
+		if($total !== null) {
+			$rsmt = new ResultSetMappingBuilder(self::_EM());
+			$rsmt->addScalarResult('total', 'total');
+			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+			$queryt->setParameter('q', $q);
+			$total = $queryt->getSingleScalarResult();
+		}
 
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata(get_class(), 'D');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
-
 		return $query->getResult();
 	}
 

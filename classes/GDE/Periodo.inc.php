@@ -94,7 +94,7 @@ class Periodo extends Base {
 	 * @return self
 	 */
 	public function Anterior() {
-		return self::_EM()->createQuery('SELECT P FROM GDE\\Periodo P WHERE P.id_periodo < ?1 ORDER BY P.id_periodo DESC')
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.id_periodo < ?1 ORDER BY P.id_periodo DESC')
 			->setParameter(1, $this->getID(false))
 			->setMaxResults(1)
 			->getOneOrNullResult();
@@ -108,7 +108,7 @@ class Periodo extends Base {
 	 * @return self
 	 */
 	public function Proximo() {
-		return self::_EM()->createQuery('SELECT P FROM GDE\\Periodo P WHERE P.id_periodo > ?1 ORDER BY P.id_periodo ASC')
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.id_periodo > ?1 ORDER BY P.id_periodo ASC')
 			->setParameter(1, $this->getID(false))
 			->setMaxResults(1)
 			->getOneOrNullResult();
@@ -122,7 +122,7 @@ class Periodo extends Base {
 	 * @return ArrayCollection
 	 */
 	public static function Listar() {
-		return self::_EM()->createQuery('SELECT P FROM GDE\\Periodo P ORDER BY P.id_periodo DESC')->getResult();
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P ORDER BY P.id_periodo DESC')->getResult();
 	}
 
 	/**
@@ -133,7 +133,7 @@ class Periodo extends Base {
 	 * @return self
 	 */
 	public static function getAtual() {
-		return self::_EM()->createQuery('SELECT P FROM GDE\\Periodo P WHERE P.tipo = ?1')
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1')
 			->setParameter(1, self::TIPO_ATUAL)
 			->setMaxResults(1)
 			->getOneOrNullResult();
@@ -147,7 +147,7 @@ class Periodo extends Base {
 	 * @return self
 	 */
 	public static function getProximo() {
-		return self::_EM()->createQuery('SELECT P FROM GDE\\Periodo P WHERE P.tipo = ?1 ORDER BY P.id_periodo ASC')
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1 ORDER BY P.id_periodo ASC')
 			->setParameter(1, self::TIPO_PROXIMO)
 			->setMaxResults(1)
 			->getOneOrNullResult();
