@@ -79,6 +79,7 @@ class Sala extends Base {
 	 * Carrega uma sala pelo nome
 	 *
 	 * @param $nome
+	 * @param $vazio
 	 * @return mixed
 	 */
 	public static function Por_Nome($nome, $vazio = false) {
@@ -88,6 +89,10 @@ class Sala extends Base {
 		return $Sala;
 	}
 
+	/**
+	 * @param null $periodo
+	 * @return array
+	 */
 	public function Oferecimentos($periodo = null) {
 		$Lista = array();
 		$dql = 'SELECT O FROM GDE\\Oferecimento AS O '.
