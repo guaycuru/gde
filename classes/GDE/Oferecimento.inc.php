@@ -118,11 +118,11 @@ class Oferecimento extends Base {
 	 * @param $param
 	 * @param null $ordem
 	 * @param null $total
-	 * @param string $limit
-	 * @param string $start
+	 * @param int $limit
+	 * @param int $start
 	 * @return Oferecimento[]
 	 */
-	public static function Consultar($param, $ordem = null, &$total = null, $limit = '-1', $start = '-1') {
+	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
 		if($ordem == null)
 			$ordem = "O.id_oferecimento ASC";

@@ -4,11 +4,24 @@ namespace GDE;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Disciplina
  *
- * @ORM\Table(name="gde_disciplinas", uniqueConstraints={@ORM\UniqueConstraint(name="sigla_nivel", columns={"sigla", "nivel"})}, indexes={@ORM\Index(name="nome", columns={"nome"}), @ORM\Index(name="nivel", columns={"nivel"})})
+ * @ORM\Table(
+ *  name="gde_disciplinas",
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="sigla_nivel", columns={"sigla", "nivel"})
+ *  },
+ *  indexes={
+ *     @ORM\Index(name="sigla_nome_ementa_fts", columns={"sigla", "nome", "ementa"}, flags={"fulltext"}),
+ *     @ORM\Index(name="nome", columns={"nome"}),
+ *     @ORM\Index(name="creditos", columns={"creditos"}),
+ *     @ORM\Index(name="periodicidade", columns={"periodicidade"}),
+ *     @ORM\Index(name="nivel", columns={"nivel"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Disciplina extends Base {
@@ -199,12 +212,12 @@ class Disciplina extends Base {
 	 * @param $param
 	 * @param null $ordem
 	 * @param int $total
-	 * @param string $limit
-	 * @param string $start
+	 * @param int $limit
+	 * @param int $start
 	 * @param string $tipo
 	 * @return mixed
 	 */
-	public static function Consultar($param, $ordem = null, &$total = 0, $limit = '-1', $start = '-1', $tipo = 'AND') {
+	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1, $tipo = 'AND') {
 		$qrs = $jns = array();
 		if($ordem == null)
 			$ordem = "D.sigla ASC";
@@ -245,6 +258,60 @@ class Disciplina extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
+		return $query->getResult();
+	}
+
+	/**
+	 * @param $q
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return Disciplina[]
+	 */
+	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (strlen($q) < CONFIG_FT_MIN_LENGTH)) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
+				$ordem = ($ordem != '`rank` DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
+			if($total !== null) {
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q";
+				$rsmt = new ResultSetMappingBuilder(self::_EM());
+				$rsmt->addScalarResult('total', 'total');
+				$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+				$queryt->setParameter('q', $q);
+				$total = $queryt->getSingleScalarResult();
+			}
+			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.sigla LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$q = '%'.$q.'%';
+		} else {
+			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			if($ordem == null)
+				$ordem = 'rank DESC';
+			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$extra_select = ", MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q) AS `rank`";
+				if($ordem == 'rank ASC')
+					$ordem .= ', D.`sigla` DESC';
+				else
+					$ordem .= ', D.`sigla` ASC';
+			} else
+				$extra_select = "";
+			if($total !== null) {
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE)";
+				$rsmt = new ResultSetMappingBuilder(self::_EM());
+				$rsmt->addScalarResult('total', 'total');
+				$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+				$queryt->setParameter('q', $q);
+				$total = $queryt->getSingleScalarResult();
+			}
+			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		}
+
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata('GDE\\Disciplina', 'D');
+
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('q', $q);
+
 		return $query->getResult();
 	}
 
@@ -293,6 +360,20 @@ class Disciplina extends Base {
 			$ret[] = implode(" e ", $siglas);
 		}
 		return implode(" ou<br />", $ret);
+	}
+
+	/**
+	 * @param bool $html
+	 * @param bool $no_html
+	 * @return string
+	 */
+	public function getEmenta($html = false, $no_html = true) {
+		$ementa = parent::getEmenta(false);
+		if($no_html)
+			$ementa = html_entity_decode(strip_tags($ementa));
+		if($html)
+			$ementa = htmlspecialchars($ementa);
+		return $ementa;
 	}
 
 	/**

@@ -12,7 +12,7 @@ class Util {
 	}
 
 	public static function Limita($texto, $tamanho) {
-		return (strlen($texto) <= $tamanho) ? $texto : substr($texto, 0, $tamanho-3).'...';
+		return (mb_strlen($texto) <= $tamanho) ? $texto : mb_substr($texto, 0, $tamanho-3).'...';
 	}
 
 	public static function Limpa_Busca($str) {

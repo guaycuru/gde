@@ -90,6 +90,33 @@ class Sala extends Base {
 	}
 
 	/**
+	 * Consultar_Simples
+	 *
+	 * @param $q
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return Sala[]
+	 */
+	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		$param = array("%".str_replace(' ', '%', $q)."%");
+		if($total !== null) {
+			$dqlt = "SELECT COUNT(DISTINCT S.id_sala) FROM GDE\\Sala AS S WHERE S.nome LIKE ?1";
+			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+		}
+		$dql = "SELECT DISTINCT S FROM GDE\\Sala AS S WHERE S.nome LIKE ?1";
+		if($ordem != null)
+			$dql .= " ORDER BY ".$ordem;
+		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		if($limit > 0)
+			$query->setMaxResults($limit);
+		if($start > -1)
+			$query->setFirstResult($start);
+		return $query->getResult();
+	}
+
+	/**
 	 * @param null $periodo
 	 * @return array
 	 */

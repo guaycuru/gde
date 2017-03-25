@@ -163,7 +163,7 @@ class Aluno extends Base {
 	 * @param string $start
 	 * @return Aluno[]
 	 */
-	public static function Consultar($param, $ordem = null, &$total = 0, $limit = '-1', $start = '-1') {
+	public static function Consultar($param, $ordem = null, &$total = null, $limit = '-1', $start = '-1') {
 		$qrs = $jns = array();
 		if($ordem == null)
 			$ordem = 'A.ra ASC';

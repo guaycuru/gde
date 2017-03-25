@@ -161,7 +161,7 @@ if(isset($_GET['m'])) {
 						<?php } ?>
 						<tr>
 							<td width="25%"><b>Ementa:</b></td>
-							<td><?=$Disciplina->getEmenta(); ?></td>
+							<td><?=$Disciplina->getEmenta(true); ?></td>
 						</tr>
 						<?php if(isset($_GET['of'])) { ?>
 							<tr>
@@ -175,15 +175,15 @@ if(isset($_GET['m'])) {
 						<?php if($Disciplina->getCreditos() != -1) { ?>
 							<tr>
 								<td width="25%"><b>Vezes Cursada:</b></td>
-								<td><?=$Disciplina->getCursacoes(); ?> desde 2007</td>
+								<td><?=$Disciplina->getCursacoes(true); ?> desde 2007</td>
 							</tr>
 							<tr>
 								<td width="25%"><b>Reprova&ccedil;&otilde;es:</b></td>
-								<td><?=$Disciplina->getReprovacoes(); ?> (<?= ($Disciplina->getCursacoes() > 0) ? number_format(($Disciplina->getReprovacoes() / $Disciplina->getCursacoes())*100, 2) : '-'; ?>%) (Valor estimado)</td>
+								<td><?=$Disciplina->getReprovacoes(true); ?> (<?= ($Disciplina->getCursacoes() > 0) ? number_format(($Disciplina->getReprovacoes() / $Disciplina->getCursacoes())*100, 2) : '-'; ?>%) (Valor estimado)</td>
 							</tr>
 							<tr>
 								<td width="25%"><b>Desist&ecirc;ncias:</b></td>
-								<td><?=$Disciplina->Desistencias(); ?></td>
+								<td><?=$Disciplina->Desistencias(true); ?></td>
 							</tr>
 							<tr>
 								<td width="25%" id="eliminada_td"><b>Eliminada:</b></td>
@@ -213,9 +213,6 @@ if(isset($_GET['m'])) {
 				<div id="tab_oferecimentos" class="tab_content">
 					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Oferecimentos...
 				</div>
-				<!-- <div id="tab_forum" class="tab_content">
-					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando F&oacute;rum...
-				</div> -->
 				<!-- <div id="tab_professores" class="tab_content">
 					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Professores...
 				</div> -->

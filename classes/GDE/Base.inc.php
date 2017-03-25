@@ -25,7 +25,7 @@ abstract class Base {
 	* Gets or Sets the Entity Manager
 	*
 	* @param object $EM (optional) Entity Manager
-	* @return object Entity Manager
+	* @return \Doctrine\ORM\EntityManager Entity Manager
 	*/
 	public static function _EM($EM = null) {
 		if($EM != null)

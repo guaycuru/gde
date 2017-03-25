@@ -93,12 +93,24 @@ class Professor extends Base {
 	public static $ordens_nome = array('Relev&acirc;ncia', 'Nome');
 	public static $ordens_inte = array('rank', 'P.nome');
 
+	/**
+	 * @param null|string $periodo
+	 * @param bool $formatado
+	 * @param bool $links
+	 * @return string
+	 */
 	public function getOferecimentos($periodo = null, $formatado = false, $links = true) {
+		if($periodo == null) {
+			$Oferecimentos = parent::getOferecimentos();
+		} else {
+			$criteria = Criteria::create()->where(Criteria::expr()->eq("id_periodo", $periodo));
+			$Oferecimentos = parent::getOferecimentos()->matching($criteria);
+		}
 		if($formatado === false)
-			return parent::getOferecimentos();
+			return $Oferecimentos;
 		else {
 			$lista = array();
-			foreach(parent::getOferecimentos() as $Oferecimento)
+			foreach(parent::$Oferecimentos as $Oferecimento)
 				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
