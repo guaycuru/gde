@@ -48,7 +48,7 @@ if($simples) {
 	$ordem['professores'] = (isset($_POST['ord']['professores_s'])) ? Professor::$ordens_inte[$_POST['ord']['professores_s']]." ".(($_POST['em']['professores_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
 	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s'])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
 	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s'])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['salas'] = (isset($_POST['ord']['salas_s'])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'sala ASC';
+	$ordem['salas'] = (isset($_POST['ord']['salas_s'])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'S.nome ASC';
 
 	$start = microtime(true);
 	$Alunos = ($qts['alunos'] != 0) ? Aluno::Consultar_Simples($q, $ordem['alunos'], $total['alunos'], $qts['alunos'], $sta['alunos']) : array();
@@ -222,7 +222,7 @@ $fim[$tp] = $sta[$tp] + $qts[$tp];
 if($fim[$tp] > $total[$tp])
 	$fim[$tp] = $total[$tp];
 
-$pgs = ceil($total[$tp] / $qts[$tp]);
+$pgs = ceil(intval($total[$tp]) / intval($qts[$tp]));
 $paginas = "";
 $range = 3;
 
@@ -343,7 +343,7 @@ if($qts['alunos'] != 0) {
 ?>
 	<tr>
 		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"<strong>":null).$Aluno->getNome(true).(($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"</strong>":null) : $Aluno->getNome(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"<strong>":null).$Aluno->getNome(true).(($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"</strong>":null) : $Aluno->getNome(true); ?></a></td>
 		<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true)." (".$Aluno->getCurso()->getNUmero(true).")" : '-'; ?></td>
 		<td><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade(true) : '-'; ?></td>
 		<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true)." (".$Aluno->getCurso_Pos()->getNumero(true).")" : '-'; ?></td>
@@ -374,7 +374,7 @@ if($qts['alunos'] != 0) {
 		foreach($Professores as $Professor) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>"><?= $Professor->getNome(); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>"><?= $Professor->getNome(true); ?></a></td>
 		<td><?= ($Professor->getInstituto() === null) ? 'Desconhecido' : $Professor->getInstituto()->getSigla(true).' - '.$Professor->getInstituto()->getNome(true); ?></td>
 	</tr>
 <?php
@@ -403,8 +403,8 @@ if($qts['alunos'] != 0) {
 		foreach($Disciplinas as $Disciplina) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>/"><?= $Disciplina->getSigla(true); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(); ?>/"><?= $Disciplina->getNome(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(true); ?>/"><?= $Disciplina->getSigla(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(true); ?>/"><?= $Disciplina->getNome(true); ?></a></td>
 		<td><?= $Disciplina->getCreditos(true); ?></td>
 		<td><?= Util::Limita($Disciplina->getEmenta(true), 100); ?></td>
 	</tr>
@@ -450,10 +450,10 @@ if($qts['alunos'] != 0) {
 ?>
 	<tr>
 		<td><?= $nivel_of; ?></td>
-		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getSigla()." ".$Oferecimento->getTurma(); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina()->getNome(); ?></a></td>
-		<td><?= ($Oferecimento->getProfessor() != null) ? '<a href="'.CONFIG_URL.'perfil/?professor='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor()->getNome().'</a>' : 'Desconhecido'; ?></td>
-		<td><?= $Oferecimento->getPeriodo()->getNome(); ?></td>
+		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getSigla(true)." ".$Oferecimento->getTurma(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getNome(true); ?></a></td>
+		<td><?= ($Oferecimento->getProfessor(false) !== null) ? '<a href="'.CONFIG_URL.'perfil/?professor='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor(true)->getNome(true).'</a>' : 'Desconhecido'; ?></td>
+		<td><?= $Oferecimento->getPeriodo(true)->getNome(true); ?></td>
 		<td><?= $vagas; ?></td>
 		<td><?= $matriculados; ?></td>
 		<td><?= $situacao; ?></td>

@@ -3,11 +3,17 @@
 namespace GDE;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Aluno
  *
- * @ORM\Table(name="gde_alunos", indexes={@ORM\Index(name="nome", columns={"nome"})})
+ * @ORM\Table(
+ *  name="gde_alunos",
+ *  indexes={
+ *     @ORM\Index(name="nome", columns={"nome"}, flags={"fulltext"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Aluno extends Base {
@@ -222,7 +228,7 @@ class Aluno extends Base {
 					$mts[] = "(O.sigla = ".$db->Quote($oferecimento[0]).(($oferecimento[1]!='*')?" AND O.turma = ".$db->Quote($oferecimento[1]):null).")";
 				$qrs[] = "O.periodo = :periodo AND (".implode(" OR ", $mts).")";
 			}
-		}*/ // ToDo
+		}*/ // ToDo: Permitir consultar por oferecimentos
 		unset($param['oferecimentos'], $param['periodo']);
 		if(!empty($param['amigos'])) {
 			$jns[] = " INNER JOIN U.amigos AS UA";
@@ -250,6 +256,86 @@ class Aluno extends Base {
 		if($start > -1)
 			$query->setFirstResult($start);
 		return $query->getResult();
+	}
+
+	/**
+	 * @param $q
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return Aluno[]
+	 */
+	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		// ToDo: Pegar nome da tabela das annotations
+		if(preg_match('/^[\d]+$/i', $q) > 0) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
+				$ordem = ($ordem != 'rank DESC') ? 'A.ra ASC' : 'A.ra DESC';
+			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
+				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
+				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
+			} else
+				$extra_select = "";
+			$q = (strlen($q) == 6) ? intval($q) : '%'.$q.'%';
+			$w = (strlen($q) == 6) ? "A.`ra` = :q" : "A.`ra` LIKE :q";
+
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE ".$w;
+			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE ".$w." ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		} elseif(mb_strlen($q) < CONFIG_FT_MIN_LENGTH) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
+				$ordem = ($ordem != 'rank DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
+			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
+				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
+				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
+			} else
+				$extra_select = "";
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q";
+			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		} else {
+			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			if($ordem == null)
+				$ordem = 'rank DESC';
+			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$extra_select = ", MATCH(`nome`) AGAINST(:q) AS `rank`";
+				if($ordem == 'rank ASC')
+					$ordem .= ', `nome` DESC';
+				else
+					$ordem .= ', `nome` ASC';
+			} elseif($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
+				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
+				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
+			} else
+				$extra_select = "";
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE MATCH(A.`nome`) AGAINST(:q IN BOOLEAN MODE)";
+			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE MATCH(A.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+		}
+
+		if($total !== null) {
+			$rsmt = new ResultSetMappingBuilder(self::_EM());
+			$rsmt->addScalarResult('total', 'total');
+			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
+			$queryt->setParameter('q', $q);
+			$total = $queryt->getSingleScalarResult();
+		}
+
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata(get_class(), 'A');
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('q', $q);
+		return $query->getResult();
+	}
+
+	/**
+	 * @param bool $formatado
+	 * @return int|string
+	 */
+	public function getRA($formatado = false) {
+		if(($formatado) && ($this->ra == null))
+			return "-";
+		return ($formatado) ? sprintf("%06d", $this->ra) : $this->ra;
 	}
 
 	/**

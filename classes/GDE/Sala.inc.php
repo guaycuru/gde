@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Sala
  *
- * @ORM\Table(name="gde_salas")
+ * @ORM\Table(
+ *  name="gde_salas",
+ *  indexes={
+ *     @ORM\Index(name="nome", columns={"nome"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Sala extends Base {
