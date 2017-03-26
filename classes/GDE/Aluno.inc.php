@@ -171,6 +171,7 @@ class Aluno extends Base {
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = '-1', $start = '-1') {
 		$qrs = $jns = array();
+		$usou_periodo = false;
 		if($ordem == null)
 			$ordem = 'A.ra ASC';
 		if(!empty($param['ra']))
@@ -213,34 +214,50 @@ class Aluno extends Base {
 		if(!empty($param['id_oferecimento'])) {
 			$jns[] = "JOIN A.oferecimentos AS O";
 			$qrs[] = "O.id_oferecimento = :id_oferecimento";
-		} /*elseif((isset($param['oferecimentos'])) && (count($param['oferecimentos'][1] > 0))) {
+		} elseif((isset($param['oferecimentos'])) && (count($param['oferecimentos'][1] > 0))) {
 			$mts = array();
 			if($param['oferecimentos'][0]) { // AND
 				$i = 0;
 				foreach($param['oferecimentos'][1] as $oferecimento) {
-					$jns[] = "JOIN A.oferecimentos AS O".$i."";
-					$qrs[] = "O".$i.".periodo = :periodo AND O".$i.".sigla = ".$db->Quote($oferecimento[0]).(($oferecimento[1]!='*')?" AND O".$i.".turma = ".$db->Quote($oferecimento[1]):null);
+					$jns[] = "JOIN A.oferecimentos AS O".$i;
+					$jns[] = "JOIN O".$i.".disciplina AS D".$i;
+					$qrs[] = "O".$i.".periodo = :periodo AND D".$i.".sigla = :d".$i."sigla".(($oferecimento[1]!='*')?" AND O".$i.".turma = :o".$i."turma":"");
+					$param['d'.$i.'sigla'] = $oferecimento[0];
+					if($oferecimento[1] != '*')
+						$param['o'.$i.'turma'] = $oferecimento[1];
 					$i++;
+					$usou_periodo = true;
 				}
 			} else { // OR
 				$jns[] = " JOIN A.oferecimentos AS O";
-				foreach($param['oferecimentos'][1] as $oferecimento)
-					$mts[] = "(O.sigla = ".$db->Quote($oferecimento[0]).(($oferecimento[1]!='*')?" AND O.turma = ".$db->Quote($oferecimento[1]):null).")";
+				$i = 0;
+				foreach($param['oferecimentos'][1] as $oferecimento) {
+					$jns[] = "JOIN O.disciplina AS D".$i;
+					$mts[] = "(D".$i.".sigla = :d".$i."sigla".(($oferecimento[1] != '*')?" AND O.turma = :o".$i."turma" : "") . ")";
+					$param['d'.$i.'sigla'] = $oferecimento[0];
+					if($oferecimento[1] != '*')
+						$param['o'.$i.'turma'] = $oferecimento[1];
+					$i++;
+				}
 				$qrs[] = "O.periodo = :periodo AND (".implode(" OR ", $mts).")";
+				$usou_periodo = true;
 			}
-		}*/ // ToDo: Permitir consultar por oferecimentos
-		unset($param['oferecimentos'], $param['periodo']);
+			unset($param['oferecimentos']);
+		}
 		if(!empty($param['amigos'])) {
 			$jns[] = " INNER JOIN U.amigos AS UA";
 			$qrs[] = " UA.amigo = :id_usuario";
 			unset($param['amigos']);
 		}
 
+		if($usou_periodo === false)
+			unset($param['periodo']);
+
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		$where = (count($qrs) > 0) ? "WHERE ".implode(" AND ", $qrs) : "";
 
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM GDE\\Aluno AS A ".$joins." ".$where;
+			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins." ".$where;
 			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
 		}
 
