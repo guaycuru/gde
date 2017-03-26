@@ -135,7 +135,7 @@ class Professor extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Disciplina[]
+	 * @return Professor[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations

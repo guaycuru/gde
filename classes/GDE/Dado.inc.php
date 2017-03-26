@@ -14,7 +14,7 @@ class Dado extends Base {
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 * @ORM\Id
 	 * @ORM\GeneratedValue
 	 */

@@ -16,7 +16,6 @@ class ApiSession extends Base {
 	 *
 	 * @ORM\Column(type="string", length=16, nullable=false)
 	 * @ORM\Id
-	 * @ORM\GeneratedValue
 	 */
 	protected $code;
 
