@@ -42,7 +42,7 @@ else {
 	// ToDo: Nao carregar as avaliacoes por Ajax para poder aproveitar um unico SELECT das avalicacoes do usuario!
 	//$_Usuario->getAvaliacao_Respostas();
 	?>
-	Aqui est&atilde;o listados todos os professores com os quais voc&ecirc; j&aacute; cursou alguma Disciplina (&agrave; partir de 2007).<br /><br />
+	Aqui est&atilde;o listados todos os professores com os quais voc&ecirc; j&aacute; cursou alguma Disciplina (desde 2007).<br /><br />
 	<div id="accordionWrapper" class="gde_jquery_ui">
 		<div id="menuAccordion" class="ui-accordion ui-widget ui-helper-reset">
 			<?php

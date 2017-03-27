@@ -29,9 +29,11 @@ Funcionam as páginas:
 
  - Amigos
  - Árvore / Integralização (pouco testada)
+ - Avaliar Professores
  - Contato (não testada)
  - Convidar um Amigo (não testada)
  - Disciplina
+ - Eliminar Disciplinas
  - Estatísticas (parcial)
  - Login
  - Inicial

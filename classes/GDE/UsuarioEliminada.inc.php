@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UsuariosEliminada
  *
- * @ORM\Table(name="gde_usuarios_eliminadas", uniqueConstraints={@ORM\UniqueConstraint(name="id_usuario_sigla", columns={"id_usuario", "sigla"})})
+ * @ORM\Table(
+ *  name="gde_usuarios_eliminadas",
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="usuario_sigla", columns={"id_usuario", "sigla"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class UsuarioEliminada extends Base {
@@ -24,9 +29,7 @@ class UsuarioEliminada extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
 

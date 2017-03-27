@@ -214,7 +214,7 @@ $(document).ready(function(){
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>arvore/">&Aacute;rvore / Integraliza&ccedil;&atilde;o</a></li>
 							<li><a href="<?= CONFIG_URL; ?>avaliar/">Avaliar Professores</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Eliminador.php">Eliminar Disciplinas</a></li>
+							<li><a href="<?= CONFIG_URL; ?>eliminador/">Eliminar Disciplinas</a></li>
 							<li><a href="<?= CONFIG_URL; ?>mapa/">Mapa do Campus</a></li>
 							<li><a href="<?= CONFIG_URL; ?>planejador/">Planejador</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Rankings.php">Rankings</a></li>
