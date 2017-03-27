@@ -87,7 +87,7 @@ class Usuario extends Base {
 	protected $modalidade;
 
 	/**
-	 * @var UsuarioEliminada
+	 * @var \Doctrine\Common\Collections\Collection
 	 *
 	 * @ORM\OneToMany(targetEntity="UsuarioEliminada", mappedBy="usuario")
 	 */
@@ -99,6 +99,13 @@ class Usuario extends Base {
 	 * @ORM\OneToMany(targetEntity="UsuarioEmprego", mappedBy="usuario")
 	 */
 	protected $empregos;
+
+	/**
+	 * @var \Doctrine\Common\Collections\Collection
+	 *
+	 * @ORM\OneToMany(targetEntity="AvaliacaoResposta", mappedBy="usuario")
+	 */
+	protected $avaliacao_respostas;
 
 	/**
 	 * @var ArrayCollection

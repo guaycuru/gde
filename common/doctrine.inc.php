@@ -52,7 +52,7 @@ $annotationDriver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
 );
 
 // Create a driver chain for metadata reading
-$driver = new Doctrine\ORM\Mapping\Driver\DriverChain();
+$driver = new Doctrine\Common\Persistence\Mapping\Driver\MappingDriverChain();
 
 // Register annotation driver for our application Entity namespace
 $driver->addDriver($annotationDriver, $_namespace);
@@ -72,6 +72,10 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === true))
 	$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_ALWAYS);
 else
 	$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
+
+// Set the query logger
+if((defined('CONFIG_DB_LOGGER')) && (CONFIG_DB_LOGGER === true))
+	$config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
 
 // DB connection options
 $connection = array(

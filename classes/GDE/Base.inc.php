@@ -20,13 +20,13 @@ abstract class Base {
 	protected static $_TZ = null;
 	
 	/** 
-	* _EM
-	*
-	* Gets or Sets the Entity Manager
-	*
-	* @param object $EM (optional) Entity Manager
-	* @return \Doctrine\ORM\EntityManager Entity Manager
-	*/
+	 * _EM
+	 *
+	 * Gets or Sets the Entity Manager
+	 *
+	 * @param object $EM (optional) Entity Manager
+	 * @return \Doctrine\ORM\EntityManager Entity Manager
+	 */
 	public static function _EM($EM = null) {
 		if($EM != null)
 			self::$_EM = $EM;
@@ -34,13 +34,13 @@ abstract class Base {
 	}
 	
 	/** 
-	* _TZ
-	*
-	* Gets or Sets the Display Timezone
-	*
-	* @param DateTimeZone|string $Timezone (optional) Timezone
-	* @return DateTimeZone|null Current display Timezone
-	*/
+	 * _TZ
+	 *
+	 * Gets or Sets the Display Timezone
+	 *
+	 * @param DateTimeZone|string $Timezone (optional) Timezone
+	 * @return DateTimeZone|null Current display Timezone
+	 */
 	public static function _TZ($Timezone = null) {
 		if($Timezone !== null) {
 			if(is_object($Timezone) === false)
@@ -50,11 +50,11 @@ abstract class Base {
 		return self::$_TZ;
 	}
 
-	/** 
-	* __construct
-	*
-	* Constructor
-	*/
+	/**
+	 * __construct
+	 *
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->_meta = self::_EM()->getClassMetadata(get_class($this));
 		foreach($this->_meta->associationMappings as $property => $data) {
@@ -64,26 +64,26 @@ abstract class Base {
 	}
 	
 	/** 
-	* To_JSON
-	*
-	* Returns the input in JSON
-	*
-	* @param mixed $input The input oO
-	* @return string The JSON encoded output
-	*/
+	 * To_JSON
+	 *
+	 * Returns the input in JSON
+	 *
+	 * @param mixed $input The input oO
+	 * @return string The JSON encoded output
+	 */
 	public static function To_JSON($input) {
 		return json_encode($input, JSON_FORCE_OBJECT & JSON_NUMERIC_CHECK);
 	}
 	
 	/** 
-	* Random
-	*
-	* Generates a random string
-	*
-	* @param integer $size The size of the random string
-	* @param string $chars Chars to be used
-	* @return string The random string
-	*/
+	 * Random
+	 *
+	 * Generates a random string
+	 *
+	 * @param integer $size The size of the random string
+	 * @param string $chars Chars to be used
+	 * @return string The random string
+	 */
 	public static function Random($size, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
 		$l = strlen($chars) - 1;
 		$r = '';
@@ -93,15 +93,15 @@ abstract class Base {
 	}
 	
 	/** 
-	* OK_JSON
-	*
-	* Outputs a JSON OK and terminates the execution
-	*
-	* @param integer $id Object ID
-	* @param integer $http (Optional) HTTP response code
-	* @param array $extra (Optional) Extra info to be sent with the response JSON
-	* @return void
-	*/
+	 * OK_JSON
+	 *
+	 * Outputs a JSON OK and terminates the execution
+	 *
+	 * @param integer $id Object ID
+	 * @param integer $http (Optional) HTTP response code
+	 * @param array $extra (Optional) Extra info to be sent with the response JSON
+	 * @return void
+	 */
 	public static function OK_JSON($id = null, $http = 200, $extra = array()) {
 		http_response_code($http);
 		die(self::To_JSON(array(
@@ -111,15 +111,15 @@ abstract class Base {
 	}
 	
 	/** 
-	* Erro_JSON
-	*
-	* Outputs a JSON error and terminates the execution
-	*
-	* @param string $message Error message
-	* @param integer $http (Optional) HTTP response code
-	* @param array $extra (Optional) Extra info to be sent with the response JSON
-	* @return void
-	*/
+	 * Erro_JSON
+	 *
+	 * Outputs a JSON error and terminates the execution
+	 *
+	 * @param string $message Error message
+	 * @param integer $http (Optional) HTTP response code
+	 * @param array $extra (Optional) Extra info to be sent with the response JSON
+	 * @return void
+	 */
 	public static function Error_JSON($message, $http = 200, $extra = array()) {
 		http_response_code($http);
 		die(self::To_JSON(array(
@@ -127,14 +127,15 @@ abstract class Base {
 			'error' => $message
 		) + $extra));
 	}
-	
-	/** 
-	* Salvar_JSON
-	*
-	* Saves and outputs
-	*
-	* @return void
-	*/
+
+	/**
+	 * Save_JSON
+	 *
+	 * Saves and outputs JSON
+	 *
+	 * @param bool $flush
+	 * @param array $extra
+	 */
 	public function Save_JSON($flush = true, $extra = array()) {
 		if($this->Save($flush) === true) {
 			if(is_callable($extra))
@@ -143,25 +144,19 @@ abstract class Base {
 		} else
 			return self::Error_JSON('Um erro desconhecido ocorreu, por favor tente novamente.');
 	}
-	public function Salvar_JSON($flush = true, $extra = array()) {
-		return static::Save_JSON($flush, $extra);
-	}
-	
-	/** 
-	* Delete_JSON
-	*
-	* Delete and outputs
-	*
-	* @return void
-	*/
+
+	/**
+	 * Delete_JSON
+	 *
+	 * Deletes and outputs JSON
+	 *
+	 * @param bool $flush
+	 */
 	public function Delete_JSON($flush = true) {
 		if($this->Delete($flush) === true)
 			self::OK_JSON();
 		else
 			self::Error_JSON('Um erro desconhecido ocorreu, por favor tente novamente.');
-	}
-	public function Excluir_JSON($flush = true) {
-		return static::Delete_JSON($flush);
 	}
 
 	/**
@@ -178,15 +173,15 @@ abstract class Base {
 	}
 	
 	/** 
-	* Download_Headers
-	*
-	* Outputs the HTTP headers for downloading a file
-	*
-	* @param string $filename The file name
-	* @param integer $filesize The file size (in bytes)
-	* @param string $mime (Optional) The mime type
-	* @return void
-	*/
+	 * Download_Headers
+	 *
+	 * Outputs the HTTP headers for downloading a file
+	 *
+	 * @param string $filename The file name
+	 * @param integer $filesize The file size (in bytes)
+	 * @param string $mime (Optional) The mime type
+	 * @return void
+	 */
 	public static function Download_Headers($filename, $filesize, $mime = 'application/octet-stream') {
 		header("Content-type: ".$mime);
 		header('Content-Disposition: attachment; filename="'.$filename.'"');
@@ -201,67 +196,67 @@ abstract class Base {
 	}
 	
 	/** 
-	* FindBy
-	*
-	* Searches the DB for objects
-	*
-	* @param array $params (optional) Search parameters
-	* @param array $order (optional) Results order
-	* @param integer $limit (optional) Results limit
-	* @param integer $offset (optional) Results offset
-	* @return mixed Array of objects found, or false on query error
-	*/
+	 * FindBy
+	 *
+	 * Searches the DB for objects
+	 *
+	 * @param array $params (optional) Search parameters
+	 * @param array $order (optional) Results order
+	 * @param integer $limit (optional) Results limit
+	 * @param integer $offset (optional) Results offset
+	 * @return array|false Array of objects found, or false on query error
+	 */
 	public static function FindBy($params = array(), array $order = null, $limit = null, $offset = null) {
 		return self::_EM()->getRepository(get_called_class())->findBy($params, $order, $limit, $offset);
 	}
 	
 	/** 
-	* FindOneBy
-	*
-	* Searches the DB for only one object
-	*
-	* @param array $params Search parameters
-	* @return mixed Object found, null if not found or false on query error
-	*/
+	 * FindOneBy
+	 *
+	 * Searches the DB for only one object
+	 *
+	 * @param array $params Search parameters
+	 * @return mixed Object found, null if not found or false on query error
+	 */
 	public static function FindOneBy($params) {
 		return self::_EM()->getRepository(get_called_class())->findOneBy($params);
 	}
 	
 	/** 
-	* Load
-	*
-	* Loads the object
-	*
-	* @param mixed $id The ID to load into the object
-	* @return Current_Class_Name This object
-	*/
+	 * Load
+	 *
+	 * Loads the object
+	 *
+	 * @param mixed $id The ID to load into the object
+	 * @return static This object
+	 */
 	public static function Load($id = null) {
 		if($id == null) { // No data, new object
 			return new static();
 		}
-		$Obj = self::_EM()->find(get_called_class(), intval($id));
+		$Obj = self::_EM()->find(get_called_class(), $id);
 		return ($Obj !== null) ? $Obj : new static();
 	}
 	
 	/** 
-	* StartTrans
-	*
-	* Starts a Transaction block -> Should be avoided because LOGs may not be saved if the trans fails!
-	*
-	*/
+	 * StartTrans
+	 *
+	 * Starts a Transaction block -> Should be avoided because LOGs may not be saved if the trans fails!
+	 *
+	 */
 	public static function StartTrans() {
 		self::$_trans_count++;
 		return self::_EM()->getConnection()->beginTransaction();
 	}
 	
 	/** 
-	* CompleteTrans
-	*
-	* Completes a Transaction block
-	*
-	* @param boolean $commit True to commit, false to rollback
-	* @return boolean True if the transaction was committed, false otherwise
-	*/
+	 * CompleteTrans
+	 *
+	 * Completes a Transaction block
+	 *
+	 * @param boolean $commit True to commit, false to rollback
+	 * @return boolean True if the transaction was committed, false otherwise
+	 */
 	public static function CompleteTrans($commit = true) {
 		self::$_trans_count--;
 		
@@ -286,12 +281,12 @@ abstract class Base {
 	}
 	
 	/**
-	* TransCount
-	* 
-	* Returns the number os transactions currently open
-	* 
-	* @return integer Number of transactions currently open
-	*/
+	 * TransCount
+	 * 
+	 * Returns the number os transactions currently open
+	 * 
+	 * @return integer Number of transactions currently open
+	 */
 	public static function TransCount() {
 		return self::$_trans_count;
 	}
@@ -301,12 +296,12 @@ abstract class Base {
 	}
 	
 	/** 
-	* getID
-	*
-	* Returns the object primary key's value
-	*
-	* @return integer This object primary key's value
-	*/
+	 * getID
+	 *
+	 * Returns the object primary key's value
+	 *
+	 * @return integer This object primary key's value
+	 */
 	public function getID() {
 		if($this->_meta === null)
 			$this->_meta = self::_EM()->getClassMetadata(get_class($this));
@@ -315,13 +310,13 @@ abstract class Base {
 	}
 	
 	/** 
-	* Save
-	*
-	* Saves the object properties to the DB
-	*
-	* @param boolean $flush (optional) Whether to write the changes to the DB
-	* @return boolean True in case of success or false in case of error
-	*/
+	 * Save
+	 *
+	 * Saves the object properties to the DB
+	 *
+	 * @param boolean $flush (optional) Whether to write the changes to the DB
+	 * @return boolean True in case of success or false in case of error
+	 */
 	public function Save($flush = true) {
 		if(self::_EM()->persist($this) === false)
 			return false;
@@ -333,13 +328,13 @@ abstract class Base {
 	}
 	
 	/** 
-	* Delete
-	*
-	* Deletes the object properties from the DB
-	*
-	* @param boolean $flush (optional) Whether to write the changes to the DB
-	* @return boolean True in case of success or false in case of error
-	*/
+	 * Delete
+	 *
+	 * Deletes the object properties from the DB
+	 *
+	 * @param boolean $flush (optional) Whether to write the changes to the DB
+	 * @return boolean True in case of success or false in case of error
+	 */
 	public function Delete($flush = true) {
 		if($this->getID() == null)
 			return true;

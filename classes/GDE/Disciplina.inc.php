@@ -161,6 +161,8 @@ class Disciplina extends Base {
 		self::PERIODICIDADE_CRITERIO => "A Crit&eacute;rio do Instituto"
 	);
 
+	const NOME_VAZIO = '(Desconhecido)';
+
 	// ToDo: Remover isto!
 	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla', 'Nome', 'Cr&eacute;ditos');
 	static $ordens_inte = array('rank', 'D.sigla', 'D.nome', 'D.creditos');
@@ -355,6 +357,13 @@ class Disciplina extends Base {
 			$ret[] = implode(" e ", $siglas);
 		}
 		return implode(" ou<br />", $ret);
+	}
+
+	public function getNome($html = false) {
+		$nome = parent::getNome($html);
+		if(($nome == null) && ($html))
+			return self::NOME_VAZIO;
+		return $nome;
 	}
 
 	/**

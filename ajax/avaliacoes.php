@@ -9,10 +9,10 @@ define('NO_REDIRECT', true);
 require_once('../common/common.inc.php');
 
 foreach(AvaliacaoPergunta::Listar('t') as $Pergunta) {
-	$Professor = Professor::Load($_POST['id_professor']);
-	$Disciplina = Disciplina::Por_Sigla(str_replace("_", " ", $_POST['sigla']));
+	$Professor = Professor::Load($_GET['id_professor']);
+	$Disciplina = Disciplina::Por_Sigla(str_replace("_", " ", $_GET['sigla']));
 	$sigla = $Disciplina->getSigla(true);
-	$Media = $Pergunta->getMedia($_POST['id_professor'], $sigla);
+	$Media = $Pergunta->getMedia($_GET['id_professor'], $sigla);
 	echo "<strong>".$Pergunta->getPergunta(true)."</strong><br />";
 	if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
 		echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";
@@ -24,6 +24,7 @@ foreach(AvaliacaoPergunta::Listar('t') as $Pergunta) {
 		echo "<br />";
 	}
 	$pode = $Pergunta->Pode_Votar($_Usuario, $Professor, $Disciplina);
+
 	if($pode === true)
 		echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"link_votar\">Votar</a></div>";
 	elseif($pode == AvaliacaoPergunta::ERRO_JA_VOTOU)

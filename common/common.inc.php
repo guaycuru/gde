@@ -213,7 +213,7 @@ $(document).ready(function(){
 					<li><a href="#" onclick="return false;">Acad&ecirc;mico</a>
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>arvore/">&Aacute;rvore / Integraliza&ccedil;&atilde;o</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Avaliar.php">Avaliar Professores</a></li>
+							<li><a href="<?= CONFIG_URL; ?>avaliar/">Avaliar Professores</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/Eliminador.php">Eliminar Disciplinas</a></li>
 							<li><a href="<?= CONFIG_URL; ?>mapa/">Mapa do Campus</a></li>
 							<li><a href="<?= CONFIG_URL; ?>planejador/">Planejador</a></li>

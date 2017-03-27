@@ -5,8 +5,8 @@ namespace GDE;
 if(isset($_GET['r']))
 	define("NO_HTML", true);
 
+// ToDo: Titulo mais informativo
 define('TITULO', 'Disciplina');
-
 require_once('../common/common.inc.php');
 
 if(empty($_GET['id']))

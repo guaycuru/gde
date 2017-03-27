@@ -7,7 +7,16 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AvaliacaoResposta
  *
- * @ORM\Table(name="gde_avaliacao_respostas", indexes={@ORM\Index(name="sigla", columns={"sigla"}), @ORM\Index(name="id_pergunta_usuario", columns={"id_pergunta", "id_usuario"})})
+ * @ORM\Table(
+ *  name="gde_avaliacao_respostas",
+ *  indexes={
+ *     @ORM\Index(name="sigla", columns={"sigla"}),
+ *     @ORM\Index(name="pergunta_usuario", columns={"id_pergunta", "id_usuario"})
+ *  },
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="pergunta_usuario_professor_sigla", columns={"id_pergunta", "id_usuario", "id_professor", "sigla"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class AvaliacaoResposta extends Base {
@@ -24,19 +33,15 @@ class AvaliacaoResposta extends Base {
 	 * @var AvaliacaoPergunta
 	 *
 	 * @ORM\ManyToOne(targetEntity="AvaliacaoPergunta")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_pergunta", referencedColumnName="id_pergunta")
-	 * })
+	 * @ORM\JoinColumn(name="id_pergunta", referencedColumnName="id_pergunta")
 	 */
 	protected $pergunta;
 
 	/**
 	 * @var Usuario
 	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="avaliacao_respostas")
+	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
 
@@ -44,18 +49,17 @@ class AvaliacaoResposta extends Base {
 	 * @var Professor
 	 *
 	 * @ORM\ManyToOne(targetEntity="Professor")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
-	 * })
+	 * @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
 	 */
 	protected $professor;
 
 	/**
-	 * @var string
+	 * @var Disciplina
 	 *
-	 * @ORM\Column(type="string", length=5, nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Disciplina")
+	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
 	 */
-	protected $sigla;
+	protected $disciplina;
 
 	/**
 	 * @var integer

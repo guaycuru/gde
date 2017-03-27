@@ -2,8 +2,8 @@
 
 namespace GDE;
 
+// ToDo: Titulo mais informativo
 define('TITULO', 'Perfil');
-
 require_once('../common/common.inc.php');
 
 $Aluno = $Professor = null;

@@ -7,7 +7,15 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AvaliacaoRanking
  *
- * @ORM\Table(name="gde_avaliacao_rankings", uniqueConstraints={@ORM\UniqueConstraint(name="id_pergunta", columns={"id_pergunta", "id_professor", "sigla"})})
+ * @ORM\Table(
+ *  name="gde_avaliacao_rankings",
+ *  indexes={
+ *     @ORM\Index(name="pergunta_sigla_ranking", columns={"id_pergunta", "sigla", "ranking"})
+ *  },
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="pergunta_professor_sigla", columns={"id_pergunta", "id_professor", "sigla"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class AvaliacaoRanking extends Base {
@@ -21,25 +29,28 @@ class AvaliacaoRanking extends Base {
 	protected $id_ranking;
 
 	/**
-	 * @var integer
+	 * @var AvaliacaoPergunta
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
+	 * @ORM\ManyToOne(targetEntity="AvaliacaoPergunta")
+	 * @ORM\JoinColumn(name="id_pergunta", referencedColumnName="id_pergunta")
 	 */
-	protected $id_pergunta;
+	protected $pergunta;
 
 	/**
-	 * @var integer
+	 * @var Professor
 	 *
-	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Professor")
+	 * @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
 	 */
-	protected $id_professor;
+	protected $professor;
 
 	/**
-	 * @var string
+	 * @var Disciplina
 	 *
-	 * @ORM\Column(type="string", length=5, nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Disciplina")
+	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
 	 */
-	protected $sigla;
+	protected $disciplina;
 
 	/**
 	 * @var integer

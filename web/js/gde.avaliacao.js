@@ -5,7 +5,7 @@ var Carregar_Avaliacoes = function() {
 	if($(this).val() != '') {
 		var ids = $(this).attr('id').split('_');
 		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).Carregando();
-		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load('../ajax/avaliacoes.php', {id_professor: ids[1], sigla: $(this).val()}, function() {
+		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load(CONFIG_URL + 'ajax/avaliacoes.php', 'id_professor='+ids[1]+'&sigla='+$(this).val(), function() {
 			$("#div_avaliacoes_"+ids[1]+"_"+ids[2]+" div.nota_slider").each(function() {
 				Criar_Slider($(this));
 			});
@@ -23,7 +23,7 @@ var Enviar_Avaliacao = function(link, idp, professor, sigla) {
 		sigla = '';
 	link.hide();
 	link.after('<span id="votando_aguarde_'+idp+'_'+professor+((sigla)?"_"+sigla:"")+'">Aguarde...</span>');
-	$.post('../ajax/ax_avaliacao.php', {idp: idp, professor: professor, sigla: sigla.replace('-', ' '), nota: $("#nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).slider("value")}, function(data) {
+	$.post(CONFIG_URL + 'ajax/avaliacao.php', {idp: idp, professor: professor, sigla: sigla.replace('-', ' '), nota: $("#nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).slider("value")}, function(data) {
 		if(data == 1) {
 			$("#votar_nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).before("Voto salvo com sucesso!");
 			$("#votar_nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).remove();
