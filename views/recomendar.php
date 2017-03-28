@@ -9,8 +9,26 @@ require_once('../common/common.inc.php');
 $Aluno = (isset($_GET['ra'])) ? Aluno::Load($_GET['ra']) : false;
 
 ?>
+<script type="text/javascript">
+// <![CDATA[
+$(document).ready(function() {
+	$("#form_recomendacao").submit(function() {
+		$.post(CONFIG_URL + 'ajax/recomendar.php', $(this).serialize(), function(res) {
+			if((res) && (res.ok)) {
+				var msg = 'Sua Recomenda&ccedil;&atilde;o foi enviada com sucesso! O GDE agradece!!!';
+				$.guaycuru.confirmacao(msg, CONFIG_URL + "/index/");
+			} else {
+				var erro = ((res) && (res.erros)) ? res.erros.join(' ') : 'Um erro desconhecido ocorreu. Por favor, tente novamente.';
+				$.guaycuru.confirmacao(erro);
+			}
+		});
+		return false;
+	});
+});
+// ]]>
+</script>
 <h2>Recomendar o GDE</h2>
-<form method="post" action="<?= CONFIG_URL; ?>ajax/recomendar.php" target="controle">
+<form id="form_recomendacao">
 	<table border="0">
 		<tr>
 			<td>RA:</td>
@@ -29,6 +47,4 @@ $Aluno = (isset($_GET['ra'])) ? Aluno::Load($_GET['ra']) : false;
 		</tr>
 	</table>
 </form>
-<?php
-echo $FIM;
-?>
+<?= $FIM; ?>

@@ -30,9 +30,7 @@ class Evento extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
 
@@ -40,9 +38,7 @@ class Evento extends Base {
 	 * @var Oferecimento
 	 *
 	 * @ORM\ManyToOne(targetEntity="Oferecimento")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")
-	 * })
+	 * @ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")
 	 */
 	protected $oferecimento;
 

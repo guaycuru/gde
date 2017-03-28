@@ -18,13 +18,6 @@ require_once(__DIR__.'/../classes/GDE/Util.inc.php');
 date_default_timezone_set('America/Sao_Paulo');
 mb_internal_encoding("UTF-8");
 
-// Password hashing
-if(version_compare(PHP_VERSION, '5.5.0') < 0)
-	require_once(__DIR__.'/password/password.php');
-
-// ToDo: Remover isto, usado soh para dev
-error_reporting(E_ALL & ~E_STRICT);
-
 session_name('GDES');
 session_start();
 
@@ -34,8 +27,8 @@ if((defined('JSON')) && (JSON === true)) {
 }
 if((defined('AJAX')) && (AJAX === true)) {
 	define('HTML', false);
-	define('SEM_CACHE', true);
-	define('LOGIN_REDIRECIONAR', false);
+	define('NO_CACHE', true);
+	define('NO_REDIRECT', true);
 }
 
 if(defined('NO_HTML'))
@@ -44,7 +37,7 @@ if(defined('NO_HTML'))
 if(!defined('HTML'))
 	define('HTML', true);
 
-if((defined('SEM_CACHE')) && (SEM_CACHE === TRUE)) {
+if((defined('NO_CACHE')) && (NO_CACHE === TRUE)) {
 	header("Cache-Control: no-cache, must-revalidate");
 	header("Expires: Sat, 16 Dec 2003 16:38:00 GMT");
 }
@@ -54,7 +47,7 @@ if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
 	if($_SESSION['admin']['debug'] >= 2)
 		error_reporting(E_ALL);
 	register_shutdown_function(function ($inicio) {
-		if((!defined('NO_HTML')) || (NO_HTML === false))
+		if((!defined('HTML')) || (HTML === true))
 			echo "<hr />Tempo de Gera&ccedil;&atilde;o da P&aacute;gina: ".(microtime(true)-$inicio)." segundo(s)";
 	}, $TS_INICIO);
 }
@@ -128,13 +121,17 @@ if((!defined('HTML')) || (HTML === true)) {
 	<link rel="apple-touch-icon" href="<?= CONFIG_URL; ?>web/images/apple-touch-icon.png" />
 </head>
 <body id="page_bg">
+<script type="text/javascript">
+// <![CDATA[
+var CONFIG_URL = '<?= CONFIG_URL; ?>';
+// ]]>
+</script>
 <?php
 	if((!defined('JUST_INC')) || (JUST_INC === false)) {
 		if($_Usuario !== null) {
 ?>
 <script type="text/javascript">
 // <![CDATA[
-var CONFIG_URL = '<?= CONFIG_URL; ?>';
 // Informacoes para o chat
 <?php if(($_Usuario !== null) && (((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false)))) { ?>
 var meu_id = '<?= $_Usuario->getID(); ?>';
@@ -171,9 +168,9 @@ $(document).ready(function(){
 	});
 <?php } ?>
 });
+<?php } ?>
 // ]]>
 </script>
-<?php } ?>
 	<iframe src="about:blank" width="0" height="0" frameborder="0" id="controle" name="controle"></iframe>
 		<div id="top">
 			<div id="mini_logo">

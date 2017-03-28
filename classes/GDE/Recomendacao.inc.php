@@ -8,8 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Recomendacao
  *
  * @ORM\Table(
- *   name="gde_recomendacoes",
- *   indexes={@ORM\Index(name="login", columns={"login"}), @ORM\Index(name="recomendado", columns={"recomendado"})}
+ *   name="gde_recomendacoes"
  * )
  * @ORM\Entity
  */
@@ -21,6 +20,22 @@ class Recomendacao extends Base {
 	 * @ORM\Id
 	 */
 	protected $chave;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumn(name="id_recomendante", referencedColumnName="id_usuario")
+	 */
+	protected $recomendante;
+
+	/**
+	 * @var Usuario
+	 *
+	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\JoinColumn(name="id_recomendado", referencedColumnName="id_usuario")
+	 */
+	protected $recomendado;
 
 	/**
 	 * @var integer
@@ -35,20 +50,6 @@ class Recomendacao extends Base {
 	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
 	 */
 	protected $email;
-
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="string", length=255, nullable=false)
-	 */
-	protected $login;
-
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
-	 */
-	protected $recomendado;
 
 	/**
 	 * getFinal
@@ -82,33 +83,14 @@ class Recomendacao extends Base {
 	 * @return bool
 	 */
 	public function Existe_Dados() {
+		if(($this->getEmail() == null) && ($this->getRA() == null))
+			return false;
 		return (
 			(Usuario::FindOneBy(array('email' => $this->getEmail(false))) !== null) ||
-			(Usuario::FindOneBy(array('ra' => $this->getRA(false))) !== null) ||
+			(Usuario::FindOneBy(array('aluno' => $this->getRA(false))) !== null) ||
 			(self::FindOneBy(array('email' => $this->getEmail(false))) !== null) ||
 			(self::FindOneBy(array('ra' => $this->getRA(false))) !== null)
 		);
-	}
-
-	public function Verificar() {
-		$erros = array();
-
-		if((strlen($this->login) < 3) || (strlen($this->login) > 16))
-			$erros[] = "O login deve ter no m&iacute;nimo 3 e no m&aacute;ximo 16 caracteres.";
-
-		if(preg_match('/^[A-Z0-9_]+/i', $this->login) == 0)
-			$erros[] = "O login digitado &eacute; inv&aacute;lido. Deve conter apenas letras, n&uacute;meros e underscores.";
-
-		if((strlen($this->email) < 2) || (preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $this->email) == 0))
-			$erros[] = "O email digitado &eacute; inv&aacute;lido.";
-
-		if($this->Existe_Dados() === true)
-			$erros[] = "O email ou o RA digitado j&aacute; est&aacute; cadastrado no sistema.";
-
-		if(count($erros) == 0)
-			return true;
-		else
-			return $erros;
 	}
 
 	/**
