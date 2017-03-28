@@ -63,4 +63,14 @@ class Util {
 		return $limpos;
 	}
 
+	public static function Enviar_Email($para, $assunto, $msg, $from = 'GDE <gde@guaycuru.net>', $html = false) {
+		$html_header = ($html) ? 'MIME-Version: 1.0'."\r\n".'Content-type: text/html; charset=utf-8'."\r\n" : '';
+		return @mail(
+			$para,
+			$assunto,
+			$msg,
+			$html_header.'From: '. $from . "\r\n" .'Reply-To: ' . $from . "\r\n" . 'X-Mailer: PHP/' . phpversion()
+		);
+	}
+
 }

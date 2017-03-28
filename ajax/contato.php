@@ -1,19 +1,23 @@
 <?php
 
-define('JUST_INC', true);
+namespace GDE;
 
+define('JSON', true);
 require_once('../common/common.inc.php');
-require_once('../classes/Recomendacao.inc.php');
 
-echo "<script>$(document).ready( function(){";
-
-if(isset($_POST['enviar'])) {
-	if(Envia_Email("gde-support@googlegroups.com", "GDE - ".$_POST['assunto'], $_POST['mensagem']."\n\n".print_r($_Usuario, true), $_Usuario->getEmail()) !== false)
-		echo "$.guaycuru.confirmacao(\"Sua Mensagem foi enviada com sucesso! O GDE agradece!!!\", \"".CONFIG_URL."index\")";
+if((!empty($_POST['assunto'])) && (!empty($_POST['mensagem']))) {
+	$dados = array(
+		'id' => $_Usuario->getID(),
+		'ra' => $_Usuario->getAluno(true)->getRA(false),
+		'login' => $_Usuario->getLogin(false)
+	);
+	if(Util::Enviar_Email("gde-support@googlegroups.com", "GDE - ".$_POST['assunto'], $_POST['mensagem']."\n\n".print_r($dados, true), $_Usuario->getEmail(false)) !== false)
+		die(Base::To_JSON(array(
+			'ok' => true
+		)));
 	else
-		echo "$.guaycuru.confirmacao(\"N&atilde;o foi poss&iacute;vel enviar a Mensagem...\")";
+		die(Base::To_JSON(array(
+			'ok' => false,
+			'erros' => array('N&atilde;o foi poss&iacute;vel enviar a Mensagem.')
+		)));
 }
-
-echo "});</script>";
-
-echo $FIM;

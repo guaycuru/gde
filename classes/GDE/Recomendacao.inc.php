@@ -83,13 +83,15 @@ class Recomendacao extends Base {
 	 * @return bool
 	 */
 	public function Existe_Dados() {
-		if(($this->getEmail() == null) && ($this->getRA() == null))
+		if($this->getEmail() == null)
 			return false;
+		$ra = ($this->getRA() != null) ? ((Usuario::FindOneBy(array('aluno' => $this->getRA(false))) !== null) ||
+			(self::FindOneBy(array('ra' => $this->getRA(false))) !== null)) : false;
+
 		return (
+			($ra === true) ||
 			(Usuario::FindOneBy(array('email' => $this->getEmail(false))) !== null) ||
-			(Usuario::FindOneBy(array('aluno' => $this->getRA(false))) !== null) ||
-			(self::FindOneBy(array('email' => $this->getEmail(false))) !== null) ||
-			(self::FindOneBy(array('ra' => $this->getRA(false))) !== null)
+			(self::FindOneBy(array('email' => $this->getEmail(false))) !== null)
 		);
 	}
 
@@ -101,7 +103,7 @@ class Recomendacao extends Base {
 	 * @return bool
 	 */
 	public function Recomendar($Usuario, $mensagem) {
-		$res = mail($this->getEmail(true), 'Voce conhece o GDE?', strip_tags($mensagem).self::getFinal($Usuario, $this->getChave(true))."\n\n", 'From: '.$Usuario->getEmail(true) . "\r\n" .'Reply-To: '.$Usuario->getEmail(true) . "\r\n" . 'X-Mailer: PHP/' . phpversion());
+		$res = Util::Enviar_Email($this->getEmail(false), 'Voce conhece o GDE?', strip_tags($mensagem).self::getFinal($Usuario, $this->getChave(true))."\n\n", $Usuario->getEmail(true));
 
 		if($res !== false)
 			return $this->Save(true);

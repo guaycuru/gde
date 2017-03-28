@@ -7,9 +7,27 @@ define('TITULO', 'Contato');
 require_once('../common/common.inc.php');
 
 ?>
+<script type="text/javascript">
+	// <![CDATA[
+	$(document).ready(function() {
+		$("#form_contato").submit(function() {
+			$.post(CONFIG_URL + 'ajax/contato.php', $(this).serialize(), function(res) {
+				if((res) && (res.ok)) {
+					var msg = 'Sua mensagem foi enviada com sucesso! O GDE agradece!!!';
+					$.guaycuru.confirmacao(msg, CONFIG_URL + "/index/");
+				} else {
+					var erro = ((res) && (res.erros)) ? res.erros.join(' ') : 'Um erro desconhecido ocorreu. Por favor, tente novamente.';
+					$.guaycuru.confirmacao(erro);
+				}
+			});
+			return false;
+		});
+	});
+	// ]]>
+</script>
 	Antes de enviar sua mensagem, consulte as "<a href="<?= CONFIG_URL; ?>faq/">Perguntas Frequentes</a>", talvez voc&ecirc; encontre respostas...<br /><br />
 	<h2>Recomendar o GDE</h2>
-	<form method="post" action="<?= CONFIG_URL; ?>ajax/contato/" target="controle">
+	<form id="form_contato">
 		<table border="0">
 			<tr>
 				<td>Assunto:</td>
