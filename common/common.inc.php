@@ -60,10 +60,6 @@ if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
 }
 
 $_Usuario = null;
-
-//if((isset($_GET['w3c'])) && ($_GET['w3c'] == '17239853'))
-	//$_SESSION['id_usuario'] = 1;
-
 if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 	$_Usuario = Usuario::Ping();
 	if($_Usuario->getID() == null) {
@@ -216,8 +212,8 @@ $(document).ready(function(){
 							<li><a href="<?= CONFIG_URL; ?>avaliar/">Avaliar Professores</a></li>
 							<li><a href="<?= CONFIG_URL; ?>eliminador/">Eliminar Disciplinas</a></li>
 							<li><a href="<?= CONFIG_URL; ?>mapa/">Mapa do Campus</a></li>
-							<li><a href="<?= CONFIG_URL; ?>planejador/">Planejador</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/Rankings.php">Rankings</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>planejador/">Planejador</a></li>
+							<!-- <li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>rankings/">Rankings</a></li> -->
 						</ul>
 					</li>
 					<li><a href="#" onclick="return false;">Social</a>

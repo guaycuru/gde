@@ -6,14 +6,14 @@ require_once('../common/common.inc.php');
 
 $Quase_Amigos = $_Usuario->getQuase_Amigos();
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
-$Amigos = $_Usuario->getAmigos(true);
+$Amigos = $_Usuario->Amigos();
 
 ?>
 <script type="text/javascript">
 	// <![CDATA[
 	var remover_amigo = function(id) {
 		$.guaycuru.simnao("Tem certeza que deseja remover este Usu&aacute;rio da sua lista de Amigos?", function() {
-			$.post(CONFIG_URL + 'ajax/ax_amigo.php', {i: id, tipo: 'r'}, function(data) {
+			$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'r'}, function(data) {
 				if(data == '1') {
 					$.guaycuru.confirmacao("Usu&aacute;rio n&atilde;o est&aacute; mais na sua lista de amigos!", null);
 					history.go(0);
@@ -25,13 +25,13 @@ $Amigos = $_Usuario->getAmigos(true);
 	};
 
 	var autorizar_amigo = function(id) {
-		$.post(CONFIG_URL + 'ajax/ax_amigo.php', {i: id, tipo: 'h'}, function(data) {
+		$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'h'}, function(data) {
 			if(data == '1') {
-				$.guaycuru.confirmacao("O Pedido de Autoriza&ccedil;&atilde;o foi aceito com sucesso!");
+				$.guaycuru.confirmacao("O Pedido de Amizade foi aceito com sucesso!");
 				history.go(0);
 			}
 			else if(data == '2')
-				$.guaycuru.confirmacao("N&atilde;o foi poss&iacute;vel aceitar o Pedido de Autoriza&ccedil;&atilde;o.");
+				$.guaycuru.confirmacao("N&atilde;o foi poss&iacute;vel aceitar o Pedido de Amizade.");
 		});
 	};
 
@@ -55,7 +55,7 @@ $Amigos = $_Usuario->getAmigos(true);
 			$("#tabela_pendentes_foto").hide();
 			$("#tabela_pendentes_lista").show();
 		}
-	}
+	};
 	$(document).ready(function() {
 		Carrega(0);
 		Carrega(2);
@@ -91,15 +91,15 @@ foreach($Autorizacoes as $Auth) {
 			</tr>
 			<tr>
 				<td width="20%"><strong>Curso:</strong></td>
-				<td><?= $Aluno->getNome_Curso()." (".$Aluno->getCurso().")"; ?></td>
+				<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
 			</tr>
 			<tr>
 				<td width="20%"><strong>Modalidade:</strong></td>
-				<td><?= $Aluno->getModalidade()." - ".$Aluno->getNome_Modalidade(); ?></td>
+				<td><?= $Aluno->getModalidade(true); ?></td>
 			</tr>
 			<tr>
 				<td width="20%"><strong>A&ccedil;&atilde;o:</strong></td>
-				<td><a href="#" onclick="autorizar_amigo('<?= $Auth->getID_Usuario(); ?>'); return false;">Autorizar</a> | <a href="#" onclick="remover_amigo('<?= $Auth->getID_Usuario(); ?>'); return false;">Recusar</a></td></tr>
+				<td><a href="#" onclick="autorizar_amigo('<?= $Auth->getUsuario()->getID(); ?>'); return false;">Aceitar</a> | <a href="#" onclick="remover_amigo('<?= $Auth->getUsuario()->getID(); ?>'); return false;">Recusar</a></td></tr>
 		</table></td>
 	<?php
 	if($i++ % 2 == 1)
@@ -216,7 +216,7 @@ if(count($Quase_Amigos) > 0) { ?>
 <?php
 $i = 0;
 foreach($Quase_Amigos as $Amigo) {
-	$Aluno = $Amigo->getAmigo()->getAluno();
+	$Aluno = $Amigo->getAmigo()->getAluno(true);
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>

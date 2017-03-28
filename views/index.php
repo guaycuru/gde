@@ -97,7 +97,7 @@ var Limpar_Status = function() {
 }
 
 var Adicionar_Amigo_Sugestao = function(id) {
-	$.post('<?= CONFIG_URL; ?>ajax/ax_amigo.php', {i: id, tipo: 'a'}, function(data) {
+	$.post('<?= CONFIG_URL; ?>ajax/amigo.php', {i: id, tipo: 'a'}, function(data) {
 		$.guaycuru.confirmacao("Foi enviado um pedido de autoriza&ccedil;&atilde;o!", null);
 		$("#amigo_"+id).hide();
 	});

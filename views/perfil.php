@@ -429,9 +429,9 @@ if($Usr !== null) {
 	} elseif($_Usuario->Quase_Amigo($Usr) !== false) // Eu to esperando autorizacao dele
 		$link_pessoal = '<span style=\"font-size: 10px;\">Aguardando Autoriza&ccedil;&atilde;o...</span>';
 	elseif($Usr->Quase_Amigo($_Usuario) !== false) // Ele ta esperando a minha autorizacao
-		$link_pessoal = '<a href="#" id="amizade_aceitar_'.$Usr->getID().'" class="amizade_aceitar" ><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_'.$Usr->getID().'"><i>Ignorar</i></a>';
+		$link_pessoal = '<a href="#" id="amizade_aceitar_'.$Usr->getID().'" class="amizade_aceitar" ><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_'.$Usr->getID().'"><i>Recusar</i></a>';
 	else
-		$link_pessoal = '<a href="#" id="link_amigo" style="font-size: 10px;">Adicionar Amigo</a>';
+		$link_pessoal = '<a href="#" id="link_amigo" style="font-size: 10px;">Solicitar Amizade</a>';
 } else {
 	$_Foto = Usuario::getFoto_Padrao();
 	$_nome = ($_tipo == 'A') ? $Aluno->getNome(true) : $Professor->getNome(true);

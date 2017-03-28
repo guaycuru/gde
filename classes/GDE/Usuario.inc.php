@@ -719,7 +719,7 @@ class Usuario extends Base {
 	 *
 	 * @param boolean $verificar (Opcional) Se for false, nao ira verificar o Usuario
 	 * @param $atualizar_acesso (Opcional) Se for true, ira atualizar o ultimo acesso
-	 * @return Usuario O Usuario atualmente logado
+	 * @return self O Usuario atualmente logado
 	 */
 	public static function Ping($verificar = true, $atualizar_acesso = true) {
 		$Usuario = new self();
@@ -938,9 +938,9 @@ class Usuario extends Base {
 	public function Amigos_Em_Comum(Usuario $Usuario, &$total = 0) {
 		$Lista = array();
 		$ids_amigos = array();
-		foreach($Usuario->getAmigos() as $Amigo)
+		foreach($Usuario->Amigos() as $Amigo)
 			$ids_amigos[$Amigo->getAmigo()->getID()] = true;
-		foreach($this->getAmigos() as $Amigo) // Pego do meu, pq tem os MEUS apelidos!
+		foreach($this->Amigos() as $Amigo) // Pego do meu, pq tem os MEUS apelidos!
 			if(isset($ids_amigos[$Amigo->getAmigo()->getID()]))
 				$Lista[] = $Amigo;
 		$total = count($Lista);
@@ -967,7 +967,7 @@ class Usuario extends Base {
 	 *
 	 * Retorna a lista de amigos que ainda nao aceitaram o pedido de amizade
 	 *
-	 * @return ArrayCollection
+	 * @return ArrayCollection|UsuarioAmigo[]
 	 */
 	public function getQuase_Amigos() {
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", false));
@@ -977,32 +977,55 @@ class Usuario extends Base {
 
 	/**
 	 * @param Usuario $Usuario
-	 * @return bool
+	 * @return UsuarioAmigo|false
 	 */
 	public function Quase_Amigo(Usuario $Usuario) { // Se eu to esperando autorizacao dele...
-		foreach($this->getQuase_Amigos() as $Amigo)
-			if($Amigo->getAmigo()->getID() == $Usuario->getID())
-				return $Amigo;
-		return false;
+		$criteria = Criteria::create()->where(Criteria::expr()->eq("amigo", $Usuario));
+		$criteria->setMaxResults(1);
+		$Quase = $this->getQuase_Amigos()->matching($criteria);
+		return ($Quase->count() > 0) ? $Quase->first() : false;
+	}
+
+	/**
+	 * Amigos_Pendentes
+	 *
+	 * @return ArrayCollection|UsuarioAmigo[] Autorizacoes de amizades pendentes
+	 */
+	public function getAmigos_Pendentes() {
+		/*$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", false));
+		$criteria->andWhere(Criteria::expr()->eq("amigo", $this));
+		return $this->getAmigos()->matching($criteria);*/
+		$dql = 'SELECT A FROM GDE\\UsuarioAmigo A WHERE A.amigo = ?1 AND A.ativo = FALSE';
+		return self::_EM()->createQuery($dql)
+			->setParameter(1, $this->getID())
+			->getResult();
 	}
 
 	/**
 	 * @param Usuario $Usuario
-	 * @return bool|UsuarioAmigo
+	 * @return UsuarioAmigo|false
 	 */
 	public function Amigo_Pendente(Usuario $Usuario) { // Se ele ta esperando minha autorizacao...
-		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", false));
-		$criteria->andWhere(Criteria::expr()->eq("usuario", $Usuario));
+		/*$criteria = Criteria::create()->where(Criteria::expr()->eq("usuario", $Usuario));
 		$criteria->setMaxResults(1);
-		$Amigo = $this->getAmigos()->matching($criteria);
-		return ($Amigo->count() > 0) ? $Amigo->first() : false;
+		$Quase = $this->getAmigos_Pendentes()->matching($criteria);
+		return ($Quase->count() > 0) ? $Quase->first() : false;*/
+		$dql = 'SELECT A FROM GDE\\UsuarioAmigo A WHERE A.amigo = ?1 AND A.usuario = ?2 AND A.ativo = FALSE';
+		$Pendente = self::_EM()->createQuery($dql)
+			->setParameter(1, $this->getID())
+			->setParameter(2, $Usuario->getID())
+			->setMaxResults(1)
+			->getOneOrNullResult();
+		return ($Pendente !== null) ? $Pendente : false;
 	}
 
 	/**
 	 * @param Usuario $Usuario
-	 * @return bool|UsuarioAmigo
+	 * @return UsuarioAmigo|false
 	 */
 	public function Amigo(Usuario $Usuario) { // Se eh um amigo atualmente
+		if($this->getID() == $Usuario->getID())
+			return true;
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", true));
 		$criteria->andWhere(Criteria::expr()->eq("amigo", $Usuario));
 		$criteria->setMaxResults(1);
@@ -1011,7 +1034,7 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * @return ArrayCollection Amizades ja autorizadas
+	 * @return ArrayCollection|UsuarioAmigo[] Amizades ja autorizadas
 	 */
 	public function Amigos() { // Lista de amizades ja autorizadas
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", true));
@@ -1019,12 +1042,94 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * Amigos_Pendentes
-	 *
-	 * @return ArrayColection Autorizacoes de amizades pendentes
+	 * @param Usuario $Usuario
+	 * @param bool $ativo
+	 * @param bool $flush
+	 * @return bool
 	 */
-	public function getAmigos_Pendentes() {
-		return UsuarioAmigo::FindBy(array('amigo' => $this->getID(), 'ativo' => false));
+	public function Adicionar_Amigo(Usuario $Usuario, $ativo = false, $flush = true) {
+		if(($this->Quase_Amigo($Usuario) !== false) || ($this->Amigo_Pendente($Usuario) !== false)) // Ja tem uma autorizacao pendente...
+			return false;
+		$Usuario_Amigo = new UsuarioAmigo();
+		$Usuario_Amigo->setUsuario($this);
+		$Usuario_Amigo->setAmigo($Usuario);
+		$Usuario_Amigo->setAtivo($ativo);
+		if($Usuario_Amigo->Save(false) === false)
+			return false;
+		if($ativo === true) {
+			$Usuario_Amigo = new UsuarioAmigo();
+			$Usuario_Amigo->setUsuario($Usuario);
+			$Usuario_Amigo->setAmigo($this);
+			$Usuario_Amigo->setAtivo(true);
+			if($Usuario_Amigo->Save(false) === false)
+				return false;
+		}
+		if(($flush) && (self::_EM()->flush() === false))
+			return false;
+		return true;
+	}
+
+	/**
+	 * @param Usuario $Usuario
+	 * @param bool $flush
+	 * @return bool
+	 */
+	public function Remover_Amigo(Usuario $Usuario, $flush = true) {
+		$Usuario_Amigo = $this->Amigo($Usuario);
+		if($Usuario_Amigo === false) {
+			$Usuario_Amigo = $this->Quase_Amigo($Usuario);
+			if($Usuario_Amigo === false) {
+				$Usuario_Amigo = $this->Amigo_Pendente($Usuario);
+			}
+		}
+
+		$Reverso = $Usuario->Amigo($this);
+		if($Reverso === false) {
+			$Reverso = $Usuario->Quase_Amigo($this);
+			if($Reverso === false)
+				$Reverso = $Usuario->Amigo($this);
+		}
+
+		if(($Usuario_Amigo === false) && ($Reverso === false))
+			// Nada a fazer...
+			return false;
+
+		if($Usuario_Amigo !== false)
+			$Usuario_Amigo->Delete(false);
+		if($Reverso !== false)
+			$Reverso->Delete(false);
+		if(($flush) && (self::_EM()->flush() === false))
+			return false;
+		return true;
+	}
+
+	/**
+	 * @param Usuario $Usuario
+	 * @param bool $flush
+	 * @return bool
+	 */
+	public function Autorizar_Amigo(Usuario $Usuario, $flush = true) {
+		$Quase_Amigo = $this->Amigo_Pendente($Usuario);
+		if($Quase_Amigo === false)
+			return false;
+
+		$Quase_Amigo->setAtivo(true);
+		if($Quase_Amigo->Save(false) === false)
+			return false;
+
+		$Reverso = $this->Quase_Amigo($Usuario);
+		if($Reverso === false) {
+			$Reverso = new UsuarioAmigo();
+			$Reverso->setUsuario($this);
+			$Reverso->setAmigo($Usuario);
+		}
+		$Reverso->setAtivo(true);
+		if($Reverso->Save(false) === false)
+			return false;
+
+		if(($flush) && (self::_EM()->flush() === false))
+			return false;
+		return true;
 	}
 
 	/**

@@ -10,7 +10,7 @@ var Amizade_Aceitar = function(e) {
 	var i = $(this).attr('id').replace('amizade_aceitar_', '');
 	$("#amizade_aceitar_"+i).text('Aguarde...');
 	$("#amizade_ignorar_"+i).hide();
-	$.post('../ajax/ax_amigo.php', {i: i, tipo: 'h'}, function(data) {
+	$.post(CONFIG_URL + 'ajax/amigo.php', {i: i, tipo: 'h'}, function(data) {
 		if(data == 1) {
 			t = 1;
 			$("#amizade_aceitar_"+i).text('Pedido aceito!');
@@ -25,13 +25,13 @@ var Amizade_Aceitar = function(e) {
 	});
 	e.stopPropagation();
 	return false;
-}
+};
 
 var Amizade_Ignorar = function(e) {
 	var i = $(this).attr('id').replace('amizade_ignorar_', '');
 	$("#amizade_ignorar_"+i).text('Aguarde...');
 	$("#amizade_aceitar_"+i).hide();
-	$.post('../ajax/ax_amigo.php', {i: i, tipo: 'r'}, function(data) {
+	$.post(CONFIG_URL + 'ajax/amigo.php', {i: i, tipo: 'r'}, function(data) {
 		if(data == 1) {
 			$("#amizade_ignorar_"+i).text('Pedido ignorado!');
 			$("#amizade_ignorar_"+i).unbind('click');
@@ -43,10 +43,10 @@ var Amizade_Ignorar = function(e) {
 	});
 	e.stopPropagation();
 	return false;
-}
+};
 
 var Adicionar_Amigo = function(id) {
-	$.post('../ajax/ax_amigo.php', {i: id, tipo: 'a'}, function(data) {
+	$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'a'}, function(data) {
 		if(data == '1')
 			$.guaycuru.confirmacao("Tem que ser muito solit&aacute;rio pra querer ser amigo de voc&ecirc; mesmo!");
 		else if(data == '2') {
@@ -57,13 +57,13 @@ var Adicionar_Amigo = function(id) {
 			$.guaycuru.confirmacao("<i>Ele(a) j&aacute; est&aacute; na sua lista de amigos.");
 	});
 	return false;
-}
+};
 var Remover_Amigo = function(id) {
 	$.guaycuru.simnao("Tem certeza que deseja remover ele(a) da sua lista de amigos?", function() { 
-		$.post('../ajax/ax_amigo.php', {i: id, tipo: 'r'}, function(data) {
+		$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'r'}, function(data) {
 			if(data == '1') {
 				$.guaycuru.confirmacao("Ele(a) foi removido(a) da sua lista de amigos!", null);
-				$('#link_amigo').text('Adicionar Amigo');
+				$('#link_amigo').text('Solicitar Amizade');
 				$('#link_amigo').unbind('click');
 				$('#link_amigo').click(function() { Adicionar_Amigo(id); return false; });
 			} else if(data == '2')
@@ -71,4 +71,4 @@ var Remover_Amigo = function(id) {
 		});
 	}, {});
 	return false;
-}
+};
