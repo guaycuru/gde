@@ -16,7 +16,6 @@ require_once('../common/common.inc.php');
 			collapsible: true
 		});
 		$("span.ui-icon").css({'display': 'none'});
-		$("input.avaliacao_oferecimento").each(Carregar_Avaliacoes);
 		$("div.nota_slider").each(function() {
 			Criar_Slider($(this));
 		});
@@ -39,8 +38,7 @@ require_once('../common/common.inc.php');
 if($_Usuario->getAluno(false) === null)
 	echo "<strong>Erro:</strong> Apenas Alunos podem avaliar Professores!<br />";
 else {
-	// ToDo: Nao carregar as avaliacoes por Ajax para poder aproveitar um unico SELECT das avalicacoes do usuario!
-	//$_Usuario->getAvaliacao_Respostas();
+	$Perguntas = AvaliacaoPergunta::Listar('t');
 	?>
 	Aqui est&atilde;o listados todos os professores com os quais voc&ecirc; j&aacute; cursou alguma Disciplina (desde 2007).<br /><br />
 	<div id="accordionWrapper" class="gde_jquery_ui">
@@ -70,8 +68,36 @@ else {
 								<td rowspan="2" style="width: 50%; padding: 0px 5px 0px 5px; border: 1px solid #A6C9E2">
 									<div class="gde_jquery_ui">
 										<h2>Como Professor(a) em <?= $Oferecimento->getDisciplina(true)->getSigla(true); ?></h2>
-										<input type="hidden" class="avaliacao_oferecimento" id="selectoferecimento_<?= $Professor->getID(); ?>_<?= $p; ?>" value="<?= str_replace(" ", "_", $Oferecimento->getDisciplina(true)->getSigla(false)); ?>" />
-										<div class="div_avaliacoes" id="div_avaliacoes_<?= $Professor->getID(); ?>_<?= $p++; ?>"></div>
+										<input type="hidden" class="avaliacao_oferecimento" id="selectoferecimento_<?= $Professor->getID(); ?>_<?= $p; ?>" value="<?= str_replace(" ", "_", $Oferecimento->getDisciplina(true)->getSigla(true)); ?>" />
+										<div class="div_avaliacoes" id="div_avaliacoes_<?= $Professor->getID(); ?>_<?= $p++; ?>">
+											<?php
+											foreach($Perguntas as $Pergunta) {
+												$Disciplina = $Oferecimento->getDisciplina(true);
+												$sigla = $Disciplina->getSigla(true);
+												$Media = $Pergunta->getMedia($Professor->getID(), $sigla);
+												echo "<strong>".$Pergunta->getPergunta(true)."</strong><br />";
+												if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
+													echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";
+												else {
+													echo "Pontua&ccedil;&atilde;o: <span id=\"span_fixo_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" style=\"font-weight: bold;\">".number_format($Media['w'], 2, ',', '.')."</span> (".$Media['v']." votos)";
+													if($_Usuario->getAdmin() === true)
+														echo " - Ranking: <strong>".$Pergunta->Ranking($Professor, $Disciplina)."/".$Pergunta->Max_Ranking($Disciplina)."</strong><div id=\"fixo_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"nota_slider_fixo\"></div>";
+													echo "<br />";
+												}
+												$pode = $Pergunta->Pode_Votar($_Usuario, $Professor, $Disciplina);
+
+												if($pode === true)
+													echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"link_votar\">Votar</a></div>";
+												elseif($pode == AvaliacaoPergunta::ERRO_JA_VOTOU)
+													echo "Voc&ecirc; j&aacute; votou nesta pergunta! Seu voto: ".$Pergunta->Meu_Voto($_Usuario, $Professor, $Disciplina)."<br />";
+												elseif($pode == AvaliacaoPergunta::ERRO_NAO_CURSOU)
+													echo "Voc&ecirc; n&atilde;o pode votar pois ainda n&atilde;o cursou ".$sigla." com ".$Professor->getNome(true).".";
+												elseif($pode == AvaliacaoPergunta::ERRO_NAO_ALUNO)
+													echo "Voc&ecirc; n&atilde;o pode votar pois apenas alunos podem avaliar Professores.";
+												echo "<br /><br />";
+											}
+											?>
+										</div>
 									</div>
 								</td>
 							</tr>
