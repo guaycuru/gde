@@ -12,9 +12,13 @@ define('CONFIG_DB_USER', 'Web');
 define('CONFIG_DB_PASS', '');
 define('CONFIG_DB_NAME', 'gde');
 
-// Redis (desnecessario em Dev Mode)
-define('CONFIG_REDIS_HOST', '');
-define('CONFIG_REDIS_PORT', '');
+// APCu (cache)
+define('CONFIG_APCU_ENABLED', false);
+
+// Redis (cache)
+define('CONFIG_REDIS_ENABLED', false);
+define('CONFIG_REDIS_HOST', '127.0.0.1');
+define('CONFIG_REDIS_PORT', '6379');
 
 // URL base do sistema, tem que ter trailing slash
 define('CONFIG_URL', 'http://localhost/Web/gde/');

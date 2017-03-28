@@ -17,20 +17,25 @@ $loader->register();
 unset($loader);
 
 // Initialize the caching mechanism
-$arrayCache = new \Doctrine\Common\Cache\ArrayCache;
-if((defined('CONFIG_DEV_MODE')) && (CONFIG_DEV_MODE === false)) {
+$availableCaches = array(new \Doctrine\Common\Cache\ArrayCache);
+
+// Initialize the APCu caching mechanism
+if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
 	$redis = new Redis();
 	$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
 	$redisCache = new \Doctrine\Common\Cache\RedisCache;
 	$redisCache->setRedis($redis);
-	$_cache = new \Doctrine\Common\Cache\ChainCache([
-		$arrayCache,
-		$redisCache
-	]);
-	unset($redisCache);
-} else
-	$_cache = $arrayCache;
-unset($arrayCache);
+	$availableCaches[] = $redisCache;
+}
+
+// Initialize the redis caching mechanism
+if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
+	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
+}
+
+// Add all available caches to the cache chain
+$_cache = new \Doctrine\Common\Cache\ChainCache($availableCaches);
+unset($arrayCache, $redisCache);
 
 // Load Annotation Registry
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
