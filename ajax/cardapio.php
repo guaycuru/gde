@@ -23,6 +23,6 @@ echo ($Cardapio->getID() != null) ? $Cardapio->Formatado()."<br />" : "<strong>N
 if($id_anterior !== false)
 	echo "<a href=\"#\" onclick=\"return Cardapio_Muda('".$id_anterior."');\">&laquo;</a>";
 if($Cardapio->getID() != null)
-	echo ' <a href="../ajax/cardapios.php?d='.$Cardapio->getData('Y-m-d').'" id="cardapio_semana">Semana</a>';
+	echo ' <a href="'.CONFIG_URL.'ajax/cardapios.php?d='.$Cardapio->getData('Y-m-d').'" id="cardapio_semana">Semana</a>';
 if($id_proximo !== false)
 	echo " <a href=\"#\" onclick=\"return Cardapio_Muda('".$id_proximo."');\">&raquo;</a>";
