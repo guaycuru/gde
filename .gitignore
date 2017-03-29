@@ -2,8 +2,10 @@
 # You may choose to ignore a library lock file http://getcomposer.org/doc/02-libraries.md#lock-file
 # composer.lock
 
-nbproject/
 .svn/
+cache/
+common/config.inc.php
+nbproject/
 api/gen/
 web/fts/*
 !web/fts/nobody*.gif
@@ -14,5 +16,5 @@ web/fts/*
 proxies/*
 vendor/
 composer.phar
-common/config.inc.php
-cache/
+
+
