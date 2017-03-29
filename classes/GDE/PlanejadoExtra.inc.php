@@ -60,10 +60,18 @@ class PlanejadoExtra extends Base {
 
 	private static $_cores = array('#604F99', '#D47F1E', '#4CB052', '#AD2D2D', '#536CA6');
 
+	/**
+	 * @return array
+	 */
 	public static function getCores() {
 		return self::$_cores;
 	}
 
+	/**
+	 * @param null $cor
+	 * @param bool $editable
+	 * @return array
+	 */
 	public function Evento($cor = null, $editable = true) {
 		$ret = array('id' => 'extra_'.$this->getID(), 'title' => $this->getNome(true), 'start' => '2003-12-0'.$this->getDia().'T'.$this->getInicio('H:i:s').'-03:00', 'end' => '2003-12-0'.$this->getDia().'T'.$this->getFim('H:i:s').'-03:00', 'editable' => $editable);
 		if($cor != null)
@@ -71,6 +79,11 @@ class PlanejadoExtra extends Base {
 		return $ret;
 	}
 
+	/**
+	 * @param $dias
+	 * @param $minutos
+	 * @param $inteiro
+	 */
 	public function Mover($dias, $minutos, $inteiro) {
 		if($inteiro) {
 			$h = $this->getInicio('H');

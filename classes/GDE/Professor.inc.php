@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
- * Professore
+ * Professor
  *
  * @ORM\Table(
  *   name="gde_professores",
