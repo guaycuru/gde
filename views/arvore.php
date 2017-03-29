@@ -130,15 +130,15 @@ if($continua) {
 		$('#select_modalidade').load('<?= CONFIG_URL; ?>ajax/modalidades.php?c='+$('#curso').val()+'&a='+$('#catalogo').val()+'&o=1', {}, function(){
 			$('#select_modalidade').removeClass("ac_loading");
 		});
-	}
+	};
 	manda_form = function() {
 		document.location = '<?= CONFIG_URL; ?>arvore/?curso='+$("#curso").val()+'&modalidade='+$("#modalidade").val()+'&catalogo='+$("#catalogo").val()+'&cp='+$("#cp").val();
-	}
+	};
 	limpa_form = function() {
 		document.location = '<?= CONFIG_URL; ?>arvore/';
-	}
+	};
 	Elimina = function(sigla, a, r) {
-		$.post('<?= CONFIG_URL; ?>ajax/ax_disciplina.php', {sigla: sigla, e: '1', a: a, r: r, v: '1'}, function() {
+		$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {sigla: sigla, e: '1', a: a, r: r, v: '1'}, function() {
 			history.go(0);
 		});
 	}

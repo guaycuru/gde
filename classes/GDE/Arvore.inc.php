@@ -690,7 +690,7 @@ class Arvore {
 
 		$mapa = "";
 		foreach($mapas as $sigla => $dados)
-			$mapa .= "<area shape='rect' coords='".implode(",", $dados[1])."' title='".$dados[0]."' alt='".$dados[0]."' href='".(($meu === true)?"#":CONFIG_URL."disciplina/".$sigla."' target='_blank'")."' id='Shape_".str_replace(" ", "_", $sigla)."' class='Shapes' />";
+			$mapa .= "<area shape='rect' coords='".implode(",", $dados[1])."' title='".$dados[0]."' alt='".$dados[0]."' href='".(($meu === true)?"#":CONFIG_URL."disciplina/".$sigla."/' target='_blank'")."' id='Shape_".str_replace(" ", "_", $sigla)."' class='Shapes' />";
 		return $mapa;
 	}
 
@@ -754,7 +754,7 @@ class Arvore {
 					$menus .= "<div id=\"Menu_".str_replace(" ", "_", $Disciplina->getSigla(true))."\" style=\"display:none;\" class=\"RMenu\">
    <ul>
    <li>".$Disciplina->getNome()."</li>
-   <li><a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."\" target=\"_blank\">Informa&ccedil;&otilde;es</a></li>
+   <li><a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."/\" target=\"_blank\">Informa&ccedil;&otilde;es</a></li>
    <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 0 ,0); return false;\">Eliminar Normalmente</a></li>
    <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 1 ,0); return false;\">Eliminar Parcialmente</a></li>
    <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 0 ,1); return false;\">Eliminar Por Profici&ecirc;ncia</a></li>
@@ -800,7 +800,8 @@ class Arvore {
 			if(substr($sigla, 0, 2) == 'AA')
 				continue;
 			$i++;
-			$ret .= "  <a href=\"".CONFIG_URL."disciplina/".$sigla."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina(true)->getNome(true)."\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina(true)->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$Eliminada->getPeriodo()->getNome(true); //  MC102S06+  9,2150 4 1S07
+			$url = Disciplina::URL_Disciplina($sigla);
+			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina(true)->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina(true)->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$Eliminada->getPeriodo()->getNome(true); //  MC102S06+  9,2150 4 1S07
 			if($i % 4 == 0) $ret .= "<br />"; // normal eh 3
 		}
 
@@ -812,7 +813,8 @@ class Arvore {
 			foreach($Deste_Semestre as $Disciplina) {
 				$sigla = $Disciplina->getSigla(true);
 				if(($sigla != 'ELET') && ($sigla != 'LING') && (in_array($sigla, $this->siglas_atuais) === false)) {
-					$ret .= "  <a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."\" class=\"sigla\" title=\"".$Disciplina->getNome(true)."\">".$Disciplina->getSigla(true)."</a>(".(sprintf("%02d", $Disciplina->getCreditos(false))).")";
+					$url = Disciplina::URL_Disciplina($Disciplina->getSigla(false));
+					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Disciplina->getNome(true)."\" target=\"_blank\">".$Disciplina->getSigla(true)."</a>(".(sprintf("%02d", $Disciplina->getCreditos(false))).")";
 					$i++;
 					if($i % 7 == 0) $ret .= "\r\n";
 				}
@@ -832,7 +834,8 @@ class Arvore {
 				//$ret .= "\r\n  OBTER  ".(($creditos<10)?' ':null).$creditos." CREDITO(S) DENTRE";
 				$ret .= "  Obter ".(($creditos<10)?' ':null).$creditos." Cr&eacute;dito(s) dentre a(s) seguinte(s) disciplina(s): ";
 				foreach($Elet->getConjuntos() as $Falta) {
-					$ret .= "  <a href=\"".CONFIG_URL."disciplina/".$Falta->getSigla(true)."\" class=\"sigla\" title=\"".$Falta->getDisciplina()->getNome(true)."\">".$Falta->getSigla(true)."</a>(".(($Falta->getDisciplina()->getCreditos() > 0)?(sprintf("%02d", $Falta->getDisciplina()->getCreditos(false))):'??').")";
+					$url = Disciplina::URL_Disciplina($Falta->getSigla(false));
+					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Falta->getDisciplina()->getNome(true)."\" target=\"_blank\">".$Falta->getSigla(true)."</a>(".(($Falta->getDisciplina()->getCreditos() > 0)?(sprintf("%02d", $Falta->getDisciplina()->getCreditos(false))):'??').")";
 					$i++;
 					if($i % 5 == 0) $ret .= "\r\n                                                             ";
 				}
@@ -846,7 +849,7 @@ class Arvore {
 		if($this->completa === false) {
 			$i = 0;
 			foreach($this->Atuais as $Atual) {
-				$ret .= "  <a href=\"".CONFIG_URL."oferecimento/".$Atual->getID()."\" class=\"sigla\" title=\"".$Atual->getDisciplina(true)->getNome()."\">".$Atual->getDisciplina(true)->getSigla(true).$Atual->getTurma(true)."</a>(".(sprintf("%02d", $Atual->getDisciplina(true)->getCreditos(false))).")".$this->getTipo($Atual->getSigla(true), true);
+				$ret .= "  <a href=\"".CONFIG_URL."oferecimento/".$Atual->getID()."\" class=\"sigla\" title=\"".$Atual->getDisciplina(true)->getNome()."\" target=\"_blank\">".$Atual->getDisciplina(true)->getSigla(true).$Atual->getTurma(true)."</a>(".(sprintf("%02d", $Atual->getDisciplina(true)->getCreditos(false))).")".$this->getTipo($Atual->getSigla(true), true);
 				$i++;
 				if($i % 6 == 0) $ret .= "\r\n";
 			}

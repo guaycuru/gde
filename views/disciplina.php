@@ -12,7 +12,7 @@ require_once('../common/common.inc.php');
 if(empty($_GET['id']))
 	die("Cad&ecirc; a sigla da Disciplina?".$FIM);
 
-$Disciplina = Disciplina::Por_Sigla($_GET['id']);
+$Disciplina = Disciplina::Por_Sigla($_GET['id'], null, false);
 if($Disciplina === null)
 	die("Disciplina não encontrada!".$FIM);
 
@@ -40,7 +40,6 @@ if(isset($_GET['m'])) {
 }
 
 ?>
-<!-- <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.forum.js?<?= REVISION; ?>"></script> -->
 <script type="text/javascript">
 	// <![CDATA[
 	var carregou_oferecimentos = false;
@@ -119,7 +118,6 @@ if(isset($_GET['m'])) {
 					<li><a href="#tab_informacoes" class="ativo">Informa&ccedil;&otilde;es</a></li>
 					<li><a href="#tab_curso">Curso</a></li>
 					<li><a href="#tab_oferecimentos">Oferecimentos</a></li>
-					<!-- <li><a href="#tab_forum">F&oacute;rum</a></li> -->
 					<!-- <li><a href="#tab_professores">Professores</a></li> -->
 				</ul>
 				<div id="tab_informacoes" class="tab_content">
@@ -136,7 +134,7 @@ if(isset($_GET['m'])) {
 							<td width="25%"><b>N&iacute;vel:</b></td>
 							<td><?=$Disciplina->getNivel(true); ?></td>
 						</tr>
-						<?php if($Disciplina->getInstituto()->getNome() != null) { ?>
+						<?php if($Disciplina->getInstituto(false) !== null) { ?>
 							<tr>
 								<td width="25%"><b>Instituto:</b></td>
 								<td><?=$Disciplina->getInstituto(true)->getNome(true); ?> (<?=$Disciplina->getInstituto(true)->getSigla(true); ?>)</td>

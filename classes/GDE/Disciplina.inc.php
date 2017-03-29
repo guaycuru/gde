@@ -224,7 +224,10 @@ class Disciplina extends Base {
 		if($ordem == null)
 			$ordem = "D.sigla ASC";
 		if(isset($param['sigla'])) {
-			if(strlen($param['sigla']) == 5)
+			if(strpos($param['sigla'], '-') !== false) {
+				$qrs[] = "D.sigla LIKE :sigla";
+				$param['sigla'] = preg_replace('/[\-]+/', '%', $param['sigla']);
+			} elseif(strlen($param['sigla']) == 5)
 				$qrs[] = "D.sigla = :sigla";
 			else {
 				$qrs[] = "D.sigla LIKE :sigla";
@@ -359,7 +362,22 @@ class Disciplina extends Base {
 		return implode(" ou<br />", $ret);
 	}
 
-	public function getNome($html = false) {
+	/**
+	 * @param $sigla
+	 * @return string
+	 */
+	public static function URL_Disciplina($sigla) {
+		return CONFIG_URL.((strpos($sigla, '-') === false)
+			? 'disciplina/'.urlencode($sigla).'/'
+			: 'busca/?t=tab_disciplinas&sigla='.urlencode($sigla).'&buscar#tab_disciplinas');
+	}
+
+	/**
+	 * @param bool $html
+	 * @param bool $vazio
+	 * @return string
+	 */
+	public function getNome($html = false, $vazio = false) {
 		$nome = parent::getNome($html);
 		if(($nome == null) && ($html))
 			return self::NOME_VAZIO;

@@ -15,7 +15,7 @@ if(isset($_GET['buscar']) || isset($_GET['q'])) {
 	} else { // Busca Avancada
 		$simples = false;
 		$q = null;
-		$tp = htmlspecialchars($_GET['t']);
+		$tp = (!empty($_GET['t'])) ? htmlspecialchars($_GET['t']) : 'tudo';
 	}
 } else {
 	$buscar = false;
