@@ -272,7 +272,8 @@ class Acontecimento extends Base {
 		$maior = ($maior_que) ? " AND O.id_acontecimento > '".intval($maior_que)."'" : "";
 		$originais = "(SELECT O.*, O.id_acontecimento AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY ordem DESC)";
 		$respostas = "(SELECT O.*, MAX(R.id_acontecimento) AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS R INNER JOIN "  . $AcontecimentoMetaData->getTableName() . " AS O ON (O.id_acontecimento = R.id_original AND (".$qrs.")) ".$qrsr." GROUP BY R.id_original ORDER BY ordem DESC)";
-		// ToDo: Arrumar pra funcionar com MySQL Mode ONLY_FULL_GROUP_BY
+		// ToDo: Arrumar pra funcionar com MySQL Mode ONLY_FULL_GROUP_BY, precisa fazer UNION?
+		// 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'A.id_original' which is not functionally dependent on columns in GROUP BY clause;
 		$sql = "SELECT *, MAX(ordem) AS ordem FROM (".$originais." UNION ".$respostas.") AS A GROUP BY A.id_acontecimento ORDER BY ordem DESC LIMIT :limit OFFSET :offset";
 		//$sql = "SELECT O.* FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY id_acontecimento DESC LIMIT ? OFFSET ?";
 

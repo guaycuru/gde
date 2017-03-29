@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -85,7 +86,7 @@ class Sala extends Base {
 	 *
 	 * @param $nome
 	 * @param $vazio
-	 * @return mixed
+	 * @return Sala|null
 	 */
 	public static function Por_Nome($nome, $vazio = false) {
 		$Sala = self::FindOneBy(array('nome' => $nome));
@@ -102,7 +103,7 @@ class Sala extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Sala[]
+	 * @return ArrayCollection|Sala[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $q)."%");

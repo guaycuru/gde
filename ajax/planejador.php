@@ -32,7 +32,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	$Planejado = Planejado::Load($_POST['id']);
 	if($Planejado->getUsuario(true)->getID() != $_Usuario->getID())
 		die(json_encode(false));
-	$Ret['ok'] = ($Planejado->Excluir() != false);
+	$Ret['ok'] = ($Planejado->Delete(true) != false);
 	$Planejados = null;
 	if($Ret['ok'] === true)
 		$Ret['id'] = Planejado::Algum($_Usuario, $Planejado->getPeriodo(true)->getID(), $Planejados, $Planejado->getPeriodo_Atual(true)->getID())->getID();
@@ -61,7 +61,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$tt += $times['load'] = microtime(true) - $times['start'] - $tt;
 
 	if($_POST['a'] == 'c') { // Carregar
-		$Oferecimentos = $Raw = array();
+		$Raw = array();
 
 		$c = (isset($_POST['c'])) ? intval($_POST['c']) : 0;
 		$ce = (isset($_POST['ce'])) ? intval($_POST['ce']) : 0;
@@ -72,7 +72,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				if($pa == 0) {
 					$PA = new Periodo(Dado::Pega_Dados('planejador_periodo_atual'));
 					$Planejado->setPeriodo_Atual($PA);
-					$Planejado->Salvar(true);
+					$Planejado->Save(true);
 				}
 			}
 			
@@ -292,9 +292,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					$Ret['Oferecimentos'][$sigla] = array(
 						'Disciplina' => array(
 							'sigla' => $Dados['Disciplina']->getSigla(false),
-							'siglan' => str_replace(' ', '_', $Dados['Disciplina']->getSigla(true)),
-							'nome' => $Dados['Disciplina']->getNome(true),
-							'creditos' => $Dados['Disciplina']->getCreditos(),
+							'siglan' => str_replace(' ', '_', $Dados['Disciplina']->getSigla(false)),
+							'nome' => $Dados['Disciplina']->getNome(false, true),
+							'creditos' => $Dados['Disciplina']->getCreditos(false, true),
 							'semestre' => $semestre,
 							'quinzenal' => $Dados['Disciplina']->getQuinzenal(),
 							'c' => $c,
@@ -436,9 +436,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Ret['Oferecimentos'][$sigla] = array(
 				'Disciplina' => array(
 					'sigla' => $Disciplina->getSigla(false),
-					'siglan' => str_replace(' ', '_', $Disciplina->getSigla(true)),
-					'nome' => $Disciplina->getNome(true),
-					'creditos' => $Disciplina->getCreditos(),
+					'siglan' => str_replace(' ', '_', $Disciplina->getSigla(false)),
+					'nome' => $Disciplina->getNome(false, true),
+					'creditos' => $Disciplina->getCreditos(false, true),
 					'semestre' => 'N',
 					'c' => $c,
 					'cor' => $cores[$c],
@@ -483,7 +483,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 'm') { // Mudar compartilhado
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
-		$Ret = ($Planejado->Salvar() !== false);
+		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
 		$Ret = $Planejado->Limpar_Eliminadas();
 		if(isset($_POST['conf'])) {
@@ -493,15 +493,24 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			}
 		}
 	} elseif($_POST['a'] == 'ae') { // Adicionar Extra
+		$erros = array();
+		if(strlen($_POST['nome']) < 2)
+			$erros[] = "O Nome informado &eacute; inv&aacute;lido.";
+		if(($_POST['dia'] < 1) || ($_POST['dia'] > 7))
+			$erros[] = "O dia informado &eacute; inv&aacute;lido.";
+		if(preg_match('/^\d{2}:\d{2}:\d{2}$/i', $_POST['inicio']) == 0)
+			$erros[] = "O in&iacute;cio informado &eacute; inv&aacute;lido.";
+		if(preg_match('/^\d{2}:\d{2}:\d{2}$/i', $_POST['fim']) == 0)
+			$erros[] = "O fim informado &eacute; inv&aacute;lido.";
 		$Extra = new PlanejadoExtra();
 		$Extra->setPlanejado($Planejado);
 		$Extra->setNome($_POST['nome']);
 		$Extra->setDia($_POST['dia']);
 		$Extra->setInicio($_POST['inicio']);
 		$Extra->setFim($_POST['fim']);
-		if($Extra->Verificar() === false)
+		if(count($erros) > 0)
 			$Ret = false;
-		elseif($Extra->Salvar() !== false) {
+		elseif($Extra->Save(true) !== false) {
 			$Ret = $Extra->Evento($cores_extras[intval($_POST['c'])]);
 		} else
 			$Ret = false;
@@ -510,7 +519,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		if($Extra->getPlanejado()->getID() != $Planejado->getID())
 			$Ret = false;
 		else
-			$Ret = $Extra->Excluir();
+			$Ret = $Extra->Delete();
 		//$Planejado->Remover_Extra($Extra); // Meio inutil nao?
 	} elseif($_POST['a'] == 'ee') { // Editar Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
@@ -518,7 +527,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Ret = false;
 		else {
 			$Extra->Mover(intval($_POST['dd']), intval($_POST['md']), ($_POST['t'] == 'd'));
-			$Ret = ($Extra->Salvar() !== false);
+			$Ret = ($Extra->Save(true) !== false);
 		}
 	} elseif($_POST['a'] == 'cd') { // Carregar Dados extendidos do Oferecimento
 		$Oferecimento = Oferecimento::Load($_POST['oid']);

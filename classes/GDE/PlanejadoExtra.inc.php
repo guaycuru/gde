@@ -38,9 +38,9 @@ class PlanejadoExtra extends Base {
 	protected $nome;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
-	 * @ORM\Column(type="boolean", nullable=false)
+	 * @ORM\Column(type="smallint", nullable=false)
 	 */
 	protected $dia;
 
@@ -62,6 +62,35 @@ class PlanejadoExtra extends Base {
 
 	public static function getCores() {
 		return self::$_cores;
+	}
+
+	public function Evento($cor = null, $editable = true) {
+		$ret = array('id' => 'extra_'.$this->getID(), 'title' => $this->getNome(true), 'start' => '2003-12-0'.$this->getDia().'T'.$this->getInicio('H:i:s').'-03:00', 'end' => '2003-12-0'.$this->getDia().'T'.$this->getFim('H:i:s').'-03:00', 'editable' => $editable);
+		if($cor != null)
+			$ret['color'] = $cor;
+		return $ret;
+	}
+
+	public function Mover($dias, $minutos, $inteiro) {
+		if($inteiro) {
+			$h = $this->getInicio('H');
+			$m = $this->getInicio('i');
+			$s = $this->getInicio('s');
+			$h += floor($minutos / 60);
+			$m += $minutos % 60;
+			if($h < 7)
+				$h = 7;
+			$this->setInicio(sprintf("%02d", $h).':'.sprintf("%02d", $m).':'.$s);
+		}
+		$h = $this->getFim('H');
+		$m = $this->getFim('i');
+		$s = $this->getFim('s');
+		$h += floor($minutos / 60);
+		if($h < 7)
+			$h = 7;
+		$m += $minutos % 60;
+		$this->setFim(sprintf("%02d", $h).':'.sprintf("%02d", $m).':'.$s);
+		$this->setDia($this->getDia() + $dias);
 	}
 
 }

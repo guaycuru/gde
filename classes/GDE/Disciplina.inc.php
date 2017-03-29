@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -162,6 +163,7 @@ class Disciplina extends Base {
 	);
 
 	const NOME_VAZIO = '(Desconhecido)';
+	const CREDITOS_VAZIO = '?';
 
 	// ToDo: Remover isto!
 	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla', 'Nome', 'Cr&eacute;ditos');
@@ -217,7 +219,7 @@ class Disciplina extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @param string $tipo
-	 * @return mixed
+	 * @return Collection|Disciplina[]
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1, $tipo = 'AND') {
 		$qrs = $jns = array();
@@ -272,7 +274,7 @@ class Disciplina extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Disciplina[]
+	 * @return Collection|Disciplina[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -379,9 +381,21 @@ class Disciplina extends Base {
 	 */
 	public function getNome($html = false, $vazio = false) {
 		$nome = parent::getNome($html);
-		if(($nome == null) && ($html))
+		if(($nome == null) && ($html || $vazio))
 			return self::NOME_VAZIO;
 		return $nome;
+	}
+
+	/**
+	 * @param bool $html
+	 * @param bool $vazio
+	 * @return string
+	 */
+	public function getCreditos($html = false, $vazio = false) {
+		$creditos = parent::getCreditos($html);
+		if(($creditos == null) && ($html || $vazio))
+			return self::CREDITOS_VAZIO;
+		return $creditos;
 	}
 
 	/**

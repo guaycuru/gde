@@ -15,15 +15,14 @@ if(isset($_POST['id']) && $_POST['tipo'] == 'l') {
 	if($Aviso->getID_Usuario() != $_Usuario->getID())
 		die();
 	$Aviso->setLido($Aviso->getLido() ? false : true);
-	$Aviso->Salvar();
+	$Aviso->Save(true);
 }
 
 if(isset($_POST['id']) && $_POST['tipo'] == 'r') {
 	$Aviso = Aviso::Load($_POST['id']);
 	if($Aviso->getID_Usuario() != $_Usuario->getID())
 		die();
-	$Aviso->Excluir();
+	$Aviso->Delete();
 }
 
 echo Aviso::QuantidadeAvisos($_Usuario->getID());
-?>

@@ -132,7 +132,7 @@ class Planejado extends Base {
 		$Novo->setPeriodo_Atual($Atual);
 		foreach($Usuario->getAluno(true)->getOferecimentos($periodo_atual) as $Atual)
 			$Novo->Adicionar_Eliminada($Atual->getDisciplina(true));
-		return (($salvar === false) || ($Novo->Salvar(true) !== false)) ? $Novo : false;
+		return (($salvar === false) || ($Novo->Save(true) !== false)) ? $Novo : false;
 	}
 
 	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, $salvar = true) {
@@ -149,7 +149,7 @@ class Planejado extends Base {
 		} else
 			$Removido = false;
 		$this->addOferecimentos($Oferecimento);
-		$ok = (($salvar === false) || ($this->Salvar(true) !== false));
+		$ok = (($salvar === false) || ($this->Save(true) !== false));
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
 
@@ -159,7 +159,7 @@ class Planejado extends Base {
 		$this->removeOferecimentos($Oferecimento);
 		if($salvar === false)
 			return true;
-		return ($this->Salvar(true) !== false);
+		return ($this->Save(true) !== false);
 	}
 
 	public function Tem_Oferecimento(Oferecimento $Oferecimento, $checa_disciplina = false) {
@@ -181,7 +181,7 @@ class Planejado extends Base {
 		$this->addEliminadas($Nova);
 		if($salvar === false)
 			return true;
-		return ($this->Salvar(true) !== false);
+		return ($this->Save(true) !== false);
 	}
 
 	public function Remover_Eliminada(Disciplina $Disciplina, $salvar = true) {
@@ -191,14 +191,14 @@ class Planejado extends Base {
 		$this->removeEliminadas($Eliminada);
 		if($salvar === false)
 			return true;
-		return ($this->Salvar(true) !== false);
+		return ($this->Save(true) !== false);
 	}
 
 	public function Limpar_Eliminadas($salvar = true) {
 		$this->setEliminadas(new ArrayCollection());
 		if($salvar === false)
 			return true;
-		return ($this->Salvar(true) !== false);
+		return ($this->Save(true) !== false);
 	}
 
 	public function Tem_Eliminada(Disciplina $Disciplina) {

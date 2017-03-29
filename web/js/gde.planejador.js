@@ -46,10 +46,10 @@ var InicializarPlanejador = function(id) {
 	});
 	$.post(CONFIG_URL + 'ajax/planejador.php', {id: id, a: 'c', c: c, pp: periodo, pa: periodo_atual}, function(data) {
 		if(data == false) {
-			document.location = 'Planejador.php?id='+id;
+			document.location = CONFIG_URL + 'planejador/'+id;
 			return;
 		} else if(data == 'forbidden') {
-			document.location = 'Planejador.php';
+			document.location = CONFIG_URL + 'planejador/';
 			return;
 		}
 		c = data.c;
@@ -621,7 +621,7 @@ $(document).ready(function() {
 		PlanejadorAdicionarExtraPopUpFechar('cancelar');
 	});
 	$("#visualizar_impressao").click(function() {
-		window.open('Planejador.php?idi='+id_planejado, '_blank', 'width=700, height=550, scrollbars=yes');
+		window.open(CONFIG_URL + 'planejador/?idi='+id_planejado, '_blank', 'width=700, height=550, scrollbars=yes');
 		return false;
 	});
 	$("#extra_lista_nomes").change(function() {
@@ -667,10 +667,10 @@ $(document).ready(function() {
 				if(res.ok === false)
 					window.location.reload();
 				else
-					document.location = 'Planejador.php?id='+res.id;
+					document.location = CONFIG_URL + 'planejador/'+res.id;
 			});
 		} else
-			document.location = 'Planejador.php?id='+id;
+			document.location = CONFIG_URL + 'planejador/'+id;
 	});
 	$(".planejador_excluir").click(function() {
 		$.guaycuru.simnao('Tem certeza que deseja excluir esta op&ccedil;&atilde;o?', function() {
@@ -678,7 +678,7 @@ $(document).ready(function() {
 				if(res.ok === false)
 					window.location.reload();
 				else
-					document.location = 'Planejador.php?id='+res.id;
+					document.location = CONFIG_URL + 'planejador/'+res.id;
 			});
 		});
 		return false;

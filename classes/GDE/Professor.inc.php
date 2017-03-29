@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
@@ -135,7 +136,7 @@ class Professor extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Professor[]
+	 * @return ArrayCollection|Professor[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations

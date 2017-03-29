@@ -33,7 +33,7 @@ if($id == null) {
 	$id = $Planejado->getID();
 } else {
 	$Planejado = Planejado::Load($id);
-	$Planejados = Planejado::Por_Usuario($_Usuario, $Planejado->getID_Periodo(), false);
+	$Planejados = Planejado::Por_Usuario($_Usuario, $Planejado->getID(), false);
 }
 
 $periodo = $Planejado->getPeriodo(true)->getID();

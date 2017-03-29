@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
@@ -167,7 +168,7 @@ class Aluno extends Base {
 	 * @param int $total
 	 * @param string $limit
 	 * @param string $start
-	 * @return Aluno[]
+	 * @return ArrayCollection|Aluno[]
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = '-1', $start = '-1') {
 		$qrs = $jns = array();
@@ -281,7 +282,7 @@ class Aluno extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Aluno[]
+	 * @return ArrayCollection|Aluno[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -390,7 +391,7 @@ class Aluno extends Base {
 	 * @param string[] $niveis
 	 * @param bool $formatado
 	 * @param bool $links
-	 * @return string
+	 * @return ArrayCollection|Oferecimento[]|string
 	 */
 	public function getOferecimentos($periodo = null, $niveis = array(), $formatado = false, $links = true) {
 		if($niveis == self::NIVEL_GRAD)
@@ -442,7 +443,7 @@ class Aluno extends Base {
 	 * @param integer|null $periodo
 	 * @param string[] $niveis
 	 * @param bool $formatado
-	 * @return string
+	 * @return ArrayCollection|Oferecimento[]|string
 	 */
 	public function getTrancadas($periodo = null, $niveis = array(), $formatado = false) {
 		if($niveis == self::NIVEL_GRAD)
