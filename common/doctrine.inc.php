@@ -19,18 +19,18 @@ unset($loader);
 // Initialize the caching mechanism
 $availableCaches = array(new \Doctrine\Common\Cache\ArrayCache);
 
-// Initialize the APCu caching mechanism
+// Initialize the redis caching mechanism
 if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
+	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
+}
+
+// Initialize the APCu caching mechanism
+if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
 	$redis = new Redis();
 	$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
 	$redisCache = new \Doctrine\Common\Cache\RedisCache;
 	$redisCache->setRedis($redis);
 	$availableCaches[] = $redisCache;
-}
-
-// Initialize the redis caching mechanism
-if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
-	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
 }
 
 // Add all available caches to the cache chain

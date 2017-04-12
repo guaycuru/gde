@@ -11,7 +11,7 @@ define('NO_DENIAL', true);
 
 require_once('../common/common.inc.php');
 
-if($_Usuario === false)
+if($_Usuario->getID() == null)
 	die('<xml><deslogado>true</deslogado></xml>');
 
 session_write_close();
