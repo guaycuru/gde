@@ -421,7 +421,7 @@ if($Usr !== null) {
 	else
 		$link_arvore = '&Aacute;rvore n&atilde;o compartilhada...';
 	if($Usr->getLogin() == $_Usuario->getLogin())
-		$link_pessoal = '<a href="'.CONFIG_URL.'configuracoes/">Editar Perfil</a>';
+		$link_pessoal = '<a href="'.CONFIG_URL.'editar/">Editar Perfil</a>';
 	elseif($Meu_Amigo !== false) {
 		$link_pessoal = '<a href="#" id="link_amigo" style="font-size: 10px;">Excluir Amigo</a>';
 		if($Meu_Amigo->getApelido(false) != null)

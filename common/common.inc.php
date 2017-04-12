@@ -104,7 +104,9 @@ if((!defined('HTML')) || (HTML === true)) {
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery.watcherkeys.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.common.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.42.js?<?= REVISION; ?>"></script>
-    <?php if(($_Usuario !== null) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?><script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.chat.js?<?= REVISION; ?>"></script><?php } ?>
+    <?php if(($_Usuario !== null) && ($_Usuario->getID() != null) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?>
+	    <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.chat.js?<?= REVISION; ?>"></script>
+    <?php } ?>
 	<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-3315545-3']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/dropdown_menu.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
@@ -215,8 +217,8 @@ $(document).ready(function(){
 					</li>
 					<li><a href="#" onclick="return false;">Social</a>
 						<ul>
-							<li><a href="<?= CONFIG_URL; ?>visoes/EditarPerfil.php">Editar Perfil</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/Configuracoes.php">Configura&ccedil;&otilde;es da Conta</a></li>
+							<li><a href="<?= CONFIG_URL; ?>editar/">Editar Perfil</a></li>
+							<li><a href="<?= CONFIG_URL; ?>configuracoes/">Configura&ccedil;&otilde;es da Conta</a></li>
 							<li><a href="<?= CONFIG_URL; ?>amigos/">Meus Amigos</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>recomendar/">Convidar um Amigo</a></li>
 						</ul>

@@ -17,12 +17,12 @@ var Iniciar_Chat = function() {
 	Atualizar_Chat();
 	$("#chatMiguxo").show();
 	Atualizar_Coisas(true);
-}
+};
 
 var Atualizar_Coisas = function(atualiza_chat) {
 	$.post(CONFIG_URL + 'ajax/ax_xml.php', {n: n_requisicao, id_chat: id_chat, ac: (atualiza_chat) ? 1 : 0}, function(data){
 		if($(data).find('deslogado').length > 0) {
-			document.location = 'VisaoLogin.php';
+			document.location = CONFIG_URL + 'login/';
 			return;
 		}
 		n_requisicao++;
@@ -206,7 +206,7 @@ var Atualizar_Coisas = function(atualiza_chat) {
 		else if(!atualiza_chat)
 			setTimeout(function() { Atualizar_Coisas(false); }, 10000);
 	});
-}
+};
 
 var Atualizar_Chat = function() {
 	$("#chatAmigos").height(300);
@@ -259,7 +259,7 @@ var Atualizar_Chat = function() {
 			});
 		}
 	});
-}
+};
 
 var Cria_Chat = function(id) {
 	var chat_html = "<div id=\"chat_" + id + "\" class=\"chat\">";
@@ -340,7 +340,7 @@ var Cria_Chat = function(id) {
 	});
 	
 	Atualizar_Chat();
-}
+};
 
 var Minimizar_Restaurar_Chat = function(id) {
 	$("#chat_body_" + id).toggle();
@@ -358,7 +358,7 @@ var Minimizar_Restaurar_Chat = function(id) {
 	$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'ws', id: id, status: status});
 	Atualizar_Chat();
 	return false;
-}
+};
 
 var Mensagem_Enviar = function(id, id_usuario_destino, mensagem) {
 	$.post(CONFIG_URL + "ajax/ax_chat.php", {tipo: 'i', id: id, id_usuario_destino: id_usuario_destino, mensagem: mensagem}, function (data) {
@@ -379,7 +379,7 @@ var Mensagem_Enviar = function(id, id_usuario_destino, mensagem) {
 		}
 		$("#chat_body_"+id_usuario_destino).scrollTop($("#chat_body_"+id_usuario_destino).outerHeight());
 	});
-}
+};
 
 var Mensagem_Chat = function(id, id_destino, nome_usuario, mensagem, hora, direcao, foto, enviar) {
 	if($("#chat_"+id_destino).length > 0) { // Janela ja esta aberta
@@ -454,7 +454,7 @@ var Mensagem_Chat = function(id, id_destino, nome_usuario, mensagem, hora, direc
 		Cria_Chat(id_destino);
 		Mensagem_Chat(id, id_destino, nome_usuario, mensagem, hora, direcao, foto, enviar);
 	}
-}
+};
 
 var Toggle_Lista_Amigos = function() {
 	if ($("#chatAmigos").is(":hidden"))
@@ -465,7 +465,7 @@ var Toggle_Lista_Amigos = function() {
 		Atualizar_Chat();
 	});
 	Atualizar_Chat();
-}
+};
 
 var Change_Chat_Image = function(status) {
 	if(status == "i")
@@ -482,7 +482,7 @@ var Change_Chat_Image = function(status) {
 	$("img.status_icone_"+meu_id).each(function() {
 		$(this).attr("src", CONFIG_URL + "web/images/status_" + status + ".png");
 	});
-}
+};
 
 $(document).ready(function(){
 	$("#chatOpcoesLink > img").click(function() {
