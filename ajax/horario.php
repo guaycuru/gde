@@ -121,7 +121,7 @@ if($_tipo == 'A') {
 		<td colspan="5" style="padding: 10px 5px;"><?=$Aluno->getTrancadas($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
 	</tr>
 	<tr>
-		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('Imprimir_Horario.php?ra=<?= $Aluno->getRA(); ?>&p=<?= $Periodo_Selecionado->getPeriodo(); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Visualizar Para Impress&atilde;o</a></td>
+		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>imprimir_horario/?ra=<?= $Aluno->getRA(); ?>&p=<?= $Periodo_Selecionado->getPeriodo(); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Visualizar Para Impress&atilde;o</a></td>
 	</tr>
 <?php } if($_tipo == 'P') {
 ?>

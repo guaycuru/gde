@@ -7,10 +7,10 @@ define('TITULO', 'Perfil');
 require_once('../common/common.inc.php');
 
 $Aluno = $Professor = null;
-if(!empty($_GET['ra'])) {
+if(!empty($_GET['aluno'])) {
 	$_tipo = 'A';
-	$Usr = Usuario::Por_RA($_GET['ra']);
-	$Aluno = ($Usr !== null) ? $Usr->getAluno(true) : Aluno::Load($_GET['ra']);
+	$Usr = Usuario::Por_RA($_GET['aluno']);
+	$Aluno = ($Usr !== null) ? $Usr->getAluno(true) : Aluno::Load($_GET['aluno']);
 	if($Aluno->getID() == null)
 		die('Aluno n&atilde;o encontrado...'.$FIM);
 	$_matricula = $Aluno->getRA();
@@ -285,11 +285,11 @@ if($_tipo == 'A') {
 		if($_tipo == 'A') {
 		if($_Usuario->Favorito($Aluno)) {
 		?>
-		$('#link_favorito').click(function() { return Remover_Favorito('<?= $Aluno->getRA(); ?>'); });
+		$('#link_favorito').click(function() { Remover_Favorito('<?= $Aluno->getRA(); ?>'); return false; });
 		<?php
 		} else {
 		?>
-		$('#link_favorito').click(function() { return Adicionar_Favorito('<?= $Aluno->getRA(); ?>'); });
+		$('#link_favorito').click(function() { Adicionar_Favorito('<?= $Aluno->getRA(); ?>'); return false; });
 		<?php
 		}
 		}
@@ -417,11 +417,11 @@ if($Usr !== null) {
 	$_status = $Usr->getStatus();
 
 	if($_Usuario->Pode_Ver($Usr, $Usr->getCompartilha_Arvore()) === true)
-		$link_arvore = '<a href="Arvore.php?us='.$Usr->getLogin().'">Ver</a>';
+		$link_arvore = '<a href="'.CONFIG_URL.'arvore/?us='.$Usr->getLogin().'">Ver</a>';
 	else
 		$link_arvore = '&Aacute;rvore n&atilde;o compartilhada...';
 	if($Usr->getLogin() == $_Usuario->getLogin())
-		$link_pessoal = '<a href="EditarPerfil.php">Editar Perfil</a>';
+		$link_pessoal = '<a href="'.CONFIG_URL.'configuracoes/">Editar Perfil</a>';
 	elseif($Meu_Amigo !== false) {
 		$link_pessoal = '<a href="#" id="link_amigo" style="font-size: 10px;">Excluir Amigo</a>';
 		if($Meu_Amigo->getApelido(false) != null)

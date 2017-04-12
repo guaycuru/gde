@@ -291,12 +291,12 @@ if($qts['alunos'] != 0) {
 		<td width="50%">
 			<table border="1" width="100%">
 				<tr>
-					<td width="128" height="150" align="center" rowspan="7"><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(); ?>"><img src="<?= ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario()->getFoto(true) : Usuario::getFoto_Padrao(); ?>" alt="Foto" border="0" /></a></td>
-					<td width="25%" height="20%"><strong>RA:</strong></td><td height="20%"><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
+					<td width="128" height="150" align="center" rowspan="7"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(); ?>"><img src="<?= ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario()->getFoto(true) : Usuario::getFoto_Padrao(); ?>" alt="Foto" border="0" /></a></td>
+					<td width="25%" height="20%"><strong>RA:</strong></td><td height="20%"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 				</tr>
 				<tr>
 					<td width="25%" height="20%"><strong>Nome:</strong></td>
-					<td height="20%"><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"<strong>":null).$Aluno->getNome().(($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"</strong>":null) : $Aluno->getNome(); ?></a></td>
+					<td height="20%"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"<strong>":null).$Aluno->getNome().(($_Usuario->Amigo($Aluno->getUsuario()) !== false)?"</strong>":null) : $Aluno->getNome(); ?></a></td>
 				</tr>
 				<tr>
 					<td width="25%" height="20%"><strong>Curso:</strong></td>
@@ -342,8 +342,8 @@ if($qts['alunos'] != 0) {
 			foreach($Alunos as $Aluno) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"<strong>":null).$Aluno->getNome(true).(($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"</strong>":null) : $Aluno->getNome(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= ($Aluno->getUsuario(false) !== null) ? (($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"<strong>":null).$Aluno->getNome(true).(($_Usuario->Amigo($Aluno->getUsuario(false)) !== false)?"</strong>":null) : $Aluno->getNome(true); ?></a></td>
 		<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true)." (".$Aluno->getCurso()->getNUmero(true).")" : '-'; ?></td>
 		<td><?= ($Aluno->getModalidade(false) !== null) ? $Aluno->getModalidade(true) : '-'; ?></td>
 		<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true)." (".$Aluno->getCurso_Pos()->getNumero(true).")" : '-'; ?></td>

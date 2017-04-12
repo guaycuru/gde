@@ -196,7 +196,7 @@ foreach($Amigos as $Amigo) {
 		$Aluno = $Amigo->getAmigo()->getAluno();
 		?>
 		<tr>
-			<td><a href="<?= CONFIG_URL; ?>perfil/?ra=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
+			<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 			<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome_Completo(true); ?></a></td>
 			<td><?= $Aluno->getNivel(true); ?></td>
 			<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
@@ -267,8 +267,8 @@ foreach($Quase_Amigos as $Amigo) {
 		$Aluno = $Amigo->getAmigo()->getAluno();
 		?>
 		<tr>
-			<td><a href="Perfil.php?ra=<?= $Aluno->getRA(); ?>"><?= $Aluno->getRA(true); ?></a></td>
-			<td><a href="Perfil.php?l=<?= $Amigo->getAmigo()->getLogin(); ?>"><?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true); ?></a></td>
+			<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
+			<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome(true).' '.$Amigo->getAmigo(true)->getSobrenome(true); ?></a></td>
 			<td><?= $Aluno->getNivel(true); ?></td>
 			<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
 			<td><?= $Aluno->getModalidade(true); ?></td>
