@@ -140,12 +140,14 @@ class Professor extends Base {
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
+		$limit = intval($limit);
+		$start = intval($start);
 		if(strlen($q) < CONFIG_FT_MIN_LENGTH) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
 				$ordem = ($ordem != 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE P.`nome` LIKE :q";
-			$sql = "SELECT D.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT P.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
 			$q = '%'.$q.'%';
 		} else {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);

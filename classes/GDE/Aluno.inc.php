@@ -166,11 +166,11 @@ class Aluno extends Base {
 	 * @param $param
 	 * @param null $ordem
 	 * @param int $total
-	 * @param string $limit
-	 * @param string $start
+	 * @param int $limit
+	 * @param int $start
 	 * @return ArrayCollection|Aluno[]
 	 */
-	public static function Consultar($param, $ordem = null, &$total = null, $limit = '-1', $start = '-1') {
+	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
 		$usou_periodo = false;
 		if($ordem == null)
@@ -286,6 +286,8 @@ class Aluno extends Base {
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
+		$limit = intval($limit);
+		$start = intval($start);
 		if(preg_match('/^[\d]+$/i', $q) > 0) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
 				$ordem = ($ordem != 'rank DESC') ? 'A.ra ASC' : 'A.ra DESC';

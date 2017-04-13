@@ -278,6 +278,8 @@ class Disciplina extends Base {
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
+		$limit = intval($limit);
+		$start = intval($start);
 		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
 				$ordem = ($ordem != 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';

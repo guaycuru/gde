@@ -5,6 +5,7 @@ namespace GDE;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Usuario
@@ -948,18 +949,37 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * @param string $minimo
-	 * @param string $limite
-	 * @param string $start
-	 * @return array
+	 * @param int $minimo
+	 * @param int|null $limite
+	 * @param int|null $start
+	 * @return Usuario[]|ArrayCollection
 	 */
-	public function Amigos_Recomendacoes($minimo = '2', $limite = '-1', $start = '-1') {
-		$Lista = array();
-		// ToDo
-		/*$res = self::$db->SelectLimit("SELECT U1.amigo FROM ".self::$tabela_r_amigos." AS U1 JOIN ".self::$tabela_r_amigos." AS U2 ON (U2.amigo = U1.".self::$chave.") WHERE U2.".self::$chave." = '".$this->getID()."' AND U1.amigo != '".$this->getID()."' AND U1.ativo = 't' AND U2.ativo = 't' AND U1.amigo NOT IN (SELECT amigo FROM ".self::$tabela_r_amigos." WHERE ".self::$chave." = '".$this->getID()."') AND U1.amigo NOT IN (SELECT id_usuario FROM ".self::$tabela_r_amigos." WHERE amigo = '".$this->getID()."') GROUP BY U1.amigo HAVING COUNT(U1.amigo) >= ".$minimo." ORDER BY COUNT(U1.amigo) DESC, RAND()", $limite, $start);
-		foreach($res as $linha)
-			$Lista[] = new Usuario($linha['amigo'], self::$db);*/
-		return $Lista;
+	public function Amigos_Recomendacoes($minimo = 2, $limite = null, $start = null) {
+		// ToDo: Pegar nome da tabela das annotations
+		//$res = self::$db->SelectLimit("SELECT U1.amigo FROM ".self::$tabela_r_amigos." AS U1 JOIN ".self::$tabela_r_amigos." AS U2 ON (U2.amigo = U1.".self::$chave.") WHERE U2.".self::$chave." = '".$this->getID()."' AND U1.amigo != '".$this->getID()."' AND U1.ativo = 't' AND U2.ativo = 't' AND U1.amigo NOT IN (SELECT amigo FROM ".self::$tabela_r_amigos." WHERE ".self::$chave." = '".$this->getID()."') AND U1.amigo NOT IN (SELECT id_usuario FROM ".self::$tabela_r_amigos." WHERE amigo = '".$this->getID()."') GROUP BY U1.amigo HAVING COUNT(U1.amigo) >= ".$minimo." ORDER BY COUNT(U1.amigo) DESC, RAND()", $limite, $start);
+		$sql = 'SELECT U.* FROM `gde_usuarios_amigos` AS U1 '.
+			'JOIN `gde_usuarios_amigos` AS U2 ON (U2.`id_amigo` = U1.`id_usuario`) '.
+			'JOIN `gde_usuarios` AS U ON (U.`id_usuario` = U1.`id_amigo`) '.
+			'WHERE U2.`id_usuario` = :id_usuario AND U1.`id_amigo` != :id_usuario AND '.
+			'U1.`ativo` = TRUE AND U2.`ativo` = TRUE AND U1.`id_amigo` NOT IN '.
+				'(SELECT `id_amigo` FROM `gde_usuarios_amigos` WHERE `id_usuario` = :id_usuario) '.
+			'AND U1.`id_amigo` NOT IN '.
+				'(SELECT `id_usuario` FROM `gde_usuarios_amigos` WHERE `id_amigo` = :id_usuario) '.
+			'GROUP BY U1.`id_amigo` HAVING COUNT(U1.`id_amigo`) >= :minimo '.
+			'ORDER BY COUNT(U1.`id_amigo`) DESC, RAND()';
+
+		if(($limite !== null) && ($start !== null))
+			$sql .= ' LIMIT '.intval($start).','.intval($limite);
+		elseif($limite !== null)
+			$sql .= ' LIMIT '.intval($limite);
+
+
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addRootEntityFromClassMetadata(get_class(), 'U');
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('id_usuario', $this->getID());
+		$query->setParameter('minimo', $minimo);
+		return $query->getResult();
 	}
 
 	/**
