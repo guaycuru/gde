@@ -1033,8 +1033,14 @@ class Usuario extends Base {
 	 * @return UsuarioAmigo|false
 	 */
 	public function Amigo(Usuario $Usuario) { // Se eh um amigo atualmente
-		if($this->getID() == $Usuario->getID())
-			return true;
+		if($this->getID() == $Usuario->getID()) {
+			// Eu sou meu amigo!
+			$UA = new UsuarioAmigo();
+			$UA->setUsuario($this);
+			$UA->setAmigo($this);
+			$UA->setApelido('Eu');
+			return $UA;
+		}
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", true));
 		$criteria->andWhere(Criteria::expr()->eq("amigo", $Usuario));
 		$criteria->setMaxResults(1);
@@ -1150,7 +1156,7 @@ class Usuario extends Base {
 	 */
 	public function Apelido_Ou_Nome(Usuario $Usuario, $html = true) {
 		$Amigo = $this->Amigo($Usuario);
-		if($Amigo !== false)
+		if(($Amigo !== false) && ($Amigo->getApelido(false) != null))
 			return $Amigo->getApelido($html);
 		else
 			return $Usuario->getNome($html);
