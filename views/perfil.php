@@ -551,10 +551,6 @@ if($Usr !== null) {
 								</tr>
 							<?php } ?>
 							<tr>
-								<td width="30%"><strong>GTalk:</strong></td>
-								<td><?= $Usr->getGTalk(true); ?></td>
-							</tr>
-							<tr>
 								<td width="30%"><strong>Twitter:</strong></td>
 								<td><?= ($Usr->getTwitter() != null)?'<a href="http://twitter.com/'.$Usr->getTwitter(true).'" target="_blank">Twitter</a>':null; ?></td>
 							</tr>

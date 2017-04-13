@@ -57,13 +57,13 @@ $(document).ready(function() {
 							parse_res(false);
 						});
 				} else {
-					var iframe_name = 'auto_form_iframe';
+					var iframe_name = 'controle';
 					$("#" + iframe_name).unbind('load');
 					$("#" + iframe_name).bind('load', function() {
 						try {
 							parse_res($.parseJSON($(this).contents().text()));
 						} catch(err) {
-							parse_res({ok: false});;
+							parse_res({ok: false});
 						}
 					});
 					$(form).attr({

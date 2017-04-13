@@ -31,7 +31,7 @@ class UsuarioConfig extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", options={"default"="n"}, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"="n"}, nullable=false)
 	 */
 	protected $avisos_aniversario = 'n';
 

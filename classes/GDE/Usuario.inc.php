@@ -96,7 +96,7 @@ class Usuario extends Base {
 	/**
 	 * @var \Doctrine\Common\Collections\Collection
 	 *
-	 * @ORM\OneToMany(targetEntity="UsuarioEmprego", mappedBy="usuario")
+	 * @ORM\OneToMany(targetEntity="UsuarioEmprego", mappedBy="usuario", cascade={"persist", "remove"})
 	 */
 	protected $empregos;
 
@@ -287,18 +287,18 @@ class Usuario extends Base {
 	protected $mais;
 
 	/**
-	 * @var boolean
+	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"=1}, nullable=false)
 	 */
-	protected $compartilha_arvore = true;
+	protected $compartilha_arvore = 't';
 
 	/**
 	 * @var boolean
 	 *
-	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=true)
 	 */
-	protected $procurando_emprego = false;
+	protected $procurando_emprego;
 
 	/**
 	 * @var string
@@ -329,11 +329,11 @@ class Usuario extends Base {
 	protected $info_profissional;
 
 	/**
-	 * @var boolean
+	 * @var string
 	 *
-	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
+	 * @ORM\Column(type="string", length=1, options={"default"=1}, nullable=false)
 	 */
-	protected $compartilha_horario = true;
+	protected $compartilha_horario = 't';
 
 	/**
 	 * @var \DateTime
@@ -1002,6 +1002,15 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * @param $campo
+	 * @return mixed
+	 */
+	public function getCompartilha($campo) {
+		$campo = 'compartilha_'.$campo;
+		return $this->{'get'.$campo}(false);
+	}
+
+	/**
 	 * @param Usuario $Usuario
 	 * @return UsuarioAmigo|false
 	 */
@@ -1318,6 +1327,109 @@ class Usuario extends Base {
 				return array($ret, true);
 		}
 		return false;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function Enviar_Email_Validar() {
+		if($this->getProfessor(false) !== null)
+			$RA_Matricula = '<li>Matr&iacute;cula: '.$this->getProfessor()->getMatricula(true).'</li>';
+		elseif($this->getAluno(false) !== null)
+			$RA_Matricula = '<li>RA: '.$this->getAluno()->getRA(true).'</li>';
+		$to = $this->getEmail(false);
+		$subject = 'GDE - Valide seu email';
+		$message = '
+		<html>
+		<head>
+			<title>Valida&ccedil;&atilde;o de email do GDE</title>
+			<style type="text/css">
+				a:link, a:visited { background-color: #F6FAFA; }
+				a:hover, a:active { background-color: #FFFFFF; }
+			</style>
+		</head>
+		<body style="width: 460px; padding-left: 30px; padding-right:30px; border: 1px solid black; background-color: #F6FAFA;">
+			<h1 style="
+				background-color: #639BAC; 
+				text-align: center; 
+				color: #FFFFFF;
+				border: 1px solid black;
+				-moz-border-radius: 5px; -webkit-border-radius: 5px; border-radius: 5px; 
+			">Valida&ccedil;&atilde;o de email do GDE</h1>
+			<div style="font-family: Arial, sans-serif; font-size: 12px; color: #333; ">
+				<h2>'.$this->getNome(true).'</h2>
+				<p>Obrigado por utilizar o <strong>GDE</strong>, a rede de ajuda acad&ecirc;mica!</p>
+				<p>Por favor, confira os seus dados abaixo e valide seu email:</p>
+				<ul>
+					<li>Nome: '.$this->getNome(true).'</li>
+					<li>Email: '.$this->getEmail(true).'</li>
+					'.$RA_Matricula.'
+				</ul>
+				<a href="'.CONFIG_URL.'validaremail/?id='.$this->getID().'&token='.$this->getToken().'">Clique aqui para validar seu e-mail.</a>
+				<p>Se o seu cliente de e-mail n&atilde;o suportar links, copie o endere&ccedil;o abaixo e cole-o na barra de navega&ccedil;&atilde;o de seu navegador:</p>
+				<div style="font-family: Courier, \'Courier New\', monospace; background-color: #FFFFFF">'.CONFIG_URL.'validaremail/?id='.$this->getID().'&token='.$this->getToken().'</div>
+				<p>Caso n&atilde;o tenha solicitado esse email, por favor desconsidere-o. Provavelmente foi por engano de algum outro usu&aacute;rio.</p>
+				<p>Divirta-se!</p>
+				<p style="font-style: italic;">Equipe do <strong>GDE</strong></p>
+			</div>
+		</body>
+		</html>
+		';
+		return Util::Enviar_Email($to, $subject, $message, "GDE <gde@guaycuru.net>", true);
+	}
+
+	/**
+	 * @param $arquivo
+	 * @return bool
+	 */
+	public function Enviar_Foto($arquivo) {
+		$m_largura = 128;
+		$m_altura = 150;
+		if((is_uploaded_file($arquivo['tmp_name']) === false) || ($arquivo['size'] > 5242880))
+			return false;
+		list($largura, $altura, $tipo) = getimagesize($arquivo['tmp_name']);
+		if($tipo == IMAGETYPE_JPEG) {
+			$original = imagecreatefromjpeg($arquivo['tmp_name']);
+		} elseif($tipo == IMAGETYPE_GIF) {
+			$original = imagecreatefromgif($arquivo['tmp_name']);
+		} elseif($tipo == IMAGETYPE_PNG) {
+			$original = imagecreatefrompng($arquivo['tmp_name']);
+		} else
+			return false;
+		if($this->foto != null) {
+			@unlink(self::PASTA_FOTOS.$this->foto.'.jpg');
+			@unlink(self::PASTA_FOTOS.$this->foto.'_th.jpg');
+		}
+		do {
+			$nome = Code(16);
+		} while(file_exists(self::PASTA_FOTOS.$nome.'.jpg'));
+		$p_largura = ($largura > $m_largura) ? $m_largura / $largura : 1;
+		$p_altura = ($altura > $m_altura) ? $m_altura / $altura : 1;
+		$porcentagem = min($p_altura, $p_largura);
+		$n_largura = round($porcentagem * $largura);
+		$n_altura = round($porcentagem * $altura);
+		$nova = imagecreatetruecolor($n_largura, $n_altura);
+		imagecopyresampled($nova, $original, 0, 0, 0, 0, $n_largura, $n_altura, $largura, $altura);
+		if(imagejpeg($nova, self::PASTA_FOTOS.$nome.'.jpg', 90) === true) {
+			$this->setFoto($nome);
+			$porcentagem_th = $porcentagem / 2;
+			$n_largura = round($porcentagem_th * $largura);
+			$n_altura = round($porcentagem_th * $altura);
+			$nova = imagecreatetruecolor($n_largura, $n_altura);
+			imagecopyresampled($nova, $original, 0, 0, 0, 0, $n_largura, $n_altura, $largura, $altura);
+			imagejpeg($nova, self::PASTA_FOTOS.$nome.'_th.jpg', 90);
+			return true;
+		} else
+			return false;
+	}
+
+	/**
+	 * @param Usuario $Usuario
+	 * @param $campo
+	 * @return bool
+	 */
+	public function Posso_Ver(Usuario $Usuario, $campo) {
+		return (($this->getAdmin()) || (($campo == 't') || (($campo == 'a') && ($this->Amigo($Usuario) !== false))));
 	}
 
 	/**
