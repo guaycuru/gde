@@ -96,6 +96,25 @@ class Professor extends Base {
 	public static $ordens_inte = array('rank', 'P.nome');
 
 	/**
+	 * @param $matricula
+	 * @return Professor|null|false
+	 */
+	public static function Por_Matricula($matricula) {
+		return self::FindOneBy(array('matricula' => $matricula));
+	}
+
+	/**
+	 * @param $nome
+	 * @return Professor|false
+	 */
+	public static function Nome_Unico($nome) {
+		$Professores = self::Por_Nome($nome);
+		if(count($Professores) != 1)
+			return false;
+		return $Professores->first();
+	}
+
+	/**
 	 * @param null|string $periodo
 	 * @param bool $formatado
 	 * @param bool $links
@@ -128,6 +147,33 @@ class Professor extends Base {
 			foreach($Oferecimento->getDimensoes() as $Dimensao)
 				$Lista[$Dimensao->getDia()][$Dimensao->getHorario()][] = array($Oferecimento, $Dimensao->getSala(true)->getNome());
 		return $Lista;
+	}
+
+	/**
+	 * Por_Nome
+	 *
+	 * @param $nome
+	 * @param null $ordem
+	 * @param null $total
+	 * @param int $limit
+	 * @param int $start
+	 * @return ArrayCollection|Professor[]
+	 */
+	public static function Por_Nome($nome, $ordem = null, &$total = null, $limit = -1, $start = -1) {
+		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");
+		if($total !== null) {
+			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
+			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+		}
+		$dql = "SELECT DISTINCT P FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
+		if($ordem != null)
+			$dql .= " ORDER BY ".$ordem;
+		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		if($limit > 0)
+			$query->setMaxResults($limit);
+		if($start > -1)
+			$query->setFirstResult($start);
+		return $query->getResult();
 	}
 
 	/**

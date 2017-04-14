@@ -19,11 +19,16 @@ if(isset($_POST['salvar'])) {
 	if(($_POST['senha'] != null) && ($_POST['senha'] != $_POST['conf_senha'])) {
 		Base::Error_JSON('As senhas n&atilde;o conferem!');
 	}
+	if((empty($_POST['email'])) || (Util::Validar_Email($_POST['email']) === false))
+		Base::Error_JSON("Favor informar um email v&aacute;lido.");
 	if($_Usuario->getEmail() != $_POST['email'])
 		$_Usuario->setEmail_Validado(false);
 	$_Usuario->setEmail($_POST['email']);
-	if($_POST['senha'] != null)
+	if(!empty($_POST['senha'])) {
+		if(strlen($_POST['senha']) < 3)
+			Base::Error_JSON("A senha precisa ter no m&iacute;nimo 3 caracteres.");
 		$_Usuario->setSenha($_POST['senha']);
+	}
 	$_Usuario->setNome($_POST['nome']);
 	$_Usuario->setSobrenome($_POST['sobrenome']);
 	$Curso = Curso::Por_Numero($_POST['curso']);

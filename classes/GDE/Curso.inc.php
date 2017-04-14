@@ -42,16 +42,22 @@ class Curso extends Base {
 	 */
 	protected $nome;
 
+	const NIVEIS_GRAD = array('G', 'T');
+	const NIVEIS_POS = array('M', 'D');
+
 	/**
 	 * Listar
 	 *
 	 * @param array $niveis
+	 * @param bool $sem_especial
 	 * @return ArrayCollection
 	 */
-	public static function Listar($niveis = array()) {
+	public static function Listar($niveis = array(), $sem_especial = false) {
 		$dql = 'SELECT C FROM GDE\\Curso C ';
 		if(count($niveis) > 0)
 			$dql .= 'WHERE C.nivel IN (?1) ';
+		if($sem_especial)
+			$dql .= 'AND C.numero != 99 ';
 		$dql .= 'ORDER BY C.nome ASC';
 		$query = self::_EM()->createQuery($dql);
 		if(count($niveis) > 0)
@@ -66,7 +72,7 @@ class Curso extends Base {
 	 * @param array $niveis
 	 * @return self|null
 	 */
-	public static function Por_Numero($numero, $niveis = array('G', 'T')) {
+	public static function Por_Numero($numero, $niveis = self::NIVEIS_GRAD) {
 		$dql = 'SELECT C FROM GDE\\Curso C WHERE C.numero = ?1';
 		if(count($niveis) > 0)
 			$dql .= ' AND C.nivel IN (?2)';

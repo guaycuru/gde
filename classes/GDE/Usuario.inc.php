@@ -150,13 +150,6 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
-	 */
-	protected $nome_completo;
-
-	/**
-	 * @var string
-	 *
 	 * @ORM\Column(type="string", length=255, unique=true, nullable=true)
 	 */
 	protected $email;
@@ -566,6 +559,14 @@ class Usuario extends Base {
 
 	/**
 	 * @param bool $html
+	 * @return string
+	 */
+	public function getNome_Completo($html = false) {
+		return trim($this->getNome($html).' '.$this->getSobrenome($html));
+	}
+
+	/**
+	 * @param bool $html
 	 * @param bool $artigo
 	 * @return string
 	 */
@@ -654,9 +655,6 @@ class Usuario extends Base {
 	 * @return string A nova senha
 	 */
 	public function setSenha($senha, $codificar = true) {
-		// ToDo: Move to controller
-		/*if(($codificar) && (strlen($senha) < 3))
-			$this->_Erro(new Erro(get_class(), "senha", "A senha precisa ter no mínimo 3 caracteres."));*/
 		if($codificar)
 			$senha = self::Codificar_Senha($senha);
 		return parent::setSenha($senha);
@@ -799,8 +797,11 @@ class Usuario extends Base {
 	 * @return false|Usuario O Usuario logado (podendo ser vazio ou nao) ou false se o token for invalido
 	 */
 	public static function Efetuar_Login_DAC($token, $verificar_horario = true, &$erro = false) {
-		if($token == null)
+		if($token == null) {
+			if($erro !== false)
+				$erro = self::ERRO_LOGIN_TOKEN_INVALIDO;
 			return false;
+		}
 		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token, $verificar_horario);
 		if($resultado === false) {
 			$Usuario = self::Logout(null);
@@ -815,10 +816,15 @@ class Usuario extends Base {
 					$Usuario = self::Por_Unique($matricula, 'matricula');
 					break;
 				default: // Outros (Funcionarios, etc)
+					if($erro !== false)
+						$erro = self::ERRO_LOGIN_TOKEN_INVALIDO;
 					return false;
 			}
-			if($Usuario === null)
+			if($Usuario === null) {
+				if($erro !== false)
+					$erro = self::ERRO_LOGIN_NAO_ENCONTRADO;
 				return false;
+			}
 
 			// Salva o cookie do login
 			$Usuario->Salvar_Cookie(false);
@@ -1356,13 +1362,21 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function Token_Email() {
+		// ToDo: Nao usar mais sha1
+		return sha1($this->login.'GDE'.$this->senha);
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function Enviar_Email_Validar() {
 		if($this->getProfessor(false) !== null)
-			$RA_Matricula = '<li>Matr&iacute;cula: '.$this->getProfessor()->getMatricula(true).'</li>';
+			$RA_Matricula = '<li>Matr&iacute;cula: '.$this->getProfessor(true)->getMatricula(true).'</li>';
 		elseif($this->getAluno(false) !== null)
-			$RA_Matricula = '<li>RA: '.$this->getAluno()->getRA(true).'</li>';
+			$RA_Matricula = '<li>RA: '.$this->getAluno(true)->getRA(true).'</li>';
 		$to = $this->getEmail(false);
 		$subject = 'GDE - Valide seu email';
 		$message = '
@@ -1391,9 +1405,9 @@ class Usuario extends Base {
 					<li>Email: '.$this->getEmail(true).'</li>
 					'.$RA_Matricula.'
 				</ul>
-				<a href="'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->getToken().'">Clique aqui para validar seu e-mail.</a>
+				<a href="'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->Token_Email().'">Clique aqui para validar seu e-mail.</a>
 				<p>Se o seu cliente de e-mail n&atilde;o suportar links, copie o endere&ccedil;o abaixo e cole-o na barra de navega&ccedil;&atilde;o de seu navegador:</p>
-				<div style="font-family: Courier, \'Courier New\', monospace; background-color: #FFFFFF">'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->getToken().'</div>
+				<div style="font-family: Courier, \'Courier New\', monospace; background-color: #FFFFFF">'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->Token_Email().'</div>
 				<p>Caso n&atilde;o tenha solicitado esse email, por favor desconsidere-o. Provavelmente foi por engano de algum outro usu&aacute;rio.</p>
 				<p>Divirta-se!</p>
 				<p style="font-style: italic;">Equipe do <strong>GDE</strong></p>

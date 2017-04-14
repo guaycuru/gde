@@ -1,5 +1,8 @@
-var erro_comum = function(form, mensagem, titulo, foco) {
-	$.guaycuru.confirmacao(mensagem);
+var erro_comum = function(form, mensagem, titulo, foco, destino) {
+	if(destino)
+		$.guaycuru.confirmacao(mensagem, destino);
+	else
+		$.guaycuru.confirmacao(mensagem);
 };
 
 var erro_comum_esconder = function(mensagem, titulo, foco) {
@@ -29,7 +32,9 @@ $(document).ready(function() {
 						var msg = ($(form).data('sucesso')) ? $(form).data('sucesso') : 'Dados salvos com sucesso!';
 						if(msg !== ' ')
 							alert(msg);
-						if(!$(form).data('destino')) {
+						if(res.destino)
+							var destino = res.destino;
+						else if(!$(form).data('destino')) {
 							var destino = document.URL;
 							if(destino.charAt(destino.length-1) !== '/')
 								destino += '/';
@@ -45,7 +50,11 @@ $(document).ready(function() {
 							var msg = res.error;
 						else
 							var msg = 'Um erro ocorreu, por favor tente novamente.';
-						erro_comum($(form), msg, 'Erro:', true);
+						if(res.destino)
+							var destino = res.destino;
+						else
+							var destino = null;
+						erro_comum($(form), msg, 'Erro:', true, destino);
 						$(form).find('button').prop('disabled', false);
 					}
 				};

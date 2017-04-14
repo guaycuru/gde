@@ -17,15 +17,14 @@ if(isset($_GET['login_dac'])) {
 	exit();
 }
 
-//ToDo: Cadastro
 if(isset($_GET['token'])) { ?>
 <h1>Aguarde...</h1>
 <form name="formulario" id="form_login" method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/login.php" data-destino="<?= CONFIG_URL; ?>" data-sucesso=" ">
-	<input type="hidden" name="token" value="<?php if(!empty($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
+	<input type="hidden" name="token" id="token" value="<?php if(!empty($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
 </form>
 <script type="text/javascript">
 	<?php if(isset($_SESSION['trocar_senha'])) { ?>
-	document.location = '<?= CONFIG_URL; ?>cadastro/?token=<?= $_GET['token']; ?>';
+	document.location = '<?= CONFIG_URL; ?>cadastro/?token=' + $("#token").val();
 	<?php } else { ?>
 	$(document).ready(function() {
 		$("#form_login").submit();
@@ -41,7 +40,7 @@ if(isset($_GET['token'])) { ?>
 $(document).ready(function(){
 	$.guaycuru.tooltip("TT_senha", "Senha:", "<ul><li>Esta &eacute; sua senha do GDE, que n&atilde;o &eacute; necessariamente igual &agrave; da DAC.</li><li>Se voc&ecirc; n&atilde;o tem ou esqueceu sua senha, clique em \"Esqueci minha senha / N&atilde;o tenho senha\".</li></ul>", {});
 	$("#alterar_senha").click(function() {
-		$.post("../controladores/ControlCadastro.php", {alterar: 1}, function() {
+		$.post("<?= CONFIG_URL; ?>ajax/cadastro.php", {alterar: 1}, function() {
 			$.guaycuru.confirmacao("Para trocar sua senha, primeiro fa&ccedil;a login pelo site da DAC!", "<?= CONFIG_URL_LOGIN_DAC; ?>");
 		});
 		return false;

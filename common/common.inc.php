@@ -144,7 +144,7 @@ var minha_foto_th = '<?= $_Usuario->getFoto(true, true); ?>';
  if((isset($_SESSION['admin_su'])) && ($_SESSION['admin_su'] !== false)) { ?>
 var Un_SU = function() {
 	$.guaycuru.abreControlador('ControlAdmin.php?unsu');
-}
+};
 <?php } ?>
 $(document).ready(function(){
 	$('body').watcherkeys({callback: $.guaycuru.changeIt});
@@ -171,9 +171,9 @@ $(document).ready(function(){
 	});
 <?php } ?>
 });
-<?php } ?>
 // ]]>
 </script>
+<?php } ?>
 	<iframe src="about:blank" width="0" height="0" frameborder="0" id="controle" name="controle"></iframe>
 		<div id="top">
 			<div id="mini_logo">

@@ -216,7 +216,7 @@ abstract class Base {
 	 * Searches the DB for only one object
 	 *
 	 * @param array $params Search parameters
-	 * @return mixed Object found, null if not found or false on query error
+	 * @return object|null|false Object found, null if not found or false on query error
 	 */
 	public static function FindOneBy($params) {
 		return self::_EM()->getRepository(get_called_class())->findOneBy($params);

@@ -20,12 +20,12 @@ require_once('../common/common.inc.php');
 		$('#salvar_conta').click(function() {
 			if($("input[name='confConta']:checked").val() == 'excluir') {
 				$.guaycuru.simnao2('Tem certeza que deseja excluir seu cadastro do GDE?<br />Todos os seus dados ser&atilde;o perdidos <strong>PARA TODA A ETERNIDADE</strong>!', function() {
-					$.post('<?= CONFIG_URL; ?>ajax/excluir_conta.php', {tipo: 'excluir'}, function(data){
+					$.post('<?= CONFIG_URL; ?>ajax/excluir-conta.php', {tipo: 'excluir'}, function(data){
 						$.guaycuru.confirmacao("Seu cadstro foi exclu&iacute;do do GDE!<br />So long, so long, and thanks for all the fish!", "<?= CONFIG_URL; ?>");
 					});
 				});
 			} else if($("input[name='confConta']:checked").val() == 'desativar') {
-				$.post('<?= CONFIG_URL; ?>ajax/excluir_conta.php', {tipo: 'desativar'}, function(data){
+				$.post('<?= CONFIG_URL; ?>ajax/excluir-conta.php', {tipo: 'desativar'}, function(data){
 					$.guaycuru.confirmacao("Sua conta foi desativada!", "<?= CONFIG_URL; ?>");
 				});
 			} else

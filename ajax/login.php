@@ -20,12 +20,18 @@ if(!empty($_POST['token'])) {
 else
 	$_Usuario = Usuario::Verificar_Login($_POST['login'], $_POST['senha'], false, $erro);
 
-if($_Usuario->getID() != null) { // Login OK
+if((is_object($_Usuario)) && ($_Usuario->getID() != null)) { // Login OK
 	Base::OK_JSON();
 } else { // Login falhou
+	$extra = array('destino' => '');
 	switch($erro) {
 		case Usuario::ERRO_LOGIN_NAO_ENCONTRADO:
-			$erro = 'Login não encontrado.';
+			if(!empty($_POST['token'])) {
+				$erro = 'Login não encontrado. Por favor, efetue seu cadastro.';
+				$extra['destino'] = CONFIG_URL . 'cadastro/?token=' . urlencode($_POST['token']);
+			} else {
+				$erro = 'Login não encontrado.';
+			}
 			break;
 		case Usuario::ERRO_LOGIN_SENHA_INCORRETA:
 			$erro = 'Login ou senha incorretos.';
@@ -40,5 +46,5 @@ if($_Usuario->getID() != null) { // Login OK
 			$erro = 'Erro desconhecido.';
 			break;
 	}
-	Base::Error_JSON($erro);
+	Base::Error_JSON($erro, 200, $extra);
 }

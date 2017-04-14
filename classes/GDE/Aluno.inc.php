@@ -104,6 +104,8 @@ class Aluno extends Base {
 	/**
 	 * @var string
 	 *
+	 * Nao podemos utilizar uma Relation com Modalidade pois Aluno nao tem Catalogo
+	 *
 	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	protected $modalidade_pos;
@@ -156,6 +158,14 @@ class Aluno extends Base {
 	 */
 	public static function Listar_Niveis_Pos() {
 		return self::$_niveis_pos;
+	}
+
+	/**
+	 * @param $ra
+	 * @return Aluno|null|false
+	 */
+	public static function Por_RA($ra) {
+		return self::FindOneBy(array('ra' => $ra));
 	}
 
 	/**
