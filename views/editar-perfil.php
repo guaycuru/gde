@@ -147,7 +147,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 </script>
 <h2>Cadastro</h2>
 <strong>Importante:</strong> Ao se cadastrar no GDE voc&ecirc; concorda com o fato de que todos os dados fornecidos ser&atilde;o armazenados no banco de dados do site.<br />No entanto voc&ecirc; n&atilde;o &eacute; obrigado(a) a fornecer nenhuma informa&ccedil;&atilde;o.<br /><br />
-<form method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/editar.php" enctype="multipart/form-data" data-destino="<?= CONFIG_URL; ?>editar/">
+<form method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/editar.php" enctype="multipart/form-data" data-destino="<?= CONFIG_URL; ?>editar-perfil/">
 	<input type="hidden" name="MAX_FILE_SIZE" value="5242880" />
 	<input type="hidden" id="acao" name="acao" value="salvar" />
 	<div id="tabs">

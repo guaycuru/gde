@@ -1391,9 +1391,9 @@ class Usuario extends Base {
 					<li>Email: '.$this->getEmail(true).'</li>
 					'.$RA_Matricula.'
 				</ul>
-				<a href="'.CONFIG_URL.'validaremail/?id='.$this->getID().'&token='.$this->getToken().'">Clique aqui para validar seu e-mail.</a>
+				<a href="'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->getToken().'">Clique aqui para validar seu e-mail.</a>
 				<p>Se o seu cliente de e-mail n&atilde;o suportar links, copie o endere&ccedil;o abaixo e cole-o na barra de navega&ccedil;&atilde;o de seu navegador:</p>
-				<div style="font-family: Courier, \'Courier New\', monospace; background-color: #FFFFFF">'.CONFIG_URL.'validaremail/?id='.$this->getID().'&token='.$this->getToken().'</div>
+				<div style="font-family: Courier, \'Courier New\', monospace; background-color: #FFFFFF">'.CONFIG_URL.'validar-email/?id='.$this->getID().'&token='.$this->getToken().'</div>
 				<p>Caso n&atilde;o tenha solicitado esse email, por favor desconsidere-o. Provavelmente foi por engano de algum outro usu&aacute;rio.</p>
 				<p>Divirta-se!</p>
 				<p style="font-style: italic;">Equipe do <strong>GDE</strong></p>
