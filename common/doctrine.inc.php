@@ -7,6 +7,9 @@ use \Doctrine\Common\Annotations\AnnotationRegistry,
 	\Doctrine\ORM\Configuration,
 	\Doctrine\Common\ClassLoader;
 
+// Composer Autoload
+require_once(__DIR__.'/../vendor/autoload.php');
+
 // Default namespace
 $_namespace = 'GDE';
 

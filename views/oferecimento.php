@@ -146,7 +146,7 @@ if($oferecimento_pagina == null) {
 							<tr><td width="25%"><b>Per&iacute;odo:</b></td><td><?= $Oferecimento->getPeriodo(true)->getNome(false); ?></td></tr>
 							<tr><td width="25%"><b>Turma:</b></td><td><?= $Oferecimento->getTurma(true); ?></td></tr>
 							<tr><td width="25%"><b>Professor:</b></td><td><?= ($Oferecimento->getProfessor() !== null) ? "<a href=\"".CONFIG_URL."perfil/?professor=".$Oferecimento->getProfessor(true)->getID()."\">".$Oferecimento->getProfessor(true)->getNome(true)."</a>" : "Desconhecido"; ?></td></tr>
-							<tr><td width="25%"><b>Vagas:</b></td><td><?= $Oferecimento->getVagas().(($Oferecimento->getFechada())?' - <b>Fechada</b>':null); ?></td></tr>
+							<tr><td width="25%"><b>Vagas:</b></td><td><?= $Oferecimento->getVagas().(($Oferecimento->getFechado())?' - <b>Fechada</b>':null); ?></td></tr>
 							<tr><td width="25%"><b>Alunos:</b></td><td><?= $Oferecimento->Matriculados(); ?></td></tr>
 							<tr><td width="25%"><b>Desist&ecirc;ncias:</b></td><td><?= $Oferecimento->Desistencias(); ?></td></tr>
 							<tr><td width="25%"><b>Reservas:</b></td><td><?= $Oferecimento->getReservas(true); ?></td></tr>

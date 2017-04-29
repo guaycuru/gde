@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,6 +42,13 @@ class Disciplina extends Base {
 	 * @ORM\JoinColumn(name="id_instituto", referencedColumnName="id_instituto")
 	 */
 	protected $instituto;
+
+	/**
+	 * @var ArrayCollection|Oferecimento[]
+	 *
+	 * @ORM\OneToMany(targetEntity="Oferecimento", mappedBy="disciplina")
+	 */
+	protected $oferecimentos;
 
 	/**
 	 * @var PreConjunto
@@ -141,6 +149,7 @@ class Disciplina extends Base {
 	const NIVEL_POS = 'P';
 	const NIVEL_S = 'S';
 	const NIVEL_TEC = 'T';
+	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
 	private static $_niveis = array(
 		self::NIVEL_TEC => 'Tecnologia',
 		self::NIVEL_GRAD => 'Gradua&ccedil;&atilde;o',
@@ -189,19 +198,13 @@ class Disciplina extends Base {
 	 * Carrega uma Disciplina pela sigla e, opcionamente, nivel
 	 *
 	 * @param $sigla
-	 * @param string|null $nivel
+	 * @param string|array|null $nivel
 	 * @param bool $vazio
-	 * @return self
+	 * @return self|false
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
-		if($nivel != null) {
-			// Se temos nivel podemos fazer a busca por unique
-			$Disciplina = self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
-			if(($Disciplina === null) && ($vazio === true))
-				return new self;
-			return $Disciplina;
-		} else {
-			// Se o nivel nao foi fornecido, pegamos a primeira encontrada
+		if(empty($nivel)) {
+			// Se o nivel nao foi fornecido, pegamos a "primeira" encontrada
 			$Disciplinas = self::FindBy(array('sigla' => $sigla));
 			if(count($Disciplinas) > 0)
 				return array_pop($Disciplinas);
@@ -209,6 +212,25 @@ class Disciplina extends Base {
 				return new self;
 			else
 				return null;
+		} elseif((is_array($nivel)) && (count($nivel) > 1)) {
+			// Se temos uma lista de niveis, fazemos uma consulta e retornamos a primeira encontrada
+			$total = null;
+			$Disciplinas = self::Consultar(array(
+				'sigla' => $sigla,
+				'nivel' => $nivel
+			), null, $total, 1);
+			if(count($Disciplinas) == 0)
+				return ($vazio) ? new self : null;
+			else
+				return $Disciplinas->first();
+		} else {
+			if(is_array(($nivel)))
+				$nivel = $nivel[0];
+			// Se temos nivel podemos fazer a busca por unique
+			$Disciplina = self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
+			if(($Disciplina === null) && ($vazio === true))
+				return new self;
+			return $Disciplina;
 		}
 	}
 
@@ -274,7 +296,7 @@ class Disciplina extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Collection|Disciplina[]
+	 * @return Disciplina[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -285,7 +307,13 @@ class Disciplina extends Base {
 				$ordem = ($ordem != 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q";
-			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY ".$ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT ".$start.",".$limit;
+				else
+					$sql .= " LIMIT ".$limit;
+			}
 			$q = '%'.$q.'%';
 		} else {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
@@ -301,7 +329,13 @@ class Disciplina extends Base {
 				$extra_select = "";
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE)";
-			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT ".$start.",".$limit;
+				else
+					$sql .= " LIMIT ".$limit;
+			}
 		}
 
 		if($total !== null) {

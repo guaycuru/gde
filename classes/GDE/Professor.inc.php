@@ -182,7 +182,7 @@ class Professor extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return ArrayCollection|Professor[]
+	 * @return Professor[]
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -193,7 +193,13 @@ class Professor extends Base {
 				$ordem = ($ordem != 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE P.`nome` LIKE :q";
-			$sql = "SELECT P.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT P.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT ".$start.",".$limit;
+				else
+					$sql .= " LIMIT ".$limit;
+			}
 			$q = '%'.$q.'%';
 		} else {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
@@ -209,7 +215,13 @@ class Professor extends Base {
 				$extra_select = "";
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE)";
-			$sql = "SELECT P.*".$extra_select." FROM `gde_professores` AS P WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
+			$sql = "SELECT P.*".$extra_select." FROM `gde_professores` AS P WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT ".$start.",".$limit;
+				else
+					$sql .= " LIMIT ".$limit;
+			}
 		}
 
 		if($total !== null) {

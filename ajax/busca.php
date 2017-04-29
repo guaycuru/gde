@@ -441,7 +441,7 @@ if($qts['alunos'] != 0) {
 			$matriculados = $Oferecimento->Matriculados();
 			$nivel_of = $Oferecimento->getDisciplina()->getNivel(false);
 			$nivel_of = ($nivel_of != null) ? $niveis_oferecimentos[$nivel_of] : '?';
-			if($Oferecimento->getFechada())
+			if($Oferecimento->getFechado())
 				$situacao = "Fechada";
 			elseif($matriculados >= $vagas)
 				$situacao = "Lotada";
