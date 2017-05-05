@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PreConjunto
  *
- * @ORM\Table(name="gde_pre_conjuntos", indexes={@ORM\Index(name="sigla_catalogo", columns={"sigla", "catalogo"})})
+ * @ORM\Table(
+ *  name="gde_pre_conjuntos",
+ *  indexes={
+ *     @ORM\Index(name="sigla_catalogo", columns={"sigla", "catalogo"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class PreConjunto extends Base {

@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Dimensao
  *
- * @ORM\Table(name="gde_dimensoes", uniqueConstraints={@ORM\UniqueConstraint(name="sala_dia_horario", columns={"id_sala", "dia", "horario"})})
+ * @ORM\Table(
+ *  name="gde_dimensoes",
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="sala_dia_horario", columns={"id_sala", "dia", "horario"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Dimensao extends Base {
@@ -36,14 +41,14 @@ class Dimensao extends Base {
 	protected $sala;
 
 	/**
-	 * @var string
+	 * @var integer
 	 *
-	 * @ORM\Column(type="string", length=1, nullable=false)
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $dia;
 
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */

@@ -131,7 +131,7 @@ class Professor extends Base {
 			return $Oferecimentos;
 		else {
 			$lista = array();
-			foreach(parent::$Oferecimentos as $Oferecimento)
+			foreach($Oferecimentos as $Oferecimento)
 				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}

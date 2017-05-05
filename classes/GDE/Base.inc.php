@@ -358,7 +358,7 @@ abstract class Base {
 	 * @throws \Exception
 	 */
 	public function __call($name, $args) {
-		if(preg_match('/^(get|set|add|remove)(.+?)$/i', $name, $matches) > 0) { // GET / SET
+		if(preg_match('/^(get|set|add|remove|clear)(.+?)$/i', $name, $matches) > 0) { // GET / SET
 			if($this->_meta === null)
 				$this->_meta = self::_EM()->getClassMetadata(get_class($this));
 			list($full, $method, $property) = $matches;
@@ -470,22 +470,27 @@ abstract class Base {
 						}
 					} else { // Value passed
 						$value = $args[0];
+						$skip_other_side = ((isset($args[1])) && ($args[1] === true));
 						if($_association !== false) { // Is Association
 							switch($_association['type']) {
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE: // OneToOne
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
-									// Determine if this is the inverse side and set the inverse relation
-									if(!empty($_association['mappedBy']))
-										$value->{$_association['mappedBy']} = $this;
+									// Determine if this is the inverse side and set the inverse relation, if needed
+									if($skip_other_side === false) {
+										if(!empty($_association['mappedBy']))
+											$value->{$_association['mappedBy']} = $this;
+									}
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY: // OneToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if(!empty($_association['mappedBy'])) {
-										foreach($value as $object)
-											$object->{$_association['mappedBy']} = $this;
+									if($skip_other_side === false) {
+										if(!empty($_association['mappedBy'])) {
+											foreach($value as $object)
+												$object->{$_association['mappedBy']} = $this;
+										}
 									}
 									// Convert value from array to ArrayCollection
 									if(is_array($value))
@@ -495,18 +500,22 @@ abstract class Base {
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if(!(empty($_association['inversedBy'])) && (is_object($value)))
-										if($value->{'get'.$_association['inversedBy']}()->contains($this) === false)
-											$value->{'add'.$_association['inversedBy']}($this);
+									if($skip_other_side === false) {
+										if(!(empty($_association['inversedBy'])) && (is_object($value)))
+											if($value->{'get' . $_association['inversedBy']}()->contains($this) === false)
+												$value->{'add' . $_association['inversedBy']}($this);
+									}
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if(!empty($_association['mappedBy'])) {
-										foreach($value as $object) {
-											if($object->{'get'.$_association['mappedBy']}()->contains($this) === false)
-												$object->{'add'.$_association['mappedBy']}($this);
+									if($skip_other_side === false) {
+										if(!empty($_association['mappedBy'])) {
+											foreach($value as $object) {
+												if($object->{'get' . $_association['mappedBy']}()->contains($this) === false)
+													$object->{'add' . $_association['mappedBy']}($this);
+											}
 										}
 									}
 									// Convert value from array to ArrayCollection
@@ -616,6 +625,11 @@ abstract class Base {
 					if($this->{$property} === null)
 						return false;
 					return $this->{$property}->removeElement($Obj);
+					break;
+				case 'clear':
+					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
+						throw new \Exception("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
+					$this->{$property}->clear();
 					break;
 				default:
 					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');

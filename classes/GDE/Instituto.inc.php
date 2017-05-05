@@ -35,6 +35,13 @@ class Instituto extends Base {
 	protected $nome;
 
 	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
+	 */
+	protected $tecnologia = false;
+
+	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}, nullable=true)
