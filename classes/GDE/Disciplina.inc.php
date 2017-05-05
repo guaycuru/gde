@@ -207,7 +207,7 @@ class Disciplina extends Base {
 			// Se o nivel nao foi fornecido, pegamos a "primeira" encontrada
 			$Disciplinas = self::FindBy(array('sigla' => $sigla));
 			if(count($Disciplinas) > 0)
-				return array_pop($Disciplinas);
+				return $Disciplinas[0];
 			elseif($vazio == true)
 				return new self;
 			else
@@ -222,7 +222,7 @@ class Disciplina extends Base {
 			if(count($Disciplinas) == 0)
 				return ($vazio) ? new self : null;
 			else
-				return $Disciplinas->first();
+				return $Disciplinas[0];
 		} else {
 			if(is_array(($nivel)))
 				$nivel = $nivel[0];
@@ -241,7 +241,7 @@ class Disciplina extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @param string $tipo
-	 * @return Collection|Disciplina[]
+	 * @return Disciplina[]
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1, $tipo = 'AND') {
 		$qrs = $jns = array();
@@ -260,8 +260,12 @@ class Disciplina extends Base {
 		}
 		if(isset($param['nome']))
 			$qrs[] = "D.nome LIKE :nome";
-		if(isset($param['nivel']))
-			$qrs[] = "D.nivel ".((is_array($param['nivel'])) ? "IN ('".implode("','", $param['nivel'])."')" : "= '".$param['nivel'][0]."'")."";
+		if(isset($param['nivel'])) {
+			if(is_array($param['nivel']))
+				$qrs[] = "D.nivel IN (:nivel)";
+			else
+				$qrs[] = "D.nivel = :nivel";
+		}
 		if(isset($param['instituto'])) {
 			$jns[] = "D.instituto AS I";
 			$qrs[] = "INNER JOIN I.id_instituto = :instituto";

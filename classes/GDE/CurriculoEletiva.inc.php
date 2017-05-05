@@ -67,7 +67,7 @@ class CurriculoEletiva extends Base {
 	 * Consultar
 	 *
 	 * @param $param
-	 * @return mixed
+	 * @return CurriculoEletiva[]
 	 */
 	public static function Consultar($param) {
 		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C ';

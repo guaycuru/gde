@@ -178,7 +178,7 @@ class Aluno extends Base {
 	 * @param int $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return ArrayCollection|Aluno[]
+	 * @return Aluno[]
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
