@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *  name="gde_pre_conjuntos",
  *  indexes={
- *     @ORM\Index(name="sigla_catalogo", columns={"sigla", "catalogo"})
+ *     @ORM\Index(name="disciplina_catalogo", columns={"id_disciplina", "catalogo"})
  *  }
  * )
  * @ORM\Entity
@@ -29,7 +29,7 @@ class PreConjunto extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="pre_conjuntos")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 
@@ -44,16 +44,22 @@ class PreConjunto extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=5, nullable=false)
-	 */
-	protected $sigla;
-
-	/**
-	 * @var string
-	 *
 	 * @ORM\Column(type="string", length=4, nullable=false)
 	 */
 	protected $catalogo;
 
+	/**
+	 * getSigla
+	 *
+	 * Retorna a sigla da Disciplina deste Conjunto
+	 *
+	 * @param bool $html
+	 * @return null
+	 */
+	public function getSigla($html = false) {
+		if($this->getDisciplina(false) === null)
+			return null;
+		return $this->getDisciplina()->getSigla($html);
+	}
 
 }

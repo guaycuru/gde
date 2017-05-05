@@ -10,10 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *  name="gde_avaliacao_rankings",
  *  indexes={
- *     @ORM\Index(name="pergunta_sigla_ranking", columns={"id_pergunta", "sigla", "ranking"})
+ *     @ORM\Index(name="pergunta_disciplina_ranking", columns={"id_pergunta", "id_disciplina", "ranking"})
  *  },
  *  uniqueConstraints={
- *     @ORM\UniqueConstraint(name="pergunta_professor_sigla", columns={"id_pergunta", "id_professor", "sigla"})
+ *     @ORM\UniqueConstraint(name="pergunta_professor_disciplina", columns={"id_pergunta", "id_professor", "id_disciplina"})
  *  }
  * )
  * @ORM\Entity
@@ -48,7 +48,7 @@ class AvaliacaoRanking extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 

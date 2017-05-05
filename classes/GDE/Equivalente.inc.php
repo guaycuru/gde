@@ -24,7 +24,7 @@ class Equivalente extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="equivalentes")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 

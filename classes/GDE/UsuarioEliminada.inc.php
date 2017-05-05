@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *  name="gde_usuarios_eliminadas",
  *  uniqueConstraints={
- *     @ORM\UniqueConstraint(name="usuario_sigla", columns={"id_usuario", "sigla"})
+ *     @ORM\UniqueConstraint(name="usuario_disciplina", columns={"id_usuario", "id_disciplina"})
  *  }
  * )
  * @ORM\Entity
@@ -37,7 +37,7 @@ class UsuarioEliminada extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 
@@ -80,8 +80,9 @@ class UsuarioEliminada extends Base {
 	 * @return array|bool
 	 */
 	public function Elimina(Disciplina $Disciplina, $Outras) {
-		if($this->getDisciplina(true)->getSigla(false) == $Disciplina->getSigla(false))
+		if($this->getDisciplina(true)->getID() == $Disciplina->getID())
 			return array($this);
+		// ToDo: Usar ID ao inves de sigla
 		foreach($Disciplina->getEquivalentes(false) as $Conjunto) {
 			if(!isset($Conjunto[$this->getDisciplina(true)->getSigla(false)])) // Esta nao esta neste conjunto, entao nem continuo...
 				continue;
@@ -108,6 +109,7 @@ class UsuarioEliminada extends Base {
 	 * @return array|false
 	 */
 	public function Elimina_Eletiva(&$Faltantes, $Possiveis) {
+		// ToDo: Usar ID ao inves de sigla
 		$creditos = 0;
 		$ret = array('creditos' => 0, 'diff_creditos' => 0, 'siglas' => array());
 		foreach($Faltantes as $c => $Faltante) {

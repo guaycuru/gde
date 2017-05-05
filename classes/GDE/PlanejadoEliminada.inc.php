@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *  name="gde_planejados_eliminadas",
  *  uniqueConstraints={
- *     @ORM\UniqueConstraint(name="id_planejado_sigla", columns={"id_planejado", "sigla"})
+ *     @ORM\UniqueConstraint(name="id_planejado_disciplina", columns={"id_planejado", "id_disciplina"})
  *  }
  * )
  * @ORM\Entity
@@ -29,9 +29,7 @@ class PlanejadoEliminada extends Base {
 	 * @var Planejado
 	 *
 	 * @ORM\ManyToOne(targetEntity="Planejado", inversedBy="eliminadas")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_planejado", referencedColumnName="id_planejado")
-	 * })
+	 * @ORM\JoinColumn(name="id_planejado", referencedColumnName="id_planejado")
 	 */
 	protected $planejado;
 
@@ -39,7 +37,7 @@ class PlanejadoEliminada extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 

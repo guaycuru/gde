@@ -27,7 +27,7 @@ class Oferecimento extends Base {
 	 * @var Disciplina
 	 *
 	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="oferecimentos")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 
@@ -133,7 +133,7 @@ class Oferecimento extends Base {
 			if(strlen($param['sigla']) == 5) {
 				$qrs[] = "DI.sigla = :sigla";
 			} else {
-				$qrs[] = "O.sigla LIKE :sigla";
+				$qrs[] = "DI.sigla LIKE :sigla";
 				$param['sigla'] = '%'.$param['sigla'].'%';
 			}
 		if(!empty($param['periodo'])) {
@@ -193,25 +193,22 @@ class Oferecimento extends Base {
 		$limit = intval($limit);
 		$start = intval($start);
 		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
+			$extra_join = "";
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
-				$extra_join = "";
 				$ordem = ($ordem != 'rank DESC')
-					? 'O.`id_periodo` ASC, O.`sigla` DESC, O.`turma` DESC'
-					: 'O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC';
-			} elseif($ordem == "DI.`nome` ASC" || $ordem == "DI.`nome` DESC")
-				$extra_join = " JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`) ";
-			elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC")
+					? 'O.`id_periodo` ASC, DI.`sigla` DESC, O.`turma` DESC'
+					: 'O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC';
+			} elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC")
 				$extra_join = " JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
-			elseif(($ordem == "O.sigla ASC") || ($ordem == "O.sigla DESC")) {
-				$ordem = ($ordem != "O.`sigla` DESC")
-					? "O.`sigla` ASC, O.`turma` ASC"
-					: "O.`sigla` DESC, O.`turma` DESC";
-				$extra_join = "";
+			elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
+				$ordem = ($ordem != "DI.`sigla` DESC")
+					? "DI.`sigla` ASC, O.`turma` ASC"
+					: "DI.`sigla` DESC, O.`turma` DESC";
 			} else
 				$extra_join = "";
 			if($total !== null)
-				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O".$extra_join." WHERE O.`sigla` LIKE :q";
-			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O".$extra_join." WHERE O.`sigla` LIKE :q ORDER BY ".$ordem;
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`)".$extra_join." WHERE DI.`sigla` LIKE :q";
+			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O".$extra_join." WHERE DI.`sigla` LIKE :q ORDER BY ".$ordem;
 			if($limit > 0) {
 				if($start > 0)
 					$sql .= " LIMIT ".$start.",".$limit;
@@ -224,8 +221,8 @@ class Oferecimento extends Base {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
 				$ordem = ($ordem != 'rank DESC')
-					? "`rank` ASC, O.id_periodo ASC, O.`sigla` DESC, O.`turma` DESC"
-					: "`rank` DESC, O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC";
+					? "`rank` ASC, O.id_periodo ASC, DI.`sigla` DESC, O.`turma` DESC"
+					: "`rank` DESC, O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC";
 				$extra_select1 = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`";
 				$extra_select2 = ", MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q) AS `rank`";
 				$extra_join1 = $extra_join2 = "";
@@ -240,10 +237,10 @@ class Oferecimento extends Base {
 				$extra_join2 = "JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
 				$ordem = ($ordem != "P.nome DESC")
 					? "O.`professor` ASC" : "O.`professor` DESC";
-			} elseif(($ordem == "O.sigla ASC") || ($ordem == "O.sigla DESC")) {
-				$ordem = ($ordem != "O.`sigla` DESC")
-					? "O.`sigla` ASC, O.`turma` ASC"
-					: "O.`sigla` DESC, O.`turma` DESC";
+			} elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
+				$ordem = ($ordem != "DI.`sigla` DESC")
+					? "DI.`sigla` ASC, O.`turma` ASC"
+					: "DI.`sigla` DESC, O.`turma` DESC";
 				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";
 			} else
 				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";

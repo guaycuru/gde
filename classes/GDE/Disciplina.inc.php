@@ -3,7 +3,6 @@
 namespace GDE;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
@@ -28,10 +27,18 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  */
 class Disciplina extends Base {
 	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 */
+	protected $id_disciplina;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(type="string", length=5, nullable=false)
-	 * @ORM\Id
 	 */
 	protected $sigla;
 
@@ -377,7 +384,7 @@ class Disciplina extends Base {
 				$Pre_Requisitos[$Conjunto->getCatalogo(false)] = array();
 			$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()] = array();
 			foreach($Conjunto->getLista() as $Lista) {
-				$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()][] = array(Disciplina::Por_Sigla($Lista->getSigla(false)), $Lista->getParcial(), $Lista->getSigla(false));
+				$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()][] = array(Disciplina::Por_Sigla($Lista->getSigla(false), Disciplina::NIVEIS_GRAD), $Lista->getParcial(), $Lista->getSigla(false));
 			}
 		}
 		return $Pre_Requisitos;
@@ -573,7 +580,8 @@ class Disciplina extends Base {
 			if(!isset($Lista[$Equivalente->getID()]))
 				$Lista[$Equivalente->getID()] = array();
 			foreach($Equivalente->getConjuntos() as $Conjunto)
-				$Lista[$Equivalente->getID()][$Conjunto->getSigla(false)] = Disciplina::Por_Sigla($Conjunto->getSigla(false));
+				// ToDo: Usar ID da Disciplina ao inves de sigla
+				$Lista[$Equivalente->getID()][$Conjunto->getSigla(false)] = Disciplina::Por_Sigla($Conjunto->getSigla(false), Disciplina::NIVEIS_GRAD);
 		}
 		return ($formatado) ? self::Formata_Conjuntos($Lista) : $Lista;
 	}
