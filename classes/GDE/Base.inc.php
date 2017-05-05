@@ -595,33 +595,45 @@ abstract class Base {
 						return $value;
 					break;
 				case 'add':
-					if(!array_key_exists(0, $args)) // No value passed
-						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
 					if($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_ONE)
 						throw new \Exception("Can't add".$name."() for property TO_ONE on class ".get_class($this).'.');
+					if(!array_key_exists(0, $args)) // No value passed
+						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
 						: $_association['targetEntity']::Load($args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
-					if(!empty($_association['mappedBy']))
-						$Obj->{$_association['mappedBy']} = $this;
+					if(!empty($_association['mappedBy'])) {
+						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY)
+							$Obj->{$_association['mappedBy']}->add($this);
+						else // OneToMany
+							$Obj->{$_association['mappedBy']} = $this;
+					}
+					if(!empty($_association['inversedBy'])) // Always a ManyToMany
+						$Obj->{$_association['inversedBy']}->add($this);
 					if($this->{$property} === null)
 						$this->{$property} = new \Doctrine\Common\Collections\ArrayCollection();
 					return $this->{$property}->add($Obj);
 					break;
 				case 'remove':
-					if(!array_key_exists(0, $args)) // No value passed
-						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
 					if($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_ONE)
 						throw new \Exception("Can't remove".$name."() for property TO_ONE on class ".get_class($this).'.');
+					if(!array_key_exists(0, $args)) // No value passed
+						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
 						: $_association['targetEntity']::Load($args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
-					if(!empty($_association['mappedBy']))
-						$Obj->{$_association['mappedBy']} = null;
+					if(!empty($_association['mappedBy'])) {
+						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY)
+							$Obj->{$_association['mappedBy']}->removeElement($this);
+						else // OneToMany
+							$Obj->{$_association['mappedBy']} = null;
+					}
+					if(!empty($_association['inversedBy'])) // Always a ManyToMany
+						$Obj->{$_association['inversedBy']}->removeElement($this);
 					if($this->{$property} === null)
 						return false;
 					return $this->{$property}->removeElement($Obj);
@@ -629,6 +641,20 @@ abstract class Base {
 				case 'clear':
 					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
 						throw new \Exception("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
+					if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY) {
+						if(!empty($_association['mappedBy'])) {
+							foreach($this->{$property} as $Obj)
+								$Obj->{$_association['mappedBy']} = null;
+						}
+					} else { // ManyToMany
+						if(!empty($_association['mappedBy'])) { // Inverse Side, clear the other side so Doctrine detects the change
+							foreach($this->{$property} as $Obj)
+								$Obj->{$_association['mappedBy']}->removeElement($this);
+						} elseif(!empty($_association['inversedBy'])) { // Owning Side, clear the other side
+							foreach($this->{$property} as $Obj)
+								$Obj->{$_association['inversedBy']}->removeElement($this);
+						}
+					}
 					$this->{$property}->clear();
 					break;
 				default:
