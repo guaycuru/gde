@@ -10,7 +10,13 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  *
  * @ORM\Table(
  *   name="gde_oferecimentos",
- *   indexes={@ORM\Index(name="turma", columns={"turma"})})
+ *   indexes={
+ *     @ORM\Index(name="turma", columns={"turma"})
+ *   },
+ *   uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="disciplina_periodo_turma", columns={"id_disciplina", "id_periodo", "turma"})
+ *   }
+ * )
  * @ORM\Entity
  */
 class Oferecimento extends Base {
@@ -112,6 +118,24 @@ class Oferecimento extends Base {
 	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.id_periodo');
 
 	/**
+	 * Por_Unique
+	 *
+	 * Encontra um Oferecimento por disciplina, turma e periodo
+	 *
+	 * @param Disciplina $Disciplina
+	 * @param $turma
+	 * @param Periodo $Periodo
+	 * @return false|null|Oferecimento
+	 */
+	public static function Por_Unique(Disciplina $Disciplina, $turma, Periodo $Periodo) {
+		return self::FindOneBy(array(
+			'disciplina' => $Disciplina,
+			'turma' => $turma,
+			'periodo' => $Periodo
+		));
+	}
+
+	/**
 	 * Consultar
 	 *
 	 * Efetua uma consulta por Oferecimentos
@@ -149,8 +173,12 @@ class Oferecimento extends Base {
 			$qrs[] = "DI.creditos = :creditos";
 		if(!empty($param['instituto']))
 			$qrs[] = "DI.instituto = :instituto";
-		if(!empty($param['nivel']))
-			$qrs[] = "DI.nivel = :nivel";
+		if(!empty($param['nivel'])) {
+			if(is_array($param['nivel']))
+				$qrs[] = "DI.nivel IN (:nivel)";
+			else
+				$qrs[] = "DI.nivel = :nivel";
+		}
 		if(!empty($param['turma']))
 			$qrs[] = "O.turma = :turma";
 		if(!empty($param['professor']))
