@@ -88,7 +88,7 @@ class Oferecimento extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=2, nullable=false)
+	 * @ORM\Column(type="string", length=5, nullable=false)
 	 */
 	protected $turma;
 
