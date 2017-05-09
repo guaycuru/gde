@@ -12,7 +12,7 @@ if(empty($_GET['c']))
 	exit;
 
 $catalogo = (!empty($_GET['a'])) ? $_GET['a'] : null;
-$Modalidades = Modalidade::Listar('G', $_GET['c'], $catalogo);
+$Modalidades = Modalidade::Listar(Curso::NIVEIS_GRAD, $_GET['c'], $catalogo);
 
 if(count($Modalidades) == 0)
 	$opcoes = "<option value=\"\">-</option>";

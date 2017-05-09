@@ -52,7 +52,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 			die("<h2>Curso n&atilde;o encontrado!</h2>");
 		$Usr->setCurso($Curso);
 		$modalidade = (strlen($_GET['modalidade']) > 0) ? substr($_GET['modalidade'], 0, 2) : null;
-		$Modalidade = Modalidade::Por_Unique($Curso->getNivel(false), $Curso->getID(), $modalidade, $catalogo);
+		$Modalidade = Modalidade::Por_Unique($Curso->getID(), $modalidade, $catalogo);
 		if($Modalidade === null)
 			die("<h2>Modalidade n&atilde;o encontrada!</h2>");
 		$Usr->setModalidade($Modalidade);

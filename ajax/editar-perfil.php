@@ -37,7 +37,7 @@ if(isset($_POST['salvar'])) {
 	$_Usuario->setCurso($Curso);
 	$_Usuario->setCatalogo(intval($_POST['catalogo']));
 	if(!empty($_POST['modalidade']))
-		$Modalidade = Modalidade::Por_Curso_Sigla_Catalogo($Curso->getNumero(false), $_POST['modalidade'], array('G', 'T'), $_POST['catalogo']);
+		$Modalidade = Modalidade::Por_Unique($Curso->getID(), $_POST['modalidade'], $_POST['catalogo']);
 	else
 		$Modalidade = null;
 	$_Usuario->setModalidade($Modalidade);
