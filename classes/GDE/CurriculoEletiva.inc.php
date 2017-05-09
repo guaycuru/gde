@@ -72,7 +72,8 @@ class CurriculoEletiva extends Base {
 	public static function Consultar($param) {
 		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C ';
 		if($param['curso'] == 51) {
-			$dql .= 'WHERE C.curso = 28 AND C.semestre < 4 ';
+			$dql .= 'WHERE C.curso = 28 ';
+			unset($param['curso'], $param['modalidade']);
 		} else
 			$dql .= 'WHERE C.curso = :curso ';
 		if(empty($param['modalidade'])) {

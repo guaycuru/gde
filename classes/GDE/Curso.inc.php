@@ -22,6 +22,13 @@ class Curso extends Base {
 	protected $id_curso;
 
 	/**
+	 * @var Curriculo[]
+	 *
+	 * @ORM\OneToMany(targetEntity="Curriculo", mappedBy="curso")
+	 */
+	protected $curriculos;
+
+	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", nullable=false)

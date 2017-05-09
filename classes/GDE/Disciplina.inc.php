@@ -207,7 +207,7 @@ class Disciplina extends Base {
 	 * @param $sigla
 	 * @param string|array|null $nivel
 	 * @param bool $vazio
-	 * @return self|false
+	 * @return self|null|false
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
 		if(empty($nivel)) {
