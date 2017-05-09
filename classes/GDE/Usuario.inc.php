@@ -31,14 +31,14 @@ class Usuario extends Base {
 	protected $id_usuario;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var ArrayCollection|UsuarioAmigo[]
 	 *
 	 * @ORM\OneToMany(targetEntity="UsuarioAmigo", mappedBy="usuario")
 	 */
 	protected $amigos;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var ArrayCollection|Aluno[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Aluno")
 	 * @ORM\JoinTable(name="gde_r_usuarios_favoritos",
@@ -51,7 +51,7 @@ class Usuario extends Base {
 	/**
 	 * @var UsuarioConfig
 	 *
-	 * @ORM\OneToOne(targetEntity="UsuarioConfig", mappedBy="usuario", cascade={"persist","remove"})
+	 * @ORM\OneToOne(targetEntity="UsuarioConfig", mappedBy="usuario", cascade={"persist", "remove"})
 	 */
 	protected $config;
 
@@ -88,28 +88,28 @@ class Usuario extends Base {
 	protected $modalidade;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var ArrayCollection|UsuarioEliminada[]
 	 *
 	 * @ORM\OneToMany(targetEntity="UsuarioEliminada", mappedBy="usuario")
 	 */
 	protected $eliminadas;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var ArrayCollection|UsuarioEmprego[]
 	 *
 	 * @ORM\OneToMany(targetEntity="UsuarioEmprego", mappedBy="usuario", cascade={"persist", "remove"})
 	 */
 	protected $empregos;
 
 	/**
-	 * @var \Doctrine\Common\Collections\Collection
+	 * @var ArrayCollection|AvaliacaoResposta[]
 	 *
 	 * @ORM\OneToMany(targetEntity="AvaliacaoResposta", mappedBy="usuario")
 	 */
 	protected $avaliacao_respostas;
 
 	/**
-	 * @var ArrayCollection
+	 * @var ArrayCollection|EnqueteOpcao[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="EnqueteOpcao")
 	 * @ORM\JoinTable(name="gde_r_usuarios_enquetes_opcoes",

@@ -36,6 +36,8 @@ class CurriculoEletivaConjunto extends Base {
 	/**
 	 * @var string
 	 *
+	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas do curriculo que nao temos em nosso DB
+	 *
 	 * @ORM\Column(type="string", length=5, nullable=false)
 	 */
 	protected $sigla;

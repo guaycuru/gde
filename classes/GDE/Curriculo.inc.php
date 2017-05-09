@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(
  *   name="gde_curriculos",
- *   indexes={@ORM\Index(name="curso_modalidade_catalogo", columns={"id_curso", "modalidade", "catalogo"})}
+ *   indexes={@ORM\Index(name="curso_modalidade_catalogo", columns={"id_curso", "id_modalidade", "catalogo"})}
  * )
  * @ORM\Entity
  */
@@ -50,6 +50,7 @@ class Curriculo extends Base {
 	 * @var string
 	 *
 	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas do curriculo que nao temos em nosso DB
+	 * Inclusive "ELET." e "LING."
 	 *
 	 * @ORM\Column(type="string", length=5, nullable=false)
 	 */

@@ -34,7 +34,7 @@ class Aluno extends Base {
 	protected $usuario;
 
 	/**
-	 * @var Oferecimento
+	 * @var ArrayCollection|Oferecimento[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Oferecimento", inversedBy="alunos")
 	 * @ORM\JoinTable(name="gde_r_alunos_oferecimentos",
@@ -45,7 +45,7 @@ class Aluno extends Base {
 	protected $oferecimentos;
 
 	/**
-	 * @var Oferecimento
+	 * @var ArrayCollection|Oferecimento[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Oferecimento")
 	 * @ORM\JoinTable(name="gde_r_alunos_trancadas",

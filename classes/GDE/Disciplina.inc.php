@@ -58,19 +58,19 @@ class Disciplina extends Base {
 	protected $oferecimentos;
 
 	/**
-	 * @var PreConjunto
+	 * @var ArrayCollection|PreConjunto[]
 	 *
-	 * @ORM\OneToMany(targetEntity="PreConjunto", mappedBy="disciplina")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\OneToMany(targetEntity="PreConjunto", mappedBy="disciplina", orphanRemoval=true)
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 * @ORM\OrderBy({"catalogo" = "ASC"})
 	 */
 	protected $pre_conjuntos;
 
 	/**
-	 * @var Equivalente
+	 * @var ArrayCollection|Equivalente[]
 	 *
-	 * @ORM\OneToMany(targetEntity="Equivalente", mappedBy="disciplina")
-	 * @ORM\JoinColumn(name="sigla", referencedColumnName="sigla")
+	 * @ORM\OneToMany(targetEntity="Equivalente", mappedBy="disciplina", orphanRemoval=true)
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $equivalentes;
 

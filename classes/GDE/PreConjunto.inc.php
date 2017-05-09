@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,9 +35,9 @@ class PreConjunto extends Base {
 	protected $disciplina;
 
 	/**
-	 * @var PreLista
+	 * @var ArrayCollection|PreLista[]
 	 *
-	 * @ORM\OneToMany(targetEntity="PreLista", mappedBy="conjunto")
+	 * @ORM\OneToMany(targetEntity="PreLista", mappedBy="conjunto", cascade={"persist", "remove"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"sigla" = "ASC"})
 	 */
 	protected $lista;

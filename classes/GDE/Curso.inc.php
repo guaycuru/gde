@@ -22,7 +22,7 @@ class Curso extends Base {
 	protected $id_curso;
 
 	/**
-	 * @var Curriculo[]
+	 * @var ArrayCollection|Curriculo[]
 	 *
 	 * @ORM\OneToMany(targetEntity="Curriculo", mappedBy="curso")
 	 */
@@ -49,15 +49,19 @@ class Curso extends Base {
 	 */
 	protected $nome;
 
-	const NIVEIS_GRAD = array('G', 'T');
-	const NIVEIS_POS = array('M', 'D');
+	const NIVEL_GRAD = 'G';
+	const NIVEL_TEC = 'T';
+	const NIVEL_MESTRADO = 'M';
+	const NIVEL_DOUTORADO = 'D';
+	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
+	const NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO);
 
 	/**
 	 * Listar
 	 *
 	 * @param array $niveis
 	 * @param bool $sem_especial
-	 * @return ArrayCollection
+	 * @return Curso[]
 	 */
 	public static function Listar($niveis = array(), $sem_especial = false) {
 		$dql = 'SELECT C FROM GDE\\Curso C ';
