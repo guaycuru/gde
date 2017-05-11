@@ -470,15 +470,18 @@ abstract class Base {
 						}
 					} else { // Value passed
 						$value = $args[0];
-						$skip_other_side = ((isset($args[1])) && ($args[1] === true));
+						// Convert value from array to ArrayCollection
+						if(($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY) && (is_array($value)))
+							$value = new \Doctrine\Common\Collections\ArrayCollection($value);
+						$set_other_side = ((!isset($args[1])) || ($args[1] === true));
 						if($_association !== false) { // Is Association
 							switch($_association['type']) {
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE: // OneToOne
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation, if needed
-									if($skip_other_side === false) {
-										if(!empty($_association['mappedBy']))
+									if($set_other_side === true) {
+										if((!empty($_association['mappedBy'])) && (is_object($value)))
 											$value->{$_association['mappedBy']} = $this;
 									}
 									break;
@@ -486,10 +489,11 @@ abstract class Base {
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($skip_other_side === false) {
+									if($set_other_side === true) {
 										if(!empty($_association['mappedBy'])) {
 											foreach($value as $object)
-												$object->{$_association['mappedBy']} = $this;
+												if(is_object($object))
+													$object->{$_association['mappedBy']} = $this;
 										}
 									}
 									// Convert value from array to ArrayCollection
@@ -500,27 +504,24 @@ abstract class Base {
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($skip_other_side === false) {
+									if($set_other_side === true) {
 										if(!(empty($_association['inversedBy'])) && (is_object($value)))
-											if($value->{'get' . $_association['inversedBy']}()->contains($this) === false)
-												$value->{'add' . $_association['inversedBy']}($this);
+											if($value->{$_association['inversedBy']}->contains($this) === false)
+												$value->{$_association['inversedBy']}->add($this);
 									}
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($skip_other_side === false) {
+									if($set_other_side === true) {
 										if(!empty($_association['mappedBy'])) {
 											foreach($value as $object) {
-												if($object->{'get' . $_association['mappedBy']}()->contains($this) === false)
-													$object->{'add' . $_association['mappedBy']}($this);
+												if((is_object($object)) && ($object->{$_association['mappedBy']}->contains($this) === false))
+													$object->{$_association['mappedBy']}->add($this);
 											}
 										}
 									}
-									// Convert value from array to ArrayCollection
-									if(is_array($value))
-										$value = new \Doctrine\Common\Collections\ArrayCollection($value);
 									break;
 							}
 						} else { // Scalar Property

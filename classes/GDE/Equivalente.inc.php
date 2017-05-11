@@ -29,9 +29,9 @@ class Equivalente extends Base {
 	protected $disciplina;
 
 	/**
-	 * @var EquivalentesConjunto
+	 * @var EquivalentesConjunto[]
 	 *
-	 * @ORM\OneToMany(targetEntity="EquivalentesConjunto", mappedBy="equivalente")
+	 * @ORM\OneToMany(targetEntity="EquivalentesConjunto", mappedBy="equivalente", cascade={"persist", "remove"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"sigla" = "ASC"})
 	 */
 	protected $conjuntos;
