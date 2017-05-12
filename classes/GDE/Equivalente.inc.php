@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,7 @@ class Equivalente extends Base {
 	protected $disciplina;
 
 	/**
-	 * @var EquivalentesConjunto[]
+	 * @var ArrayCollection|EquivalentesConjunto[]
 	 *
 	 * @ORM\OneToMany(targetEntity="EquivalentesConjunto", mappedBy="equivalente", cascade={"persist", "remove"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"sigla" = "ASC"})

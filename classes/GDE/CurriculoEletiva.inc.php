@@ -22,23 +22,25 @@ class CurriculoEletiva extends Base {
 	protected $id_eletivas;
 
 	/**
-	 * @var CurriculoEletivaConjunto
+	 * @var ArrayCollection|CurriculoEletivaConjunto[]
 	 *
-	 * @ORM\OneToMany(targetEntity="CurriculoEletivaConjunto", mappedBy="eletiva")
+	 * @ORM\OneToMany(targetEntity="CurriculoEletivaConjunto", mappedBy="eletiva", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
 	protected $conjuntos;
 
 	/**
-	 * @var integer
+	 * @var Curso
 	 *
-	 * @ORM\Column(type="smallint", nullable=false)
+	 * @ORM\ManyToOne(targetEntity="Curso")
+	 * @ORM\JoinColumn(name="id_curso", referencedColumnName="id_curso")
 	 */
 	protected $curso;
 
 	/**
-	 * @var string
+	 * @var Modalidade
 	 *
-	 * @ORM\Column(type="string", length=2, nullable=true)
+	 * @ORM\ManyToOne(targetEntity="Modalidade")
+	 * @ORM\JoinColumn(name="id_modalidade", referencedColumnName="id_modalidade")
 	 */
 	protected $modalidade;
 
@@ -70,17 +72,17 @@ class CurriculoEletiva extends Base {
 	 * @return CurriculoEletiva[]
 	 */
 	public static function Consultar($param) {
-		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C ';
+		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C INNER JOIN C.curso U LEFT JOIN C.modalidade M ';
 		if($param['curso'] == 51) {
-			$dql .= 'WHERE C.curso = 28 ';
+			$dql .= 'WHERE U.numero = 28 ';
 			unset($param['curso'], $param['modalidade']);
 		} else
-			$dql .= 'WHERE C.curso = :curso ';
+			$dql .= 'WHERE U.numero = :curso ';
 		if(empty($param['modalidade'])) {
-			$dql .= 'AND C.modalidade IS NULL ';
+			$dql .= 'AND M.id_modalidade IS NULL ';
 			unset($param['modalidade']);
 		} else
-			$dql .= 'AND C.modalidade = :modalidade ';
+			$dql .= 'AND M.sigla = :modalidade ';
 		$dql .= 'AND C.catalogo = :catalogo ';
 		$dql .= 'ORDER BY C.id_eletivas ASC';
 		return self::_EM()->createQuery($dql)
