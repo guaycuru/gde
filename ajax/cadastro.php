@@ -84,11 +84,11 @@ if(isset($_POST['enviar'])) {
 					if($Usuario->getModalidade(false) !== null)
 						$Aluno->setModalidade($Usuario->getModalidade(true)->getSigla(false));
 					if(!empty($_POST['curso_pos'])) {
-						$Curso_Pos = Curso::Por_Numero($_POST['curso_pos'], Curso::NIVEIS_POS);
+						$Aluno->setNivel_Pos((!empty($_POST['nivel_pos'])) ? $_POST['nivel_pos'][0] : null);
+						$Curso_Pos = Curso::Por_Numero($_POST['curso_pos'], $Aluno->getNivel_Pos(false));
 						if($Curso_Pos === null)
 							Base::Error_JSON('Curso de p&oacute;s-gradua&ccedil;&atilde;o n&atilde;o encontrado!');
 						$Aluno->setCurso_Pos($Curso_Pos);
-						$Aluno->setNivel_Pos((!empty($_POST['nivel_pos'])) ? $_POST['nivel_pos'][0] : null);
 						$Aluno->setModalidade_Pos(($_POST['modalidade_pos'] == "") ? null : strtoupper(substr($_POST['modalidade_pos'], 0, 2)));
 					}
 					$Aluno->Save(false);

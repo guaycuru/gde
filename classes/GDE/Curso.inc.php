@@ -55,6 +55,7 @@ class Curso extends Base {
 	const NIVEL_DOUTORADO = 'D';
 	const NIVEL_PROFISSIONAL = 'S';
 	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
+	// Evitar de usar, pois os numeros se repetem entre mestrado e doutorado!
 	const NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
 
 	/**
