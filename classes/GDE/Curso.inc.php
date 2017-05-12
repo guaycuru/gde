@@ -53,8 +53,9 @@ class Curso extends Base {
 	const NIVEL_TEC = 'T';
 	const NIVEL_MESTRADO = 'M';
 	const NIVEL_DOUTORADO = 'D';
+	const NIVEL_PROFISSIONAL = 'S';
 	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
-	const NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO);
+	const NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
 
 	/**
 	 * Listar

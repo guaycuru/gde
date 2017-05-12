@@ -179,7 +179,7 @@ class Oferecimento extends Base {
 			else
 				$qrs[] = "DI.nivel = :nivel";
 		}
-		if(!empty($param['turma']))
+		if(isset($param['turma']))
 			$qrs[] = "O.turma = :turma";
 		if(!empty($param['professor']))
 			$qrs[] = "P.nome LIKE :professor";

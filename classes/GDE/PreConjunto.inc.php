@@ -45,6 +45,8 @@ class PreConjunto extends Base {
 	/**
 	 * @var string
 	 *
+	 * Pode ser um ano (para grad) ou uma letra (Nivel Pos, P ou S)
+	 *
 	 * @ORM\Column(type="string", length=4, nullable=false)
 	 */
 	protected $catalogo;
