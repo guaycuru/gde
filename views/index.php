@@ -45,11 +45,11 @@ var Cardapio_Muda = function(id) {
 		}
 	});
 	return false;
-}
+};
 
 var Toggle_Cardapio = function() {
 	$("#cardapio_conteudo").toggle("slow");
-}
+};
 
 var Atualizar_Horario = function(periodo, nivel) {
 	if(!periodo)
@@ -61,7 +61,7 @@ var Atualizar_Horario = function(periodo, nivel) {
 		if(data)
 			$("#tab_horario").html(data);
 	});
-}
+};
 
 var Atualizar_Status = function() {
 	var status = $("#meu_status").val();
@@ -71,8 +71,8 @@ var Atualizar_Status = function() {
 	$("#atualizar_status").text('Salvando...');
 	$("#meu_status").addClass('enviando');
 	$.post('<?= CONFIG_URL; ?>ajax/ax_acontecimento.php', {tp: 'us', txt: status}, function(data) {
-		if(data != 0) {
-			$("#meu_status_atual").load('<?= CONFIG_URL; ?>ajax/ax_status.php', {q: 'carregar'});
+		if(data && data.ok) {
+			$("#meu_status_atual").load('<?= CONFIG_URL; ?>ajax/status.php', {q: 'carregar'});
 			$("#limpar_status").show();
 			$("#meu_status").Padrao();
 			Adicionar_Atualizacao('', data);
@@ -82,19 +82,19 @@ var Atualizar_Status = function() {
 		$("#atualizar_status").click(Atualizar_Status);
 	});
 	return false;
-}
+};
 
 var Limpar_Status = function() {
 	$("#limpar_status").text('Removendo...');
-	$.post('<?= CONFIG_URL; ?>ajax/ax_status.php', {q: 'limpar_status'}, function(data) {
-		if(data != 0) {
+	$.post('<?= CONFIG_URL; ?>ajax/status.php', {q: 'limpar_status'}, function(data) {
+		if(data && data.ok) {
 			$("#meu_status_atual").html('');
 			$("#limpar_status").hide();
 		}
 		$("#limpar_status").text('Remover');
 	});
 	return false;
-}
+};
 
 var Adicionar_Amigo_Sugestao = function(id) {
 	$.post('<?= CONFIG_URL; ?>ajax/amigo.php', {i: id, tipo: 'a'}, function(data) {
@@ -102,7 +102,7 @@ var Adicionar_Amigo_Sugestao = function(id) {
 		$("#amigo_"+id).hide();
 	});
 	return false;
-}
+};
 
 $(document).ready(function() {
 	$("#atualizacoes_mensagens").attr('checked', <?= ($_Usuario->getConfig(true)->getAcontecimentos_Mensagens()) ? 'true' : 'false'; ?>);
@@ -298,7 +298,6 @@ $(document).ready(function() {
 						<div id="cardapio_botao"><img src="<?= CONFIG_URL; ?>web/images/cardapio_icone.gif" alt="Cardapio" /></div>
 					</div>
 					<div id="cardapio_conteudo" style="width: 260px; float: left; margin-left: 10px"></div>
-					<!--<div id="previsao_tempo" style="float: left; margin-left: 20px"></div> -->
 				</div>
 			</div>
 		</div>

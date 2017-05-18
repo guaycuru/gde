@@ -493,7 +493,7 @@ $(document).ready(function(){
 	$("div.chatStatusSelect > a").click(function() {
 		var status = ($(this).attr("id").split("_"))[2];
 		$("#chatOpcoesLink > img").attr("src", CONFIG_URL + "web/images/loading.gif");
-		$.post(CONFIG_URL + "ajax/ax_chat_status.php", {set_chat_status: status});
+		$.post(CONFIG_URL + "ajax/chat_status.php", {set_chat_status: status});
 		$("#chatStatus").animate({left: 'toggle'}, 1000);
 		Change_Chat_Image(status);
 		return false;
