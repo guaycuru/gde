@@ -154,7 +154,7 @@ if(isset($_GET['m'])) {
 							</tr>
 							<tr>
 								<td width="25%"><b>Contida Em:</b></td>
-								<td><?=$Disciplina->getEquivalentes(true); ?></td>
+								<td><?=$Disciplina->Equivalencias(true); ?></td>
 							</tr>
 						<?php } ?>
 						<tr>

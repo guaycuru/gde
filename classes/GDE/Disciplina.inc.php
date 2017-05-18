@@ -67,12 +67,12 @@ class Disciplina extends Base {
 	protected $pre_conjuntos;
 
 	/**
-	 * @var ArrayCollection|Equivalente[]
+	 * @var ArrayCollection|Equivalencia[]
 	 *
-	 * @ORM\OneToMany(targetEntity="Equivalente", mappedBy="disciplina", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="Equivalencia", mappedBy="disciplina", orphanRemoval=true)
 	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
-	protected $equivalentes;
+	protected $equivalencias;
 
 	/**
 	 * @var string
@@ -392,20 +392,20 @@ class Disciplina extends Base {
 	}
 
 	/**
-	 * @param $Conjuntos
+	 * @param $Equivalentes
 	 * @return string
 	 */
-	public static function Formata_Conjuntos($Conjuntos) {
-		if(count($Conjuntos) == 0)
+	public static function Formata_Conjuntos($Equivalentes) {
+		if(count($Equivalentes) == 0)
 			return "-";
 		$ret = array();
-		foreach($Conjuntos as $Conjunto) {
+		foreach($Equivalentes as $Equivalente) {
 			$siglas = array();
-			foreach($Conjunto as $sigla => $Equivalente) {
-				if($Equivalente === null)
+			foreach($Equivalente as $sigla => $Disciplina) {
+				if($Disciplina === null)
 					$siglas[] = htmlspecialchars($sigla)." (?)";
 				else
-					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Equivalente->getSigla(true)."/\" title=\"".$Equivalente->getNome()."\">".$Equivalente->getSigla()."</a> (".(($Equivalente->getCreditos() > 0)?$Equivalente->getCreditos():'?').")";
+					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."/\" title=\"".$Disciplina->getNome()."\">".$Disciplina->getSigla()."</a> (".(($Disciplina->getCreditos() > 0)?$Disciplina->getCreditos():'?').")";
 			}
 			$ret[] = implode(" e ", $siglas);
 		}
@@ -575,14 +575,14 @@ class Disciplina extends Base {
 	 * @param bool $formatado
 	 * @return array|string
 	 */
-	public function getEquivalentes($formatado = false) {
+	public function Equivalencias($formatado = false) {
 		$Lista = array();
-		foreach(parent::getEquivalentes() as $Equivalente) {
-			if(!isset($Lista[$Equivalente->getID()]))
-				$Lista[$Equivalente->getID()] = array();
-			foreach($Equivalente->getConjuntos() as $Conjunto)
+		foreach(parent::getEquivalencias() as $Equivalencia) {
+			if(!isset($Lista[$Equivalencia->getID()]))
+				$Lista[$Equivalencia->getID()] = array();
+			foreach($Equivalencia->getEquivalentes() as $Equivalente)
 				// ToDo: Usar ID da Disciplina ao inves de sigla
-				$Lista[$Equivalente->getID()][$Conjunto->getSigla(false)] = Disciplina::Por_Sigla($Conjunto->getSigla(false), Disciplina::NIVEIS_GRAD);
+				$Lista[$Equivalencia->getID()][$Equivalente->getSigla(false)] = $Equivalente->getDisciplina(true);
 		}
 		return ($formatado) ? self::Formata_Conjuntos($Lista) : $Lista;
 	}

@@ -1347,15 +1347,15 @@ class Usuario extends Base {
 		$eliminada = $this->Eliminada($Disciplina, $parcial, false);
 		if($eliminada !== false)
 			return array(array($eliminada), false);
-		$Equivalentes = $Disciplina->getEquivalentes(false);
-		foreach($Equivalentes as $conjunto) {
+		$Equivalencias = $Disciplina->Equivalencias(false);
+		foreach($Equivalencias as $Equivalente) {
 			$ret = array();
-			foreach($conjunto as $Disc) {
-				$eliminada = $this->Eliminada($Disc, $parcial, false);
+			foreach($Equivalente as $Disciplina) {
+				$eliminada = $this->Eliminada($Disciplina, $parcial, false);
 				if($eliminada !== false)
 					$ret[] = $eliminada;
 			}
-			if(count($ret) == count($conjunto))
+			if(count($ret) == count($Equivalente))
 				return array($ret, true);
 		}
 		return false;

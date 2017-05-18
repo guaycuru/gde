@@ -116,7 +116,7 @@ class CurriculoEletiva extends Base {
 	}
 
 	/**
-	 * getCOnjuntos
+	 * getConjuntos
 	 *
 	 * @param bool $vazio
 	 * @return ArrayCollection

@@ -31,7 +31,7 @@ class PreLista extends Base {
 	/**
 	 * @var string
 	 *
-	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas equivalentes que nao temos em nosso DB
+	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas que nao temos em nosso DB
 	 *
 	 * @ORM\Column(type="string", nullable=false)
 	 */

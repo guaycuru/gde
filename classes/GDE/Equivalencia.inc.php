@@ -6,12 +6,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Equivalente
+ * Equivalencia
  *
- * @ORM\Table(name="gde_equivalentes")
+ * @ORM\Table(name="gde_equivalencias")
  * @ORM\Entity
  */
-class Equivalente extends Base {
+class Equivalencia extends Base {
 	/**
 	 * @var integer
 	 *
@@ -19,22 +19,22 @@ class Equivalente extends Base {
 	 * @ORM\Id
 	 * @ORM\GeneratedValue
 	 */
-	protected $id_equivalente;
+	protected $id_equivalencia;
 
 	/**
 	 * @var Disciplina
 	 *
-	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="equivalentes")
+	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="equivalencias")
 	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
 
 	/**
-	 * @var ArrayCollection|EquivalentesConjunto[]
+	 * @var ArrayCollection|EquivalenciaEquivalente[]
 	 *
-	 * @ORM\OneToMany(targetEntity="EquivalentesConjunto", mappedBy="equivalente", cascade={"persist", "remove"}, orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="EquivalenciaEquivalente", mappedBy="equivalencia", cascade={"persist", "remove"}, orphanRemoval=true)
 	 * @ORM\OrderBy({"sigla" = "ASC"})
 	 */
-	protected $conjuntos;
+	protected $equivalentes;
 
 }

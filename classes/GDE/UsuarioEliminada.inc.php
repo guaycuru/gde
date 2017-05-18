@@ -83,7 +83,7 @@ class UsuarioEliminada extends Base {
 		if($this->getDisciplina(true)->getID() == $Disciplina->getID())
 			return array($this);
 		// ToDo: Usar ID ao inves de sigla
-		foreach($Disciplina->getEquivalentes(false) as $Conjunto) {
+		foreach($Disciplina->Equivalencias(false) as $Conjunto) {
 			if(!isset($Conjunto[$this->getDisciplina(true)->getSigla(false)])) // Esta nao esta neste conjunto, entao nem continuo...
 				continue;
 			$ret = array();
