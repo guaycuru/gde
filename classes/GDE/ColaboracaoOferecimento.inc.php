@@ -66,6 +66,9 @@ class ColaboracaoOferecimento extends Base {
 	 */
 	protected $data;
 
+	const CAMPO_PAGINA = 'pagina';
+	private static $_campos = array(self::CAMPO_PAGINA);
+
 	const STATUS_AUTORIZADA = 'a';
 	const STATUS_PENDENTE = 'p';
 	const STATUS_RECUSADA = 'r';
@@ -85,6 +88,10 @@ class ColaboracaoOferecimento extends Base {
 			->setParameter(3, self::STATUS_RECUSADA);
 
 		return ($query->getSingleScalarResult() > 0);
+	}
+
+	public static function Campo_Valido($campo) {
+		return in_array($campo, self::$_campos);
 	}
 
 }

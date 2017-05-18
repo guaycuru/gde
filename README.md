@@ -47,14 +47,13 @@ Funcionam as páginas:
  - Sala
  - Sobre o GDE
 
-Ainda não funciona:
+Ainda não funcionam:
 
  - Admin
  - API
  - Avisos
  - Calendário
  - Chat
- - Colaborações
  - Enquetes
  - Notas
  - Salvar Acontecimentos

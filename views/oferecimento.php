@@ -101,12 +101,14 @@ if($oferecimento_pagina == null) {
 				else {
 					$("#" + campo + "_valor").attr('disabled', 'disabled');
 					$("#" + campo + "_colaborar").hide();
-					$.post("<?= CONFIG_URL; ?>ajax/ax_colaboracao_oferecimento.php", {campo: campo, valor: valor, id_oferecimento: id_oferecimento}, function(data) {
-						if(data == "1") {
+					$.post("<?= CONFIG_URL; ?>ajax/colaboracao_oferecimento.php", {campo: campo, valor: valor, id_oferecimento: id_oferecimento}, function(data) {
+						if(data && data.ok) {
 							$.guaycuru.confirmacao("Colabora&ccedil;&atilde;o enviada. Aguarde autoriza&ccedil;&atilde;o.");
 							$("#" + campo + "_valor").hide();
 							$("#" + campo + "_valor").after("<label>Colabora&ccedil;&atilde;o pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.</label>");
 							$("#" + campo + "_colaborar").hide();
+						} else if(data.error) {
+							$.guaycuru.confirmacao(data.error, "<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>");
 						} else {
 							$("#" + campo + "_valor").removeAttr('disabled');
 							$("#" + campo + "_colaborar").show();

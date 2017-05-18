@@ -135,14 +135,15 @@ abstract class Base {
 	 *
 	 * @param bool $flush
 	 * @param array $extra
+	 * @return void
 	 */
 	public function Save_JSON($flush = true, $extra = array()) {
 		if($this->Save($flush) === true) {
 			if(is_callable($extra))
 				$extra = $extra();
-			return self::OK_JSON($this->getID(), 200, $extra);
+			self::OK_JSON($this->getID(), 200, $extra);
 		} else
-			return self::Error_JSON('Um erro desconhecido ocorreu, por favor tente novamente.');
+			self::Error_JSON('Um erro desconhecido ocorreu, por favor tente novamente.');
 	}
 
 	/**
@@ -151,6 +152,7 @@ abstract class Base {
 	 * Deletes and outputs JSON
 	 *
 	 * @param bool $flush
+	 * @return void
 	 */
 	public function Delete_JSON($flush = true) {
 		if($this->Delete($flush) === true)

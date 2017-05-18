@@ -66,6 +66,19 @@ class ColaboracaoProfessor extends Base {
 	 */
 	protected $data;
 
+	const CAMPO_EMAIL = 'email';
+	const CAMPO_INSTITUTO = 'instituto';
+	const CAMPO_LATTES = 'lattes';
+	const CAMPO_PAGINA = 'pagina';
+	const CAMPO_SALA = 'sala';
+	private static $_campos = array(
+		self::CAMPO_EMAIL,
+		self::CAMPO_INSTITUTO,
+		self::CAMPO_LATTES,
+		self::CAMPO_PAGINA,
+		self::CAMPO_SALA
+	);
+
 	const STATUS_AUTORIZADA = 'a';
 	const STATUS_PENDENTE = 'p';
 	const STATUS_RECUSADA = 'r';
@@ -85,6 +98,10 @@ class ColaboracaoProfessor extends Base {
 			->setParameter(3, self::STATUS_RECUSADA);
 
 		return ($query->getSingleScalarResult() > 0);
+	}
+
+	public static function Campo_Valido($campo) {
+		return in_array($campo, self::$_campos);
 	}
 
 }

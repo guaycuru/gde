@@ -151,7 +151,6 @@ if($_tipo == 'A') {
 <?php if ($Usr !== null) { ?>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.amizades.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.atualizacoes.js?<?= REVISION; ?>"></script>
-	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.grupos.js?<?= REVISION; ?>"></script>
 <?php } if ($_tipo == 'P') { ?>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.avaliacao.js?<?= REVISION; ?>"></script>
 <?php } if ($_tipo == 'A') { ?>
@@ -258,8 +257,8 @@ if($_tipo == 'A') {
 			if($.trim($("#nome_amigo").val()) == '' || $.trim($("#nome_amigo").val()) == '<?= $Usr->getNome_Completo(true) ?>') {
 				$("#nome_amigo").val('<?= $Usr->getNome_Completo(true) ?>');
 				salvando_apelido = true;
-				$.post('<?= CONFIG_URL; ?>ajax/apelido.php', {id: '<?= $Usr->getID() ?>', nome: ""}, function(data){
-					if(data == '1') {
+				$.post('<?= CONFIG_URL; ?>ajax/apelido.php', {id: '<?= $Meu_Amigo->getID() ?>', nome: ""}, function(data){
+					if(data && data.ok) {
 						$("#salvando_nome_amigo").remove();
 						salvando_apelido = false;
 						if(!blur)
@@ -271,8 +270,8 @@ if($_tipo == 'A') {
 					return;
 				$("#nome_amigo").after('<img id="salvando_nome_amigo" src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." />');
 				salvando_apelido = true;
-				$.post('<?= CONFIG_URL; ?>ajax/apelido.php', {id: '<?= $Usr->getID() ?>', nome: $("#nome_amigo").val()}, function(data){
-					if(data == '1') {
+				$.post('<?= CONFIG_URL; ?>ajax/apelido.php', {id: '<?= $Meu_Amigo->getID() ?>', nome: $("#nome_amigo").val()}, function(data){
+					if(data && data.ok) {
 						$("#salvando_nome_amigo").remove();
 						salvando_apelido = false;
 						if(!blur)
@@ -315,7 +314,6 @@ if($_tipo == 'A') {
 		$(window).resize(Tamanho_Abas);
 		<?php if($Usr !== null) { ?>
 		$('#buscar_amigos1').Procura_Amigo('lista_amigos1');
-		Carregar_Grupos(<?= $Usr->getID() ?>);
 		<?php if(($Meu_Amigo === false) && ($_Usuario->Quase_Amigo($Usr) === false)) { ?>
 		$('#link_amigo').click(function() { Adicionar_Amigo('<?= $Usr->getID(); ?>'); return false; });
 		<?php } else { ?>
@@ -361,18 +359,15 @@ if($_tipo == 'A') {
 				$("#" + campo + "_valor").attr('disabled', 'disabled');
 				$("#" + campo + "_colaborar").hide();
 				$.post("<?= CONFIG_URL; ?>ajax/colaboracao_professor.php", {campo: campo, valor: valor, id_professor: id_professor}, function(data) {
-					if(data == "4")
-						$.guaycuru.confirmacao("O link para o curriculo Lattes deve come&ccedil;ar com 'http://buscatextual.cnpq.br/buscatextual/visualizacv.do' ou 'http://lattes.cnpq.br/'.", "<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>");
-					else if(data == "3")
-						$.guaycuru.confirmacao("O e-mail deve conter 'unicamp.br'.", "<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>");
-					else if(data == "2")
-						$.guaycuru.confirmacao("A p&aacute;gina deve come&ccedil;ar com 'http://' e deve conter 'unicamp.br'.", "<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>");
-					else if(data == "1") {
+					if(data && data.ok) {
 						$.guaycuru.confirmacao("Colabora&ccedil;&atilde;o enviada. Aguarde autoriza&ccedil;&atilde;o.");
 						$("#" + campo + "_valor").hide();
 						$("#" + campo + "_valor").after("<label>Colabora&ccedil;&atilde;o pendente j&aacute; existe. Aguardando autoriza&ccedil;&atilde;o.</label>");
 						$("#" + campo + "_colaborar").hide();
-					} else {
+					}
+					else if(data.error)
+						$.guaycuru.confirmacao(data.error, "<?= CONFIG_URL; ?>perfil/?professor=<?= $Professor->getID(); ?>");
+					else {
 						$("#" + campo + "_valor").removeAttr('disabled');
 						$("#" + campo + "_colaborar").show();
 						$.guaycuru.confirmacao("Houve um problema com o seu pedido. Tente novamente mais tarde.");
@@ -809,8 +804,6 @@ if($Usr !== null) {
 					<?php } ?>
 				</div>
 			<?php } ?>
-			<h3 id="accordion_grupos"><a href='#' class='accordion_header'>Grupos (<span id="span_numero_grupos">?</span>):</a></h3>
-			<div id="lista_grupos" ><img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando...</div>
 		</div>
 	</div>
 <?php } ?>
