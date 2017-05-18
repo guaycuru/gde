@@ -48,12 +48,12 @@ class Aluno extends Base {
 	 * @var ArrayCollection|Oferecimento[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Oferecimento")
-	 * @ORM\JoinTable(name="gde_r_alunos_trancadas",
+	 * @ORM\JoinTable(name="gde_r_alunos_trancados",
 	 *      joinColumns={@ORM\JoinColumn(name="ra", referencedColumnName="ra")},
 	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")}
 	 * )
 	 */
-	protected $trancadas;
+	protected $trancados;
 
 	/**
 	 * @var Curso
@@ -460,7 +460,7 @@ class Aluno extends Base {
 	}
 
 	/**
-	 * getTrancadas
+	 * getTrancados
 	 *
 	 * Retorna a lista de Oferecimentos trancados deste Aluno, opcionalmente filtrada por $periodo ou $niveis
 	 *
@@ -469,19 +469,19 @@ class Aluno extends Base {
 	 * @param bool $formatado
 	 * @return ArrayCollection|Oferecimento[]|string
 	 */
-	public function getTrancadas($periodo = null, $niveis = array(), $formatado = false) {
+	public function getTrancados($periodo = null, $niveis = array(), $formatado = false) {
 		if($niveis == self::NIVEL_GRAD)
 			$niveis = array_keys(self::$_niveis_grad);
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
 		if(($periodo == null) && (count($niveis) == 0))
-			$Trancadas = parent::getTrancadas();
+			$Trancados = parent::getTrancados();
 		else {
 			$qb = self::_EM()->createQueryBuilder()
 				->select('o')
 				->from('GDE\\Oferecimento', 'o')
-				->join('o.alunos_trancadas', 'a')
+				->join('o.alunos_trancados', 'a')
 				->where('a.ra = :ra')
 				->setParameter('ra', $this->getRA(false));
 			if($periodo != null) {
@@ -494,16 +494,16 @@ class Aluno extends Base {
 					->andWhere('d.nivel IN (:niveis)')
 					->setParameter('niveis', $niveis);
 			}
-			$Trancadas = $qb->getQuery()->getResult();
+			$Trancados = $qb->getQuery()->getResult();
 		}
 
 		if($formatado === false)
-			return $Trancadas;
+			return $Trancados;
 		else {
 			$lista = array();
-			foreach($Trancadas as $Trancada)
-				$lista[] = "<a href=\"".CONFIG_URL."oferecimento/".$Trancada->getID()."/\" title=\"".$Trancada->getDisciplina(true)->getNome(true)."\">".
-					$Trancada->getSigla(true).$Trancada->getTurma(true)."</a> (".$Trancada->getDisciplina()->getCreditos(true).")";
+			foreach($Trancados as $Trancado)
+				$lista[] = "<a href=\"".CONFIG_URL."oferecimento/".$Trancado->getID()."/\" title=\"".$Trancado->getDisciplina(true)->getNome(true)."\">".
+					$Trancado->getSigla(true).$Trancado->getTurma(true)."</a> (".$Trancado->getDisciplina()->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
 	}
@@ -570,7 +570,7 @@ class Aluno extends Base {
 	 */
 	public function Creditos_Trancados($periodo = null, $niveis = array()) {
 		$creditos = 0;
-		foreach($this->getTrancadas($periodo, $niveis) as $Oferecimento)
+		foreach($this->getTrancados($periodo, $niveis) as $Oferecimento)
 			$creditos += $Oferecimento->getDisciplina()->getCreditos();
 		return $creditos;
 	}
@@ -606,7 +606,7 @@ class Aluno extends Base {
 	 */
 	public function Trancou(Disciplina $Disciplina) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
-			'INNER JOIN A.trancadas AS O '.
+			'INNER JOIN A.trancados AS O '.
 			'INNER JOIN O.disciplina AS D '.
 			'WHERE A.ra = ?1 AND D.sigla = ?2';
 
@@ -657,7 +657,7 @@ class Aluno extends Base {
 	 */
 	public function Trancou_Com(Professor $Professor, Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
-			'INNER JOIN A.trancadas AS O ';
+			'INNER JOIN A.trancados AS O ';
 		if($Disciplina !== null)
 			$dql .= 'INNER JOIN O.disciplina AS D ';
 		$dql .= 'WHERE A.ra = ?1 AND O.professor = ?2';

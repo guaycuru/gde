@@ -596,7 +596,7 @@ class Disciplina extends Base {
 	 */
 	public function Desistencias() {
 		$dql = 'SELECT COUNT(A.ra) FROM GDE\\Aluno AS A '.
-			'INNER JOIN A.trancadas AS O '.
+			'INNER JOIN A.trancados AS O '.
 			'INNER JOIN O.disciplina AS D '.
 			'WHERE D.sigla = ?1';
 

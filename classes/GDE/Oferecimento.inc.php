@@ -70,9 +70,9 @@ class Oferecimento extends Base {
 	/**
 	 * @var Aluno
 	 *
-	 * @ORM\ManyToMany(targetEntity="Aluno", mappedBy="trancadas")
+	 * @ORM\ManyToMany(targetEntity="Aluno", mappedBy="trancados")
 	 */
-	protected $alunos_trancadas;
+	protected $alunos_trancados;
 
 	/**
 	 * @var Dimensao
@@ -425,7 +425,7 @@ class Oferecimento extends Base {
 	 * @return integer
 	 */
 	public function Desistencias() {
-		return $this->getAlunos_Trancadas()->count();
+		return $this->getAlunos_Trancados()->count();
 	}
 
 	/**

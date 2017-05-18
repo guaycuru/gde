@@ -118,7 +118,7 @@ if($_tipo == 'A') {
 	</tr>
 	<tr>
 		<td colspan="2" style="padding: 10px 5px;"><strong>Desist&ecirc;ncias (<?=$Aluno->Creditos_Trancados($Periodo_Selecionado->getPeriodo(), $nivel); ?>):</strong></td>
-		<td colspan="5" style="padding: 10px 5px;"><?=$Aluno->getTrancadas($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
+		<td colspan="5" style="padding: 10px 5px;"><?=$Aluno->getTrancados($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
 	</tr>
 	<tr>
 		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>imprimir-horario/?ra=<?= $Aluno->getRA(true); ?>&p=<?= $Periodo_Selecionado->getID(true); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Visualizar Para Impress&atilde;o</a></td>
