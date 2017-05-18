@@ -20,13 +20,11 @@ if(!isset($_SESSION['atualizacoes_last_id']))
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.calendario.js?<?= REVISION; ?>"></script>
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.favoritos.js?<?= REVISION; ?>"></script>
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.notas.js?<?= REVISION; ?>"></script>
-<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.aviso.js?<?= REVISION; ?>"></script>
 <script type="text/javascript">
 // <![CDATA[
 var carregou_horario = false;
 var carregou_calendario = false;
 var carregou_notas = false;
-var carregou_avisos = false;
 var atualizacao_id = '';
 var atualizacao_tp = 'u';
 var status_padrao = 'Definir status...';
@@ -164,11 +162,6 @@ $(document).ready(function() {
 			else if((ui.panel.id == 'tab_notas') && (!carregou_notas)) {
 				Atualizar_Notas();
 				carregou_notas = true;
-			}
-			
-			else if((ui.panel.id == 'tab_avisos') && (!carregou_avisos)) {
-				Atualizar_Avisos();
-				carregou_avisos = true;
 			}
 <?php } ?>
 		},
@@ -311,7 +304,6 @@ $(document).ready(function() {
 <?php } if($_Usuario->getAluno(false) !== null) { ?>
 					<li><a href="#tab_calendario">Calend&aacute;rio</a></li>
 					<li><a href="#tab_notas">Notas</a></li>
-					<li><a href="#tab_avisos" id="link_avisos">Avisos</a></li>
 <?php } ?>
 				</ul>
 				<div id="tab_atualizacoes" class="tab_content">
@@ -348,9 +340,6 @@ $(document).ready(function() {
 				</div>
 				<div id="tab_notas" class="tab_content">
 					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Notas...
-				</div>
-				<div id="tab_avisos" class="tab_content">
-					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Avisos...
 				</div>
 <?php } ?>
 			</div>

@@ -32,14 +32,6 @@ require_once('../common/common.inc.php');
 				$.guaycuru.confirmacao("Marque a op&ccedil;&atilde;o para desativar / excluir a conta");
 		});
 
-		$('#salvar').click(function() {
-			if($("input[name='tipoAviso']").is(':checked'))
-				$.post('<?= CONFIG_URL; ?>ajax/configuracao.php', {tipoA: $("input[name='tipoAviso']:checked").val()}, function(data){
-					if(data == '1')
-						$.guaycuru.confirmacao("Configura&ccedil;&otilde;es salvas com sucesso!");
-				});
-		});
-
 		$('#cancelar').click(function() {
 			window.location="<?= CONFIG_URL; ?>";
 		});
@@ -51,23 +43,8 @@ require_once('../common/common.inc.php');
 	<div id="perfil_abas">
 		<div id="tabs">
 			<ul>
-				<li><a href="#tab_aviso" class="ativo">Configura&ccedil;&atilde;o dos Avisos</a></li>
-				<li><a href="#tab_conta">Configura&ccedil;&atilde;o da Conta</a></li>
+				<li><a href="#tab_conta" class="ativo">Configura&ccedil;&atilde;o da Conta</a></li>
 			</ul>
-			<div id="tab_aviso" class="tab_content">
-				<table cellspacing="0" class="tabela_bonyta_branca">
-					<tr>
-						<td><strong>Avisos de Anivers&aacute;rio</strong></td>
-						<td>
-							<?php foreach(UsuarioConfig::getTipos() as  $i => $tipo) { ?>
-								<input type="radio" name="tipoAviso" value="<?= $i ?>" <?= ($_Usuario->getConfig(true)->getAvisos_Aniversario(false) == $i) ? 'checked="checked"' : '' ?> /><label><?= $tipo ?></label>
-							<?php } ?>
-						</td>
-					</tr>
-				</table>
-				<br />
-				<input type="button" id="salvar" name="salvar" class="botao_salvar" value=" " alt="Salvar" />
-			</div>
 			<div id="tab_conta" class="tab_content">
 				<table cellspacing="0" class="tabela_bonyta_branca">
 					<tr>

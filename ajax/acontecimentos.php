@@ -23,7 +23,6 @@ if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) ||
 	$minhas = ((isset($_POST['min'])) && ($_POST['min'] != null));
 	$amizades = $minhas;
 	$amigos = ((isset($_POST['am'])) && ($_POST['am'] != null));
-	$grupos = ((isset($_POST['gr'])) && ($_POST['gr'] != null));
 	$gde = ((isset($_POST['gde'])) && ($_POST['gde'] != null));
 	$todas_respostas = ((isset($_POST['rt']) && ($_POST['rt'] == 1)));
 	// ToDo: Testar salvar
@@ -32,28 +31,22 @@ if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) ||
 		$Usuario_Config->setAcontecimentos_Mensagens($mensagens);
 		$Usuario_Config->setAcontecimentos_Minhas($minhas);
 		$Usuario_Config->setAcontecimentos_Amigos($amigos);
-		$Usuario_Config->setAcontecimentos_Grupos($grupos);
 		$Usuario_Config->setAcontecimentos_GDE($gde);
 		$Usuario_Config->Save(true);
 	}
 	$Usr = $_Usuario;
-	$Grupo = null;
 } elseif(isset($_POST['i'])) {
 	$home = $meu = false;
 	$mensagens = $minhas = $todas_respostas = true;
-	$amizades = $amigos = $gde = $grupos = false;
+	$amizades = $amigos = $gde = false;
 	$Usr = new Usuario(intval($_POST['i']));
 	if($Usr->getID() == null)
 		exit();
-	$Grupo = null;
 } elseif(isset($_POST['g'])) {
 	$home = false;
 	$mensagens = $minhas = true;
-	$Grupo = new Grupo(intval($_POST['g']));
-	$todas_respostas = $amizades = (($_Usuario->Grupo_Moderador($Grupo)) || ($_Usuario->getAdmin()));
+	$todas_respostas = $amizades = $_Usuario->getAdmin();
 	$meu = false;
-	if($Grupo->getID() == null)
-		exit();
 	$Usr = null;
 }
 // Um Acontecimento especifico...
@@ -63,7 +56,7 @@ if(isset($_POST['o'])) {
 	if($Acontecimentos[0]->Pode_Ver($_Usuario) === false)
 		exit();
 } else
-	$Acontecimentos = ($Usr !== null) ? Acontecimento::Listar($Usr, $por_pagina, $start, $maior_que, $mensagens, $minhas, $amizades, $amigos, $gde, $grupos) : Acontecimento::Listar_Grupo($Grupo, $por_pagina, $start, $maior_que, $mensagens, $minhas, $amizades);
+	$Acontecimentos = Acontecimento::Listar($Usr, $por_pagina, $start, $maior_que, $mensagens, $minhas, $amizades, $amigos, $gde);
 
 $maior_id = (isset($_POST['ultimo'])) ? intval($_POST['ultimo']) : 0;
 

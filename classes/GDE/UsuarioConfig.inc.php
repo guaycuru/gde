@@ -29,13 +29,6 @@ class UsuarioConfig extends Base {
 	protected $usuario;
 
 	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="string", length=1, options={"default"="n"}, nullable=false)
-	 */
-	protected $avisos_aniversario = 'n';
-
-	/**
 	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
@@ -57,23 +50,10 @@ class UsuarioConfig extends Base {
 	protected $acontecimentos_amigos = true;
 
 	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
-	 */
-	protected $acontecimentos_grupos = true;
-
-	/**
 	 * @var boolean
 	 *
 	 * @ORM\Column(type="boolean", options={"default"=1}, nullable=false)
 	 */
 	protected $acontecimentos_gde = true;
-
-	static $tipos = array('e' => 'Email', 'a' => 'Aba Aviso', 't' => 'Ambos', 'n' => 'Nenhum Aviso');
-
-	public static function getTipos() {
-		return self::$tipos;
-	}
 
 }
