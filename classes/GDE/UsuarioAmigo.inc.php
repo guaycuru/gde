@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,9 +30,7 @@ class UsuarioAmigo extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_amigo", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_amigo", referencedColumnName="id_usuario")
 	 */
 	protected $amigo;
 
@@ -39,9 +38,7 @@ class UsuarioAmigo extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
 
@@ -59,5 +56,24 @@ class UsuarioAmigo extends Base {
 	 */
 	protected $ativo = false;
 
+	/**
+	 * @param bool $completo
+	 * @param bool $html
+	 * @return mixed
+	 */
+	public function Apelido_Ou_Nome($completo = false, $html = true) {
+		if($this->getApelido(false) != null)
+			return $this->getApelido($html);
+		else
+			return ($completo) ? $this->getAmigo(true)->getNome_Completo($html) : $this->getAmigo(true)->getNome($html);
+	}
+
+	public static function Ordenar_Por_Nome($Amigos) {
+		$iterator = $Amigos->getIterator();
+		$iterator->uasort(function ($A, $B) {
+			return strcmp($A->getAmigo()->getNome_Completo(false), $B->getAmigo()->getNome_Completo(false));
+		});
+		return new ArrayCollection(iterator_to_array($iterator));
+	}
 
 }

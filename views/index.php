@@ -6,7 +6,7 @@ define('TITULO', 'Home');
 
 require_once('../common/common.inc.php');
 
-$Amigos = $_Usuario->Amigos();
+$Amigos = UsuarioAmigo::Ordenar_Por_Nome($_Usuario->Amigos(array('amigo' => 'ASC')));
 $Recomendacoes = $_Usuario->Amigos_Recomendacoes(2, 15);
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
 
@@ -243,12 +243,6 @@ $(document).ready(function() {
 		'hideOnContentClick': false,
 		'autoDimensions': true
 	});
-<?php
-//require_once('../classes/Enquete.inc.php');
-//$Enquete = new Enquete(5, $_GDE['DB']);
-//if($Enquete->Ja_Votou($_Usuario) === false) { ?>
-	//$("a#enquete").click();
-<?php //} ?>
 	$("#lista_amigos2 div.sliding_top").live("click", function() {
 		Adicionar_Amigo_Sugestao(($(this).attr("id").split('_'))[1]);
 		return false;
@@ -372,13 +366,13 @@ $(document).ready(function() {
 				foreach($Amigos as $Amigo) { ?>
 				<div class="amigo" id="amigo_<?= $Amigo->getAmigo()->getID(); ?>">
 					<div class="amigo_foto">
-						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true) ?>">
-							<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->Apelido_Ou_Nome(false, true); ?>">
+							<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->Apelido_Ou_Nome(false, true); ?>" />
 						</a>
 					</div>
 					<div class="amigo_nome">
 						<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
-						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= Util::Limita($Amigo->getApelido(true), 10); ?></a>
+						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(); ?>" class="amigo" title="<?= $Amigo->Apelido_Ou_Nome(true, true); ?>"><?= Util::Limita($Amigo->Apelido_Ou_Nome(false, true), 10); ?></a>
 					</div>
 				</div>
 			<?php } } ?>

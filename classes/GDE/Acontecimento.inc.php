@@ -87,7 +87,7 @@ class Acontecimento extends Base {
 		// Amizade
 		if($this->getTipo() == 'ua')
 			return (!$meu)
-					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_GDE['Usuario']->Apelido_Ou_Nome($this->getDestino(), true)."."
+					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true)."."
 					: " agora &eacute; ".(($this->getOrigem()->getSexo() == 'f')?'sua amiga':'seu amigo').".";
 		// Mensagem, Status de Usuario
 		elseif(($this->getTipo() == 'um') || ($this->getTipo() == 'us') || ($this->getTipo() == 'rs')) {
@@ -96,7 +96,7 @@ class Acontecimento extends Base {
 			elseif($this->getTipo() == 'rs')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (an&uacute;ncio)</span>";
 			elseif(($this->getOriginal() !== null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
-				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), true);
+				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true);
 			else
 				$texto_pre = "";
 			$texto_pre .= ": ";
@@ -124,7 +124,7 @@ class Acontecimento extends Base {
 	public function getNome($completo = false) {
 		global $_Usuario;
 		if($this->getOrigem() !== null)
-			return ($completo) ? $this->getOrigem()->getNome_Completo(true) : $_Usuario->Apelido_Ou_Nome($this->getOrigem(), true);
+			return ($completo) ? $this->getOrigem()->getNome_Completo(true) : $_Usuario->Apelido_Ou_Nome($this->getOrigem(), false, true);
 		elseif($this->tipo == 'ga')
 			return "Atualiza&ccedil;&atilde;o do GDE";
 		else

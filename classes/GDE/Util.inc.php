@@ -77,4 +77,10 @@ class Util {
 		return (preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email) > 0);
 	}
 
+	public static function Dia_Da_Semana($d) {
+		if($d < 0 || $d > 6)
+			return '';
+		return array('Domingo', 'Segunda-feira', 'Ter&ccedil;a-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'S&aacute;bado')[$d];
+	}
+
 }

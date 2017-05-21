@@ -1075,6 +1075,7 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * @param string|null $ordem
 	 * @return ArrayCollection|UsuarioAmigo[] Amizades ja autorizadas
 	 */
 	public function Amigos() { // Lista de amizades ja autorizadas
@@ -1177,15 +1178,16 @@ class Usuario extends Base {
 	 * Apelido_Ou_Nome
 	 *
 	 * @param Usuario $Usuario
+	 * @param bool|true $completo
 	 * @param bool|true $html
 	 * @return string
 	 */
-	public function Apelido_Ou_Nome(Usuario $Usuario, $html = true) {
+	public function Apelido_Ou_Nome(Usuario $Usuario, $completo = false, $html = true) {
 		$Amigo = $this->Amigo($Usuario);
-		if(($Amigo !== false) && ($Amigo->getApelido(false) != null))
-			return $Amigo->getApelido($html);
+		if($Amigo !== false)
+			return $Amigo->Apelido_Ou_Nome($completo, $html);
 		else
-			return $Usuario->getNome($html);
+			return ($completo) ? $Usuario->getNome_Completo($html) : $Usuario->getNome($html);
 	}
 
 	/**
