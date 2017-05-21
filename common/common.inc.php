@@ -189,14 +189,8 @@ $(document).ready(function(){
 					<li><a href="#" onclick="return false;">Admin</a>
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdmin.php">Super P&aacute;gina!!!</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminCadastros.php">Usu&aacute;rios Cadastrados</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminCadastros.php?inativos">Usu&aacute;rios Inativos</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminAluno.php">Novo Aluno</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminUsuario.php">Novo Usu&aacute;rio</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminDisciplina.php">Nova Disciplina</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminOferecimento.php">Novo Oferecimento</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminAcontecimento.php">Novo Acontecimento</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/AdminAutorizarGrupos.php">Autorizar Grupos</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/AdminAutorizarColaboracoes.php">Autorizar Colabora&ccedil;&otilde;es</a></li>
 							<li><a href="<?= CONFIG_URL; ?>stats/awstats.gde.html">Estat&iacute;sticas</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/desenha_grafico_cadastros.php?dt=2011-01-1">Gr&aacute;fico Cadastros</a></li>
