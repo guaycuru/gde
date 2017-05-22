@@ -31,9 +31,8 @@ $Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $n);
 
 $UsuarioAluno = ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario(false) : new Usuario();
 $pode_ver = $_Usuario->Pode_Ver($UsuarioAluno, 'horario');
-if ((is_array($pode_ver) && !$pode_ver[0]) || !$pode_ver) {
-	Sem_Permissao();
-}
+if((is_array($pode_ver) && !$pode_ver[0]) || !$pode_ver)
+	exit;
 
 $meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());
 $limpos = Util::Horarios_Livres($Horario);

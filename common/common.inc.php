@@ -60,18 +60,16 @@ if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 			$_SESSION['last_pg'] = $_SERVER['REQUEST_URI'];
 			header("Location: ".CONFIG_URL.CONFIG_URL_LOGIN);
 		}
-		if(!defined('NO_DENIAL') || NO_DENIAL === false)
-			Sem_Permissao();
+		if(!defined('NO_DENIAL') || NO_DENIAL === false) {
+			if((defined('JSON')) && (JSON === true))
+				Base::Error_JSON('Login necessário.');
+			exit;
+		}
 	}
 }
 
 if((defined('NO_SESSION')) && (NO_SESSION === true))
 	session_write_close();
-
-/*if(($_Usuario === null) || ($_Usuario->getAdmin() === false))
-	die("O GDE est&aacute; em Manuten&ccedil;&atilde;o, volte mais tarde...");*/
-
-//<meta name="robots" content="noindex, nofollow" />
 
 if((!defined('HTML')) || (HTML === true)) {
 	if(!defined('TITULO'))
