@@ -1541,10 +1541,27 @@ class Usuario extends Base {
 		if(!isset($Horario[$dia][$hora]))
 			return "-";
 		$formatado = array();
+		$i = 0;
 		foreach($Horario[$dia][$hora] as $Oferecimento) {
 			$strong_oferecimento = ((!$meu) && ($Periodo !== null) && ($this->Cursando($Oferecimento[0])));
 			$strong_sala = ((!$meu) && ($Periodo !== null) && ($this->Tem_Dimensao(array($Oferecimento[1], $dia, $hora), $Periodo)));
-			$formatado[] = (($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento[0]->getID()."/\" title=\"".$Oferecimento[0]->getDisciplina()->getNome()."\">":null).(($strong_oferecimento)?"<strong>":null).$Oferecimento[0]->getSigla().$Oferecimento[0]->getTurma().(($strong_oferecimento)?"</strong>":null).(($links)?"</a>":null).((($links) && ($Oferecimento[1] != '????'))?"/<a href=\"".CONFIG_URL."sala/".$Oferecimento[1]."/\">":"/").(($strong_sala)?"<strong>":null).$Oferecimento[1].(($strong_sala)?"</strong>":null).(($links)?"</a>":null);
+			$formatado[$i] = (
+				($links)
+					? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento[0]->getID()."/\" title=\"".$Oferecimento[0]->getDisciplina()->getNome()."\">"
+					: null
+			).
+			(($strong_oferecimento)	? "<strong>" : null).
+			$Oferecimento[0]->getSigla().$Oferecimento[0]->getTurma().
+			(($strong_oferecimento) ? "</strong>" : null ).
+			(($links) ? "</a>" : null);
+			if(!empty($Oferecimento[1]))
+				$formatado[$i] .= (($links)
+					? "/<a href=\"".CONFIG_URL."sala/".$Oferecimento[1]."/\">"
+					: "/").
+				(($strong_sala) ? "<strong>" : null).
+				$Oferecimento[1].
+				(($strong_sala) ? "</strong>" : null).
+				(($links) ? "</a>" : null);
 		}
 		return implode("<br />", $formatado);
 	}
