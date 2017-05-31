@@ -143,7 +143,7 @@ $(document).ready(function() {
 	$("#tabs").tabs({
 		show: function(event, ui) {
 			if(ui.panel.id == 'tab_atualizacoes') {
-				Atualizar_Atualizacoes('', 'u', false, false);
+				Atualizar_Atualizacoes('', false, false);
 			}
 <?php if(($_Usuario->getAluno(false) !== null) || ($_Usuario->getProfessor(false) !== null)) { ?>
 			else if((ui.panel.id == 'tab_horario') && (!carregou_horario)) {
@@ -227,7 +227,7 @@ $(document).ready(function() {
 			$("input.tipo_atualizacoes").attr('checked', $(this).is(':checked'));
 		else
 			$("#atualizacoes_todas").attr('checked', false);
-		Atualizar_Atualizacoes('', 'u', false, false);
+		Atualizar_Atualizacoes('', false, false);
 	});
 	$("input.tipo_calendario").click(function() {
 		$("div."+$(this).attr('id')).toggle();

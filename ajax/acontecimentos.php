@@ -17,16 +17,16 @@ $maior_que = (isset($_POST['nvs'])) ? intval($_POST['ultimo']) : false;
 if(isset($_POST['nvs']))
 	$por_pagina = '-1';
 
-if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) || ($_POST['g'] == null))) {
+if(empty($_GET['i'])) {
 	$home = $meu = true;
-	$mensagens = ((isset($_POST['msg'])) && ($_POST['msg'] != null));
-	$minhas = ((isset($_POST['min'])) && ($_POST['min'] != null));
+	$mensagens = (!empty($_GET['msg']));
+	$minhas = (!empty($_GET['min']));
 	$amizades = $minhas;
-	$amigos = ((isset($_POST['am'])) && ($_POST['am'] != null));
-	$gde = ((isset($_POST['gde'])) && ($_POST['gde'] != null));
-	$todas_respostas = ((isset($_POST['rt']) && ($_POST['rt'] == 1)));
+	$amigos = (!empty($_GET['am']));
+	$gde = (!empty($_GET['gde']));
+	$todas_respostas = (!empty($_GET['rt']));
 	// ToDo: Testar salvar
-	if(!isset($_POST['o'])) {
+	if(!isset($_GET['o'])) {
 		$Usuario_Config = $_Usuario->getConfig(true);
 		$Usuario_Config->setAcontecimentos_Mensagens($mensagens);
 		$Usuario_Config->setAcontecimentos_Minhas($minhas);
@@ -35,32 +35,24 @@ if(((!isset($_POST['i'])) || ($_POST['i'] == null)) && ((!isset($_POST['g'])) ||
 		$Usuario_Config->Save(true);
 	}
 	$Usr = $_Usuario;
-} elseif(isset($_POST['i'])) {
+} else {
 	$home = $meu = false;
 	$mensagens = $minhas = $todas_respostas = true;
 	$amizades = $amigos = $gde = false;
-	$Usr = new Usuario(intval($_POST['i']));
+	$Usr = Usuario::Load($_GET['i']);
 	if($Usr->getID() == null)
 		exit();
-} elseif(isset($_POST['g'])) {
-	$home = false;
-	$mensagens = $minhas = true;
-	$todas_respostas = $amizades = $_Usuario->getAdmin();
-	$meu = false;
-	$Usr = null;
 }
 // Um Acontecimento especifico...
-if(isset($_POST['o'])) {
+if(!empty($_GET['o'])) {
 	$todas_respostas = true;
-	$Acontecimentos =  array(new Acontecimento(intval($_POST['o'])));
-	if($Acontecimentos[0]->Pode_Ver($_Usuario) === false)
-		exit();
+	$Acontecimentos = array(Acontecimento::Load($_GET['o']));
 } else
 	$Acontecimentos = Acontecimento::Listar($Usr, $por_pagina, $start, $maior_que, $mensagens, $minhas, $amizades, $amigos, $gde);
 
-$maior_id = (isset($_POST['ultimo'])) ? intval($_POST['ultimo']) : 0;
+$maior_id = (isset($_GET['ultimo'])) ? intval($_GET['ultimo']) : 0;
 
-if(isset($_POST['mais'])) // Gambiarra pro find do jQuery funcionar
+if(isset($_GET['mais'])) // Gambiarra pro find do jQuery funcionar
 	echo '<div>';
 
 if(count($Acontecimentos) > 0)
@@ -69,7 +61,7 @@ if(count($Acontecimentos) > 0)
 foreach($Acontecimentos as $Acontece) {
 	$Respostas  = $Acontece->Listar_Respostas(($todas_respostas) ? null : $Usr);
 ?>
-<div class="atualizacao<?php if(($maior_id > -1) && ($Acontece->getID() > $maior_id)) echo " atualizacao_nova"; if(isset($_POST['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_POST['nvs'])) echo "nova_"; ?>atualizacao_<?= $Acontece->getID(); ?>"<?php if(isset($_POST['nvs'])) echo " style=\"display: none;\""; ?>>
+<div class="atualizacao<?php if(($maior_id > -1) && ($Acontece->getID() > $maior_id)) echo " atualizacao_nova"; if(isset($_GET['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_GET['nvs'])) echo "nova_"; ?>atualizacao_<?= $Acontece->getID(); ?>"<?php if(isset($_GET['nvs'])) echo " style=\"display: none;\""; ?>>
 	<div class="atualizacao_foto">
 		<a href="<?= $Acontece->getLink(); ?>"><img src="<?= $Acontece->getFoto(); ?>" border="0" alt="<?= $Acontece->getNome(); ?>" class="escala" /></a>
 	</div>
@@ -84,16 +76,16 @@ foreach($Acontecimentos as $Acontece) {
 			<?php if(($Acontece->Pode_Responder($_Usuario)) && ($Acontece->Pode_Apagar($_Usuario))) echo " / "; ?>
 			<?php if($Acontece->Pode_Apagar($_Usuario)) { ?><a href="#" class="atualizacao_remover" id="remover_<?= $Acontece->getID(); ?>"><strong>Remover</strong></a><?php } ?>
 			</span><br />
-			<?php if($Acontece->getNumero_Respostas() > count($Respostas)) { ?><span class="todas_respostas"><a href="#" class="atualizacao_todas_respostas" id="todas_respostas_<?= $Acontece->getID(); ?>">Exibir <?= ($Acontece->getRespostas() > 1) ? 'as '.$Acontece->getRespostas().' respostas' : ' 1 resposta'; ?></a></span><?php } ?>
+			<?php if($Acontece->getNumero_Respostas() > count($Respostas)) { ?><span class="todas_respostas"><a href="#" class="atualizacao_todas_respostas" id="todas_respostas_<?= $Acontece->getID(); ?>">Exibir <?= ($Acontece->getNumero_Respostas() > 1) ? 'as '.$Acontece->getNumero_Respostas().' respostas' : ' 1 resposta'; ?></a></span><?php } ?>
 		</div>
 	</div>
 	<div class="clear_all"></div>
 </div>
-<div class="atualizacao_respostas<?php if(isset($_POST['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_POST['nvs'])) echo "nova_"; ?>respostas_<?= $Acontece->getID(); ?>"<?php if(isset($_POST['nvs'])) echo " style=\"display: none;\""; ?>>
+<div class="atualizacao_respostas<?php if(isset($_GET['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_GET['nvs'])) echo "nova_"; ?>respostas_<?= $Acontece->getID(); ?>"<?php if(isset($_GET['nvs'])) echo " style=\"display: none;\""; ?>>
 <?php
 	foreach($Respostas as $Resposta) {
 ?>
-	<div class="atualizacao_resposta<?php if(($maior_id > -1) && ($Resposta->getID() > $maior_id)) echo " atualizacao_nova"; if(isset($_POST['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_POST['nvs'])) echo "nova_"; ?>atualizacao_<?= $Resposta->getID(); ?>"<?php if(isset($_POST['nvs'])) echo " style=\"display: none;\" class=\"atualizacao_nova_escondida\""; ?>>
+	<div class="atualizacao_resposta<?php if(($maior_id > -1) && ($Resposta->getID() > $maior_id)) echo " atualizacao_nova"; if(isset($_GET['nvs'])) echo " atualizacao_nova_escondida"; ?>" id="<?php if(isset($_GET['nvs'])) echo "nova_"; ?>atualizacao_<?= $Resposta->getID(); ?>"<?php if(isset($_GET['nvs'])) echo " style=\"display: none;\" class=\"atualizacao_nova_escondida\""; ?>>
 		<div class="atualizacao_foto">
 			<a href="<?= $Resposta->getLink(); ?>"><img src="<?= $Resposta->getFoto(); ?>" border="0" alt="<?= $Resposta->getNome(); ?>" class="escala" /></a>
 		</div>
@@ -116,7 +108,7 @@ foreach($Acontecimentos as $Acontece) {
 </div>
 <?php
 }
-if(isset($_POST['mais']))
+if(isset($_GET['mais']))
 	echo '</div>';
 
 echo $FIM;

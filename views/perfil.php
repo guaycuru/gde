@@ -388,7 +388,7 @@ if($_tipo == 'A') {
 				}
 				<?php if ($Usr !== null) { ?>
 				else if(ui.panel.id == 'tab_atualizacoes') {
-					Atualizar_Atualizacoes('<?= $Usr->getID(); ?>', 'u');
+					Atualizar_Atualizacoes('<?= $Usr->getID(); ?>');
 				}
 				<?php } if($_tipo == 'P') { ?>
 				else if((ui.panel.id == 'tab_avaliacao') && (!carregou_avaliacao)) {

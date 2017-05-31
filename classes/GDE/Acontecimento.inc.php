@@ -21,7 +21,6 @@ class Acontecimento extends Base {
 	 */
 	protected $id_acontecimento;
 
-	// ToDo: Constants de tipo
 	/**
 	 * @var string
 	 *
@@ -54,9 +53,7 @@ class Acontecimento extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_origem", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_origem", referencedColumnName="id_usuario")
 	 */
 	protected $origem;
 
@@ -64,9 +61,7 @@ class Acontecimento extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_destino", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_destino", referencedColumnName="id_usuario")
 	 */
 	protected $destino;
 
@@ -74,26 +69,33 @@ class Acontecimento extends Base {
 	 * @var Acontecimento
 	 *
 	 * @ORM\ManyToOne(targetEntity="Acontecimento")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_original", referencedColumnName="id_acontecimento")
-	 * })
+	 * @ORM\JoinColumn(name="id_original", referencedColumnName="id_acontecimento")
 	 */
 	protected $original;
+
+	// ToDo: Definir os tipos
+	const TIPO_GDE = 'ga';
+	const TIPO_RA = 'ra';
+	const TIPO_RM = 'rm';
+	const TIPO_RS = 'rs';
+	const TIPO_UA = 'ua';
+	const TIPO_UM = 'um';
+	const TIPO_US = 'us';
 
 	public function getTexto($html = false, $processa = false, $meu = false, Usuario $Usuario = null) {
 		global $_Usuario;
 		if(!$html)
 			return $this->texto;
 		// Amizade
-		if($this->getTipo() == 'ua')
+		if($this->getTipo(false) == 'ua')
 			return (!$meu)
 					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true)."."
 					: " agora &eacute; ".(($this->getOrigem()->getSexo() == 'f')?'sua amiga':'seu amigo').".";
 		// Mensagem, Status de Usuario
-		elseif(($this->getTipo() == 'um') || ($this->getTipo() == 'us') || ($this->getTipo() == 'rs')) {
-			if($this->getTipo() == 'us')
+		elseif(($this->getTipo(false) == 'um') || ($this->getTipo(false) == 'us') || ($this->getTipo(false) == 'rs')) {
+			if($this->getTipo(false) == 'us')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (status)</span>";
-			elseif($this->getTipo() == 'rs')
+			elseif($this->getTipo(false) == 'rs')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (an&uacute;ncio)</span>";
 			elseif(($this->getOriginal() !== null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
 				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true);
@@ -107,7 +109,7 @@ class Acontecimento extends Base {
 			return $texto_pre.$texto;
 		}
 		// Atualizacao do GDE
-		elseif($this->getTipo() == 'ga') {
+		elseif($this->getTipo(false) == self::TIPO_GDE) {
 			return ": ".$this->texto;
 		}
 		else
@@ -125,7 +127,7 @@ class Acontecimento extends Base {
 		global $_Usuario;
 		if($this->getOrigem() !== null)
 			return ($completo) ? $this->getOrigem()->getNome_Completo(true) : $_Usuario->Apelido_Ou_Nome($this->getOrigem(), false, true);
-		elseif($this->tipo == 'ga')
+		elseif($this->getTipo(false) == self::TIPO_GDE)
 			return "Atualiza&ccedil;&atilde;o do GDE";
 		else
 			return "";
@@ -134,7 +136,7 @@ class Acontecimento extends Base {
 	public function getFoto($th = true) {
 		if($this->getOrigem() !== null)
 			return $this->getOrigem()->getFoto(true, $th);
-		elseif($this->tipo == 'ga')
+		elseif($this->tipo == self::TIPO_GDE)
 			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
 		elseif($this->tipo == 'gc')
 			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
@@ -144,13 +146,13 @@ class Acontecimento extends Base {
 		if($Usuario->getAdmin())
 			return true;
 		// Atualizacoes do GDE
-		if($this->getTipo() == 'ga')
+		if($this->getTipo(false) == self::TIPO_GDE)
 			return true;
 		// Status de Usuario
-		if($this->getTipo() == 'us')
+		if($this->getTipo(false) == 'us')
 			return true;
 		// Mensagens pra mim ou minhas
-		if(($this->getTipo() == 'um') && (($this->getOrigem()->getID() == $Usuario->getID()) || ($this->getDestino()->getID() == $Usuario->getID())))
+		if(($this->getTipo(false) == 'um') && (($this->getOrigem()->getID() == $Usuario->getID()) || ($this->getDestino()->getID() == $Usuario->getID())))
 			return true;
 		return false;
 	}
@@ -167,27 +169,25 @@ class Acontecimento extends Base {
 
 	/**
 	 * @param Usuario|null $Usuario
-	 * @return mixed
+	 * @return Acontecimento[]
 	 */
 	public function Listar_Respostas(Usuario $Usuario = null) { // Soh usada para Usuarios (Ajax)
-		//$Lista = array();
 		$todas = (
-			($Usuario === null) || (
-				(($this->getOrigem() !== null) && ($this->getOrigem()->getID() == $Usuario->getID())) ||
-				(($this->getDestino() !== null) && ($this->getDestino()->getID() == $Usuario->getID()))
-			)
+			($Usuario === null) ||
+			(($this->getOrigem() !== null) && ($this->getOrigem()->getID() == $Usuario->getID())) ||
+			(($this->getDestino() !== null) && ($this->getDestino()->getID() == $Usuario->getID()))
 		);
 		$dql = "SELECT A FROM GDE\\Acontecimento A WHERE A.original = ?1";
-		if($todas) {
+		if($todas === false) {
 			$dql .= " AND (A.origem = ?2 OR A.destino = ?3";
-			if($this->getTipo() != 'ga')
+			if($this->getTipo(false) != self::TIPO_GDE)
 				$dql .= " OR A.destino IS NULL";
 			$dql .= ")";
 		}
 		$dql .= " ORDER BY A.id_acontecimento ASC";
 		$query = self::_EM()->createQuery($dql);
 		$query->setParameter(1, $this->getID());
-		if($todas) {
+		if($todas === false) {
 			$query->setParameter(2, $Usuario->getID());
 			$query->setParameter(3, $Usuario->getID());
 		}
@@ -219,7 +219,7 @@ class Acontecimento extends Base {
 
 	/**
 	 * @param $texto
-	 * @return mixed
+	 * @return string
 	 */
 	public static function Processar($texto) {
 		$tira = array('/\b((http\:\/{2}|ftp:\/{2}|https:\/{2}|((http:\/\/)?[a-z][a-z0-9-_.]*@)|)(([0-9a-z_-]+\.)+(aero|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|bg|bh|bi|bj|bm|bn|bo|br|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|co|cr|cu|cv|cx|cy|cz|cz|de|dj|dk|dm|do|dz|ec|ee|eg|er|es|et|eu|fi|fj|fk|fm|fo|fr|ga|gb|gd|ge|gf|gg|gh|gi|gl|gm|gn|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|id|ie|il|im|in|io|iq|ir|is|it|je|jm|jo|jp|ke|kg|kh|ki|km|kn|kp|kr|kw|ky|kz|la|lb|lc|li|lk|lr|ls|lt|lu|lv|ly|ma|mc|md|me|mg|mh|mk|ml|mn|mn|mo|mp|mr|ms|mt|mu|mv|mw|mx|my|mz|na|nc|ne|nf|ng|ni|nl|no|np|nr|nu|nz|nom|pa|pe|pf|pg|ph|pk|pl|pm|pn|pr|ps|pt|pw|py|qa|re|ra|rs|ru|rw|sa|sb|sc|sd|se|sg|sh|si|sj|sj|sk|sl|sm|sn|so|sr|st|su|sv|sy|sz|tc|td|tf|tg|th|tj|tk|tl|tm|tn|to|tp|tr|tt|tv|tw|tz|ua|ug|uk|us|uy|uz|va|vc|ve|vg|vi|vn|vu|wf|ws|ye|yt|yu|za|zm|zw|arpa)(:[0-9]{1,5})?(\/(([~0-9a-zA-Z\#\+\%@\.\/_-]+))?(\?[0-9a-zA-Z\+\%@\.\/&\[\];=_-]+)?(#[~0-9a-zA-Z\+\%@\.\/_-]+)?)?))\b/i');
@@ -236,12 +236,12 @@ class Acontecimento extends Base {
 	 * @param bool|false $amizades
 	 * @param bool|false $amigos
 	 * @param bool|false $gde
-	 * @return ArrayCollection
+	 * @return Acontecimento[]
 	 */
 	public static function Listar(Usuario $Usuario = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $amizades = false, $amigos = false, $gde = false) {
 		$qrs = $qrsr = array();
 		if((!$mensagens) && (!$minhas) && (!$amigos) && (!$gde))
-			return new ArrayCollection();
+			return array();
 		// Mensagens para mim
 		if($mensagens)
 			$qrs[] = "(O.tipo = 'um')";
@@ -259,7 +259,7 @@ class Acontecimento extends Base {
 			$qrs[] = "(O.tipo = 'ua')";
 		// Atualizacoes do GDE
 		if($gde)
-			$qrs[] = "(O.tipo = 'ga')";
+			$qrs[] = "(O.tipo = '".self::TIPO_GDE."')";
 		$qrs = implode(" OR ", $qrs);
 		//if(!$todas_respostas)
 		// Pego todas as respostas que sejam para o usuario ou que nao tenham sido enviadas pelo proprio usuario (qd eh US e id_destino eh NULL, eh broadcast...)
