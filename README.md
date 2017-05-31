@@ -53,6 +53,7 @@ Ainda não funcionam:
  - API
  - Calendário
  - Chat
+ - Frase do Dia
  - Enquetes
  - Notas
  - Salvar Acontecimentos
