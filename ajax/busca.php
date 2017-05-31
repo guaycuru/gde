@@ -453,7 +453,7 @@ if($qts['alunos'] != 0) {
 		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getSigla(true)." ".$Oferecimento->getTurma(true); ?></a></td>
 		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getNome(true); ?></a></td>
 		<td><?= ($Oferecimento->getProfessor(false) !== null) ? '<a href="'.CONFIG_URL.'perfil/?professor='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor(true)->getNome(true).'</a>' : 'Desconhecido'; ?></td>
-		<td><?= $Oferecimento->getPeriodo(true)->getNome(true); ?></td>
+		<td><?= $Oferecimento->getPeriodo(true)->getNome(false); ?></td>
 		<td><?= $vagas; ?></td>
 		<td><?= $matriculados; ?></td>
 		<td><?= $situacao; ?></td>

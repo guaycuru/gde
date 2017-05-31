@@ -229,14 +229,14 @@ class Oferecimento extends Base {
 			} elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC")
 				$extra_join = " JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
 			elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
-				$ordem = ($ordem != "DI.`sigla` DESC")
+				$ordem = ($ordem != "DI.sigla DESC")
 					? "DI.`sigla` ASC, O.`turma` ASC"
 					: "DI.`sigla` DESC, O.`turma` DESC";
 			} else
 				$extra_join = "";
 			if($total !== null)
-				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`)".$extra_join." WHERE DI.`sigla` LIKE :q";
-			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O".$extra_join." WHERE DI.`sigla` LIKE :q ORDER BY ".$ordem;
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`)".$extra_join." WHERE DI.`sigla` LIKE :q";
+			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`)".$extra_join." WHERE DI.`sigla` LIKE :q ORDER BY ".$ordem;
 			if($limit > 0) {
 				if($start > 0)
 					$sql .= " LIMIT ".$start.",".$limit;
@@ -249,14 +249,15 @@ class Oferecimento extends Base {
 			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
 				$ordem = ($ordem != 'rank DESC')
-					? "`rank` ASC, O.id_periodo ASC, DI.`sigla` DESC, O.`turma` DESC"
-					: "`rank` DESC, O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC";
-				$extra_select1 = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`";
-				$extra_select2 = ", MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q) AS `rank`";
-				$extra_join1 = $extra_join2 = "";
+					? "`rank` ASC, O.id_periodo ASC, O.`sigla` DESC, O.`turma` DESC"
+					: "`rank` DESC, O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC";
+				$extra_select1 = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`, DI.`sigla` AS `sigla`";
+				$extra_select2 = ", MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q) AS `rank`, DI.`sigla` AS `sigla`";
+				$extra_join1 = "JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`) ";
+				$extra_join2 = "JOIN `gde_professores` AS P ON (O.`id_professor` = P.`id_professor`) ";
 			} elseif($ordem == "DI.nome ASC" || $ordem == "DI.nome DESC") {
 				$extra_select1 = $extra_select2 = ", DI.`nome` AS `disciplina`";
-				$extra_join1 = "JOIN `gde_disciplinas` AS DI ON (O.`sigla` = DI.`sigla`) ";
+				$extra_join1 = "JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`) ";
 				$extra_join2 = "";
 				$ordem = ($ordem != "DI.nome DESC") ? "O.`disciplina` ASC" : "O.`disciplina` DESC";
 			} elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC") {
@@ -266,15 +267,17 @@ class Oferecimento extends Base {
 				$ordem = ($ordem != "P.nome DESC")
 					? "O.`professor` ASC" : "O.`professor` DESC";
 			} elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
-				$ordem = ($ordem != "DI.`sigla` DESC")
-					? "DI.`sigla` ASC, O.`turma` ASC"
-					: "DI.`sigla` DESC, O.`turma` DESC";
-				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";
+				$extra_select1 = $extra_select2 = ", DI.`sigla` AS `sigla`";
+				$extra_join1 = "JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`) ";
+				$ordem = ($ordem != "DI.sigla DESC")
+					? "O.`sigla` ASC, O.`turma` ASC"
+					: "O.`sigla` DESC, O.`turma` DESC";
+				$extra_join2 = "";
 			} else
 				$extra_select1 = $extra_select2 = $extra_join1 = $extra_join2 = "";
 			if($total !== null)
-				$sqlt = "SELECT A.`total` + B.`total` AS `total` FROM (SELECT COUNT(*) AS total FROM `gde_oferecimentos` AS O INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE)) AS A, (SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (DI.`sigla` = O.`sigla`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE)) AS B";
-			$sql = "SELECT O.* FROM ((SELECT O.*".$extra_select1." FROM `gde_oferecimentos` AS O ".$extra_join1."INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC) UNION ALL (SELECT O.*".$extra_select2." FROM `gde_oferecimentos` AS O ".$extra_join2."INNER JOIN `gde_disciplinas` AS DI ON (DI.`sigla` = O.`sigla`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC)) AS O ORDER BY ".$ordem;
+				$sqlt = "SELECT A.`total` + B.`total` AS `total` FROM (SELECT COUNT(*) AS total FROM `gde_oferecimentos` AS O INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE)) AS A, (SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (DI.`id_disciplina` = O.`id_disciplina`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE)) AS B";
+			$sql = "SELECT O.* FROM ((SELECT O.*".$extra_select1." FROM `gde_oferecimentos` AS O ".$extra_join1."INNER JOIN `gde_professores` AS P ON (P.`id_professor` = O.`id_professor`) WHERE MATCH(P.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC) UNION ALL (SELECT O.*".$extra_select2." FROM `gde_oferecimentos` AS O ".$extra_join2."INNER JOIN `gde_disciplinas` AS DI ON (DI.`id_disciplina` = O.`id_disciplina`) WHERE MATCH(DI.`sigla`, DI.`nome`, DI.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY `rank` DESC, O.`id_periodo` DESC)) AS O ORDER BY ".$ordem;
 			if($limit > 0) {
 				if($start > 0)
 					$sql .= " LIMIT ".$start.",".$limit;

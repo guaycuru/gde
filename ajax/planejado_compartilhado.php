@@ -35,7 +35,7 @@ if(isset($_POST['p']))
 <table border="0" cellspacing="0" class="<?= (isset($_POST['p'])) ? "tabela_bonyta" : "tabela_bonyta_branca"; ?>">
 	<tr>
 		<td width="20%"><b>Per&iacute;odo:</b></td>
-		<td><?= $Planejado->getPeriodo(true)->getNome(true); ?></td>
+		<td><?= $Planejado->getPeriodo(true)->getNome(false); ?></td>
 	</tr>
 	<tr>
 		<td width="20%"><b>Cr&eacute;ditos:</b></td>
