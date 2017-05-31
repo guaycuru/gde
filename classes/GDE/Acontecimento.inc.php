@@ -137,9 +137,9 @@ class Acontecimento extends Base {
 		if($this->getOrigem() !== null)
 			return $this->getOrigem()->getFoto(true, $th);
 		elseif($this->tipo == self::TIPO_GDE)
-			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
+			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "web/images/gde.gif";
 		elseif($this->tipo == 'gc')
-			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "../web/images/gde.gif";
+			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "web/images/gde.gif";
 	}
 
 	public function Pode_Responder(Usuario $Usuario) {
@@ -201,9 +201,9 @@ class Acontecimento extends Base {
 	 */
 	public static function TrataURL($url) {
 		if(preg_match('/(?:http:\/\/)?(?:www.|)youtube.com\/watch?(?:.*?)v=([a-z0-9_\-]+)(?:.*?)(&hd=1|).*/i', $url))
-			return preg_replace('/(?:http:\/\/)?(?:www.|)youtube.com\/watch?(?:.*?)v=([a-z0-9_\-]+)(?:.*?)(&hd=1|).*/i', '<br /><a href="#" id="youtube_${1}" class="video_youtube"><img src="../web/images/play_video.png" style="background: url(http://i.ytimg.com/vi/${1}/default.jpg) transparent" alt="YouTube" border="0" height="90" width="120" /></a>', $url);
+			return preg_replace('/(?:http:\/\/)?(?:www.|)youtube.com\/watch?(?:.*?)v=([a-z0-9_\-]+)(?:.*?)(&hd=1|).*/i', '<br /><a href="#" id="youtube_${1}" class="video_youtube"><img src="'.CONFIG_URL.'web/images/play_video.png" style="background: url(http://i.ytimg.com/vi/${1}/default.jpg) transparent" alt="YouTube" border="0" height="90" width="120" /></a>', $url);
 		if(preg_match('/(?:http:\/\/)?(?:www.|)youtu.be\/([a-z0-9_\-]+)(?:.*?)(\?hd=1|).*/i', $url))
-			return preg_replace('/(?:http:\/\/)?(?:www.|)youtu.be\/([a-z0-9_\-]+)(?:.*?)(\?hd=1|).*/i', '<br /><a href="#" id="youtube_${1}" class="video_youtube"><img src="../web/images/play_video.png" style="background: url(http://i.ytimg.com/vi/${1}/default.jpg) transparent" alt="YouTube" border="0" height="90" width="120" /></a>', $url);
+			return preg_replace('/(?:http:\/\/)?(?:www.|)youtu.be\/([a-z0-9_\-]+)(?:.*?)(\?hd=1|).*/i', '<br /><a href="#" id="youtube_${1}" class="video_youtube"><img src="'.CONFIG_URL.'web/images/play_video.png" style="background: url(http://i.ytimg.com/vi/${1}/default.jpg) transparent" alt="YouTube" border="0" height="90" width="120" /></a>', $url);
 		if(preg_match('/(http\:\/\/i.ytimg.com\/vi\/.*\/default.jpg)/i', $url))
 			return $url;
 

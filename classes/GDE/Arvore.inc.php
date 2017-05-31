@@ -710,12 +710,12 @@ class Arvore {
 			$div = "<a id=\"inline\" href=\"#popup_arvore\"><img src=\"".$this->arquivo."\" border=\"0\" width=\"".$largura."\" height=\"".$altura."\" alt=\"Arvore\" /></a>
 <div style=\"display:none\">
 <div id=\"popup_arvore\">
-<div class=\"div_img_ov_arvore\" style=\"opacity: 0; position: absolute; display: none; z-index: 100;\"><img class=\"img_ov_arvore\" src=\"\" alt=\"\" /></div><div id=\"div_img_ov_mapa\" style=\"position: absolute; z-index: 110;\"><img id=\"img_ov_mapa\" usemap=\"#mapa\" src=\"../web/images/spacer.gif\" width=\"".$this->largura."\" height=\"".$this->altura."\" alt=\"\" /></div>
+<div class=\"div_img_ov_arvore\" style=\"opacity: 0; position: absolute; display: none; z-index: 100;\"><img class=\"img_ov_arvore\" src=\"\" alt=\"\" /></div><div id=\"div_img_ov_mapa\" style=\"position: absolute; z-index: 110;\"><img id=\"img_ov_mapa\" usemap=\"#mapa\" src=\"".CONFIG_URL."web/images/spacer.gif\" width=\"".$this->largura."\" height=\"".$this->altura."\" alt=\"\" /></div>
 <img src=\"".$this->arquivo."\" class=\"img_arvore\" usemap=\"#mapa\" border=\"0\" alt=\"Arvore\" />
 </div>
 </div>";
 		} else {
-			$div = "<div class=\"div_img_ov_arvore\" style=\"opacity: 0; position: absolute; display: none; z-index: 100;\"><img class=\"img_ov_arvore\" src=\"\" alt=\"\" /></div><div id=\"div_img_ov_mapa\" style=\"position: absolute; z-index: 110;\"><img id=\"img_ov_mapa\" usemap=\"#mapa\" src=\"../web/images/spacer.gif\" width=\"".$this->largura."\" height=\"".$this->altura."\" alt=\"\" /></div><img src=\"".$this->arquivo."\" id=\"img_arvore\" border=\"0\" alt=\"Arvore\" />";
+			$div = "<div class=\"div_img_ov_arvore\" style=\"opacity: 0; position: absolute; display: none; z-index: 100;\"><img class=\"img_ov_arvore\" src=\"\" alt=\"\" /></div><div id=\"div_img_ov_mapa\" style=\"position: absolute; z-index: 110;\"><img id=\"img_ov_mapa\" usemap=\"#mapa\" src=\"".CONFIG_URL."web/images/spacer.gif\" width=\"".$this->largura."\" height=\"".$this->altura."\" alt=\"\" /></div><img src=\"".$this->arquivo."\" id=\"img_arvore\" border=\"0\" alt=\"Arvore\" />";
 		}
 		$div .= "<map name=\"mapa\" id=\"mapa\">
 ".$this->Mapa($meu)."

@@ -607,7 +607,7 @@ class Usuario extends Base {
 		if(!$icone)
 			return $status;
 		else
-			return '<img src="../web/images/status_'.$status.'.png" class="status_icone status_icone_'.$this->getID().'" alt="'.$status.'" />';
+			return '<img src="'.CONFIG_URL.'web/images/status_'.$status.'.png" class="status_icone status_icone_'.$this->getID().'" alt="'.$status.'" />';
 	}
 
 	/**

@@ -119,14 +119,7 @@ jQuery.guaycuru = {
 	
 	aguarde: function() {
 	
-		return jQuery.popup.show("", '<h1 style="text-align: center;"><img src="../web/images/loading.gif" /> Aguarde...</h1>', {returnHide: true});
-	
-	},
-	
-	abreControlador: function(url) {
-	
-		//top.frames['controle'].location = '../controladores/' + url;
-		window.open('../controladores/' + url, 'controle');
+		return jQuery.popup.show("", '<h1 style="text-align: center;"><img src=' + CONFIG_URL + 'web/images/loading.gif" /> Aguarde...</h1>', {returnHide: true});
 	
 	},
 	
@@ -160,7 +153,7 @@ jQuery.guaycuru = {
 	
 	changeIt: function() {
 	
-		$("body").css({"background-image": "url(../web/images/bodybg.png)", "background-repeat": "repeat"});
+		$("body").css({"background-image": "url(" + CONFIG_URL + "web/images/bodybg.png)", "background-repeat": "repeat"});
 		$("#wrapper").css("background", "transparent");
 		
 	},

@@ -121,7 +121,7 @@ if($Usuario !== null) {
 	}
 
 	?>
-	<script type="text/javascript" src="../web/js/jquery.jhelpertip.js"></script>
+	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery.jhelpertip.js"></script>
 	<script type="text/javascript">
 		// <![CDATA[
 		$(document).ready(function(){
