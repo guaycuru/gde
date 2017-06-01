@@ -246,7 +246,7 @@ class Oferecimento extends Base {
 			$q = '%'.$q.'%';
 		} else {
 			//$q = preg_replace('/(\w+)/', '+$1*', $q);
-			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			$q = preg_replace('/(\p{L}{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $q);
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
 				$ordem = ($ordem != 'rank DESC')
 					? "`rank` ASC, O.id_periodo ASC, O.`sigla` DESC, O.`turma` DESC"
