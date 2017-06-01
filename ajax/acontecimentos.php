@@ -11,10 +11,10 @@ require_once('../common/common.inc.php');
 /*if(isset($_POST['ui']))
 	die(Acontecimento::Ultimo_ID($_GDE['DB']));*/
 
-$por_pagina = (isset($_POST['pp'])) ? intval($_POST['pp']) : 10;
-$start = (isset($_POST['st'])) ? intval($_POST['st']) : 0;
-$maior_que = (isset($_POST['nvs'])) ? intval($_POST['ultimo']) : false;
-if(isset($_POST['nvs']))
+$por_pagina = (isset($_GET['pp'])) ? intval($_GET['pp']) : 10;
+$start = (isset($_GET['st'])) ? intval($_GET['st']) : 0;
+$maior_que = (isset($_GET['nvs'])) ? intval($_GET['ultimo']) : false;
+if(isset($_GET['nvs']))
 	$por_pagina = '-1';
 
 if(empty($_GET['i'])) {
@@ -112,4 +112,3 @@ if(isset($_GET['mais']))
 	echo '</div>';
 
 echo $FIM;
-?>

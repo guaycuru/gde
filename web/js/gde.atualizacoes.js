@@ -137,7 +137,7 @@ $(document).ready(function() {
 	$("#tab_atualizacoes").on('click', 'a.atualizacao_todas_respostas', Todas_Respostas_Atualizacao);
 	$("#tab_atualizacoes").on('click', 'a.resposta_link_enviar', Responder_Atualizacao_Enviar);
 	$("#tab_atualizacoes").on('click', 'a.resposta_link_cancelar', Responder_Atualizacao_Cancelar);
-	$("#tab_atualizacoes").on('click', 'a.atualizacoes_mais_link', function() { Atualizar_Atualizacoes(atualizacao_id, true, false); return false; });
+	$("#tab_atualizacoes").on('click', '#atualizacoes_mais_link', function() { Atualizar_Atualizacoes(atualizacao_id, true, false); return false; });
 	$("#tab_atualizacoes").on('click', '#link_tem_atualizacoes', function() {
 		$("#div_tem_atualizacoes").remove();
 		// Atualizo o ID aqui pra ficar certo enquanto nao clicou no link de ver as novas...
