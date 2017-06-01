@@ -31,6 +31,8 @@ foreach($Planejado->getOferecimentos() as $Oferecimento) {
 if(isset($_POST['p']))
 	echo "<h2 align=\"center\">GDE - Planejamento de Hor&aacute;rio</h2>";
 
+$links = (!isset($_POST['p']));
+
 ?>
 <table border="0" cellspacing="0" class="<?= (isset($_POST['p'])) ? "tabela_bonyta" : "tabela_bonyta_branca"; ?>">
 	<tr>
@@ -64,7 +66,7 @@ if((isset($_POST['full'])) || (count($limpos) < 16)) {
 			continue;
 		echo "<tr><td align=\"center\"><b>".$j.":00</b></td>";
 		for($i = 2; $i < 8; $i++) {
-			echo "<td align=\"center\">".$_Usuario->Formata_Horario($Horario, $i, $j, false)."</td>";
+			echo "<td align=\"center\">".$_Usuario->Formata_Horario($Horario, $i, $j, false, null, $links)."</td>";
 		}
 		echo "</tr>";
 	}
