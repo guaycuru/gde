@@ -282,7 +282,7 @@ $(document).ready(function(){
 					<div id=\"usuarios_online\"><span>Usu&aacute;rios online</span>: <span id=\"contador_usuarios_online\">".Usuario::Conta_Online(false)."</span></div>
 					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.5
 					<br /><br /><strong>Aviso:</strong> O GDE n&atilde;o &eacute; um sistema oficial da Unicamp, e tem por &uacute;nico objetivo auxiliar alunos na vida acad&ecirc;mica.
-					<br /><br /><i>"./* ToDo Quote() */''."</i>
+					<br /><br /><i>".Quote::Qualquer_Uma(true)."</i>
 					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
 					<div style=\"width: 210px; height: 42px; margin: auto;\">
 						<a href=\"http://www.guaycuru.net\" title=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" target=\"_blank\" style=\"float: left; margin-top: 10px;\"><img src=\"".CONFIG_URL."web/images/logo_guaycuru.gif\" border=\"0\" alt=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" width=\"100\" height=\"21\" /></a>
