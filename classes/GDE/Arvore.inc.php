@@ -129,7 +129,7 @@ class Arvore {
 			$Old_Eliminadas = $this->Eliminadas;
 			foreach($this->Atuais as $Mtr) {
 				if($this->Usuario->Eliminada($Mtr->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
-					$El = new Usuario_Eliminada();
+					$El = new UsuarioEliminada();
 					$El->setUsuario($Usuario);
 					$El->setDisciplina($Mtr->getDisciplina());
 					$El->setPeriodo($this->Periodo);
@@ -161,7 +161,7 @@ class Arvore {
 			} else { // Disciplina Obrigatoria
 				$this->Disciplinas[$For_Curriculo->getSemestre()][] = $For_Curriculo->getDisciplina();
 				$this->siglas_obrigatorias[] = $For_Curriculo->getSigla();
-				$this->creditos_totais += $For_Curriculo->getDisciplina()->getCreditos();
+				$this->creditos_totais += intval($For_Curriculo->getDisciplina()->getCreditos());
 			}
 		}
 		$this->numero_semestres = $maior_semestre;
@@ -416,7 +416,6 @@ class Arvore {
 			$altura_l2 = $pr_y - $altura_l1;
 			self::imagelinethick($image, $at_x, $at_y, $at_x, $altura_l2, $cor, 2); // Desce
 
-			$at_x = $at_x;
 			$at_y = $altura_l2;
 		}
 		self::imagelinethick($image, $at_x, $at_y, $largura_s1, $at_y, $cor, 2); // Vai ate a seta
@@ -792,10 +791,10 @@ class Arvore {
 		$eliminadas = array();
 		//$ret = "  HISTORICO ATUAL:\r\n";
 		$ret = "  <strong>Disciplinas j&aacute; cursadas:</strong>\r\n";
-		foreach($this->Eliminadas as $sigla => $Eliminada) {
+		foreach($this->Eliminadas as $Eliminada) {
+			$sigla = $Eliminada->getDisciplina(true)->getSigla(true);
 			if(($sigla == 'AA200') || ($Eliminada->getParcial() === true)) // Pula as eliminadas parcialmente
 				continue;
-			$sigla = $Eliminada->getDisciplina(true)->getSigla(true);
 			$eliminadas[] = $sigla;
 			if(substr($sigla, 0, 2) == 'AA')
 				continue;

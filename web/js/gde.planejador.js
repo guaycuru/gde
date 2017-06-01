@@ -59,7 +59,7 @@ var InicializarPlanejador = function(id) {
 		PlanejadorProcessarExtras(data.Extras);
 		esconder_aguarde();
 	});
-}
+};
 var PlanejadorProcessarPlanejado = function(Planejado) {
 	periodo = Planejado.periodo;
 	periodo_nome = Planejado.periodo_nome;
@@ -82,7 +82,7 @@ var PlanejadorProcessarPlanejado = function(Planejado) {
 			}
 		});
 	});
-}
+};
 var PlanejadorAdicionarDisciplina = function(Disciplina) {
 	if($("#psd_d"+Disciplina.semestre).length == 0) { // Ainda nao tem este semestre
 		$("#planejador_disciplinas").append('	<div class="planejador_semestre">'+
@@ -109,10 +109,10 @@ var PlanejadorAdicionarDisciplina = function(Disciplina) {
 			query: "#menu_"+Disciplina.siglan
 		});
 	}
-}
+};
 var PlanejadorPodeQuinzenais = function(OA, OB) {
 	return ((OA.Disciplina.quinzenal === true) && (OB.Disciplina.quinzenal === true));
-}
+};
 var PlanejadorLiBinds = {
 	mouseenter: function() {
 		if($(this).data('emcima')) // Previne que aconteca multiplas vezes
@@ -153,7 +153,7 @@ var PlanejadorLiBinds = {
 			PlanejadorAdicionarOferecimento(Oferecimento, false, true);
 		$(document).click(); // Fecho o menu
 	}
-}
+};
 var PlanejadorProcessarConflitos = function(O, P) {
 	// Este ja foi adicionado ou marcado ou eh da mesma disciplina ou eh quinzenal
 	if((P.adicionado) || (!P.possivel) || (P.siglan == O.siglan) || (PlanejadorPodeQuinzenais(O, P)))
@@ -161,7 +161,7 @@ var PlanejadorProcessarConflitos = function(O, P) {
 	P.possivel = false;
 	P.eventSources.textColor = '#FFFFFF'; // E mudo a cor para preto
 	P.eventSources.backgroundColor = '#000000'; // E mudo a cor do texto para branco
-}
+};
 var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflitos) {
 	var a = 0;
 	var Adicionar = [];
@@ -224,7 +224,7 @@ var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflit
 	$.each(Adicionar, function(i, O) {
 		PlanejadorAdicionarOferecimento(O, true, false);
 	});
-}
+};
 var PlanejadorAdicionarOferecimento = function(Oferecimento, sources, salvar) {
 	if(salvar) {
 		var tmp = $("#planejador_matriculas").CarregandoL();
@@ -264,7 +264,7 @@ var PlanejadorAdicionarOferecimento = function(Oferecimento, sources, salvar) {
 		} else
 			$("#li_oferecimento_"+Oferecimento.id).triggerHandler(e);
 	});
-}
+};
 var PlanejadorRemoverOferecimento = function(Oferecimento, sources, salvar, automatico) {
 	if(salvar) {
 		var tmp = $("#planejador_matriculas").CarregandoL();
@@ -303,7 +303,7 @@ var PlanejadorRemoverOferecimento = function(Oferecimento, sources, salvar, auto
 	Oferecimento.possivel = true;
 	Oferecimento.eventSources.textColor = '#000000';
 	Oferecimento.eventSources.backgroundColor = Oferecimento.Disciplina.cor;
-}
+};
 var PlanejadorProcessarArvore = function(Arvore) {
 	$("#planejador_cp").html(Arvore.cp);
 	$("#planejador_cpf").html(Arvore.cpf);
@@ -313,7 +313,7 @@ var PlanejadorProcessarArvore = function(Arvore) {
 	});
 	if((Arvore.cp == '1,0000') && ($("#span_cp1").length == 0))
 		$("#planejador_disciplinas").prepend('<span id="span_cp1"><strong>N&atilde;o falta nenhuma Disciplina para voc&ecirc; cursar...</strong><br />Infelizmente o GDE (ainda) n&atilde;o tem suporte<br />a planejamento do <i>futuro fora da Unicamp</i>...<br />Boa sorte! :)<br /><br /><span>');
-}
+};
 var PlanejadorProcessarExtras = function(Lista) {
 	$.each(Lista, function(i, E) {
 		var x = -1;
@@ -327,14 +327,14 @@ var PlanejadorProcessarExtras = function(Lista) {
 			x = PlanejadorCriarNovoExtra(E.title);
 		PlanejadorAdicionarExtra(E, x);
 	});
-}
+};
 var PlanejadorAdicionarExtraPopUp = function(dia, hr1, hr2) {
 	$("#extra_dia_da_semana").val(dia);
 	$("#extra_horario1").val(hr1+':00');
 	$("#extra_horario2").val(hr2+':00');
 	$("#link_novo_extra").click();
 	return false;
-}
+};
 var PlanejadorAdicionarExtraPopUpFechar = function(botao) {
 	if(botao == 'salvar') {
 		if(($("#extra_lista_nomes").val() == '-1') && ($("#extra_novo_nome").val().length < 2)) {
@@ -362,7 +362,7 @@ var PlanejadorAdicionarExtraPopUpFechar = function(botao) {
 	$("#extra_horario1").val('');
 	$("#extra_horario2").val('');
 	$.fancybox.close();
-}
+};
 var PlanejadorCriarNovoExtra = function(nome) {
 	var e = Extras.length;
 	if(ce >= nce)
@@ -376,13 +376,13 @@ var PlanejadorCriarNovoExtra = function(nome) {
 	$("#extra_lista_nomes").val(e);
 	$("#extra_novo_nome").hide();
 	return e;
-}
+};
 var PlanejadorAdicionarExtra = function(event, e) {
 	calendario.fullCalendar('renderEvent', event);
-}
+};
 var PlanejadorRemoverExtra = function(event) {
 	calendario.fullCalendar('removeEvents', event.id);
-}
+};
 var PlanejadorAdicionarEletiva = function(sigla, after) {
 	if(sigla == undefined)
 		return;
@@ -443,7 +443,7 @@ var PlanejadorBindMostrarInfo = function(elemento, Oferecimento) {
 			DivTip.data('id_timeout', id_timeout);
 		}
 	});
-}
+};
 $(document).ready(function() {
 	calendario = $('#planejador_calendario').fullCalendar({
 		header: {
@@ -598,7 +598,7 @@ $(document).ready(function() {
 		});
 		$.post(CONFIG_URL + 'ajax/planejador.php', {a: 'f', id: id_planejado, 'conf[]': config, 'parciais[]': parciais}, function(data) {
 			window.location.reload();
-		})
+		});
 		return false;
 	});
 	$("#compartilhado_t, #compartilhado_f").click(function() {

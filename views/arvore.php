@@ -63,9 +63,11 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$completa = ((isset($_GET['cp'])) && ($_GET['cp'] == 1));
 	$meu = true;
 } else {
-	$Usr = Usuario::Load($_GET['us']);
+	$Usr = Usuario::Por_Login($_GET['us']);
+	if($Usr->getID() == null)
+		die("<h2>Usu&aacute;rio n&atilde;o encontrado.</h2>");
 	if($_Usuario->Posso_Ver($Usr, $Usr->getCompartilha_Arvore()) === false)
-		die("<h2>Parab&eacute;ns, voc&ecirc; descobriu o segredo para ver a &Aacute;rvore de quem n&atilde;o quer compartilh&aacute;-la...</h2><h1>NOT!!!!!</h1>");
+		die("<h2>Vo&ccedil;&ecirc; n&atilde;o tem permiss&atilde;o para ver esta &aacute;rvore!</h2>");
 	$curso = $Usr->getCurso(true)->getNumero(true);
 	$modalidade = $Usr->getModalidade(true)->getSigla(true);
 	$catalogo = $Usr->getCatalogo(true);
@@ -91,7 +93,7 @@ if($continua) {
 		$construct = microtime(true) - $start;
 		echo "Construct: ".$construct."<br />";
 	}
-	$_SESSION['Arvore_Curriculo']['Imagem_Tmp'] = '../cache/arvores/arvore_'.Util::Code(8).'.png';
+	$_SESSION['Arvore_Curriculo']['Imagem_Tmp'] = '../cache/arvores/arvore_'.Util::Code(16).'.png';
 	$Arvore->Desenha($_SESSION['Arvore_Curriculo']['Imagem_Tmp']);
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 		echo "Desenha: ".(microtime(true) - $start - $construct)."<br />";

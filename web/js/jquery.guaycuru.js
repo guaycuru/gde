@@ -119,7 +119,7 @@ jQuery.guaycuru = {
 	
 	aguarde: function() {
 	
-		return jQuery.popup.show("", '<h1 style="text-align: center;"><img src=' + CONFIG_URL + 'web/images/loading.gif" /> Aguarde...</h1>', {returnHide: true});
+		return jQuery.popup.show("", '<h1 style="text-align: center;"><img src="' + CONFIG_URL + 'web/images/loading.gif" /> Aguarde...</h1>', {returnHide: true});
 	
 	},
 	

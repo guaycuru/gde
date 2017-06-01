@@ -65,7 +65,7 @@ Selecione a op&ccedil;&atilde;o apropriada para cada uma delas, para que sua &aa
 			if(count($Oferecimentos) == 0)
 				continue;
 			?>
-			<h3 style="padding: 5px"><?= $Periodo->getNome(true) ?></h3>
+			<h3 style="padding: 5px"><?= $Periodo->getNome(false) ?></h3>
 			<div><table  class="tabela_bonyta_branca tabela_busca" width="100%" >
 					<?php
 					foreach($Oferecimentos as $Oferecimento) {

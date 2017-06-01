@@ -67,7 +67,7 @@ foreach($Acontecimentos as $Acontece) {
 	</div>
 	<div class="atualizacao_texto_data">
 		<div class="atualizacao_texto">
-			<?php if(($home) && ($Acontece->getOrigem() !== null)/* Nao preciso pq na home nao aparece quem nao eh meu amigo && ($Usr->Amigo($Acontece->getUsuario_Origem()))*/) echo $Acontece->getOrigem()->getChat_Status(true); ?><a href="<?= $Acontece->getLink(); ?>" title="<?= $Acontece->getNome(true); ?>"><span class="atualizacao_nome"><?= $Acontece->getNome(); ?></span></a><?= $Acontece->getTexto(true, true, $meu, $_Usuario); ?>
+			<?php if(($home) && ($Acontece->getOrigem() !== null)/* Nao preciso pq na home nao aparece quem nao eh meu amigo && ($Usr->Amigo($Acontece->getUsuario_Origem()))*/) echo $Acontece->getOrigem()->getChat_Status(true); ?><a href="<?= $Acontece->getLink(); ?>" title="<?= $Acontece->getNome(true); ?>"><span class="atualizacao_nome"><?= $Acontece->getNome(); ?></span></a><?= $Acontece->getTexto(true, true, $meu, $Usr); ?>
 		</div>
 		<div class="atualizacao_data_link">
 			<span class="atualizacao_data"><?= $Acontece->getData('d/m/Y H:i:s'); ?></span><br />

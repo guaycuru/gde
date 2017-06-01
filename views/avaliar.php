@@ -52,7 +52,7 @@ else {
 				if(count($Oferecimentos) == 0)
 					continue;
 				?>
-				<h3 style="padding: 5px"><?= $Periodo->getNome(true); ?></h3>
+				<h3 style="padding: 5px"><?= $Periodo->getNome(false); ?></h3>
 				<div><table class="ui-corner-bottom" style="width: 100%; border: 1px solid #A6C9E2" >
 						<?php
 						foreach($Oferecimentos as $Oferecimento) {

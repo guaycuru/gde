@@ -68,7 +68,7 @@ $.blockUI.version = 2.28; // 2nd generation blocking at no extra cost!
 // override these in your code to change the default behavior and style
 $.blockUI.defaults = {
 	// message displayed when blocking (use null for no message)
-	message:  '<h1 style="text-align: center;"><img src="../web/images/loading.gif" /> Aguarde...</h1>',
+	message:  '<h1 style="text-align: center;"><img src="' + CONFIG_URL + 'web/images/loading.gif" /> Aguarde...</h1>',
 
 	title: null,	  // title string; only used when theme == true
 	draggable: true,  // only used when theme == true (requires jquery-ui.js to be loaded)

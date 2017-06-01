@@ -78,26 +78,26 @@ class Acontecimento extends Base {
 	const TIPO_RA = 'ra';
 	const TIPO_RM = 'rm';
 	const TIPO_RS = 'rs';
-	const TIPO_UA = 'ua';
-	const TIPO_UM = 'um';
-	const TIPO_US = 'us';
+	const TIPO_USUARIO_AMIZADE = 'ua';
+	const TIPO_USUARIO_MENSAGEM = 'um';
+	const TIPO_USUARIO_STATUS = 'us';
 
 	public function getTexto($html = false, $processa = false, $meu = false, Usuario $Usuario = null) {
 		global $_Usuario;
 		if(!$html)
 			return $this->texto;
 		// Amizade
-		if($this->getTipo(false) == 'ua')
+		if($this->getTipo(false) == self::TIPO_USUARIO_AMIZADE)
 			return (!$meu)
 					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true)."."
 					: " agora &eacute; ".(($this->getOrigem()->getSexo() == 'f')?'sua amiga':'seu amigo').".";
 		// Mensagem, Status de Usuario
-		elseif(($this->getTipo(false) == 'um') || ($this->getTipo(false) == 'us') || ($this->getTipo(false) == 'rs')) {
-			if($this->getTipo(false) == 'us')
+		elseif(($this->getTipo(false) == self::TIPO_USUARIO_MENSAGEM) || ($this->getTipo(false) == self::TIPO_USUARIO_STATUS) || ($this->getTipo(false) == 'rs')) {
+			if($this->getTipo(false) == self::TIPO_USUARIO_STATUS)
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (status)</span>";
 			elseif($this->getTipo(false) == 'rs')
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (an&uacute;ncio)</span>";
-			elseif(($this->getOriginal() !== null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
+			elseif(($this->getOriginal() === null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
 				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true);
 			else
 				$texto_pre = "";
@@ -149,10 +149,10 @@ class Acontecimento extends Base {
 		if($this->getTipo(false) == self::TIPO_GDE)
 			return true;
 		// Status de Usuario
-		if($this->getTipo(false) == 'us')
+		if($this->getTipo(false) == self::TIPO_USUARIO_STATUS)
 			return true;
 		// Mensagens pra mim ou minhas
-		if(($this->getTipo(false) == 'um') && (($this->getOrigem()->getID() == $Usuario->getID()) || ($this->getDestino()->getID() == $Usuario->getID())))
+		if(($this->getTipo(false) == self::TIPO_USUARIO_MENSAGEM) && (($this->getOrigem()->getID() == $Usuario->getID()) || ($this->getDestino()->getID() == $Usuario->getID())))
 			return true;
 		return false;
 	}
@@ -244,26 +244,26 @@ class Acontecimento extends Base {
 			return array();
 		// Mensagens para mim
 		if($mensagens)
-			$qrs[] = "(O.tipo = 'um')";
+			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_MENSAGEM."')";
 		// Minhas Atualizacoes
 		if($minhas)
-			$qrs[] = "(O.tipo = 'us' AND O.id_origem = :id_usuario)";
+			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_STATUS."' AND O.id_origem = :id_usuario)";
 		// Atualizacoes dos meus amigos
 		if($amigos) {
 			/*ESTE EH (BEM) MAIS LENTO $jns[] = "LEFT JOIN ".Usuario::$tabela_r_amigos." AS UA ON (UA.amigo = A.id_origem)";
-			$qrs[] = "(A.tipo = 'us' AND UA.".Usuario::$chave." = '".$Usuario->getID()."' AND UA.ativo = 't')";*/
+			$qrs[] = "(A.tipo = '".self::TIPO_USUARIO_STATUS."' AND UA.".Usuario::$chave." = '".$Usuario->getID()."' AND UA.ativo = 't')";*/
 			$UsuarioAmigoMetaData = self::_EM()->getClassMetadata('GDE\\UsuarioAmigo');
-			$qrs[] = "(O.tipo = 'us' AND O.id_origem IN (SELECT id_amigo FROM " . $UsuarioAmigoMetaData->getTableName() . " WHERE id_usuario = :id_usuario AND ativo = TRUE))";
+			$qrs[] = "(O.tipo = ".self::TIPO_USUARIO_STATUS."' AND O.id_origem IN (SELECT id_amigo FROM " . $UsuarioAmigoMetaData->getTableName() . " WHERE id_usuario = :id_usuario AND ativo = TRUE))";
 		}
 		if($amizades)
-			$qrs[] = "(O.tipo = 'ua')";
+			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_AMIZADE."')";
 		// Atualizacoes do GDE
 		if($gde)
 			$qrs[] = "(O.tipo = '".self::TIPO_GDE."')";
 		$qrs = implode(" OR ", $qrs);
 		//if(!$todas_respostas)
 		// Pego todas as respostas que sejam para o usuario ou que nao tenham sido enviadas pelo proprio usuario (qd eh US e id_destino eh NULL, eh broadcast...)
-		$qrsr[] = "(R.id_destino = :id_usuario OR (O.tipo = 'us' AND R.id_origem != :id_usuario AND R.id_destino IS NULL))";
+		$qrsr[] = "(R.id_destino = :id_usuario OR (O.tipo = '".self::TIPO_USUARIO_STATUS."' AND R.id_origem != :id_usuario AND R.id_destino IS NULL))";
 		$AcontecimentoMetaData = self::_EM()->getClassMetadata('GDE\Acontecimento');
 		if($maior_que)
 			$qrsr[] = "(R.id_acontecimento > :maior_que)";

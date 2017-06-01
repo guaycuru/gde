@@ -2,11 +2,9 @@
 
 namespace GDE;
 
-define('NO_HTML', true);
+define('JSON', true);
 
 require_once('../common/common.inc.php');
-
-header('Content-type: application/json');
 
 function Sort_Nomes($A, $B) {
 	return strcasecmp($A->getApelido(), $B->getApelido());
