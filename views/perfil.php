@@ -773,7 +773,7 @@ if($Usr !== null) {
 					foreach($Amigos as $Amigo) { ?>
 						<div class="amigo" id="amigo_<?= $Amigo->getAmigo()->getID() ?>">
 							<div class="amigo_foto">
-								<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true) ?>">
+								<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>">
 									<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
 								</a>
 							</div>
@@ -792,13 +792,13 @@ if($Usr !== null) {
 					<?php foreach($Em_Comum as $Amigo) { ?>
 						<div class="amigo" id="amigocomum_<?= $Amigo->getAmigo()->getID(); ?>">
 							<div class="amigo_foto">
-								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome(true).' '.$Amigo->getAmigo()->getSobrenome(true) ?>">
+								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(true) ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>">
 									<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
 								</a>
 							</div>
 							<div class="amigo_nome">
 								<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
-								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(); ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true); ?>"><?= substr($Amigo->getApelido(true), 0, 10); ?></a>
+								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(true); ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true); ?>"><?= substr($Amigo->getApelido(true), 0, 10); ?></a>
 							</div>
 						</div>
 					<?php } ?>

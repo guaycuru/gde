@@ -160,6 +160,7 @@ class CurriculoEletiva extends Base {
 		if($this->_copia === true)
 			return $this;
 		$Copia = clone $this;
+		Base::_EM()->detach($Copia);
 		$Copia->_copia = true;
 		return $Copia;
 	}

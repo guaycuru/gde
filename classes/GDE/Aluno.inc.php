@@ -110,6 +110,9 @@ class Aluno extends Base {
 	 */
 	protected $modalidade_pos;
 
+	// Determina se esta eh uma copia da entidade original, que pode ser modificada
+	private $_copia;
+
 	const NIVEL_EGRESSADO = 'E';
 	const NIVEL_GRAD = 'G';
 	const NIVEL_POS = 'P';
@@ -425,7 +428,17 @@ class Aluno extends Base {
 
 		if(($periodo == null) && (count($niveis) == 0))
 			$Oferecimentos = parent::getOferecimentos();
-		else {
+		elseif($this->_copia === true) {
+			// Nao posso usar o Query Builder em uma copia do Aluno, pois ela esta detached e nao foi persisted
+			$Oferecimentos = parent::getOferecimentos();
+			foreach($Oferecimentos as $o => $Oferecimento) {
+				if(($periodo != null) && ($Oferecimento->getPeriodo()->getID() != $periodo))
+					unset($Oferecimentos[$o]);
+				if((count($niveis) > 0) && (in_array($Oferecimento->getDisciplina()->getNivel(false), $niveis) === false))
+					unset($Oferecimentos[$o]);
+			}
+			return $Oferecimentos;
+		} else {
 			$qb = self::_EM()->createQueryBuilder()
 				->select('o')
 				->from('GDE\\Oferecimento', 'o')
@@ -506,6 +519,22 @@ class Aluno extends Base {
 					$Trancado->getSigla(true).$Trancado->getTurma(true)."</a> (".$Trancado->getDisciplina()->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
+	}
+
+	/**
+	 * Copia
+	 *
+	 * Se esta ja eh uma copia, retorna-a, caso contraria, cria uma copia e retorna-a
+	 *
+	 * @return $this|Usuario
+	 */
+	public function Copia() {
+		if($this->_copia === true)
+			return $this;
+		$Copia = clone $this;
+		$Copia->_copia = true;
+		Base::_EM()->detach($Copia);
+		return $Copia;
 	}
 
 	/**

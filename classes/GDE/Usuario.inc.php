@@ -525,6 +525,9 @@ class Usuario extends Base {
 			return $this;
 		$Copia = clone $this;
 		$Copia->_copia = true;
+		$AlunoCopia = $this->getAluno(true)->Copia();
+		$Copia->setAluno($AlunoCopia);
+		Base::_EM()->detach($Copia);
 		return $Copia;
 	}
 

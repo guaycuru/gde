@@ -312,6 +312,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
 			
+
 			$Usr->Adicionar_Oferecimentos($Adicionados);
 			
 			// Re-faz a arvore porque mudei as atuais
