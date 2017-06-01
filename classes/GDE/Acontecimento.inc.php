@@ -244,37 +244,37 @@ class Acontecimento extends Base {
 			return array();
 		// Mensagens para mim
 		if($mensagens)
-			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_MENSAGEM."')";
+			$qrs[] = "(O.`tipo` = '".self::TIPO_USUARIO_MENSAGEM."')";
 		// Minhas Atualizacoes
 		if($minhas)
-			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_STATUS."' AND O.id_origem = :id_usuario)";
+			$qrs[] = "(O.`tipo` = '".self::TIPO_USUARIO_STATUS."' AND O.`id_origem` = :id_usuario)";
 		// Atualizacoes dos meus amigos
 		if($amigos) {
 			/*ESTE EH (BEM) MAIS LENTO $jns[] = "LEFT JOIN ".Usuario::$tabela_r_amigos." AS UA ON (UA.amigo = A.id_origem)";
 			$qrs[] = "(A.tipo = '".self::TIPO_USUARIO_STATUS."' AND UA.".Usuario::$chave." = '".$Usuario->getID()."' AND UA.ativo = 't')";*/
 			$UsuarioAmigoMetaData = self::_EM()->getClassMetadata('GDE\\UsuarioAmigo');
-			$qrs[] = "(O.tipo = ".self::TIPO_USUARIO_STATUS."' AND O.id_origem IN (SELECT id_amigo FROM " . $UsuarioAmigoMetaData->getTableName() . " WHERE id_usuario = :id_usuario AND ativo = TRUE))";
+			$qrs[] = "(O.`tipo` = '".self::TIPO_USUARIO_STATUS."' AND O.`id_origem` IN (SELECT `id_amigo` FROM " . $UsuarioAmigoMetaData->getTableName() . " WHERE `id_usuario` = :id_usuario AND `ativo` = TRUE))";
 		}
 		if($amizades)
-			$qrs[] = "(O.tipo = '".self::TIPO_USUARIO_AMIZADE."')";
+			$qrs[] = "(O.`tipo` = '".self::TIPO_USUARIO_AMIZADE."')";
 		// Atualizacoes do GDE
 		if($gde)
-			$qrs[] = "(O.tipo = '".self::TIPO_GDE."')";
+			$qrs[] = "(O.`tipo` = '".self::TIPO_GDE."')";
 		$qrs = implode(" OR ", $qrs);
 		//if(!$todas_respostas)
 		// Pego todas as respostas que sejam para o usuario ou que nao tenham sido enviadas pelo proprio usuario (qd eh US e id_destino eh NULL, eh broadcast...)
-		$qrsr[] = "(R.id_destino = :id_usuario OR (O.tipo = '".self::TIPO_USUARIO_STATUS."' AND R.id_origem != :id_usuario AND R.id_destino IS NULL))";
+		$qrsr[] = "(R.id_destino = :id_usuario OR (O.tipo = '".self::TIPO_USUARIO_STATUS."' AND R.`id_origem` != :id_usuario AND R.`id_destino` IS NULL))";
 		$AcontecimentoMetaData = self::_EM()->getClassMetadata('GDE\Acontecimento');
 		if($maior_que)
-			$qrsr[] = "(R.id_acontecimento > :maior_que)";
+			$qrsr[] = "(R.`id_acontecimento` > :maior_que)";
 		$qrsr = (count($qrsr) > 0) ? " WHERE ".implode(" AND ", $qrsr) : "";
-		$qrd = "O.id_destino = :id_usuario OR O.id_destino IS NULL";
-		$maior = ($maior_que) ? " AND O.id_acontecimento > '".intval($maior_que)."'" : "";
-		$originais = "(SELECT O.*, O.id_acontecimento AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY ordem DESC)";
-		$respostas = "(SELECT O.*, MAX(R.id_acontecimento) AS ordem FROM " . $AcontecimentoMetaData->getTableName() . " AS R INNER JOIN "  . $AcontecimentoMetaData->getTableName() . " AS O ON (O.id_acontecimento = R.id_original AND (".$qrs.")) ".$qrsr." GROUP BY R.id_original ORDER BY ordem DESC)";
+		$qrd = "O.`id_destino` = :id_usuario OR O.`id_destino` IS NULL";
+		$maior = ($maior_que) ? " AND O.`id_acontecimento` > '".intval($maior_que)."'" : "";
+		$originais = "(SELECT O.*, O.`id_acontecimento` AS `ordem` FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.`id_original` IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY `ordem` DESC)";
+		$respostas = "(SELECT O.*, MAX(R.`id_acontecimento`) AS `ordem` FROM " . $AcontecimentoMetaData->getTableName() . " AS R INNER JOIN "  . $AcontecimentoMetaData->getTableName() . " AS O ON (O.`id_acontecimento` = R.`id_original` AND (".$qrs.")) ".$qrsr." GROUP BY R.`id_original` ORDER BY `ordem` DESC)";
 		// ToDo: Arrumar pra funcionar com MySQL Mode ONLY_FULL_GROUP_BY, precisa fazer UNION?
 		// 1055 Expression #2 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'A.id_original' which is not functionally dependent on columns in GROUP BY clause;
-		$sql = "SELECT *, MAX(ordem) AS ordem FROM (".$originais." UNION ".$respostas.") AS A GROUP BY A.id_acontecimento ORDER BY ordem DESC LIMIT :limit OFFSET :offset";
+		$sql = "SELECT *, MAX(`ordem`) AS `ordem` FROM (".$originais." UNION ".$respostas.") AS A GROUP BY A.`id_acontecimento` ORDER BY ordem DESC LIMIT :limit OFFSET :offset";
 		//$sql = "SELECT O.* FROM " . $AcontecimentoMetaData->getTableName() . " AS O WHERE O.id_original IS NULL ".$maior." AND (".$qrd.") AND (".$qrs.") ORDER BY id_acontecimento DESC LIMIT ? OFFSET ?";
 
 		$rsm = new \Doctrine\ORM\Query\ResultSetMappingBuilder(self::_EM());
