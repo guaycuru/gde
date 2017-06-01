@@ -907,9 +907,11 @@ class Usuario extends Base {
 		if($this->Amigo($Usuario) !== false)
 			return $Usuario;
 		else {
-			if(count($this->Amigos_Em_Comum($Usuario)) == 0)
+			$em_comum = 0;
+			$this->Amigos_Em_Comum($Usuario, false, $em_comum);
+			if($em_comum == 0)
 				return false;
-			return $this->Amigos_Em_Comum($Usuario)->first();
+			return $this->Amigos_Em_Comum($Usuario, false)->first()->getAmigo();
 		}
 	}
 
@@ -940,18 +942,21 @@ class Usuario extends Base {
 	 *
 	 * @param Usuario $Usuario
 	 * @param int $total
-	 * @return ArrayCollection
+	 * @return ArrayCollection|UsuarioAmigo[]
 	 */
-	public function Amigos_Em_Comum(Usuario $Usuario, &$total = 0) {
+	public function Amigos_Em_Comum(Usuario $Usuario, $ordem_nome = false, &$total = 0) {
 		$Lista = array();
 		$ids_amigos = array();
-		foreach($Usuario->Amigos() as $Amigo)
+		foreach($Usuario->Amigos(false) as $Amigo)
 			$ids_amigos[$Amigo->getAmigo()->getID()] = true;
-		foreach($this->Amigos() as $Amigo) // Pego do meu, pq tem os MEUS apelidos!
+		foreach($this->Amigos(false) as $Amigo) // Pego do meu, pq tem os MEUS apelidos!
 			if(isset($ids_amigos[$Amigo->getAmigo()->getID()]))
 				$Lista[] = $Amigo;
 		$total = count($Lista);
-		return new ArrayCollection($Lista);
+		$Amigos = new ArrayCollection($Lista);
+		if($ordem_nome === true)
+			return UsuarioAmigo::Ordenar_Por_Nome($Amigos);
+		return $Amigos;
 	}
 
 	/**
@@ -1241,7 +1246,14 @@ class Usuario extends Base {
 		$Atuais = $this->getAluno(true)->getOferecimentos($Periodo->getID());
 		foreach($Atuais as $Atual) {
 			foreach($Atual->getDimensoes() as $Dimens) {
-				if(($dim && $Dimens->getID() == $Dimensao_dimensoes->getID()) || (!$dim && (($Dimens->getSala()->getNome(false) == $Dimensao_dimensoes[0]) && ($Dimens->getDia() == $Dimensao_dimensoes[1]) && ($Dimens->getHorario() == $Dimensao_dimensoes[2])))) {
+				if(
+					($dim && $Dimens->getID() == $Dimensao_dimensoes->getID()) ||
+					(!$dim && (
+						($Dimens->getSala(true)->getNome(false) == $Dimensao_dimensoes[0]) &&
+						($Dimens->getDia() == $Dimensao_dimensoes[1]) &&
+						($Dimens->getHorario() == $Dimensao_dimensoes[2])
+					))
+				) {
 					return true;
 				}
 			}

@@ -71,7 +71,7 @@ class UsuarioAmigo extends Base {
 	public static function Ordenar_Por_Nome($Amigos) {
 		$iterator = $Amigos->getIterator();
 		$iterator->uasort(function ($A, $B) {
-			return strcmp($A->getAmigo()->getNome_Completo(false), $B->getAmigo()->getNome_Completo(false));
+			return strcmp($A->Apelido_Ou_Nome(true, false), $B->Apelido_Ou_Nome(true, false));
 		});
 		return new ArrayCollection(iterator_to_array($iterator));
 	}

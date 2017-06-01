@@ -52,7 +52,7 @@ if(($Usr !== null) && ($Usr->getAtivo() === false)) // Usuario desativou a conta
 if($Usr !== null) {
 	$Amigos = $Usr->Amigos(true);
 	$total_amigos = 0;
-	$Em_Comum = $_Usuario->Amigos_Em_Comum($Usr, $total_amigos);
+	$Em_Comum = $_Usuario->Amigos_Em_Comum($Usr, true, $total_amigos);
 	$_sou_eu = ($Usr->getID() == $_Usuario->getID());
 	$Meu_Amigo = $_Usuario->Amigo($Usr);
 } else {
@@ -545,10 +545,10 @@ if($Usr !== null) {
 										$Relacionamento = $_Usuario->Relacionamento($Usr);
 										if($Relacionamento === false)
 											echo "Desconhecida...";
-										elseif($Usr->getLogin() == $Relacionamento->getLogin())
-											echo "Voc&ecirc; -> ".$Usr->getNome();
+										elseif($Usr->getID() == $Relacionamento->getID())
+											echo "Voc&ecirc; -> ".$Usr->getNome_Completo(true);
 										else
-											echo "Voc&ecirc; -> <a href=\"".CONFIG_URL."perfil/?usuario=".$Relacionamento->getLogin()."\">".$Relacionamento->getNome()."</a> -> ".$Usr->getNome();
+											echo "Voc&ecirc; -> <a href=\"".CONFIG_URL."perfil/?usuario=".$Relacionamento->getLogin(true)."\">".$Relacionamento->getNome_Completo(true)."</a> -> ".$Usr->getNome(true);
 										?>
 									</td>
 								</tr>
@@ -632,7 +632,7 @@ if($Usr !== null) {
 								</tr>
 								<tr>
 									<td width="30%"><strong>Curso:</strong></td>
-									<td><?= $Aluno->getCurso(true)->getNome(true); ?> (<?= $Aluno->getCurso(true)->getNumero(true); ?>)</td>
+									<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '-'; ?>)</td>
 								</tr>
 								<tr>
 									<td width="30%"><strong>Modalidade:</strong></td>
