@@ -143,6 +143,8 @@ class Acontecimento extends Base {
 	}
 
 	public function Pode_Responder(Usuario $Usuario) {
+		if($this->getTipo(false) == self::TIPO_USUARIO_AMIZADE)
+			return false;
 		if($Usuario->getAdmin())
 			return true;
 		// Atualizacoes do GDE

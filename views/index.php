@@ -68,12 +68,12 @@ var Atualizar_Status = function() {
 	$("#atualizar_status").unbind('click');
 	$("#atualizar_status").text('Salvando...');
 	$("#meu_status").addClass('enviando');
-	$.post('<?= CONFIG_URL; ?>ajax/ax_acontecimento.php', {tp: 'us', txt: status}, function(data) {
+	$.post('<?= CONFIG_URL; ?>ajax/acontecimento.php', {tp: 'us', txt: status}, function(data) {
 		if(data && data.ok) {
-			$("#meu_status_atual").load('<?= CONFIG_URL; ?>ajax/status.php', {q: 'carregar'});
+			$("#meu_status_atual").load('<?= CONFIG_URL; ?>ajax/status.php', {q: 'carregar', p: 1});
 			$("#limpar_status").show();
 			$("#meu_status").Padrao();
-			Adicionar_Atualizacao('', data);
+			Adicionar_Atualizacao('', data.id);
 		}
 		$("#meu_status").removeClass('enviando');
 		$("#atualizar_status").text('Salvar');

@@ -55,8 +55,8 @@ var Remover_Atualizacao = function() {
 	var id = ids[1];
 	var tmp = $("#remover_"+id).html();
 	$("#remover_"+id).html('Aguarde');
-	$.get(CONFIG_URL + 'ajax/ax_acontecimento.php', {tp: 'x', id: id}, function(data) {
-		if(data != 0) {
+	$.post(CONFIG_URL + 'ajax/acontecimento.php', {tp: 'x', id: id}, function(data) {
+		if(data && data.ok) {
 			$("#atualizacao_"+id).hide("slow");
 			$("#respostas_"+id).hide("slow");
 		} else
@@ -86,8 +86,8 @@ var Responder_Atualizacao_Enviar = function() {
 	if((txt == null) || (txt == 'Responder...'))
 		return false;
 	$("#input_responder_"+id+"_"+original).addClass('enviando');
-	$.post(CONFIG_URL + 'ajax/ax_acontecimento.php', {tp: 'um', txt: $("#input_responder_"+id+"_"+original).val(), ori: original}, function(data) {
-		if(data != 0) {
+	$.post(CONFIG_URL + 'ajax/acontecimento.php', {tp: 'um', txt: $("#input_responder_"+id+"_"+original).val(), ori: original}, function(data) {
+		if(data && data.ok) {
 			$("#respostas_"+original).load(CONFIG_URL + 'ajax/acontecimentos.php?' + $.param({o: original, ultimo: atualizacao_maior_id}) + ' div.atualizacao_resposta', function() {
 				// Remove o link de exibir todas as respostas (porque depois que respondo, ja carrego todas
 				$("#div_responder_"+id).remove();
@@ -132,14 +132,13 @@ var Todas_Respostas_Atualizacao = function() {
 };
 
 $(document).ready(function() {
-	$("a.atualizacao_responder").live('click', Responder_Atualizacao);
-	$("a.atualizacao_remover").live('click', Remover_Atualizacao);
-	$("a.atualizacao_remover").live('click', Remover_Atualizacao);
-	$("a.atualizacao_todas_respostas").live('click', Todas_Respostas_Atualizacao);
-	$("a.resposta_link_enviar").live('click', Responder_Atualizacao_Enviar);
-	$("a.resposta_link_cancelar").live('click', Responder_Atualizacao_Cancelar);
-	$("#atualizacoes_mais_link").live('click', function() { Atualizar_Atualizacoes(atualizacao_id, true, false); return false; });
-	$("#link_tem_atualizacoes").live('click', function() {
+	$("#tab_atualizacoes").on('click', 'a.atualizacao_responder', Responder_Atualizacao);
+	$("#tab_atualizacoes").on('click', 'a.atualizacao_remover', Remover_Atualizacao);
+	$("#tab_atualizacoes").on('click', 'a.atualizacao_todas_respostas', Todas_Respostas_Atualizacao);
+	$("#tab_atualizacoes").on('click', 'a.resposta_link_enviar', Responder_Atualizacao_Enviar);
+	$("#tab_atualizacoes").on('click', 'a.resposta_link_cancelar', Responder_Atualizacao_Cancelar);
+	$("#tab_atualizacoes").on('click', 'a.atualizacoes_mais_link', function() { Atualizar_Atualizacoes(atualizacao_id, true, false); return false; });
+	$("#tab_atualizacoes").on('click', '#link_tem_atualizacoes', function() {
 		$("#div_tem_atualizacoes").remove();
 		// Atualizo o ID aqui pra ficar certo enquanto nao clicou no link de ver as novas...
 		$("div.atualizacao_nova_escondida").each(function() {
@@ -153,7 +152,8 @@ $(document).ready(function() {
 		});
 		return false;
 	});
-	$("a.video_youtube").live('click', function() {
+
+	$("#tab_atualizacoes").on('click', 'a.video_youtube', function() {
 		var id_video = $(this).attr('id').replace('youtube_', '');
 		var largura_maxima = Math.round($("#tab_atualizacoes_conteudo").width()) - 250;
 		var altura_maxima = Math.round(largura_maxima * 0.5625) + 26;

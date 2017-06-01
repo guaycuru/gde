@@ -25,8 +25,9 @@ R: Depende do ponto de vista. Veja a próxima pergunta.
 P: O que já funciona nesta versão e o que não funciona?  
 R: Segue a lista que vou manter atualizada:  
 
-Funcionam as páginas:
+Funciona:
 
+ - Acontecimentos e Status
  - Amigos
  - Árvore / Integralização (pouco testada)
  - Avaliar Professores
@@ -47,7 +48,7 @@ Funcionam as páginas:
  - Sala
  - Sobre o GDE
 
-Ainda não funcionam:
+Ainda não funciona:
 
  - Admin
  - API
@@ -56,7 +57,6 @@ Ainda não funcionam:
  - Frase do Dia
  - Enquetes
  - Notas
- - Salvar Acontecimentos
 
   
 P: E qual o prazo pra isso ser concluído?  
