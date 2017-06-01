@@ -8,7 +8,7 @@ require_once('../common/common.inc.php');
 
 $Quase_Amigos = $_Usuario->getQuase_Amigos();
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
-$Amigos = UsuarioAmigo::Ordenar_Por_Nome($_Usuario->Amigos());
+$Amigos = $_Usuario->Amigos(true);
 
 ?>
 <script type="text/javascript">

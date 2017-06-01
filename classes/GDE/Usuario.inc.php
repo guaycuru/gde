@@ -1075,12 +1075,15 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * @param string|null $ordem
+	 * @param bool $ordem_nome Ordernar por nome completo do amigo
 	 * @return ArrayCollection|UsuarioAmigo[] Amizades ja autorizadas
 	 */
-	public function Amigos() { // Lista de amizades ja autorizadas
+	public function Amigos($ordem_nome = false) { // Lista de amizades ja autorizadas
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("ativo", true));
-		return $this->getAmigos()->matching($criteria);
+		$Amigos = $this->getAmigos()->matching($criteria);
+		if($ordem_nome === true)
+			return UsuarioAmigo::Ordenar_Por_Nome($Amigos);
+		return $Amigos;
 	}
 
 	/**

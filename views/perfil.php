@@ -50,7 +50,7 @@ if(($Usr !== null) && ($Usr->getAtivo() === false)) // Usuario desativou a conta
 	$Usr = null;
 
 if($Usr !== null) {
-	$Amigos = $Usr->getAmigos();
+	$Amigos = $Usr->Amigos(true);
 	$total_amigos = 0;
 	$Em_Comum = $_Usuario->Amigos_Em_Comum($Usr, $total_amigos);
 	$_sou_eu = ($Usr->getID() == $_Usuario->getID());

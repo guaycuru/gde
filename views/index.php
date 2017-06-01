@@ -6,7 +6,7 @@ define('TITULO', 'Home');
 
 require_once('../common/common.inc.php');
 
-$Amigos = UsuarioAmigo::Ordenar_Por_Nome($_Usuario->Amigos(array('amigo' => 'ASC')));
+$Amigos = $_Usuario->Amigos(true);
 $Recomendacoes = $_Usuario->Amigos_Recomendacoes(2, 15);
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
 
