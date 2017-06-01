@@ -198,7 +198,7 @@ if($_tipo == 'A') {
 		$.post('<?= CONFIG_URL; ?>ajax/acontecimento.php', {tp: 'um', i: '<?= $Usr->getID(); ?>', txt: mensagem}, function(data) {
 			if(data && data.ok) {
 				$("#mensagem").Padrao();
-				Adicionar_Atualizacao('<?= $Usr->getID(); ?>', data);
+				Adicionar_Atualizacao('<?= $Usr->getID(); ?>', data.id);
 			}
 			$("#mensagem").removeClass('mensagem_enviando');
 			$("#enviar_mensagem").show();
