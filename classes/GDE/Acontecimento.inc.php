@@ -73,11 +73,7 @@ class Acontecimento extends Base {
 	 */
 	protected $original;
 
-	// ToDo: Definir os tipos
 	const TIPO_GDE = 'ga';
-	const TIPO_RA = 'ra';
-	const TIPO_RM = 'rm';
-	const TIPO_RS = 'rs';
 	const TIPO_USUARIO_AMIZADE = 'ua';
 	const TIPO_USUARIO_MENSAGEM = 'um';
 	const TIPO_USUARIO_STATUS = 'us';
@@ -92,11 +88,9 @@ class Acontecimento extends Base {
 					? " agora &eacute; amig".$this->getOrigem()->getSexo(true, true)." de ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true)."."
 					: " agora &eacute; ".(($this->getOrigem()->getSexo() == 'f')?'sua amiga':'seu amigo').".";
 		// Mensagem, Status de Usuario
-		elseif(($this->getTipo(false) == self::TIPO_USUARIO_MENSAGEM) || ($this->getTipo(false) == self::TIPO_USUARIO_STATUS) || ($this->getTipo(false) == 'rs')) {
+		elseif(($this->getTipo(false) == self::TIPO_USUARIO_MENSAGEM) || ($this->getTipo(false) == self::TIPO_USUARIO_STATUS)) {
 			if($this->getTipo(false) == self::TIPO_USUARIO_STATUS)
 				$texto_pre = "<span class=\"atualizacao_tipo\"> (status)</span>";
-			elseif($this->getTipo(false) == 'rs')
-				$texto_pre = "<span class=\"atualizacao_tipo\"> (an&uacute;ncio)</span>";
 			elseif(($this->getOriginal() === null) && ($this->getDestino() !== null) && ($this->getDestino()->getID() != $Usuario->getID())) // Tinha um ($meu) && ali, mas acho q nao faz sentido
 				$texto_pre = " -> ".$_Usuario->Apelido_Ou_Nome($this->getDestino(), false, true);
 			else
@@ -138,8 +132,8 @@ class Acontecimento extends Base {
 			return $this->getOrigem()->getFoto(true, $th);
 		elseif($this->tipo == self::TIPO_GDE)
 			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "web/images/gde.gif";
-		elseif($this->tipo == 'gc')
-			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "web/images/gde.gif";
+		else
+			return '';
 	}
 
 	public function Pode_Responder(Usuario $Usuario) {
