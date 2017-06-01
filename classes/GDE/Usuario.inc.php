@@ -1542,26 +1542,29 @@ class Usuario extends Base {
 			return "-";
 		$formatado = array();
 		$i = 0;
-		foreach($Horario[$dia][$hora] as $Oferecimento) {
-			$strong_oferecimento = ((!$meu) && ($Periodo !== null) && ($this->Cursando($Oferecimento[0])));
-			$strong_sala = ((!$meu) && ($Periodo !== null) && ($this->Tem_Dimensao(array($Oferecimento[1], $dia, $hora), $Periodo)));
+		foreach($Horario[$dia][$hora] as $dados) {
+			list($Oferecimento, $sala) = $dados;
+			$strong_oferecimento = ((!$meu) && ($Periodo !== null) && ($this->Cursando($Oferecimento)));
+			$strong_sala = ((!$meu) && ($Periodo !== null) && ($this->Tem_Dimensao(array($sala, $dia, $hora), $Periodo)));
 			$formatado[$i] = (
 				($links)
-					? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento[0]->getID()."/\" title=\"".$Oferecimento[0]->getDisciplina()->getNome()."\">"
+					? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina()->getNome(true)."\">"
 					: null
 			).
 			(($strong_oferecimento)	? "<strong>" : null).
-			$Oferecimento[0]->getSigla().$Oferecimento[0]->getTurma().
+				$Oferecimento->getSigla(true).$Oferecimento->getTurma(true).
 			(($strong_oferecimento) ? "</strong>" : null ).
 			(($links) ? "</a>" : null);
-			if(!empty($Oferecimento[1]))
+			if(!empty($dados[1])) {
 				$formatado[$i] .= (($links)
-					? "/<a href=\"".CONFIG_URL."sala/".$Oferecimento[1]."/\">"
-					: "/").
-				(($strong_sala) ? "<strong>" : null).
-				$Oferecimento[1].
-				(($strong_sala) ? "</strong>" : null).
-				(($links) ? "</a>" : null);
+						? "/<a href=\"" . CONFIG_URL . "sala/" . $sala . "/\">"
+						: "/") .
+					(($strong_sala) ? "<strong>" : null) .
+					$sala .
+					(($strong_sala) ? "</strong>" : null) .
+					(($links) ? "</a>" : null);
+			}
+			$i++;
 		}
 		return implode("<br />", $formatado);
 	}
@@ -1581,7 +1584,7 @@ class Usuario extends Base {
 		if(isset($Horario[$dia][$hora])) {
 			foreach($Horario[$dia][$hora] as $Oferecimento) {
 				$strong = $this->Cursando($Oferecimento);
-				$formatado[] = "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\">".(($strong) ? "<strong>" : "").$Oferecimento->getSigla().$Oferecimento->getTurma().(($strong) ? "</strong>" : "")."</a>";
+				$formatado[] = "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\">".(($strong) ? "<strong>" : "").$Oferecimento->getSigla(true).$Oferecimento->getTurma(true).(($strong) ? "</strong>" : "")."</a>";
 			}
 			return implode("<br />", $formatado);
 		} else

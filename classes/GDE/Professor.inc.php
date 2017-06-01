@@ -3,6 +3,7 @@
 namespace GDE;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
@@ -115,16 +116,16 @@ class Professor extends Base {
 	}
 
 	/**
-	 * @param null|string $periodo
+	 * @param null|Periodo $Periodo
 	 * @param bool $formatado
 	 * @param bool $links
-	 * @return string
+	 * @return ArrayCollection|Oferecimento[]|string
 	 */
-	public function getOferecimentos($periodo = null, $formatado = false, $links = true) {
-		if($periodo == null) {
+	public function getOferecimentos(Periodo $Periodo = null, $formatado = false, $links = true) {
+		if($Periodo === null) {
 			$Oferecimentos = parent::getOferecimentos();
 		} else {
-			$criteria = Criteria::create()->where(Criteria::expr()->eq("id_periodo", $periodo));
+			$criteria = Criteria::create()->where(Criteria::expr()->eq("periodo", $Periodo));
 			$Oferecimentos = parent::getOferecimentos()->matching($criteria);
 		}
 		if($formatado === false)
@@ -132,18 +133,20 @@ class Professor extends Base {
 		else {
 			$lista = array();
 			foreach($Oferecimentos as $Oferecimento)
-				$lista[] = ($links) ? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")" : $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
+				$lista[] = ($links)
+					? "<a href=\"".CONFIG_URL."oferecimento/".$Oferecimento->getID()."/\" title=\"".$Oferecimento->getDisciplina(true)->getNome(true)."\">".$Oferecimento->getSigla().$Oferecimento->getTurma(true)."</a> (".$Oferecimento->getDisciplina(true)->getCreditos(true).")"
+					: $Oferecimento->getSigla(true).$Oferecimento->getTurma(true)." (".$Oferecimento->getDisciplina(true)->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
 	}
 
 	/**
-	 * @param null $periodo
+	 * @param null|Periodo $Periodo
 	 * @return array
 	 */
-	public function Monta_Horario($periodo = null) {
+	public function Monta_Horario(Periodo $Periodo = null) {
 		$Lista = array();
-		foreach($this->getOferecimentos($periodo) as $Oferecimento)
+		foreach($this->getOferecimentos($Periodo) as $Oferecimento)
 			foreach($Oferecimento->getDimensoes() as $Dimensao)
 				$Lista[$Dimensao->getDia()][$Dimensao->getHorario()][] = array($Oferecimento, $Dimensao->getSala(true)->getNome());
 		return $Lista;
@@ -157,7 +160,7 @@ class Professor extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return ArrayCollection|Professor[]
+	 * @return Professor[]
 	 */
 	public static function Por_Nome($nome, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");

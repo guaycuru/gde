@@ -60,7 +60,7 @@ if($_tipo == 'A') {
 	$tem_grad = $tem_pos = false;
 } elseif($_tipo == 'P') {
 	$Professor = ((isset($_POST['professor'])) && ($_POST['professor'] > 0)) ? Professor::Load(intval($_POST['professor'])) : $_Usuario->getProfessor(true);
-	$Horario = $Professor->Monta_Horario($Periodo_Selecionado->getPeriodo());
+	$Horario = $Professor->Monta_Horario($Periodo_Selecionado);
 	$meu = (($_Usuario->getProfessor(false) !== null) && ($_Usuario->getProfessor()->getID() == $Professor->getID()));
 	$nivel = null;
 	$tem_grad = $tem_pos = false;
@@ -127,7 +127,7 @@ if($_tipo == 'A') {
 ?>
 	<tr>
 		<td colspan="2" style="padding: 10px 5px;"><strong>Oferecimentos:</strong></td>
-		<td colspan="5" style="padding: 10px 5px;"><?= $Professor->getOferecimentos($Periodo_Selecionado->getPeriodo(), $nivel, true); ?></td>
+		<td colspan="5" style="padding: 10px 5px;"><?= $Professor->getOferecimentos($Periodo_Selecionado, $nivel, true); ?></td>
 	</tr>
 <?php } ?>
 </table>
