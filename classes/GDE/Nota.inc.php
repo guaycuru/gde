@@ -24,9 +24,7 @@ class Nota extends Base {
 	 * @var Usuario
 	 *
 	 * @ORM\ManyToOne(targetEntity="Usuario")
-	 * @ORM\JoinColumns({
-	 *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
-	 * })
+	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
 
@@ -59,5 +57,13 @@ class Nota extends Base {
 	 */
 	protected $peso = '1.00000';
 
+	/**
+	 * @param Usuario $Usuario
+	 * @param Oferecimento $Oferecimento
+	 * @return Nota[]|false
+	 */
+	public static function Listar(Usuario $Usuario, Oferecimento $Oferecimento) {
+		return self::FindBy(array('usuario' => $Usuario->getID(), 'oferecimento' => $Oferecimento->getID()));
+	}
 
 }

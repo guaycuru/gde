@@ -41,6 +41,7 @@ Funciona:
  - Login
  - Inicial
  - Mapa do Campus
+ - Notas
  - Oferecimento
  - Perfil (Usuário, Aluno e Professor)
  - Perguntas Frequentes (FAQ)
@@ -56,7 +57,6 @@ Ainda não funciona:
  - Chat
  - Frase do Dia
  - Enquetes
- - Notas
 
   
 P: E qual o prazo pra isso ser concluído?  

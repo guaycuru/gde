@@ -12,10 +12,10 @@ var Adicionar_Nota = function(id_oferecimento, isExame) {
 				ja_existe = 's';
 		});
 		if (ja_existe == 'n')
-			$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nova_nota_'+id_oferecimento+'" class="nota"><input type="text" id="nova_nota_'+id_oferecimento+'_sigla" disabled="disabled" value="Exame" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_valor" class="input_nota" /><a href="#" id="salvar_nova_nota_'+id_oferecimento+'"><img src="../web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_nova_nota_'+id_oferecimento+'"><img src="../web/images/CancelOFF.png" alt="Cancelar" title="Cancelar" class="nota_botao_x"/></a></div>');
+			$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nova_nota_'+id_oferecimento+'" class="nota"><input type="text" id="nova_nota_'+id_oferecimento+'_sigla" disabled="disabled" value="Exame" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_valor" class="input_nota" /><a href="#" id="salvar_nova_nota_'+id_oferecimento+'"><img src="'+CONFIG_URL+'web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_nova_nota_'+id_oferecimento+'"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Cancelar" title="Cancelar" class="nota_botao_x"/></a></div>');
 	}else{
 		tipo = 'n';
-		$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nova_nota_'+id_oferecimento+'" class="nota"><input type="text" id="nova_nota_'+id_oferecimento+'_sigla" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_valor" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_peso" class="input_nota" /> <a href="#" id="salvar_nova_nota_'+id_oferecimento+'"><img src="../web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_nova_nota_'+id_oferecimento+'"><img src="../web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
+		$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nova_nota_'+id_oferecimento+'" class="nota"><input type="text" id="nova_nota_'+id_oferecimento+'_sigla" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_valor" class="input_nota" /><input type="text" id="nova_nota_'+id_oferecimento+'_peso" class="input_nota" /> <a href="#" id="salvar_nova_nota_'+id_oferecimento+'"><img src="'+CONFIG_URL+'web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_nova_nota_'+id_oferecimento+'"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
 		$("#nova_nota_"+id_oferecimento+"_sigla").Valor_Padrao('Sigla (Ex: P1)', 'padrao');
 	}	
 	$("#nova_nota_"+id_oferecimento+"_valor").Valor_Padrao('Nota', 'padrao');
@@ -26,19 +26,19 @@ var Adicionar_Nota = function(id_oferecimento, isExame) {
 		var peso = $("#nova_nota_"+id_oferecimento+"_peso").val();
 		$("#salvar_nova_nota_"+id_oferecimento).hide();
 		$("#div_nova_nota_"+id_oferecimento+" > input").addClass('enviando');
-		$.post('../ajax/ax_nota.php', {tp: tipo, m: id_oferecimento, sigla: sigla, nota: nota, peso: peso}, function(data) {
-			if(data != 0) {
+		$.post(CONFIG_URL + 'ajax/nota.php', {tp: tipo, m: id_oferecimento, sigla: sigla, nota: nota, peso: peso}, function(data) {
+			if(data && data.ok) {
 				$("#div_nova_nota_"+id_oferecimento).remove();
-				data = parseInt(data);
+				id = parseInt(data.id);
 				if(isExame){
-					$("#div_media_"+id_oferecimento).after('<div id="div_nota_'+data+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+data+', '+id_oferecimento+');"><img src="../web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+data+');"><img src="../web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
+					$("#div_media_"+id_oferecimento).after('<div id="div_nota_'+id+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+id+', '+id_oferecimento+');"><img src="'+CONFIG_URL+'web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+id+');"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
 					$("#funcao_exame_"+id_oferecimento).remove();
 				}
 				else{
 					if($("#div_media_"+id_oferecimento).length >= 1){
-						$("#div_media_"+id_oferecimento).before('<div id="div_nota_'+data+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+data+', '+id_oferecimento+');"><img src="../web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+data+');"><img src="../web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div><div class="peso_texto"><span class="peso_texto">Peso</span>: <span class="peso_valor">'+parseFloat(peso.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
+						$("#div_media_"+id_oferecimento).before('<div id="div_nota_'+id+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+id+', '+id_oferecimento+');"><img src="'+CONFIG_URL+'web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+id+');"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div><div class="peso_texto"><span class="peso_texto">Peso</span>: <span class="peso_valor">'+parseFloat(peso.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
 					}else{
-						$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nota_'+data+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+data+', '+id_oferecimento+');"><img src="../web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+data+');"><img src="../web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div><div class="peso_texto"><span class="peso_texto">Peso</span>: <span class="peso_valor">'+parseFloat(peso.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
+						$("#nota_funcoes_"+id_oferecimento).before('<div id="div_nota_'+id+'" class="nota"><div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+id+', '+id_oferecimento+');"><img src="'+CONFIG_URL+'web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" onclick="return Remover_Nota('+id+');"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div><div class="nota_texto"><span class="nota_texto">Nota</span>: <span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span></div><div class="peso_texto"><span class="peso_texto">Peso</span>: <span class="peso_valor">'+parseFloat(peso.replace(",",".")).toFixed(2).replace(".",",")+'</span></div></div>');
 					}
 				}
 				Calcular_Medias(id_oferecimento);
@@ -57,7 +57,7 @@ var Adicionar_Nota = function(id_oferecimento, isExame) {
 		return false;
 	});
 	return false;
-}
+};
 
 var Alterar_Nota = function(id, id_oferecimento) {
 	var prevSigla = $("#div_nota_"+id+" > div.nota_sigla").text();
@@ -65,9 +65,9 @@ var Alterar_Nota = function(id, id_oferecimento) {
 	var prevNota = $("#div_nota_"+id+" > div.nota_texto > span.nota_valor").text();
 	var prevPeso = $("#div_nota_"+id+" > div.peso_texto > span.peso_valor").text();
 	if (prevPeso != "")
-		$("#div_nota_"+id).after('<div id="div_alterar_nota_'+id+'" class="nota"><input type="text" id="alterar_nota_sigla_'+id+'" value="'+prevSigla+'" class="input_nota" /><input type="text" id="alterar_nota_valor_'+id+'" value="'+prevNota+'" class="input_nota" /> <input type="text" id="alterar_nota_peso_'+id+'" value="'+prevPeso+'" class="input_nota" /> <a href="#" id="salvar_alterar_nota_'+id+'"><img src="../web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_alterar_nota_'+id+'"><img src="../web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
+		$("#div_nota_"+id).after('<div id="div_alterar_nota_'+id+'" class="nota"><input type="text" id="alterar_nota_sigla_'+id+'" value="'+prevSigla+'" class="input_nota" /><input type="text" id="alterar_nota_valor_'+id+'" value="'+prevNota+'" class="input_nota" /> <input type="text" id="alterar_nota_peso_'+id+'" value="'+prevPeso+'" class="input_nota" /> <a href="#" id="salvar_alterar_nota_'+id+'"><img src="'+CONFIG_URL+'web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_alterar_nota_'+id+'"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
 	else
-		$("#div_nota_"+id).after('<div id="div_alterar_nota_'+id+'" class="nota"><input type="text" id="alterar_nota_sigla_'+id+'" value="'+prevSigla+'" disabled="disabled" class="input_nota" /><input type="text" id="alterar_nota_valor_'+id+'" value="'+prevNota+'" class="input_nota" /> <a href="#" id="salvar_alterar_nota_'+id+'"><img src="../web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_alterar_nota_'+id+'"><img src="../web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
+		$("#div_nota_"+id).after('<div id="div_alterar_nota_'+id+'" class="nota"><input type="text" id="alterar_nota_sigla_'+id+'" value="'+prevSigla+'" disabled="disabled" class="input_nota" /><input type="text" id="alterar_nota_valor_'+id+'" value="'+prevNota+'" class="input_nota" /> <a href="#" id="salvar_alterar_nota_'+id+'"><img src="'+CONFIG_URL+'web/images/SaveOFF.png" alt="Salvar" title="Salvar" class="nota_botao_save" /></a> <a href="#" id="cancelar_alterar_nota_'+id+'"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Cancelar" title="Cancelar"  class="nota_botao_x"/></a></div>');
 	$("#div_nota_"+id).hide();
 	$("#salvar_alterar_nota_"+id).click(function() {
 		$("#salvar_alterar_nota_"+id).text('Salvando...');
@@ -77,11 +77,11 @@ var Alterar_Nota = function(id, id_oferecimento) {
 		$("#div_alterar_nota_"+id+" > input").addClass('enviando');
 		var tipo;
 		(prevSigla == "Exame")?tipo='e':tipo='n'
-		$.post('../ajax/ax_nota.php', {tp: tipo, i: id, m: id_oferecimento, sigla: sigla, nota: nota, peso: peso}, function(data) {
-			if(data != 0) {
+		$.post(CONFIG_URL + 'ajax/nota.php', {tp: tipo, i: id, m: id_oferecimento, sigla: sigla, nota: nota, peso: peso}, function(data) {
+			if(data && data.ok) {
 				$("#div_alterar_nota_"+id).remove();
 				$("#div_nota_"+id).show();
-				$("#div_nota_"+id+" > div.nota_sigla").replaceWith('<div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+id+', '+id_oferecimento+');"><img src="../web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" id="excluir_nota_'+id+'" onclick="return Remover_Nota('+id+');"><img src="../web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div>');
+				$("#div_nota_"+id+" > div.nota_sigla").replaceWith('<div class="nota_sigla">'+sigla+' <a href="#" onclick="return Alterar_Nota('+id+', '+id_oferecimento+');"><img src="'+CONFIG_URL+'web/images/EditOFF.png" alt="Alterar" title="Alterar" class="nota_botao_lapis" /></a> <a href="#" id="excluir_nota_'+id+'" onclick="return Remover_Nota('+id+');"><img src="'+CONFIG_URL+'web/images/CancelOFF.png" alt="Excluir" title="Excluir"  class="nota_botao_x"/></a></div>');
 				$("#div_nota_"+id+" > div.nota_texto > span.nota_valor").replaceWith('<span class="nota_valor">'+parseFloat(nota.replace(",",".")).toFixed(2).replace(".",",")+'</span>');
 				if (peso)
 					$("#div_nota_"+id+" > div.peso_texto > span.peso_valor").replaceWith('<span class="peso_valor">'+parseFloat(peso.replace(",",".")).toFixed(2).replace(".",",")+'</span>');
@@ -92,14 +92,14 @@ var Alterar_Nota = function(id, id_oferecimento) {
 			}
 		});
 		return false;
-	})
+	});
 	$("#cancelar_alterar_nota_"+id).click(function() {
 		$("#div_alterar_nota_"+id).remove();
 		$("#div_nota_"+id).show();
 		return false;
 	});
 	return false;
-}
+};
 
 var Calcular_Medias = function(id_oferecimento) {
 	var accNota = 0.0;
@@ -141,7 +141,7 @@ var Calcular_Medias = function(id_oferecimento) {
 	}
 
 	return false;
-}
+};
 
 var Remover_Nota = function(id) {
 	var id_oferecimento = $("#div_nota_"+id).parent().parent().attr("id").substring(10);
@@ -153,24 +153,24 @@ var Remover_Nota = function(id) {
 		Remover_Nota(idExame);
 	}
 	$("#excluir_nota_"+id).text("Excluindo...");
-	$.post('../ajax/ax_nota.php', {tp: 'x', id: id}, function(data) {
-		if(data != 0) {
+	$.post(CONFIG_URL + 'ajax/nota.php', {tp: 'x', id: id}, function(data) {
+		if(data && data.ok) {
 			$("#div_nota_"+id).remove();
 			if ($.trim(toDelete) === "Exame") {
 				$("#funcao_nota_"+id_oferecimento).after('<div class="notas_funcoes" id="funcao_exame_'+id_oferecimento+'"><a href="#" id="link_novo_exame_'+id_oferecimento+'" onclick="return Adicionar_Nota('+id_oferecimento+', true);">Adicionar Exame</a></div>');
 			}
-			Calcular_Medias(parseInt(data));
+			Calcular_Medias(parseInt(data.id));
 		} else
 			$("#excluir_nota_"+id).text("Excluir");
 	});
 	return false;
-}
+};
 
 var Atualizar_Notas = function(periodo) {
 	if(!periodo)
 		periodo = '';
 	$("#tab_notas").Carregando('Carregando Notas...');
-	$.post('../ajax/ax_notas.php', {p: periodo}, function(data) {
+	$.get(CONFIG_URL + 'ajax/notas.php', {p: periodo}, function(data) {
 		if(data) {
 			$("#tab_notas").html(data);
 			$("#tabs_notas").tabs();
@@ -182,4 +182,4 @@ var Atualizar_Notas = function(periodo) {
 			});
 		}
 	});
-}
+};
