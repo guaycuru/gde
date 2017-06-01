@@ -454,7 +454,7 @@ class Disciplina extends Base {
 	public function getEmenta($html = false, $no_html = true) {
 		$ementa = parent::getEmenta(false);
 		if($no_html)
-			$ementa = html_entity_decode(strip_tags($ementa));
+			$ementa = strip_tags(html_entity_decode($ementa));
 		if($html)
 			$ementa = htmlspecialchars($ementa);
 		return $ementa;
