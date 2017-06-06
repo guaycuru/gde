@@ -421,7 +421,7 @@ if($qts['alunos'] != 0) {
 		if($tp != 'tudo')
 			echo '<br />Nenhum resultado encontrado!';
 	} else {
-		$niveis_oferecimentos = array('G' => 'Grad', 'P' => 'P&oacute;s', 'T' => 'T&eacute;cnol.', 'S' => 'Mes. Prof.');
+		$niveis_oferecimentos = array('G' => 'Grad', 'P' => 'P&oacute;s', 'T' => 'Tecnol.', 'S' => 'Mes. Prof.');
 		echo ($tp == 'tudo') ? '<h2>Oferecimentos ('.$total['oferecimentos'].'):</h2>' : '<span class="cabecalho_resultados_busca">Exibindo resultados '.($sta['oferecimentos']+1).' - '.$fim['oferecimentos'].' de '.$total['oferecimentos'].' ('.$tempo.' segundos)</span>';
 ?>
 <table border="1" width="100%" class="tabela_busca">
