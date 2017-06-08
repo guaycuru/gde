@@ -111,7 +111,7 @@ class Usuario extends Base {
 	/**
 	 * @var ArrayCollection|EnqueteOpcao[]
 	 *
-	 * @ORM\ManyToMany(targetEntity="EnqueteOpcao")
+	 * @ORM\ManyToMany(targetEntity="EnqueteOpcao", inversedBy="usuarios")
 	 * @ORM\JoinTable(name="gde_r_usuarios_enquetes_opcoes",
 	 *      joinColumns={@ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")},
 	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_opcao", referencedColumnName="id_opcao")}

@@ -16,86 +16,88 @@ var Logout = function() {
 	return false;
 };
 
+var auto_form_handler = function() {
+	$(this).validate({
+		submitHandler: function(form) {
+			$(form).find('button').prop('disabled', true);
+			var parse_res = function(res) {
+				if((typeof res !== 'object') || (res === null))
+					res.ok = false;
+				if(res.ok) {
+					var msg = ($(form).data('sucesso')) ? $(form).data('sucesso') : 'Dados salvos com sucesso!';
+					if(msg !== ' ')
+						alert(msg);
+					if(res.destino)
+						var destino = res.destino;
+					else if(!$(form).data('destino')) {
+						var destino = document.URL;
+						if(destino.charAt(destino.length-1) !== '/')
+							destino += '/';
+						destino += res.id;
+					} else {
+						var destino = $(form).data('destino').replace('#ID#', res.id);
+					}
+					document.location = destino;
+				} else {
+					if(res.erro)
+						var msg = res.erro;
+					else if(res.error)
+						var msg = res.error;
+					else
+						var msg = 'Um erro ocorreu, por favor tente novamente.';
+					if(res.destino)
+						var destino = res.destino;
+					else
+						var destino = null;
+					erro_comum($(form), msg, 'Erro:', true, destino);
+					$(form).find('button').prop('disabled', false);
+				}
+			};
+			var multipart = ($(form).find('input[type=file]').length > 0);
+			erro_comum_esconder();
+			if(!multipart) {
+				$.post($(form).attr('action'), $(form).serialize(), parse_res)
+					.fail(function () {
+						parse_res(false);
+					});
+			} else {
+				var iframe_name = 'controle';
+				$("#" + iframe_name).unbind('load');
+				$("#" + iframe_name).bind('load', function() {
+					try {
+						parse_res($.parseJSON($(this).contents().text()));
+					} catch(err) {
+						parse_res({ok: false});
+					}
+				});
+				$(form).attr({
+					enctype: "multipart/form-data",
+					encoding: "multipart/form-data",
+					target: iframe_name
+				}).get(0).submit();
+			}
+		},
+		invalidHandler: function(event, validator) {
+			// 'this' refers to the form
+			var errors = validator.numberOfInvalids();
+			if(errors) {
+				var msg = (errors === 1)
+					? 'Por favor verifique o campo destacado.'
+					: 'Por favor verifique os ' + errors + ' campos destacados.';
+				erro_comum($(this), msg);
+			} else {
+				erro_comum_esconder();
+			}
+		}
+	});
+};
+
 $(document).ready(function() {
 	// Logout
 	$(".link_logout").click(Logout);
 
 	// Auto Forms
-	$("form.auto-form").each(function() {
-		$(this).validate({
-			submitHandler: function(form) {
-				$(form).find('button').prop('disabled', true);
-				var parse_res = function(res) {
-					if((typeof res !== 'object') || (res === null))
-						res.ok = false;
-					if(res.ok) {
-						var msg = ($(form).data('sucesso')) ? $(form).data('sucesso') : 'Dados salvos com sucesso!';
-						if(msg !== ' ')
-							alert(msg);
-						if(res.destino)
-							var destino = res.destino;
-						else if(!$(form).data('destino')) {
-							var destino = document.URL;
-							if(destino.charAt(destino.length-1) !== '/')
-								destino += '/';
-							destino += res.id;
-						} else {
-							var destino = $(form).data('destino').replace('#ID#', res.id);
-						}
-						document.location = destino;
-					} else {
-						if(res.erro)
-							var msg = res.erro;
-						else if(res.error)
-							var msg = res.error;
-						else
-							var msg = 'Um erro ocorreu, por favor tente novamente.';
-						if(res.destino)
-							var destino = res.destino;
-						else
-							var destino = null;
-						erro_comum($(form), msg, 'Erro:', true, destino);
-						$(form).find('button').prop('disabled', false);
-					}
-				};
-				var multipart = ($(form).find('input[type=file]').length > 0);
-				erro_comum_esconder();
-				if(!multipart) {
-					$.post($(form).attr('action'), $(form).serialize(), parse_res)
-						.fail(function () {
-							parse_res(false);
-						});
-				} else {
-					var iframe_name = 'controle';
-					$("#" + iframe_name).unbind('load');
-					$("#" + iframe_name).bind('load', function() {
-						try {
-							parse_res($.parseJSON($(this).contents().text()));
-						} catch(err) {
-							parse_res({ok: false});
-						}
-					});
-					$(form).attr({
-						enctype: "multipart/form-data",
-						encoding: "multipart/form-data",
-						target: iframe_name
-					}).get(0).submit();
-				}
-			},
-			invalidHandler: function(event, validator) {
-				// 'this' refers to the form
-				var errors = validator.numberOfInvalids();
-				if(errors) {
-					var msg = (errors === 1)
-						? 'Por favor verifique o campo destacado.'
-						: 'Por favor verifique os ' + errors + ' campos destacados.';
-					erro_comum($(this), msg);
-				} else {
-					erro_comum_esconder();
-				}
-			}
-		});
-	});
+	$("form.auto-form").each(auto_form_handler);
 });
 
 jQuery.extend(jQuery.validator.messages, {

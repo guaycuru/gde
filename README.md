@@ -38,6 +38,7 @@ Funciona:
  - Disciplina
  - Editar Perfil (pouco testada)
  - Eliminar Disciplinas
+ - Enquetes
  - Estatísticas (parcial)
  - Frase do Dia
  - Login
@@ -56,7 +57,6 @@ Ainda não funciona:
  - Admin
  - API
  - Chat
- - Enquetes
 
   
 P: E qual o prazo pra isso ser concluído?  

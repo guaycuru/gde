@@ -10,6 +10,12 @@ $Amigos = $_Usuario->Amigos(true);
 $Recomendacoes = $_Usuario->Amigos_Recomendacoes(2, 15);
 $Autorizacoes = $_Usuario->getAmigos_Pendentes();
 
+$_enquete = '';
+$Enquete = Enquete::Ativa();
+if($Enquete !== null) {
+	$_enquete = '<div class="tip" id="perfil_tip" style="text-align: center;"><strong>'.$Enquete->getChamada(true).'</strong> Clique <a href="'.CONFIG_URL.'ajax/enquetes.php?id='.$Enquete->getID().'" id="enquete">aqui</a> e d&ecirc; sua opini&atilde;o!</div>';
+}
+
 // ToDo ?
 if(!isset($_SESSION['atualizacoes_last_id']))
 	$_SESSION['atualizacoes_last_id'] = 0; //Acontecimento::Ultimo_Id_Por_Data($_SESSION['ultimo_acesso']);
@@ -241,7 +247,10 @@ $(document).ready(function() {
 	$('#buscar_amigos1').Procura_Amigo('lista_amigos1');
 	$("a#enquete").fancybox({
 		'hideOnContentClick': false,
-		'autoDimensions': true
+		'autoDimensions': true,
+		'onComplete': function() {
+			$("#fancybox-content form.auto-form").each(auto_form_handler);
+		}
 	});
 	$("#lista_amigos2 div.sliding_top").live("click", function() {
 		Adicionar_Amigo_Sugestao(($(this).attr("id").split('_'))[1]);
@@ -288,7 +297,7 @@ $(document).ready(function() {
 				</div>
 			</div>
 		</div>
-		<!-- <div class="tip" id="perfil_tip" style="text-align: center;"><strong>Ajude a escolher o futuro do GDE.</strong> Clique <a href="<?= CONFIG_URL; ?>ajax/ax_enquete.php?id=5" id="enquete">aqui</a> e d&ecirc; sua opini&atilde;o!</div> -->
+		<?= $_enquete; ?>
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>
