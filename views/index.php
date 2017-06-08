@@ -231,7 +231,7 @@ $(document).ready(function() {
 	});
 	$("input.tipo_calendario").click(function() {
 		$("div."+$(this).attr('id')).toggle();
-		$.post('<?= CONFIG_URL; ?>ajax/ax_opcao_calendario.php', {c: $(this).attr('id'), v: ($(this).is(":checked") ? 1 : 0)});
+		$.post('<?= CONFIG_URL; ?>ajax/opcao_calendario.php', {c: $(this).attr('id'), v: ($(this).is(":checked") ? 1 : 0)});
 	});
 	$("#toggle_menu_requisicoes").click(Amizade_Requisicoes_Toggle);
 	$("a.amizade_aceitar").click(Amizade_Aceitar);
