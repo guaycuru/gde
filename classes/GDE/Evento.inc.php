@@ -10,8 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(
  *   name="gde_eventos",
  *   indexes={
- *     @ORM\Index(name="data_inicio", columns={"data_inicio", "data_fim"}),
- *     @ORM\Index(name="data_aviso", columns={"data_aviso"})
+ *     @ORM\Index(name="data_inicio_fim", columns={"data_inicio", "data_fim"})
  *   }
  * )
  * @ORM\Entity
@@ -91,19 +90,55 @@ class Evento extends Base {
 	 */
 	protected $dia_todo = false;
 
-	/**
-	 * @var string
-	 *
-	 * @ORM\Column(type="string", length=1, nullable=true)
-	 */
-	protected $tipo_aviso;
+	const TIPO_FERIADO = 'f';
+	const TIPO_GRADUACAO = 'g';
+	const TIPO_OUTRO = 'o';
+	const TIPO_PROVA = 'p';
+	const TIPO_TRABALHO = 't';
+
+	private static $_tipos = array(
+		self::TIPO_FERIADO => 'Feriado',
+		self::TIPO_GRADUACAO => 'Graduação',
+		self::TIPO_PROVA => 'Prova',
+		self::TIPO_TRABALHO => 'Trabalho',
+		self::TIPO_OUTRO => 'Outro'
+	);
 
 	/**
-	 * @var \DateTime
-	 *
-	 * @ORM\Column(type="datetime", nullable=true)
+	 * @return array
 	 */
-	protected $data_aviso;
+	public static function Listar_Tipos() {
+		return self::$_tipos;
+	}
 
+	/**
+	 * @param Usuario $Usuario
+	 * @param \DateTime $Inicio
+	 * @param \DateTime $Fim
+	 * @return Evento[]
+	 */
+	public static function Listar_Por_Usuario_Datas(Usuario $Usuario, \DateTime $Inicio, \DateTime $Fim) {
+		$dql = "SELECT E FROM ".get_class()." E ".
+			"WHERE (E.usuario = :usuario OR E.usuario IS NULL) AND E.data_inicio <= :fim AND E.data_fim >= :inicio";
+		$query = self::_EM()->createQuery($dql)
+			->setParameter('usuario', $Usuario)
+			->setParameter('inicio', $Inicio)
+			->setParameter('fim', $Fim);
+		return $query->getResult();
+	}
+
+	/**
+	 * @param Usuario $Usuario
+	 * @return bool
+	 */
+	public function Pode_Alterar(Usuario $Usuario) {
+		if($this->getID() == null)
+			return true;
+		if(in_array($this->getTipo(false), array(self::TIPO_FERIADO, self::TIPO_GRADUACAO)))
+			return false;
+		if(($this->getUsuario(false) === null) || ($this->getUsuario()->getID() != $Usuario->getID()))
+			return false;
+		return true;
+	}
 
 }

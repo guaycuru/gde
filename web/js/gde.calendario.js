@@ -38,24 +38,23 @@ var Atualizar_Calendario = function() {
 		select: function(startDate, endDate, allDay) {
 			$("#link_novo_evento").click();
 			$("#div_novo_evento").html("Carregando...");
-			$("#div_novo_evento").load('../ajax/ax_form_evento.php', {dti: $.guaycuru.Data(startDate), dtf: $.guaycuru.Data(endDate), hri: $.guaycuru.Hora(startDate), hrf: $.guaycuru.Hora(endDate), ad: allDay}, function() { Carregou_Novo_Evento(allDay); });
+			$("#div_novo_evento").load(CONFIG_URL + 'ajax/form_evento.php', {dti: $.guaycuru.Data(startDate), dtf: $.guaycuru.Data(endDate), hri: $.guaycuru.Hora(startDate), hrf: $.guaycuru.Hora(endDate), ad: allDay}, function() { Carregou_Novo_Evento(allDay); });
 			calendar.fullCalendar('unselect');
 		},
-		//events: "../ajax/ax_eventos.php",
 		
 		events: {
-			url: '../ajax/ax_eventos.php',
+			url: CONFIG_URL + 'ajax/eventos.php',
 			type: 'post'
 		},
 
 		eventDrop: function(event,dayDelta,minuteDelta,allDay,revertFunc) {
 			$.guaycuru.simnao2("Voc&ecirc; tem certeza?", 
 				function(){
-					$.post('../ajax/ax_evento.php', {
+					$.post(CONFIG_URL + 'ajax/evento.php', {
 						id_evento: event.id, tp: 'e', data_inicio: $.guaycuru.DateTime(event.start), data_fim: $.guaycuru.DateTime(event.end), allDay: allDay},
 						function(data) {
-							if(data == '0') {
-								$.guaycuru.confirmacao("Voc&ecirc; n&atilde;o pode alterar eventos de feriados / gradua&ccedil;&atilde;o");
+							if(!data || !data.ok) {
+								$.guaycuru.confirmacao(data.error || 'Erro!');
 								revertFunc();
 							}
 						});
@@ -66,11 +65,11 @@ var Atualizar_Calendario = function() {
 		
 		eventResize: function(event,dayDelta,minuteDelta,revertFunc) {
 			$.guaycuru.simnao2("Voc&ecirc; tem certeza?", function(){
-				$.post('../ajax/ax_evento.php', {
+				$.post(CONFIG_URL + 'ajax/evento.php', {
 					id_evento: event.id, tp: 'e', data_inicio: $.guaycuru.DateTime(event.start), data_fim: $.guaycuru.DateTime(event.end)},
 					function(data) {
-						if(data == '0') {
-							$.guaycuru.confirmacao("Voc&ecirc; n&atilde;o pode alterar eventos de feriados / gradua&ccedil;&atilde;o");
+						if(!data || !data.ok) {
+							$.guaycuru.confirmacao(data.error || 'Erro!');
 							revertFunc();
 						}
 					});
@@ -84,7 +83,7 @@ var Atualizar_Calendario = function() {
 				return;
 			$("#link_novo_evento").click();
 			$("#div_novo_evento").html("Carregando...");
-			$("#div_novo_evento").load('../ajax/ax_form_evento.php', {'id': calEvent.id}, function() { Carregou_Novo_Evento(false); });
+			$("#div_novo_evento").load(CONFIG_URL + 'ajax/form_evento.php', {'id': calEvent.id}, function() { Carregou_Novo_Evento(false); });
 			calendar.fullCalendar('unselect');	
 		},
 		
@@ -95,9 +94,9 @@ var Atualizar_Calendario = function() {
 				element.hide();
 		},
 		
-		editable: true,
+		editable: true
 	});
-}
+};
 
 var Carregou_Novo_Evento = function(allDay) {
 	$("#nomeEvento").Valor_Padrao('Clique para adicionar um t\xEDtulo', 'padrao');
@@ -213,7 +212,7 @@ var Carregou_Novo_Evento = function(allDay) {
 			allDay = false;
 		}
 		$("#novo_evento_salvar").attr('disabled', 'disable');
-		$.post('../ajax/ax_evento.php', {
+		$.post(CONFIG_URL + 'ajax/evento.php', {
 			id_evento: $("#id_evento").val(), nome: $("#nomeEvento").val(), tipo: $("#tipoEvento option:selected").val(),
 			descricao: $("#descricaoEvento").val(), local: $("#localEvento").val(),
 			data_inicio: $("#data_inicio").val(), data_fim: $("#data_fim").val(), hora_inicio: $("#hora_inicio").val(), hora_fim: $("#hora_fim").val(),
@@ -223,11 +222,11 @@ var Carregou_Novo_Evento = function(allDay) {
 			lembrete: lembrete,
 			tp: 'a', ad: allDay}, function(data) {
 				$.fancybox.close();
-				if (data == "ERRO") {
-					$.guaycuru.confirmacao("Email n&atilde;o validado.");
+				if(!data || !data.ok) {
+					$.guaycuru.confirmacao(data.error || 'Erro!');
 					return false;
 				} 
-				if ($("#id_evento").val() != "") {
+				if($("#id_evento").val() != "") {
 					var id = $("#id_evento").val();
 					$("#calendar").fullCalendar('removeEvents', parseInt(id));
 				}				
@@ -254,17 +253,21 @@ var Carregou_Novo_Evento = function(allDay) {
 		if($("#tipoEvento").val() == 'g' || $("#tipoEvento").val() == 'f') {
 			$.guaycuru.confirmacao("Voc&ecirc; n&atilde;o pode excluir este evento");
 			$.fancybox.close();
-		}
-		else {
+		} else {
 			$.guaycuru.simnao2("Voc&ecirc; tem certeza?",
 				function(){
-					$.post('../ajax/ax_evento.php', {id_evento: $("#id_evento").val(), tp: 'r'}, function(data) {
-						$("#calendar").fullCalendar('removeEvents', parseInt($("#id_evento").val()));
-						$.fancybox.close();
-						Atualizar_Avisos();
-						Atualiza_Avisos_Quantidade();
+					$.post(CONFIG_URL + 'ajax/evento.php', {id_evento: $("#id_evento").val(), tp: 'r'}, function(data) {
+						if(!data || !data.ok) {
+							$.guaycuru.confirmacao(data.error || 'Erro!');
+							revertFunc();
+						} else {
+							$("#calendar").fullCalendar('removeEvents', parseInt($("#id_evento").val()));
+							$.fancybox.close();
+							Atualizar_Avisos();
+							Atualiza_Avisos_Quantidade();
+						}
 					});
 				}, function(){$.fancybox.close();});
 		}
 	});
-}
+};

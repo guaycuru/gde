@@ -31,6 +31,7 @@ Funciona:
  - Amigos
  - Árvore / Integralização (pouco testada)
  - Avaliar Professores
+ - Calendário
  - Configurações da Conta
  - Contato (não testada)
  - Convidar um Amigo (não testada)
@@ -38,6 +39,7 @@ Funciona:
  - Editar Perfil (pouco testada)
  - Eliminar Disciplinas
  - Estatísticas (parcial)
+ - Frase do Dia
  - Login
  - Inicial
  - Mapa do Campus
@@ -53,9 +55,7 @@ Ainda não funciona:
 
  - Admin
  - API
- - Calendário
  - Chat
- - Frase do Dia
  - Enquetes
 
   

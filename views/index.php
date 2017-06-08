@@ -328,7 +328,7 @@ $(document).ready(function() {
 					</div>
 					<div id="calendar"></div>
 					<div style="display: none;">
-						<div id="div_novo_evento" style="width: 410px; height: 290px;"></div>
+						<div id="div_novo_evento" style="width: 410px; height: 220px;"></div>
 					</div>
 					<a href="#div_novo_evento" id="link_novo_evento"></a>
 				</div>
