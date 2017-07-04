@@ -25,7 +25,7 @@ require_once('../common/common.inc.php');
 	});
 	// ]]>
 </script>
-	Antes de enviar sua mensagem, consulte as "<a href="https://github.com/guaycuru/gde/wiki/FAQ">Perguntas Frequentes</a>", talvez voc&ecirc; encontre respostas...<br /><br />
+	Antes de enviar sua mensagem, por favor consulte as "<a href="https://github.com/guaycuru/gde/wiki/FAQ">Perguntas Frequentes</a>". Se sua dúvida estiver ali, sua mensagem não será respondida!<br /><br />
 	<h2>Recomendar o GDE</h2>
 	<form id="form_contato">
 		<table border="0">
