@@ -220,7 +220,7 @@ $(document).ready(function(){
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>contato/">Contato</a></li>
 							<li><a href="<?= CONFIG_URL; ?>estatisticas/">Estat&iacute;sticas</a></li>
-							<li><a href="<?= CONFIG_URL; ?>faq/">Perguntas Frequentes</a></li>
+							<li><a href="https://github.com/guaycuru/gde/wiki/FAQ" target="_blank">Perguntas Frequentes</a></li>
 							<li><a href="<?= CONFIG_URL; ?>sobre/">Sobre o GDE</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>termos/">Termos de Uso</a></li>
 						</ul>
