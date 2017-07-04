@@ -653,8 +653,8 @@ class Usuario extends Base {
 	 *
 	 * Define a senha do Usuario, possivelmente codificando-a
 	 *
-	 * @param $senha A nova senha
-	 * @param $codificar (Opcional) Se for true, a senha sera codificada
+	 * @param string $senha A nova senha
+	 * @param bool $codificar (Opcional) Se for true, a senha sera codificada
 	 * @return string A nova senha
 	 */
 	public function setSenha($senha, $codificar = true) {
@@ -753,18 +753,18 @@ class Usuario extends Base {
 	 *
 	 * @param string $login Login, RA ou email
 	 * @param string $senha A senha fornecida pelo usuario
-	 * @param boolean $lembrar (Opcional) Se for true, ira definir a duracao do cookie
-	 * @param false|string $erro (Opcional) Se for passado, sera preenchido com o codigo de erro
+	 * @param bool $lembrar (Opcional) Se for true, ira definir a duracao do cookie
+	 * @param bool|string $erro (Opcional) Se for passado, sera preenchido com o codigo de erro
 	 * @return Usuario
 	 */
 	public static function Verificar_Login($login, $senha, $lembrar = false, &$erro = false) {
 		$Usuario = self::Por_Unique($login, null);
 		if($Usuario === null) {
-			$Usuario = self::Logout(null);
+			$Usuario = self::Logout();
 			if($erro !== false)
 				$erro = self::ERRO_LOGIN_NAO_ENCONTRADO;
 		} elseif($Usuario->Verificar_Senha($senha, false) === false) { // Senha incorreta
-			$Usuario = self::Logout(null);
+			$Usuario = self::Logout();
 			if($erro !== false)
 				$erro = self::ERRO_LOGIN_SENHA_INCORRETA;
 		} elseif($Usuario->getAtivo() === false) { // Usuario inativo
@@ -807,7 +807,7 @@ class Usuario extends Base {
 		}
 		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token, $verificar_horario);
 		if($resultado === false) {
-			$Usuario = self::Logout(null);
+			$Usuario = self::Logout();
 			if($erro !== false)
 				$erro = self::ERRO_LOGIN_TOKEN_INVALIDO;
 		} else {
@@ -881,6 +881,8 @@ class Usuario extends Base {
 	 * @return Usuario Um objeto Usuario vazio
 	 */
 	public static function Logout() {
+		if(!empty($_COOKIE[CONFIG_COOKIE_NOME]))
+			UsuarioToken::Excluir(trim($_COOKIE[CONFIG_COOKIE_NOME]));
 		setcookie(CONFIG_COOKIE_NOME, '', time() - 3600, self::Cookie_Path(), '', false, true);
 		return new self();
 	}

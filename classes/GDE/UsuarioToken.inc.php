@@ -79,6 +79,25 @@ class UsuarioToken extends Base {
 	}
 
 	/**
+	 * Dados
+	 *
+	 * Extrai os dados da strng
+	 *
+	 * @param string $string
+	 * @return array|false
+	 */
+	private static function Dados($string) {
+		$dados = explode(self::SEPARADOR, $string);
+		if(count($dados) != 3)
+			return false;
+		return array(
+			'id_token' => $dados[0],
+			'id_usuario' => $dados[1],
+			'token' => $dados[2]
+		);
+	}
+
+	/**
 	 * Verificar
 	 *
 	 * Verifica o token em formato string
@@ -88,18 +107,50 @@ class UsuarioToken extends Base {
 	 * @return false|Usuario
 	 */
 	public static function Verificar($string) {
-		$dados = explode(self::SEPARADOR, $string);
-		if(count($dados) != 3)
+		$dados = self::Dados($string);
+		if($dados === false)
 			return false;
-		$Token = self::Load($dados[0]);
-		if(
-			($Token->getID() == null) || // Token nao encontrado
-			($Token->getUsuario(false) === null) || // Usuario vazio!?
-			($Token->getUsuario()->getID() != $dados[1]) || // ID de usuario nao confere
-			($Token->getToken(false) != $dados[2]) // Token nao confere
-		)
+		$Token = self::Load($dados['id_token']);
+		if($Token->Conferir_Dados($dados['id_usuario'], $dados['token']) === false)
 			return false;
 		return $Token->getUsuario();
+	}
+
+	/**
+	 * Excluir
+	 *
+	 * Exclui o token pelos dados do cookie
+	 *
+	 * @param string $string Dados do cookie
+	 * @param bool $flush
+	 * @return bool
+	 */
+	public static function Excluir($string, $flush = true) {
+		$dados = self::Dados($string);
+		if($dados === false)
+			return true;
+		$Token = self::Load($dados['id_token']);
+		if($Token->Conferir_Dados($dados['id_usuario'], $dados['token']) === false)
+			return false;
+		return $Token->Delete($flush);
+	}
+
+	/**
+	 * Conferir_Dados
+	 *
+	 * Confere se os dados fornecidos sao iguais aos deste Token
+	 *
+	 * @param integer $id_usuario
+	 * @param string $token
+	 * @return bool
+	 */
+	private function Conferir_Dados($id_usuario, $token) {
+		return (
+			($this->getID() != null) && // Token nao encontrado
+			($this->getUsuario(false) !== null) && // Usuario vazio!?
+			($this->getUsuario()->getID() == $id_usuario) || // ID de usuario nao confere
+			($this->getToken(false) == $token) // Token nao confere
+		);
 	}
 
 	/**

@@ -32,7 +32,7 @@ define('CONFIG_SALT', '');
 define('CONFIG_SALT_SENHA_ANTIGA', '');
 
 // Nome do cookie de login
-define('CONFIG_COOKIE_NOME', 'GDE');
+define('CONFIG_COOKIE_NOME', 'gde_token');
 
 // Tempo em dias para o cookie expirar quando "Lembrar" for selecionado
 define('CONFIG_COOKIE_DIAS', 30);
