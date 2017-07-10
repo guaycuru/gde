@@ -250,6 +250,8 @@ arsort($catalogos);
 	<tbody>
 	<?php
 	foreach($catalogos as $catalogo => $quantos) {
+		if(!isset($vagas[$catalogo]))
+			continue;
 		$pc_gde = number_format(($quantos / $vagas[$catalogo])*100, 2);
 		if($pc_gde > 100)
 			$pc_gde = '100.00+';
