@@ -196,6 +196,8 @@ class Acontecimento extends Base {
 	 * @return mixed|string
 	 */
 	public static function TrataURL($url) {
+		if(is_array($url))
+			$url = $url[0];
 		if(preg_match('/(?:http:\/\/)?(?:www.|)youtube.com\/watch?(?:.*?)v=([a-z0-9_\-]+)(?:.*?)(&hd=1|).*/i', $url))
 			return preg_replace('/(?:http:\/\/)?(?:www.|)youtube.com\/watch?(?:.*?)v=([a-z0-9_\-]+)(?:.*?)(&hd=1|).*/i', '<br /><a href="#" id="youtube_${1}" class="video_youtube"><img src="'.CONFIG_URL.'web/images/play_video.png" style="background: url(http://i.ytimg.com/vi/${1}/default.jpg) transparent" alt="YouTube" border="0" height="90" width="120" /></a>', $url);
 		if(preg_match('/(?:http:\/\/)?(?:www.|)youtu.be\/([a-z0-9_\-]+)(?:.*?)(\?hd=1|).*/i', $url))
