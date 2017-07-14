@@ -15,7 +15,7 @@ P: Qual a diferença entre a versão 2.3 e a 2.5?
 R: Em termos de funcionalidades: "avisos", "fóruns", "grupos" e "oportunidades" foram removidos (não eram utilizados). Em termos de backend: a versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, às vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 foi tudo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/). Além disso, a versão 2.5 suporta disciplinas com a mesma sigla e níveis diferentes, cursos com o mesmo número e níveis diferentes e oferecimentos com turmas com mais de 2 caracteres, além de várias outras correções menores.  
   
 P: Quando o GDE 2.5 vai ao ar?  
-R: Assim que algum as burocracias envolvidas forem resolvidas. Espero que isso ocorra antes de 2018!  
+R: Assim que algumas burocracias envolvidas forem resolvidas. Espero que isso ocorra antes de 2018!  
 
 P: Já foi tudo reescrito?  
 R: Não, esse é um processo lento e trabalhoso, e infelizmente estou fazendo tudo sozinho.  
