@@ -4,7 +4,17 @@
  2. Acesse a pasta raiz do projeto e rode o comando `composer install`
  3. Copie o arquivo `common/config-sample.inc.php` para `common/config.inc.php`
  4. Edite o arquivo `common/config.inc.php` com os dados apropriados
- 5. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para criar as tabelas
+ 5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o
+ 6. Importe o arquivo gde_pacote.sql com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`
+ 7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas
+
+### Sobre os dados no pacote ###
+
+ - Utilize o login `login1`
+ - Todos os usuários possuem a senha `gde42`
+ - Todos os dados de alunos e usuários são fictícios
+ - O pacote possui alguns dados dos catálogos 2007 e 2016
+ - Por questões de tamanho, apenas alguns cursos, modalidades, disciplinas e oferecimentos estão presentes
 
 ## Sobre este projeto ##
 
