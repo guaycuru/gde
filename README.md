@@ -1,12 +1,12 @@
 ## Instalação ##
 
- 1. Instale o Composer de [getcomposer.org](https://getcomposer.org)
- 2. Acesse a pasta raiz do projeto e rode o comando `composer install`
- 3. Copie o arquivo `common/config-sample.inc.php` para `common/config.inc.php`
- 4. Edite o arquivo `common/config.inc.php` com os dados apropriados
- 5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o
- 6. Importe o arquivo gde_pacote.sql com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`
- 7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas
+ 1. Instale o Composer de [getcomposer.org](https://getcomposer.org);
+ 2. Acesse a pasta raiz do projeto e rode o comando `composer install`;
+ 3. Copie o arquivo `common/config-sample.inc.php` para `common/config.inc.php`;
+ 4. Edite o arquivo `common/config.inc.php` com os dados apropriados. As partes mais importantes que devem ser alteradas são as relacionadas ao banco de dados (DB) e à URL base do sistema;
+ 5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o;
+ 6. Importe o arquivo `gde_pacote.sql` com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`. Esta importação irá demorar algum tempo, então tenha paciência;
+ 7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas.
 
 ### Sobre os dados no pacote ###
 
