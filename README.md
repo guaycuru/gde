@@ -1,3 +1,16 @@
+## Pré-Requisitos ##
+
+ - Apache 2.4 ou mais novo;
+   - Módulo `mod_rewrite` ativado;
+   - Configuração `AllowOverride` definida como `All`;
+ - PHP 5.6.30 ou mais novo (recomendável o uso do PHP 7.1);
+   - Extensão mysql_pdo;
+   - Extensão mbstring;
+   - Extensão curl;
+   - Extensão GD;
+ - MySQL 5.6.4 ou mais novo (recomendável o uso do MySQL 5.7) ou MariaDB 10.0.5 ou mais novo;
+   - InnoDB ativado
+
 ## Instalação ##
 
  1. Instale o Composer de [getcomposer.org](https://getcomposer.org);
