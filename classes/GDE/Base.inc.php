@@ -360,7 +360,7 @@ abstract class Base {
 	 * @throws \Exception
 	 */
 	public function __call($name, $args) {
-		if(preg_match('/^(get|set|add|remove|clear)(.+?)$/i', $name, $matches) > 0) { // GET / SET
+		if(preg_match('/^(get|set|add|remove|clear|has)(.+?)$/i', $name, $matches) > 0) {
 			if($this->_meta === null)
 				$this->_meta = self::_EM()->getClassMetadata(get_class($this));
 			list($full, $method, $property) = $matches;
@@ -659,6 +659,22 @@ abstract class Base {
 						}
 					}
 					$this->{$property}->clear();
+					break;
+				case 'has':
+					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
+						throw new \Exception("Can't has".$name."() for a not TO_MANY property on class ".get_class($this).'.');
+					if(!array_key_exists(0, $args)) // No value passed
+						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
+					if(is_object($args[0])) {
+						if(!($args[0] instanceof $_association['targetEntity']))
+							throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
+						else
+							$id = $args[0]->getID();
+					} else
+						$id = $args[0];
+					return $this->{$property}->exists(function($k, $O) use ($id) {
+						return $O->getID() == $id;
+					});
 					break;
 				default:
 					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');

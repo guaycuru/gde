@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
@@ -46,36 +47,39 @@ class Oferecimento extends Base {
 	protected $periodo;
 
 	/**
-	 * @var Professor
+	 * @var ArrayCollection|Professor[]
 	 *
-	 * @ORM\ManyToOne(targetEntity="Professor", inversedBy="oferecimentos")
-	 * @ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")
+	 * @ORM\ManyToMany(targetEntity="Professor", inversedBy="oferecimentos")
+	 * @ORM\JoinTable(name="gde_r_oferecimentos_professores",
+	 *      joinColumns={@ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_professor", referencedColumnName="id_professor")}
+	 * )
 	 */
-	protected $professor;
+	protected $professores;
 
 	/**
-	 * @var OferecimentoReserva
+	 * @var ArrayCollection|OferecimentoReserva[]
 	 *
 	 * @ORM\OneToMany(targetEntity="OferecimentoReserva", mappedBy="oferecimento", orphanRemoval=true)
 	 */
 	protected $reservas;
 
 	/**
-	 * @var Aluno
+	 * @var ArrayCollection|Aluno[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Aluno", mappedBy="oferecimentos")
 	 */
 	protected $alunos;
 
 	/**
-	 * @var Aluno
+	 * @var ArrayCollection|Aluno[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Aluno", mappedBy="trancados")
 	 */
 	protected $alunos_trancados;
 
 	/**
-	 * @var Dimensao
+	 * @var ArrayCollection|Dimensao[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Dimensao", inversedBy="oferecimentos")
 	 * @ORM\JoinTable(name="gde_r_oferecimentos_dimensoes",
@@ -114,7 +118,7 @@ class Oferecimento extends Base {
 	protected $pagina;
 
 	// ToDo: Remover isto!
-	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor', 'Per&iacute;odo');
+	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor(es)', 'Per&iacute;odo');
 	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.id_periodo');
 
 	/**
@@ -184,7 +188,7 @@ class Oferecimento extends Base {
 		if(!empty($param['professor']))
 			$qrs[] = "P.nome LIKE :professor";
 		if(!empty($param['professor']) || ($ordem == "P.nome ASC") || ($ordem == "P.nome DESC"))
-			$jns[] = " JOIN O.professor AS P";
+			$jns[] = " JOIN O.professores AS P";
 		if((!empty($param['dia'])) || (!empty($param['horario'])) || (!empty($param['sala'])))
 			$jns[] = " JOIN O.dimensoes AS D";
 		if(!empty($param['dia']))
@@ -313,6 +317,43 @@ class Oferecimento extends Base {
 		if($this->getDisciplina(false) === null)
 			return null;
 		return $this->getDisciplina()->getSigla($html);
+	}
+
+	/**
+	 * getProfessores
+	 *
+	 * Retorna a lista de Professores deste Oferecimento
+	 *
+	 * @param bool $formatado
+	 * @param string $cola
+	 * @return ArrayCollection|Professor[]|string
+	 */
+	public function getProfessores($formatado = false, $cola = ', ') {
+		if($formatado === false)
+			return parent::getProfessores();
+
+		$Professores = parent::getProfessores();
+		if(count($Professores) == 0)
+			return "Desconhecido";
+
+		$professores = [];
+		foreach($Professores as $Professor)
+			$professores[] = '<a href="'.CONFIG_URL.'perfil/?professor='.$Professor->getID().'">'.$Professor->getNome(true).'</a>';
+		return implode($cola, $professores);
+	}
+
+	/**
+	 * getProfessor
+	 *
+	 * Retrocompatibilidade
+	 *
+	 * @return Professor
+	 */
+	public function getProfessor() {
+		$Professores = $this->getProfessores(false);
+		if(count($Professores) == 0)
+			return null;
+		return $Professores->first();
 	}
 
 	/**

@@ -429,7 +429,7 @@ if($qts['alunos'] != 0) {
 		<th align='center'>N&iacute;vel</th>
 		<th align='center'>Sigla e Turma</th>
 		<th align='center'>Nome</th>
-		<th align='center'>Professor</th>
+		<th align='center'>Professor(es)</th>
 		<th align='center'>Per&iacute;odo</th>
 		<th align='center' width='5%'>Vagas</th>
 		<th align='center' width='5%'>Alunos</th>
@@ -452,7 +452,7 @@ if($qts['alunos'] != 0) {
 		<td><?= $nivel_of; ?></td>
 		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getSigla(true)." ".$Oferecimento->getTurma(true); ?></a></td>
 		<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>/"><?= $Oferecimento->getDisciplina(true)->getNome(true); ?></a></td>
-		<td><?= ($Oferecimento->getProfessor(false) !== null) ? '<a href="'.CONFIG_URL.'perfil/?professor='.$Oferecimento->getProfessor()->getID().'">'.$Oferecimento->getProfessor(true)->getNome(true).'</a>' : 'Desconhecido'; ?></td>
+		<td><?= $Oferecimento->getProfessores(true); ?></td>
 		<td><?= $Oferecimento->getPeriodo(true)->getNome(false); ?></td>
 		<td><?= $vagas; ?></td>
 		<td><?= $matriculados; ?></td>

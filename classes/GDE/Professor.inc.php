@@ -36,9 +36,9 @@ class Professor extends Base {
 	protected $usuario;
 
 	/**
-	 * @var Oferecimento
+	 * @var ArrayCollection|Oferecimento[]
 	 *
-	 * @ORM\OneToMany(targetEntity="Oferecimento", mappedBy="professor")
+	 * @ORM\ManyToMany(targetEntity="Oferecimento", mappedBy="professores")
 	 */
 	protected $oferecimentos;
 
@@ -125,8 +125,16 @@ class Professor extends Base {
 		if($Periodo === null) {
 			$Oferecimentos = parent::getOferecimentos();
 		} else {
-			$criteria = Criteria::create()->where(Criteria::expr()->eq("periodo", $Periodo));
-			$Oferecimentos = parent::getOferecimentos()->matching($criteria);
+			$qb = self::_EM()->createQueryBuilder()
+				->select('o')
+				->from('GDE\\Oferecimento', 'o')
+				->join('o.professores', 'pr')
+				->where('pr.id_professor = :id_professor')
+				->setParameter('id_professor', $this->getID())
+				->join('o.periodo', 'pe')
+				->andWhere('pe.id_periodo = :periodo')
+				->setParameter('periodo', $Periodo->getID());
+			$Oferecimentos = $qb->getQuery()->getResult();
 		}
 		if($formatado === false)
 			return $Oferecimentos;

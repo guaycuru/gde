@@ -660,7 +660,7 @@ class Aluno extends Base {
 			'INNER JOIN A.oferecimentos AS O ';
 		if($Disciplina !== null)
 			$dql .= 'INNER JOIN O.disciplina AS D ';
-		$dql .= 'WHERE A.ra = ?1 AND O.professor = ?2';
+		$dql .= 'WHERE A.ra = ?1 AND (?2 MEMBER OF O.professores)';
 
 		if($Disciplina !== null)
 			$dql .= ' AND D.sigla = ?3';
@@ -678,7 +678,7 @@ class Aluno extends Base {
 	/**
 	 * Cursou_Com
 	 *
-	 * Determina se este Aluno ja cursou com $Professor, opcionalmente $Disciplina
+	 * Determina se este Aluno ja trancou com $Professor, opcionalmente $Disciplina
 	 *
 	 * @param Professor $Professor
 	 * @param Disciplina $Disciplina
@@ -689,7 +689,7 @@ class Aluno extends Base {
 			'INNER JOIN A.trancados AS O ';
 		if($Disciplina !== null)
 			$dql .= 'INNER JOIN O.disciplina AS D ';
-		$dql .= 'WHERE A.ra = ?1 AND O.professor = ?2';
+		$dql .= 'WHERE A.ra = ?1 AND (?2 MEMBER OF O.professores)';
 
 		if($Disciplina !== null)
 			$dql .= ' AND D.sigla = ?3';

@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,7 +27,7 @@ class Dimensao extends Base {
 	protected $id_dimensao;
 
 	/**
-	 * @var Oferecimento
+	 * @var ArrayCollection|Oferecimento[]
 	 *
 	 * @ORM\ManyToMany(targetEntity="Oferecimento", mappedBy="dimensoes")
 	 */

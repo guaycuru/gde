@@ -51,7 +51,7 @@ if(!isset($_POST['tp'])) {
 		<td align="center" colspan="7"><strong>Nenhum oferecimento cadastrado para <?= $Periodo_Selecionado->getNome(true); ?>!</strong></td>
 	</tr>
 <?php } else { ?>
-	<table border='1' width='95%'><tr><td align='center'><strong>Sigla e Turma</strong></td><td align='center'><strong>Nome</strong></td><td align='center'><strong>Professor</strong></td><td align='center' width='5%'><strong>Vagas</strong></td><td align='center' width='5%'><strong>Alunos</strong></td><td align='center' width='10%'><strong>Situa&ccedil;&atilde;o</strong></td></tr>
+	<table border='1' width='95%'><tr><td align='center'><strong>Sigla e Turma</strong></td><td align='center'><strong>Nome</strong></td><td align='center'><strong>Professor(es)</strong></td><td align='center' width='5%'><strong>Vagas</strong></td><td align='center' width='5%'><strong>Alunos</strong></td><td align='center' width='10%'><strong>Situa&ccedil;&atilde;o</strong></td></tr>
 <?php
 	foreach($Oferecimentos as $Oferecimento) {
 		$vagas = $Oferecimento->getVagas();
@@ -66,7 +66,7 @@ if(!isset($_POST['tp'])) {
 		<tr>
 			<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>"><?= $Oferecimento->getSigla(true)." ".$Oferecimento->getTurma(true); ?></a></td>
 			<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Oferecimento->getID(); ?>"><?= $Oferecimento->getDisciplina(true)->getNome(true); ?></a></td>
-			<td><?= ($Oferecimento->getProfessor() != null) ? '<a href="'.CONFIG_URL.'perfil/?p='.$Oferecimento->getProfessor(true)->getID().'">'.$Oferecimento->getProfessor(true)->getNome(true).'</a>' : 'Desconhecido'; ?></td>
+			<td><?= $Oferecimento->getProfessores(true); ?></td>
 			<td><?= $vagas; ?></td>
 			<td><?= $matriculados; ?></td>
 			<td><?= $situacao; ?></td>
