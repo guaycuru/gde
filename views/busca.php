@@ -72,7 +72,7 @@ for($i = date('Y')+2; $i > 1980; $i--) {
 $periodos = "";
 $Periodos = Periodo::Listar();
 foreach($Periodos as $Periodo)
-	$periodos .= '<option value="'.$Periodo->getPeriodo(true).'"'.(((isset($_GET['periodo'])) && ($_GET['periodo'] == $Periodo->getPeriodo(false)))?' selected="selected"':null).'>'.$Periodo->getNome(true).'</option>';
+	$periodos .= '<option value="'.$Periodo->getPeriodo(true).'"'.(((isset($_GET['periodo'])) && ($_GET['periodo'] == $Periodo->getPeriodo(false)))?' selected="selected"':null).'>'.$Periodo->getNome(false).'</option>';
 
 $periodicidades = "<option value=\"\">Indiferente</option>";
 foreach(Disciplina::Listar_Periodicidades() as $p => $periodicidade) {

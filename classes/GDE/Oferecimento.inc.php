@@ -153,21 +153,28 @@ class Oferecimento extends Base {
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
+		$join_disciplina = false;
 		if($ordem == null)
 			$ordem = "O.id_oferecimento ASC";
-		if(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC"))
+		if(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
 			$ordem = ($ordem != "DI.sigla DESC") ? "DI.sigla ASC, O.turma ASC" : "DI.sigla DESC, O.turma DESC";
-		if(!empty($param['sigla']))
+			$join_disciplina = true;
+		}
+		if(!empty($param['sigla'])) {
+			$join_disciplina = true;
 			if(strlen($param['sigla']) == 5) {
 				$qrs[] = "DI.sigla = :sigla";
 			} else {
 				$qrs[] = "DI.sigla LIKE :sigla";
-				$param['sigla'] = '%'.$param['sigla'].'%';
+				$param['sigla'] = '%' . $param['sigla'] . '%';
 			}
+		}
 		if(!empty($param['periodo'])) {
 			$qrs[] = "O.periodo = :periodo";
 		}
 		if((!empty($param['sigla'])) || (!empty($param['nome'])) || (!empty($param['creditos'])) || (!empty($param['instituto'])) || (!empty($param['nivel'])) || ($ordem == "DI.nome ASC") || ($ordem == "DI.nome DESC"))
+			$join_disciplina = true;
+		if($join_disciplina === true)
 			$jns[] = " JOIN O.disciplina AS DI";
 		if(!empty($param['nome'])) {
 			$qrs[] = "DI.nome LIKE :nome";
