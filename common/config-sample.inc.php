@@ -11,6 +11,7 @@ define('CONFIG_DB_PORT', ''); // Padrao
 define('CONFIG_DB_USER', 'Web');
 define('CONFIG_DB_PASS', '');
 define('CONFIG_DB_NAME', 'gde');
+define('CONFIG_FTS_ENABLED', true);
 
 // APCu (cache)
 define('CONFIG_APCU_ENABLED', false);
