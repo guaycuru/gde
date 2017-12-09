@@ -343,7 +343,7 @@ class Oferecimento extends Base {
 		if(count($Professores) == 0)
 			return "Desconhecido";
 
-		$professores = [];
+		$professores = array();
 		foreach($Professores as $Professor)
 			$professores[] = '<a href="'.CONFIG_URL.'perfil/?professor='.$Professor->getID().'">'.$Professor->getNome(true).'</a>';
 		return implode($cola, $professores);
