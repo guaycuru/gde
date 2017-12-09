@@ -8,6 +8,7 @@
     "ext-gd": "*",
     "doctrine/orm": "2.5.*",
     "doctrine/dbal": "2.5.*",
-    "doctrine/common": "2.7.*"
+    "doctrine/common": "2.7.*",
+    "predis/predis": "1.1.1"
   }
 }
