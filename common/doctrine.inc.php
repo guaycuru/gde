@@ -20,7 +20,7 @@ $loader->register();
 unset($loader);
 
 // Initialize the caching mechanism
-$availableCaches = array(new \Doctrine\Common\Cache\ArrayCache);
+$availableCaches = array(new \Doctrine\Common\Cache\ArrayCache());
 
 // Initialize the APCu caching mechanism
 if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
@@ -32,27 +32,27 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
 	try {
 		$redis = new \Redis();
 		$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
-		$redisCache = new \Doctrine\Common\Cache\RedisCache;
+		$redisCache = new \Doctrine\Common\Cache\RedisCache();
 		$redisCache->setRedis($redis);
 		$availableCaches[] = $redisCache;
+		unset($redis);
 	} catch(\Exception $e) {
-
+		// Nao foi possivel conectar ao REDIS
 	}
-}
-
-// Initialize the PRedis caching mechanism
-if((defined('CONFIG_PREDIS_ENABLED')) && (CONFIG_PREDIS_ENABLED === true)) {
+} elseif((defined('CONFIG_PREDIS_ENABLED')) && (CONFIG_PREDIS_ENABLED === true)) {
+	// Initialize the PRedis caching mechanism, only if Redis is not already initialized
 	try {
-		$client = new \Predis\Client(array(
+		$redis = new \Predis\Client(array(
 			'scheme' => 'tcp',
 			'host' => CONFIG_REDIS_HOST,
 			'port' => CONFIG_REDIS_PORT,
 		));
-		$client->connect();
-		$redisCache = new \Doctrine\Common\Cache\PredisCache($client);
+		$redis->connect();
+		$redisCache = new \Doctrine\Common\Cache\PredisCache($redis);
 		$availableCaches[] = $redisCache;
-	} catch(\Exception $e) {
-
+		unset($redis);
+	} catch(\Predis\Connection\ConnectionException $e) {
+		// Nao foi possivel conectar ao REDIS
 	}
 }
 
