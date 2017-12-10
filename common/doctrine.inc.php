@@ -58,7 +58,7 @@ if((defined('CONFIG_PREDIS_ENABLED')) && (CONFIG_PREDIS_ENABLED === true)) {
 
 // Add all available caches to the cache chain
 $_cache = new \Doctrine\Common\Cache\ChainCache($availableCaches);
-unset($arrayCache, $redisCache);
+unset($arrayCache, $redisCache, $availableCaches);
 
 // Load Annotation Registry
 AnnotationRegistry::registerFile(__DIR__.'/../vendor/doctrine/orm/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php');
