@@ -323,7 +323,7 @@ class Aluno extends Base {
 			}
 		} elseif(mb_strlen($q) < CONFIG_FT_MIN_LENGTH) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem != 'rank DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
+				$ordem = ($ordem == 'rank DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
 			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
 				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
 				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";

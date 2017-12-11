@@ -326,7 +326,7 @@ class Disciplina extends Base {
 		$start = intval($start);
 		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem != 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
+				$ordem = ($ordem == 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q";
 			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY ".$ordem;

@@ -201,7 +201,7 @@ class Professor extends Base {
 		$start = intval($start);
 		if(strlen($q) < CONFIG_FT_MIN_LENGTH) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem != 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
+				$ordem = ($ordem == 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_professores` AS P WHERE P.`nome` LIKE :q";
 			$sql = "SELECT P.* FROM `gde_professores` AS P WHERE P.`nome` LIKE :q ORDER BY ".$ordem;
