@@ -191,7 +191,7 @@ if($continua) {
 		</tr>
 		<tr>
 			<td width="10%">Modalidade:</td>
-			<td><?= $Usr->getModalidade(true)->getNome(true); ?></td>
+			<td><?= ($Usr->getModalidade(false) !== null) ? $Usr->getModalidade()->getSigla(true).' - '.$Usr->getModalidade()->getNome(true) : '-'; ?></td>
 		</tr>
 	</table>
 	<br /><br />
