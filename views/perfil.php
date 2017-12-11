@@ -632,7 +632,7 @@ if($Usr !== null) {
 								</tr>
 								<tr>
 									<td width="30%"><strong>Curso:</strong></td>
-									<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '-'; ?>)</td>
+									<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 								</tr>
 								<tr>
 									<td width="30%"><strong>Modalidade:</strong></td>
@@ -649,14 +649,13 @@ if($Usr !== null) {
 								</tr>
 								<tr>
 									<td width="30%"><strong>Curso (P&oacute;s):</strong></td>
-									<td><?= $Aluno->getCurso_Pos(true)->getNome(true); ?> (<?= $Aluno->getCurso_Pos(true)->getNumero(true); ?>)</td>
+									<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
 								</tr>
 								<tr>
 									<td width="30%"><strong>Modalidade (P&oacute;s):</strong></td>
 									<td><?= $Aluno->getModalidade_Pos(); ?></td>
 								</tr>
-							<?php } ?>
-							<?php if($_Usuario->getAdmin() === true) { ?>
+							<?php } if($_Usuario->getAdmin() === true) { ?>
 								<tr>
 									<td width="30%"><strong>Admin:</strong></td>
 									<td><a href="VisaoAdminAluno.php?ra=<?=$Aluno->getRA(); ?>">Editar Aluno</a></td>
