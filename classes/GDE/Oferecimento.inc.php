@@ -117,6 +117,8 @@ class Oferecimento extends Base {
 	 */
 	protected $pagina;
 
+	const SALA_DESCONHECIDA = '????';
+
 	// ToDo: Remover isto!
 	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor(es)', 'Per&iacute;odo');
 	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.id_periodo');
@@ -429,7 +431,11 @@ class Oferecimento extends Base {
 	 * @return string
 	 */
 	public static function Formata_Horario($Horario, $dia, $horario) {
-		return (isset($Horario[$dia][$horario])) ? (($Horario[$dia][$horario] != '????') ? "<a href=\"".CONFIG_URL."sala/".$Horario[$dia][$horario]."/\">".$Horario[$dia][$horario]."</a>" : $Horario[$dia][$horario]) : "-";
+		if((!array_key_exists($dia, $Horario)) || (!array_key_exists($horario, $Horario[$dia])))
+			return '-';
+		if(($Horario[$dia][$horario] == self::SALA_DESCONHECIDA) || ($Horario[$dia][$horario] == null))
+			return ($Horario[$dia][$horario] != null) ? $Horario[$dia][$horario] : self::SALA_DESCONHECIDA;
+		return "<a href=\"".CONFIG_URL."sala/".$Horario[$dia][$horario]."/\">".$Horario[$dia][$horario]."</a>";
 	}
 
 	/**

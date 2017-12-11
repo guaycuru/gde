@@ -31,7 +31,6 @@ if($oferecimento_pagina == null) {
 	$html_oferecimento_pagina = "<a href='".$oferecimento_pagina."' target='_blank'>".$oferecimento_pagina."</a>"; //.' <a href="#" id="pagina_reclamar" class="link_reclamar">Reclamar</a>';
 
 ?>
-	<!-- <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.forum.js?<?= REVISION; ?>"></script> -->
 	<script type="text/javascript">
 		// <![CDATA[
 		var carregou_informacoes = false;
@@ -141,7 +140,6 @@ if($oferecimento_pagina == null) {
 						<li><a href="#tab_informacoes" class="ativo">Informa&ccedil;&otilde;es</a></li>
 						<li><a href="#tab_disciplina">Disciplina</a></li>
 						<li><a href="#tab_horario">Hor&aacute;rio</a></li>
-						<!-- <li><a href="#tab_forum">F&oacute;rum</a></li> -->
 					</ul>
 					<div id="tab_informacoes" class="tab_content">
 						<table cellspacing="0" class="tabela_bonyta_branca">
@@ -175,9 +173,6 @@ if($oferecimento_pagina == null) {
 							?>
 						</table>
 					</div>
-					<!-- <div id="tab_forum" class="tab_content">
-						<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando F&oacute;rum...
-					</div> -->
 				</div>
 			</div>
 		</div>

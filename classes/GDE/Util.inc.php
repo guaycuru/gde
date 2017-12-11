@@ -54,7 +54,7 @@ class Util {
 		for($j = 7; $j < 23; $j++) {
 			$conta = 0;
 			for($i = 2; $i < 8; $i++) {
-				if(isset($Horario[$i][$j]))
+				if((array_key_exists($i, $Horario)) && (array_key_exists($j, $Horario[$i])))
 					$conta++;
 			}
 			if($conta == 0)
