@@ -216,9 +216,11 @@ class Disciplina extends Base {
 			$Disciplinas = self::FindBy(array('sigla' => $sigla));
 			if(count($Disciplinas) > 0)
 				return $Disciplinas[0];
-			elseif($vazio == true)
-				return new self;
-			else
+			elseif($vazio == true) {
+				$Disciplina = new self;
+				$Disciplina->setSigla($sigla);
+				return $Disciplina;
+			} else
 				return null;
 		} elseif((is_array($nivel)) && (count($nivel) > 1)) {
 			// Se temos uma lista de niveis, fazemos uma consulta e retornamos a primeira encontrada
@@ -227,17 +229,25 @@ class Disciplina extends Base {
 				'sigla' => $sigla,
 				'nivel' => $nivel
 			), null, $total, 1);
-			if(count($Disciplinas) == 0)
-				return ($vazio) ? new self : null;
-			else
+			if(count($Disciplinas) == 0) {
+				if($vazio === true) {
+					$Disciplina = new self;
+					$Disciplina->setSigla($sigla);
+					return $Disciplina;
+				} else
+					return null;
+			} else
 				return $Disciplinas[0];
 		} else {
 			if(is_array(($nivel)))
 				$nivel = $nivel[0];
 			// Se temos nivel podemos fazer a busca por unique
 			$Disciplina = self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
-			if(($Disciplina === null) && ($vazio === true))
-				return new self;
+			if(($Disciplina === null) && ($vazio === true)) {
+				$Disciplina = new self;
+				$Disciplina->setSigla($sigla);
+				return $Disciplina;
+			}
 			return $Disciplina;
 		}
 	}
@@ -506,7 +516,7 @@ class Disciplina extends Base {
 			foreach($organizados['P'] as $n => $lista) {
 				$pres[$n] = array();
 				foreach($lista as $pre) {
-					if($pre[0] === null) {
+					if(($pre[0] === null) || ($pre[0]->getID() == null)) {
 						$url_sigla = htmlspecialchars($pre[2])." (?)";
 					} else {
 						$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
@@ -528,7 +538,7 @@ class Disciplina extends Base {
 				foreach($conjuntos as $n => $lista) {
 					$pres[$catalogo][$n] = array();
 					foreach($lista as $pre) {
-						if($pre[0] === null) {
+						if(($pre[0] === null) || ($pre[0]->getID() == null)) {
 							$url_sigla = htmlspecialchars($pre[2])." (?)";
 						} else {
 							$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
@@ -549,11 +559,11 @@ class Disciplina extends Base {
 			foreach($subfinal as $catalogo => $lista) {
 				if($agrupando === true) {
 					if($last != $lista) {
-						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $last_catalogo)) ? "<tr><td><strong>De ".$primeiro." At&eacute; ".$last_catalogo."</strong></td><td><strong>".$last."</strong></td></tr>" : "<tr><td>De ".$primeiro." At&eacute; ".$last_catalogo."</td><td>".$last."</td></tr>";
+						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $last_catalogo)) ? "<tr><td nowrap><strong>De ".$primeiro." At&eacute; ".$last_catalogo."</strong></td><td nowrap><strong>".$last."</strong></td></tr>" : "<tr><td nowrap>De ".$primeiro." At&eacute; ".$last_catalogo."</td><td nowrap>".$last."</td></tr>";
 						$agrupando = false;
 					}
 					if((!isset($subfinal[$catalogo+1])) && ($agrupando === true)) {
-						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $catalogo)) ? "<tr><td><strong>De ".$primeiro." At&eacute; ".$catalogo."</strong></td><td><strong>".$lista."</strong>" : "<tr><td>De ".$primeiro." At&eacute; ".$catalogo."</td><td>".$lista."</td></tr>";
+						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $catalogo)) ? "<tr><td nowrap><strong>De ".$primeiro." At&eacute; ".$catalogo."</strong></td><td nowrap><strong>".$lista."</strong>" : "<tr><td nowrap>De ".$primeiro." At&eacute; ".$catalogo."</td><td nowrap>".$lista."</td></tr>";
 					}
 				}
 				if($agrupando === false) {
@@ -561,7 +571,7 @@ class Disciplina extends Base {
 						$agrupando = true;
 						$primeiro = $catalogo;
 					} else {
-						$final[] = ($Usuario->getCatalogo() == $catalogo) ? "<tr><td><strong>De ".$catalogo." At&eacute; ".$catalogo."</strong></td><td><strong>".$lista."</strong></td></tr>" : "<tr><td>De ".$catalogo." At&eacute; ".$catalogo."</td><td>".$lista."</td></tr>";
+						$final[] = ($Usuario->getCatalogo() == $catalogo) ? "<tr><td nowrap><strong>De ".$catalogo." At&eacute; ".$catalogo."</strong></td><td nowrap><strong>".$lista."</strong></td></tr>" : "<tr><td nowrap>De ".$catalogo." At&eacute; ".$catalogo."</td><td nowrap>".$lista."</td></tr>";
 					}
 				}
 				$last = $lista;
