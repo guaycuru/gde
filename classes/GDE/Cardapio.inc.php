@@ -104,7 +104,7 @@ class Cardapio extends Base {
 			$dia++;
 		if($sem == 6)
 			$dia += 2;
-		$data = date('Y-m-d H:i:s', mktime(12, 0, 0, date('m'), $dia));
+		$data = date('Y-m-d', mktime(12, 0, 0, date('m'), $dia));
 
 		$query = self::_EM()->createQuery("SELECT C FROM GDE\\Cardapio C WHERE C.data >= ?1 AND C.tipo = ?2 ORDER BY C.data ASC");
 		$query->setParameter(1, $data);
