@@ -27,7 +27,7 @@ way to fit your requirements.
 .menu ul ul a.drop { background: #E7F7FB; }
 .menu ul ul a:first-letter { color: #737373; }
 /* style the second level links */
-.menu ul ul a { background: #E7F7FB; color: #737373 !important; font-size: 12px !important; height: auto; line-height: 1em; padding: 5px 10px; width: 138px; border: 1px solid #80bdc8; border-width: 0 1px 1px 1px; }
+.menu ul ul a { background: #E7F7FB; color: #737373 !important; font-size: 12px !important; height: auto; line-height: 1em; padding: 5px 10px; width: 142px; border: 1px solid #80bdc8; border-width: 0 1px 1px 1px; }
 /** html .menu ul ul a {width:150px;}*/
 /* style the second level hover */
 .menu ul ul a.drop:hover{ background: #036DAB; }
