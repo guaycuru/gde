@@ -212,8 +212,7 @@ $(document).ready(function(){
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>editar-perfil/">Editar Perfil</a></li>
 							<li><a href="<?= CONFIG_URL; ?>configuracoes/">Configura&ccedil;&otilde;es da Conta</a></li>
-							<li><a href="<?= CONFIG_URL; ?>amigos/">Meus Amigos</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>recomendar/">Convidar um Amigo</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>amigos/">Meus Amigos</a></li>
 						</ul>
 					</li>
 					<li><a href="#" onclick="return false;">Ajuda</a>
