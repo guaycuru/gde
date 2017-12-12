@@ -356,12 +356,13 @@ class Oferecimento extends Base {
 	 *
 	 * Retrocompatibilidade
 	 *
+	 * @param $vazio bool
 	 * @return Professor
 	 */
-	public function getProfessor() {
+	public function getProfessor($vazio = false) {
 		$Professores = $this->getProfessores(false);
 		if(count($Professores) == 0)
-			return null;
+			return ($vazio) ? new Professor : null;
 		return $Professores->first();
 	}
 

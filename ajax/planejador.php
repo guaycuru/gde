@@ -264,6 +264,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 						} else
 							$mediap = $media1 = $media2 = $media3 = -1;
 
+						// ToDo: Suporte a multiplos professores
+						$nome_professor = ($Oferecimento->getProfessor(false) !== null) ? $Oferecimento->getProfessor()->getNome(true) : '(Professor Desconhecido)';
 						$Ofs[$Oferecimento->getTurma()] = array(
 							'id' => $Oferecimento->getID(),
 							'siglan' => $Oferecimento->getSigla(true),
@@ -271,7 +273,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 							'professor' => $Oferecimento->Professores(true),
 							'vagas' => $Oferecimento->getVagas(),
 							'fechado' => $Oferecimento->getFechado(),
-							'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas().') - '.$Oferecimento->getProfessores(true),
+							'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas().') - '.$nome_professor,
 							'horarios' => $Oferecimento->Lista_Horarios(true),
 							'mediap' => $mediap,
 							'media1' => $media1,
@@ -411,6 +413,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					}
 				} else
 					$mediap = $media1 = $media2 = $media3 = -1;
+				// ToDo: Suporte a multiplos professores
+				$nome_professor = ($Oferecimento->getProfessor(false) !== null) ? $Oferecimento->getProfessor()->getNome(true) : '(Professor Desconhecido)';
 				$Ofs[$Oferecimento->getTurma()] = array(
 					'id' => $Oferecimento->getID(),
 					'siglan' => $Oferecimento->getSigla(true),
@@ -418,7 +422,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					'professor' => $Oferecimento->Professores(true),
 					'vagas' => $Oferecimento->getVagas(true),
 					'fechado' => $Oferecimento->getFechado(false),
-					'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas(true).') - '.$Oferecimento->Professores(true),
+					'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas(true).') - '.$nome_professor,
 					'horarios' => $Oferecimento->Lista_Horarios(true),
 					'mediap' => $mediap,
 					'media1' => $media1,
