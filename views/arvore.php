@@ -93,7 +93,7 @@ if($continua) {
 		$construct = microtime(true) - $start;
 		echo "Construct: ".$construct."<br />";
 	}
-	$_SESSION['Arvore_Curriculo']['Imagem_Tmp'] = '../cache/arvores/arvore_'.Util::Code(16).'.png';
+	$_SESSION['Arvore_Curriculo']['Imagem_Tmp'] = '../cache/arvores/arvore_'.Util::Random(16).'.png';
 	$Arvore->Desenha($_SESSION['Arvore_Curriculo']['Imagem_Tmp']);
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 		echo "Desenha: ".(microtime(true) - $start - $construct)."<br />";

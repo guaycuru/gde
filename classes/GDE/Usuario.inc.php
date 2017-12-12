@@ -1463,7 +1463,7 @@ class Usuario extends Base {
 			@unlink(self::PASTA_FOTOS.$this->foto.'_th.jpg');
 		}
 		do {
-			$nome = Code(16);
+			$nome = Util::Random(16);
 		} while(file_exists(self::PASTA_FOTOS.$nome.'.jpg'));
 		$p_largura = ($largura > $m_largura) ? $m_largura / $largura : 1;
 		$p_altura = ($altura > $m_altura) ? $m_altura / $altura : 1;

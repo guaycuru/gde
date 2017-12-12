@@ -70,7 +70,7 @@ class Recomendacao extends Base {
 	 */
 	public function setChave() {
 		do {
-			$chave = Util::Code(16);
+			$chave = Util::Random(16);
 		} while(self::FindOneBy(array('chave' => $chave)) !== null);
 		return $this->chave = $chave;
 	}

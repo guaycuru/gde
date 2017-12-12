@@ -76,23 +76,6 @@ abstract class Base {
 	}
 	
 	/** 
-	 * Random
-	 *
-	 * Generates a random string
-	 *
-	 * @param integer $size The size of the random string
-	 * @param string $chars Chars to be used
-	 * @return string The random string
-	 */
-	public static function Random($size, $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
-		$l = strlen($chars) - 1;
-		$r = '';
-		while($size-- > 0)
-			$r .= $chars[mt_rand(0, $l)];
-		return $r;
-	}
-	
-	/** 
 	 * OK_JSON
 	 *
 	 * Outputs a JSON OK and terminates the execution
