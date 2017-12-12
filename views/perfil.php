@@ -653,7 +653,7 @@ if($Usr !== null) {
 								</tr>
 								<tr>
 									<td width="30%"><strong>Modalidade (P&oacute;s):</strong></td>
-									<td><?= $Aluno->getModalidade_Pos(); ?></td>
+									<td><?= $Aluno->getModalidade_Pos(true); ?></td>
 								</tr>
 							<?php } if($_Usuario->getAdmin() === true) { ?>
 								<tr>

@@ -79,28 +79,40 @@ foreach($Autorizacoes as $Auth) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="6"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><img src="<?= $Auth->getUsuario(true)->getFoto(true); ?>" border="0" alt="<?= $Auth->getUsuario(true)->getNome(true); ?>" /></a></td>
-				<td width="20%"><strong>Nome:</strong></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><img src="<?= $Auth->getUsuario(true)->getFoto(true); ?>" border="0" alt="<?= $Auth->getUsuario(true)->getNome(true); ?>" /></a></td>
+				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><?= $Auth->getUsuario(true)->getNome_Completo(true); ?></a></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>RA:</strong></td>
+				<td width="25%"><strong>RA:</strong></td>
 				<td><?= $Aluno->getRA(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>N&iacute;vel:</strong></td>
+				<td width="25%"><strong>N&iacute;vel:</strong></td>
 				<td><?= $Aluno->getNivel(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Curso:</strong></td>
-				<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+				<td width="25%"><strong>Curso:</strong></td>
+				<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Modalidade:</strong></td>
+				<td width="25%"><strong>Modalidade:</strong></td>
 				<td><?= $Aluno->getModalidade(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>A&ccedil;&atilde;o:</strong></td>
+				<td width="25%"><strong>N&iacute;vel (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Curso (P&oacute;s):</strong></td>
+				<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Modalidade (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getModalidade_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>A&ccedil;&atilde;o:</strong></td>
 				<td><a href="#" onclick="autorizar_amigo('<?= $Auth->getUsuario()->getID(); ?>'); return false;">Aceitar</a> | <a href="#" onclick="remover_amigo('<?= $Auth->getUsuario()->getID(); ?>'); return false;">Recusar</a></td></tr>
 		</table></td>
 	<?php
@@ -151,28 +163,40 @@ foreach($Amigos as $Amigo) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="6"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
-				<td width="20%"><strong>Nome:</strong></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
+				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo()->getNome_Completo(true); ?></a></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>RA:</strong></td>
+				<td width="25%"><strong>RA:</strong></td>
 				<td><?= $Aluno->getRA(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>N&iacute;vel:</strong></td>
+				<td width="25%"><strong>N&iacute;vel:</strong></td>
 				<td><?= $Aluno->getNivel(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Curso:</strong></td>
-				<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+				<td width="25%"><strong>Curso:</strong></td>
+				<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Modalidade:</strong></td>
+				<td width="25%"><strong>Modalidade:</strong></td>
 				<td><?= $Aluno->getModalidade(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Remover:</strong></td>
+				<td width="25%"><strong>N&iacute;vel (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Curso (P&oacute;s):</strong></td>
+				<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Modalidade (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getModalidade_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Remover:</strong></td>
 				<td><a href="#" onclick="remover_amigo('<?= $Amigo->getAmigo(true)->getID(); ?>'); return false;">Remover</a></td>
 			</tr>
 		</table></td>
@@ -222,28 +246,40 @@ foreach($Quase_Amigos as $Amigo) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="6"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
-				<td width="20%"><strong>Nome:</strong></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
+				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome_Completo(true); ?></a></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>RA:</strong></td>
+				<td width="25%"><strong>RA:</strong></td>
 				<td><?= $Aluno->getRA(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>N&iacute;vel:</strong></td>
+				<td width="25%"><strong>N&iacute;vel:</strong></td>
 				<td><?= $Aluno->getNivel(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Curso:</strong></td>
-				<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+				<td width="25%"><strong>Curso:</strong></td>
+				<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Modalidade:</strong></td>
+				<td width="25%"><strong>Modalidade:</strong></td>
 				<td><?= $Aluno->getModalidade(true); ?></td>
 			</tr>
 			<tr>
-				<td width="20%"><strong>Remover:</strong></td>
+				<td width="25%"><strong>N&iacute;vel (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Curso (P&oacute;s):</strong></td>
+				<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Modalidade (P&oacute;s):</strong></td>
+				<td><?= $Aluno->getModalidade_Pos(true); ?></td>
+			</tr>
+			<tr>
+				<td width="25%"><strong>Remover:</strong></td>
 				<td><a href="#" onclick="remover_amigo('<?= $Amigo->getAmigo(true)->getID(); ?>'); return false;">Remover</a> <i>(Aguardando Autoriza&ccedil;&atilde;o)</i></td>
 			</tr>
 		</table></td>
