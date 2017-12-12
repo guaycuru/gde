@@ -380,8 +380,14 @@ class Disciplina extends Base {
 	 * @param Disciplina $B
 	 * @return int
 	 */
-	public static function Organiza(Disciplina $A, Disciplina $B) {
-		return strnatcasecmp($A->getSigla(), $B->getSigla());
+	public static function Organiza($A, $B) {
+		if(
+			(($A instanceof Disciplina) || ($A instanceof CurriculoEletivaConjunto)) &&
+			(($B instanceof Disciplina) || ($B instanceof CurriculoEletivaConjunto))
+		)
+			return strnatcasecmp($A->getSigla(), $B->getSigla());
+		else
+			return 0;
 	}
 
 	/**
