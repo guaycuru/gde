@@ -522,4 +522,11 @@ class Oferecimento extends Base {
 		return $Lista;
 	}
 
+	public function Professores($html = false, $cola = ', ') {
+		$professores = array();
+		foreach($this->getProfessores(false) as $Professor)
+			$professores[] = $Professor->getNome($html);
+		return implode($cola, $professores);
+	}
+
 }

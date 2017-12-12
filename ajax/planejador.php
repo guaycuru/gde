@@ -236,7 +236,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 							$siglas_arvore[] = $Oferecimento->getSigla(true);
 							$Adicionados[] = $Oferecimento;
 						}
-						
+
+						// ToDo: Suporte a multiplos professores
 						$Professor = $Oferecimento->getProfessor(false);
 						if($Professor !== null) {
 							if(!isset($media_professor[$Professor->getID()])) {
@@ -267,10 +268,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 							'id' => $Oferecimento->getID(),
 							'siglan' => $Oferecimento->getSigla(true),
 							'turma' => $Oferecimento->getTurma(true),
-							'professor' => $Oferecimento->getProfessor(true)->getNome(true),
+							'professor' => $Oferecimento->Professores(true),
 							'vagas' => $Oferecimento->getVagas(),
 							'fechado' => $Oferecimento->getFechado(),
-							'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas().') - '.$Oferecimento->getProfessor(true)->getNome(true),
+							'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas().') - '.$Oferecimento->getProfessores(true),
 							'horarios' => $Oferecimento->Lista_Horarios(true),
 							'mediap' => $mediap,
 							'media1' => $media1,
@@ -384,6 +385,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			$Ret['Oferecimentos'] = $Ofs = array();
 			foreach($Oferecimentos as $Oferecimento) {
+				// ToDo: Suporte a multiplos professores
 				$Professor = $Oferecimento->getProfessor(false);
 				if($Professor !== null) {
 					if(!isset($media_professor[$Professor->getID()])) {
@@ -413,10 +415,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					'id' => $Oferecimento->getID(),
 					'siglan' => $Oferecimento->getSigla(true),
 					'turma' => $Oferecimento->getTurma(true),
-					'professor' => $Oferecimento->getProfessor(true)->getNome(true),
+					'professor' => $Oferecimento->Professores(true),
 					'vagas' => $Oferecimento->getVagas(true),
 					'fechado' => $Oferecimento->getFechado(false),
-					'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas(true).') - '.$Oferecimento->getProfessor(true)->getNome(true),
+					'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas(true).') - '.$Oferecimento->Professores(true),
 					'horarios' => $Oferecimento->Lista_Horarios(true),
 					'mediap' => $mediap,
 					'media1' => $media1,

@@ -56,6 +56,7 @@ else {
 				<div><table class="ui-corner-bottom" style="width: 100%; border: 1px solid #A6C9E2" >
 						<?php
 						foreach($Oferecimentos as $Oferecimento) {
+							// ToDo: Suporte a multiplos professores
 							$Professor = $Oferecimento->getProfessor(false);
 							if(($Professor === null) || (isset($profdisc[$Professor->getID()][$Oferecimento->getSigla(false)])))
 								continue;
