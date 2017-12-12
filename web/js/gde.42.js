@@ -1,12 +1,12 @@
-var erro_comum = function(form, mensagem, titulo, foco, destino) {
+var mensagem_comum = function(mensagem, destino) {
 	if(destino)
-		$.guaycuru.confirmacao(mensagem, destino);
+		$.guaycuru.confirmacao(mensagem, destino, null);
 	else
-		$.guaycuru.confirmacao(mensagem);
+		$.guaycuru.confirmacao(mensagem, null, null);
 };
 
-var erro_comum_esconder = function(mensagem, titulo, foco) {
-	//$("#last-alert").remove();
+var erro_comum = function(mensagem, destino) {
+	mensagem_comum(mensagem, destino);
 };
 
 var Logout = function() {
@@ -25,8 +25,6 @@ var auto_form_handler = function() {
 					res.ok = false;
 				if(res.ok) {
 					var msg = ($(form).data('sucesso')) ? $(form).data('sucesso') : 'Dados salvos com sucesso!';
-					if(msg !== ' ')
-						alert(msg);
 					if(res.destino)
 						var destino = res.destino;
 					else if(!$(form).data('destino')) {
@@ -37,7 +35,10 @@ var auto_form_handler = function() {
 					} else {
 						var destino = $(form).data('destino').replace('#ID#', res.id);
 					}
-					document.location = destino;
+					if(msg !== ' ')
+						mensagem_comum(msg, destino);
+					else
+						document.location = destino;
 				} else {
 					if(res.erro)
 						var msg = res.erro;
@@ -49,12 +50,11 @@ var auto_form_handler = function() {
 						var destino = res.destino;
 					else
 						var destino = null;
-					erro_comum($(form), msg, 'Erro:', true, destino);
+					erro_comum(msg, destino);
 					$(form).find('button').prop('disabled', false);
 				}
 			};
 			var multipart = ($(form).find('input[type=file]').length > 0);
-			erro_comum_esconder();
 			if(!multipart) {
 				$.post($(form).attr('action'), $(form).serialize(), parse_res)
 					.fail(function () {
@@ -84,9 +84,7 @@ var auto_form_handler = function() {
 				var msg = (errors === 1)
 					? 'Por favor verifique o campo destacado.'
 					: 'Por favor verifique os ' + errors + ' campos destacados.';
-				erro_comum($(this), msg);
-			} else {
-				erro_comum_esconder();
+				erro_comum(msg);
 			}
 		}
 	});

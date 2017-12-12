@@ -43,7 +43,7 @@ jQuery.guaycuru = {
 				else
 					top.frames[settings.nomeFrame].location = url;
 			}
-		}
+		};
 		
 		settings.callback1();
 		
