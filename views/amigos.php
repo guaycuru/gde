@@ -131,6 +131,9 @@ $i = 0;
 		<th>N&iacute;vel</th>
 		<th>Curso</th>
 		<th>Modalidade</th>
+		<th>N&iacute;vel P&oacute;s</th>
+		<th>Curso P&oacute;s</th>
+		<th>Modalidade P&oacute;s</th>
 		<th>A&ccedil;&atilde;o</th>
 	</tr>
 	<?php
@@ -141,8 +144,11 @@ $i = 0;
 			<td><a href="Perfil.php?l=<?= $Auth->getUsuario()->getLogin(); ?>"><?= $Auth->getUsuario(true)->getNome_Completo(true); ?></a></td>
 			<td><?= $Aluno->getRA(true); ?></td>
 			<td><?= $Aluno->getNivel(true); ?></td>
-			<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+			<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			<td><?= $Aluno->getModalidade(true); ?></td>
+			<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			<td><?= $Aluno->getModalidade_Pos(true); ?></td>
 			<td><a href="#" onclick="autorizar_amigo('<?= $Auth->getUsuario(true)->getID(); ?>'); return false;">Autorizar</a> | <a href="#" onclick="remover_amigo('<?= $Auth->getUsuario(true)->getID(); ?>'); return false;">Recusar</a></td>
 		</tr>
 		<?php
@@ -215,6 +221,9 @@ foreach($Amigos as $Amigo) {
 		<th>N&iacute;vel</th>
 		<th>Curso</th>
 		<th>Modalidade</th>
+		<th>N&iacute;vel P&oacute;s</th>
+		<th>Curso P&oacute;s</th>
+		<th>Modalidade P&oacute;s</th>
 		<th>Remover</th>
 	</tr>
 	<?php
@@ -225,8 +234,11 @@ foreach($Amigos as $Amigo) {
 			<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 			<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome_Completo(true); ?></a></td>
 			<td><?= $Aluno->getNivel(true); ?></td>
-			<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+			<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			<td><?= $Aluno->getModalidade(true); ?></td>
+			<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			<td><?= $Aluno->getModalidade_Pos(true); ?></td>
 			<td><a href="#" onclick="remover_amigo('<?= $Amigo->getAmigo(true)->getID(); ?>'); return false;">Remover</a></td>
 		</tr>
 		<?php
@@ -298,6 +310,9 @@ foreach($Quase_Amigos as $Amigo) {
 		<th>N&iacute;vel</th>
 		<th>Curso</th>
 		<th>Modalidade</th>
+		<th>N&iacute;vel P&oacute;s</th>
+		<th>Curso P&oacute;s</th>
+		<th>Modalidade P&oacute;s</th>
 		<th>Remover</th>
 	</tr>
 	<?php
@@ -308,8 +323,11 @@ foreach($Quase_Amigos as $Amigo) {
 			<td><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 			<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome(true).' '.$Amigo->getAmigo(true)->getSobrenome(true); ?></a></td>
 			<td><?= $Aluno->getNivel(true); ?></td>
-			<td><?= $Aluno->getCurso(true)->getNome(true)." (".$Aluno->getCurso(true)->getNumero(true).")"; ?></td>
+			<td><?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso(false) !== null) ? $Aluno->getCurso()->getNumero(true) : '?'; ?>)</td>
 			<td><?= $Aluno->getModalidade(true); ?></td>
+			<td><?= $Aluno->getNivel_Pos(true); ?></td>
+			<td><?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNome(true) : '-'; ?> (<?= ($Aluno->getCurso_Pos(false) !== null) ? $Aluno->getCurso_Pos()->getNumero(true) : '?'; ?>)</td>
+			<td><?= $Aluno->getModalidade_Pos(true); ?></td>
 			<td><a href="#" onclick="remover_amigo('<?= $Amigo->getAmigo(true)->getID(); ?>'); return false;">Remover</a></td>
 		</tr>
 		<?php
