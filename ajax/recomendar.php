@@ -5,6 +5,9 @@ namespace GDE;
 define('JSON', true);
 require_once('../common/common.inc.php');
 
+if((empty($_POST['ra'])) || (empty($_POST['email'])))
+	Base::Error_JSON('RA e email devem ser preenchidos!');
+
 $Rec = new Recomendacao();
 $Rec->setChave();
 $Rec->setRecomendante($_Usuario);
