@@ -12,12 +12,7 @@ if((!empty($_POST['assunto'])) && (!empty($_POST['mensagem']))) {
 		'login' => $_Usuario->getLogin(false)
 	);
 	if(Util::Enviar_Email("gde-support@googlegroups.com", "GDE - ".$_POST['assunto'], $_POST['mensagem']."\n\n".print_r($dados, true), $_Usuario->getEmail(false)) !== false)
-		die(Base::To_JSON(array(
-			'ok' => true
-		)));
+		Base::OK_JSON();
 	else
-		die(Base::To_JSON(array(
-			'ok' => false,
-			'erros' => array('N&atilde;o foi poss&iacute;vel enviar a Mensagem.')
-		)));
+		Base::Error_JSON('Erro: N&atilde;o foi poss&iacute;vel enviar sua mensagem. Por favor, tente novamente mais tarde.');
 }
