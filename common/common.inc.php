@@ -241,7 +241,6 @@ $(document).ready(function(){
 							<a href="<?= CONFIG_URL; ?>busca/#tab_disciplinas">Buscar Disciplinas</a>
 							<a href="<?= CONFIG_URL; ?>busca/#tab_oferecimentos">Buscar Oferecimentos</a>
 							<a href="<?= CONFIG_URL; ?>busca/#tab_salas">Buscar Salas</a>
-							<a href="<?= CONFIG_URL; ?>busca/#tab_grupos">Buscar Grupos</a>
 						</div>
 					</div>
 				</div>
