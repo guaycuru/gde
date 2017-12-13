@@ -43,7 +43,7 @@ var Cardapio_Muda = function(id) {
 			$("a#cardapio_semana").fancybox({
 				'hideOnContentClick': false,
 				'autoDimensions': false,
-				'width': '50%',
+				'width': '75%',
 				'height': '60%'
 			});
 		}

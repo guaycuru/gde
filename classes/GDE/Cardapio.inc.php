@@ -27,6 +27,7 @@ class Cardapio extends Base {
 	 */
 	protected $data;
 
+	const TIPO_CAFE_DA_MANHA = 0;
 	const TIPO_ALMOCO = 1;
 	const TIPO_JANTAR = 2;
 	/**
@@ -86,11 +87,24 @@ class Cardapio extends Base {
 	protected $suco;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="text", nullable=true)
+	 */
+	protected $observacoes;
+
+	/**
 	 * @var \DateTime
 	 *
 	 * @ORM\Column(type="datetime", nullable=false)
 	 */
 	protected $ultima_atualizacao;
+
+	private static $_tipos = array(
+		self::TIPO_CAFE_DA_MANHA => 'Caf&eacute; da Manh&atilde;',
+		self::TIPO_ALMOCO => 'Almo&ccedil;o',
+		self::TIPO_JANTAR => 'Jantar'
+	);
 
 	/**
 	 * @return Cardapio
@@ -115,6 +129,15 @@ class Cardapio extends Base {
 		} catch(\Doctrine\ORM\NoResultException $e) {
 			return new self;
 		}
+	}
+
+	/**
+	 * @param $data
+	 * @param $tipo
+	 * @return false|null|Cardapio
+	 */
+	public static function Por_Data_Tipo($data, $tipo) {
+		return self::FindOneBy(array('data' => $data, 'tipo' => $tipo));
 	}
 
 	/**
@@ -146,7 +169,7 @@ class Cardapio extends Base {
 	public static function Cardapios_Por_Datas(\DateTime $inicio, \DateTime $fim) {
 		$inicio->setTime(0, 0, 0);
 		$fim->setTime(0, 0, 0);
-		$query = self::_EM()->createQuery("SELECT C FROM GDE\\Cardapio C WHERE C.data >= ?1 AND C.data <= ?2 ORDER BY C.data ASC");
+		$query = self::_EM()->createQuery("SELECT C FROM GDE\\Cardapio C WHERE C.data >= ?1 AND C.data <= ?2 ORDER BY C.data ASC, C.tipo ASC");
 		$query->setParameter(1, $inicio);
 		$query->setParameter(2, $fim);
 		return $query->getResult();
@@ -188,16 +211,45 @@ class Cardapio extends Base {
 	 * @return string
 	 */
 	public function Formatado($cabecalho = true) {
-		return (($cabecalho)?"<strong>".(($this->getTipo(false) == self::TIPO_ALMOCO)?"ALMO&Ccedil;O":"JANTAR")."</strong> de <strong>".$this->Dia_Da_Semana().", ".$this->getData("d/m/Y")."</strong>:<br />":null)."<strong>Prato Principal:</strong> ".$this->getPrincipal(true)."<br />".
-		((!empty($this->getGuarnicao(false)))? "<strong>Guarni&ccedil;&atilde;o:</strong> ".$this->getGuarnicao(true)."<br />" : null).
-		((!empty($this->getPTS(false)))? "<strong>PTS:</strong> ".$this->getPTS(true)."<br />" : null).
-		"<strong>Salada:</strong> ".$this->getSalada(true)."<br />".
-		"<strong>Sobremesa:</strong> ".$this->getSobremesa(true)."<br />".
-		"<strong>Suco:</strong> ".$this->getSuco(true)."<br />".
-		((!empty($this->getVegetariano(false)))? "<strong>Vegetariano:</strong> ".$this->getVegetariano(true)."<br />" : null);
+		$guarnicao = $this->getGuarnicao(true);
+		$pts = $this->getPTS(true);
+		$sobremesa = $this->getSobremesa(true);
+		$salada = $this->getSalada(true);
+		$suco = $this->getSuco(true);
+		$vegetariano = $this->getVegetariano(true);
+		$observacoes = $this->getObservacoes(true);
+
+		$ret = "";
+		if($cabecalho)
+			$ret .= "<strong>".$this->getTipo(true)."</strong> de <strong>".$this->Dia_Da_Semana().", ".$this->getData("d/m/Y")."</strong>:<br />";
+		$ret .= "<strong>Prato Principal:</strong> ".$this->getPrincipal(true)."<br />";
+		if(!empty($guarnicao))
+			$ret .= "<strong>Guarni&ccedil;&atilde;o:</strong> ".$guarnicao."<br />";
+		if(!empty($pts))
+			$ret .= "<strong>PTS:</strong> ".$pts."<br />";
+		if(!empty($salada))
+			$ret .= "<strong>Salada:</strong> ".$salada."<br />";
+		if(!empty($sobremesa))
+			$ret .= "<strong>Sobremesa:</strong> ".$sobremesa."<br />";
+		if(!empty($suco))
+			$ret .= "<strong>Suco:</strong> ".$suco."<br />";
+		if(!empty($vegetariano))
+			$ret .= "<strong>Vegetariano:</strong> ".$vegetariano."<br />";
+		if(!empty($observacoes))
+			$ret .= "<strong>Observa&ccedil;&otilde;es:</strong> ".$observacoes."<br />";
+
+		return $ret;
 	}
 
 	public function Dia_Da_Semana() {
 		return Util::Dia_Da_Semana($this->getData('w'));
+	}
+
+	public function getTipo($html = false) {
+		$tipo = parent::getTipo(false);
+		if($html === false)
+			return $tipo;
+		else
+			return self::$_tipos[$tipo];
 	}
 }
