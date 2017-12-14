@@ -356,7 +356,7 @@ $(document).ready(function() {
 		<div id="amizades_pendentes">
 			<?php foreach($Autorizacoes as $Auth) { ?>
 			<div class="div_menu_requisicoes_linha" id="requisicao_amizade_<?= $Auth->getAmigo()->getID(); ?>">
-				<div class="requisicao_foto"><img src="<?= $Auth->getUsuario()->getFoto(true, true); ?>" /></div>
+				<div class="requisicao_foto"><img src="<?= $Auth->getUsuario()->getFoto(true, true, true); ?>" /></div>
 				<div class="requisicao_nome"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario()->getLogin(); ?>"><strong><?= $Auth->getUsuario()->getNome_Completo(true); ?></strong></a><br />
 					<a href="#" class="amizade_aceitar" id="amizade_aceitar_<?= $Auth->getUsuario()->getID(); ?>"><i>Aceitar</i></a> <a href="#" class="amizade_ignorar" id="amizade_ignorar_<?= $Auth->getUsuario()->getID(); ?>"><i>Ignorar</i></a>
 				</div>
@@ -376,7 +376,7 @@ $(document).ready(function() {
 				<div class="amigo" id="amigo_<?= $Amigo->getAmigo()->getID(); ?>">
 					<div class="amigo_foto">
 						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->Apelido_Ou_Nome(false, true); ?>">
-							<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->Apelido_Ou_Nome(false, true); ?>" />
+							<img src="<?= $Amigo->getAmigo()->getFoto(true, true, true) ?>" border="0" alt="<?= $Amigo->Apelido_Ou_Nome(false, true); ?>" />
 						</a>
 					</div>
 					<div class="amigo_nome">
@@ -401,7 +401,7 @@ $(document).ready(function() {
 							<div class="sliding_top transparente ui-corner-bottom" id="div_<?= $Amigo->getID(); ?>"><span>Adicionar</span></div>
 						</a>
 						<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getNome(true).' '.$Amigo->getSobrenome(true) ?>">
-							<img src="<?= $Amigo->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getNome(true) ?>" />
+							<img src="<?= $Amigo->getFoto(true, true, true) ?>" border="0" alt="<?= $Amigo->getNome(true) ?>" />
 						</a>
 					</div>
 					<div class="amigo_nome">

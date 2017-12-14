@@ -129,7 +129,7 @@ class Acontecimento extends Base {
 
 	public function getFoto($th = true) {
 		if($this->getOrigem() !== null)
-			return $this->getOrigem()->getFoto(true, $th);
+			return $this->getOrigem()->getFoto(true, $th, true);
 		elseif($this->tipo == self::TIPO_GDE)
 			return ($th) ? CONFIG_URL . "web/images/gde_th.gif" : "web/images/gde.gif";
 		else

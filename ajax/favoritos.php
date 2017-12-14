@@ -21,7 +21,7 @@ if(false && $i % $pc == 0)
 	echo "<div class=\"favorito_linha\">";
 ?>
 	<div class="amigo">
-		<div class="amigo_foto"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Favorito->getRA(true); ?>" style="text-decoration: none" title="<?= $Favorito->getNome(true); ?>"><img src="<?= ($Favorito->getUsuario(false) !== null) ? $Favorito->getUsuario()->getFoto(true, true) : Usuario::getFoto_Padrao(true); ?>" border="0" alt="<?= $Favorito->getNome(true); ?>" /></a></div>
+		<div class="amigo_foto"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Favorito->getRA(true); ?>" style="text-decoration: none" title="<?= $Favorito->getNome(true); ?>"><img src="<?= ($Favorito->getUsuario(false) !== null) ? $Favorito->getUsuario()->getFoto(true, true, true) : Usuario::getFoto_Padrao(true, true); ?>" border="0" alt="<?= $Favorito->getNome(true); ?>" /></a></div>
 		<div class="amigo_nome">
 			<a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Favorito->getRA(true); ?>" class="amigo" title="<?= $Favorito->getNome(true); ?>"><?= $Favorito->getNome(true); ?></a>
 		</div>

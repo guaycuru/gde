@@ -291,7 +291,7 @@ if($qts['alunos'] != 0) {
 		<td width="50%">
 			<table border="1" width="100%">
 				<tr>
-					<td width="128" height="150" align="center" rowspan="7"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(); ?>"><img src="<?= ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario()->getFoto(true) : Usuario::getFoto_Padrao(); ?>" alt="Foto" border="0" /></a></td>
+					<td width="128" height="150" align="center" rowspan="7"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(); ?>"><img src="<?= ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario()->getFoto(true, false, true) : Usuario::getFoto_Padrao(false, true); ?>" alt="Foto" border="0" /></a></td>
 					<td width="25%" height="20%"><strong>RA:</strong></td><td height="20%"><a href="<?= CONFIG_URL; ?>perfil/?aluno=<?= $Aluno->getRA(true); ?>"><?= $Aluno->getRA(true); ?></a></td>
 				</tr>
 				<tr>

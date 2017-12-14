@@ -200,7 +200,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 				</tr>
 				<tr>
 					<td><strong>Foto:</strong> <i>(JPG, GIF ou PNG)<br />M&aacute;ximo de 5MB</i></td>
-					<td><img src="<?= $_Usuario->getFoto(true); ?>" alt="Foto" /><br /><input type="checkbox" name="excluir_foto" id="excluir_foto_t" value="t" /><label for="excluir_foto_t">Excluir Foto</label><br /><input type="file" name="foto" /></td>
+					<td><img src="<?= $_Usuario->getFoto(true, false, true); ?>" alt="Foto" /><br /><input type="checkbox" name="excluir_foto" id="excluir_foto_t" value="t" /><label for="excluir_foto_t">Excluir Foto</label><br /><input type="file" name="foto" /></td>
 				</tr>
 				<tr>
 					<td><strong>Data de Nascimento:</strong></td>

@@ -137,7 +137,7 @@ var CONFIG_URL = '<?= CONFIG_URL; ?>';
 <?php if(($_Usuario !== null) && (((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false)))) { ?>
 var meu_id = '<?= $_Usuario->getID(); ?>';
 var meu_status = '<?= (CONFIG_CHAT_ATIVO) ? $_Usuario->getChat_Status(false, true) : 'z'; ?>';
-var minha_foto_th = '<?= $_Usuario->getFoto(true, true); ?>';
+var minha_foto_th = '<?= $_Usuario->getFoto(true, true, true); ?>';
 <?php }
  if((isset($_SESSION['admin_su'])) && ($_SESSION['admin_su'] !== false)) { ?>
 var Un_SU = function() {

@@ -79,7 +79,7 @@ foreach($Autorizacoes as $Auth) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><img src="<?= $Auth->getUsuario(true)->getFoto(true); ?>" border="0" alt="<?= $Auth->getUsuario(true)->getNome(true); ?>" /></a></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><img src="<?= $Auth->getUsuario(true)->getFoto(true, false, true); ?>" border="0" alt="<?= $Auth->getUsuario(true)->getNome(true); ?>" /></a></td>
 				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Auth->getUsuario(true)->getLogin(true); ?>"><?= $Auth->getUsuario(true)->getNome_Completo(true); ?></a></td>
 			</tr>
@@ -169,7 +169,7 @@ foreach($Amigos as $Amigo) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true, false, true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
 				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo()->getNome_Completo(true); ?></a></td>
 			</tr>
@@ -258,7 +258,7 @@ foreach($Quase_Amigos as $Amigo) {
 	?>
 	<td width="50%"><table border="1" width="100%">
 			<tr>
-				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
+				<td width="128" height="150" align="center" rowspan="9"><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><img src="<?= $Amigo->getAmigo(true)->getFoto(true, false, true); ?>" border="0" alt="<?= $Amigo->getAmigo(true)->getNome(true); ?>" /></a></td>
 				<td width="25%"><strong>Nome:</strong></td>
 				<td><a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo(true)->getLogin(true); ?>"><?= $Amigo->getAmigo(true)->getNome_Completo(true); ?></a></td>
 			</tr>

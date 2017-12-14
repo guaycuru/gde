@@ -415,7 +415,7 @@ if($_tipo == 'A') {
 </script>
 <?php
 if($Usr !== null) {
-	$_Foto = $Usr->getFoto(true);
+	$_Foto = $Usr->getFoto(true, false, true);
 	$_nome = $Usr->getNome_Completo(true);
 	$_status = $Usr->getStatus();
 
@@ -436,7 +436,7 @@ if($Usr !== null) {
 	else
 		$link_pessoal = '<a href="#" id="link_amigo" style="font-size: 10px;">Solicitar Amizade</a>';
 } else {
-	$_Foto = Usuario::getFoto_Padrao();
+	$_Foto = Usuario::getFoto_Padrao(false, true);
 	$_nome = ($_tipo == 'A') ? $Aluno->getNome(true) : $Professor->getNome(true);
 	$_status = null;
 	$link_arvore = "";
@@ -773,7 +773,7 @@ if($Usr !== null) {
 						<div class="amigo" id="amigo_<?= $Amigo->getAmigo()->getID() ?>">
 							<div class="amigo_foto">
 								<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>">
-									<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
+									<img src="<?= $Amigo->getAmigo()->getFoto(true, true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
 								</a>
 							</div>
 							<div class="amigo_nome">
@@ -792,7 +792,7 @@ if($Usr !== null) {
 						<div class="amigo" id="amigocomum_<?= $Amigo->getAmigo()->getID(); ?>">
 							<div class="amigo_foto">
 								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(true) ?>" class="link_sem_decoracao" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>">
-									<img src="<?= $Amigo->getAmigo()->getFoto(true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
+									<img src="<?= $Amigo->getAmigo()->getFoto(true, true, true) ?>" border="0" alt="<?= $Amigo->getAmigo()->getNome(true) ?>" />
 								</a>
 							</div>
 							<div class="amigo_nome">
