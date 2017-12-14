@@ -175,7 +175,7 @@ $(document).ready(function(){
 	<iframe src="about:blank" width="0" height="0" frameborder="0" id="controle" name="controle"></iframe>
 		<div id="top">
 			<div id="mini_logo">
-				<a href="<?=CONFIG_URL;?>index/" title="Home"><img src="<?= CONFIG_URL; ?>web/images/mini_logo.gif" alt="GDE" width="128" height="38" /></a>
+				<a href="<?=CONFIG_URL;?>" title="Home"><img src="<?= CONFIG_URL; ?>web/images/mini_logo.gif" alt="GDE" width="128" height="38" /></a>
 			</div> 
 	<?php
 	if($_Usuario !== null) {

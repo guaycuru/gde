@@ -9,7 +9,7 @@ require_once('../common/common.inc.php');
 ?>
 Antes de enviar sua mensagem, por favor consulte as "<a href="https://github.com/guaycuru/gde/wiki/FAQ">Perguntas Frequentes</a>". Se sua dúvida estiver ali, sua mensagem não será respondida!<br /><br />
 <h2>Contato</h2>
-<form class="auto-form" method="post" action="<?= CONFIG_URL; ?>ajax/contato.php" data-sucesso="Sua mensagem foi enviada com sucesso. O GDE agradece!" data-destino="<?= CONFIG_URL; ?>index/">
+<form class="auto-form" method="post" action="<?= CONFIG_URL; ?>ajax/contato.php" data-sucesso="Sua mensagem foi enviada com sucesso. O GDE agradece!" data-destino="<?= CONFIG_URL; ?>">
 	<table border="0">
 		<tr>
 			<td>Assunto:</td>
