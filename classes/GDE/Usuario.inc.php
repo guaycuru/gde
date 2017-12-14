@@ -396,7 +396,7 @@ class Usuario extends Base {
 	const ERRO_LOGIN_TOKEN_INVALIDO = 4; // Token invalido
 
 	// Fotos
-	const PASTA_FOTOS = '../web/fts/';
+	const PASTA_FOTOS = '/../../web/fts/';
 	const URL_FOTOS = 'web/fts/';
 
 	// Estados Civis
@@ -626,9 +626,9 @@ class Usuario extends Base {
 			return CONFIG_URL . self::URL_FOTOS . (($th) ? $this->foto.'_th.jpg' : $this->foto.'.jpg');
 		} else {
 			if($th)
-				return self::PASTA_FOTOS . (($html) ? $this->foto.'_th.jpg' : $this->foto);
+				return __DIR__ . self::PASTA_FOTOS . (($html) ? $this->foto.'_th.jpg' : $this->foto);
 			else
-				return self::PASTA_FOTOS . (($html) ? $this->foto.'.jpg' : $this->foto);
+				return __DIR__ . self::PASTA_FOTOS . (($html) ? $this->foto.'.jpg' : $this->foto);
 		}
 	}
 
@@ -925,8 +925,8 @@ class Usuario extends Base {
 	 * @return int
 	 */
 	public static function Conta_Online($live = false) {
-		if(($live === false) && (file_exists('../cache/online.txt') === true))
-			return intval(file_get_contents('../cache/online.txt'));
+		if(($live === false) && (file_exists(__DIR__.'../../cache/online.txt') === true))
+			return intval(file_get_contents(__DIR__.'../../cache/online.txt'));
 		$Data = new \DateTime();
 		$Data->modify('-'.CONFIG_TIME_ONLINE.' seconds');
 		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM GDE\\Usuario U WHERE U.ultimo_acesso >= ?1')
@@ -1459,12 +1459,12 @@ class Usuario extends Base {
 		} else
 			return false;
 		if($this->foto != null) {
-			@unlink(self::PASTA_FOTOS.$this->foto.'.jpg');
-			@unlink(self::PASTA_FOTOS.$this->foto.'_th.jpg');
+			@unlink(__DIR__.self::PASTA_FOTOS.$this->foto.'.jpg');
+			@unlink(__DIR__.self::PASTA_FOTOS.$this->foto.'_th.jpg');
 		}
 		do {
 			$nome = Util::Random(16);
-		} while(file_exists(self::PASTA_FOTOS.$nome.'.jpg'));
+		} while(file_exists(__DIR__.self::PASTA_FOTOS.$nome.'.jpg'));
 		$p_largura = ($largura > $m_largura) ? $m_largura / $largura : 1;
 		$p_altura = ($altura > $m_altura) ? $m_altura / $altura : 1;
 		$porcentagem = min($p_altura, $p_largura);
@@ -1472,14 +1472,14 @@ class Usuario extends Base {
 		$n_altura = round($porcentagem * $altura);
 		$nova = imagecreatetruecolor($n_largura, $n_altura);
 		imagecopyresampled($nova, $original, 0, 0, 0, 0, $n_largura, $n_altura, $largura, $altura);
-		if(imagejpeg($nova, self::PASTA_FOTOS.$nome.'.jpg', 90) === true) {
+		if(imagejpeg($nova, __DIR__.self::PASTA_FOTOS.$nome.'.jpg', 90) === true) {
 			$this->setFoto($nome);
 			$porcentagem_th = $porcentagem / 2;
 			$n_largura = round($porcentagem_th * $largura);
 			$n_altura = round($porcentagem_th * $altura);
 			$nova = imagecreatetruecolor($n_largura, $n_altura);
 			imagecopyresampled($nova, $original, 0, 0, 0, 0, $n_largura, $n_altura, $largura, $altura);
-			imagejpeg($nova, self::PASTA_FOTOS.$nome.'_th.jpg', 90);
+			imagejpeg($nova, __DIR__.self::PASTA_FOTOS.$nome.'_th.jpg', 90);
 			return true;
 		} else
 			return false;

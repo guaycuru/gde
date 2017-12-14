@@ -560,11 +560,11 @@ class Arvore {
 		foreach($c_cores as $cor)
 			$cores[] = imagecolorallocate($im, $cor[0], $cor[1], $cor[2]);
 		for($c = 1; $c <= 10; $c++)
-			$fundos[] = imagecreatefromgif('../web/img/arvore_'.$c.'.gif');
-		$fundo_preto = imagecreatefromgif('../web/img/arvore_0.gif');
+			$fundos[] = imagecreatefromgif(__DIR__.'/../../web/img/arvore_'.$c.'.gif');
+		$fundo_preto = imagecreatefromgif(__DIR__.'/../../web/img/arvore_0.gif');
 
 		// Aplica a watermark
-		$wm = imagecreatefromgif('../web/img/gde_watermark_r.gif');
+		$wm = imagecreatefromgif(__DIR__.'/../../web/img/gde_watermark_r.gif');
 		imagecopy($im, $wm, floor($this->dados['largura'] / 2) - 250, floor($this->dados['altura'] / 2) - 250, 0, 0, 500, 500);
 
 		$em_x = $consts['inicio_x'];
@@ -745,7 +745,7 @@ class Arvore {
 		\$(\"div.div_img_ov_arvore\").fadeTo('slow', 0.9);
 	}, function () {
 		\$(\"div.div_img_ov_arvore\").fadeOut('fast');
-		\$(\"#img_ov_arvore\").attr(\"src\", \"../web/images/spacer.gif\");
+		\$(\"#img_ov_arvore\").attr(\"src\", \"".CONFIG_URL."web/images/spacer.gif\");
 	});";
 					$menus .= "<div style=\"display: none;\"><img src=\"".$img_overlay."\" alt=\"\" /></div>";
 				}

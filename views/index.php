@@ -283,7 +283,7 @@ $(document).ready(function() {
 	<div id="coluna_esquerda">
 		<div id="perfil_cabecalho">
 			<div id="perfil_foto">
-				<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $_Usuario->getLogin(); ?>" class="link_foto"><img src="<?= $_Usuario->getFoto(true); ?>" alt="Foto" class="foto_perfil" /></a><br /><a href="<?= CONFIG_URL; ?>editar-perfil/" class="link_foto" style="font-size: 14px">Editar Perfil</a>
+				<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $_Usuario->getLogin(); ?>" class="link_foto"><img src="<?= $_Usuario->getFoto(true, false, true); ?>" alt="Foto" class="foto_perfil" /></a><br /><a href="<?= CONFIG_URL; ?>editar-perfil/" class="link_foto" style="font-size: 14px">Editar Perfil</a>
 			</div>
 			<div id="perfil_mensagem_botoes">
 				<div id="perfil_cabecalho_nome"><?= $_Usuario->getNome_Completo(true); ?></div>
