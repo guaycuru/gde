@@ -156,7 +156,7 @@ class Acontecimento extends Base {
 	public function Pode_Apagar(Usuario $Quem) {
 		if($Quem->getAdmin())
 			return true;
-		elseif(($this->getOrigem() !== null) & ($Quem->getID() == $this->getOrigem()->getID()))
+		elseif(($this->getOrigem() !== null) &&($Quem->getID() == $this->getOrigem()->getID()))
 			return true;
 		elseif(($this->getDestino() !== null) && ($Quem->getID() == $this->getDestino()->getID()))
 			return true;

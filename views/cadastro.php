@@ -8,7 +8,7 @@ define('NO_LOGIN_CHECK', true);
 require_once('../common/common.inc.php');
 
 if(empty($_GET['token']))
-	die('TOKEN Inv&aacute;lido!');
+	die('TOKEN Inv&aacute;lido!'.$FIM);
 
 list($resultado, $identificador, $tipo) = DAC::Validar_Token($_GET['token']);
 
@@ -224,7 +224,7 @@ if($Usuario !== null) {
 						<td><select id="curso" name="curso"><?= $lista_cursos; ?></select></td>
 					</tr>
 					<tr>
-						<td><strong>Modalidade da Gradua&ccedil;&atilde;:</strong></td>
+						<td><strong>Modalidade da Gradua&ccedil;&atilde;o:</strong></td>
 						<td id="select_modalidade"><select id="modalidade" name="modalidade"><option value="">-</option></select></td>
 					</tr>
 				<?php } if(($Aluno->getID() == null) || ($tem_pos)) { ?>
