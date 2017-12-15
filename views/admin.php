@@ -54,12 +54,12 @@ $(document).ready(function() {
 	<tr>
 		<td><label>Colabora&ccedil;&otilde;es Professor</label></td>
 		<td><?= ColaboracaoProfessor::Numero(null); ?></td>
-		<td><?= (($colaboracoes_professores_pendentes > 0) ? "<a href=\"admin-colaboracoes-professor.php\" target=\"_blank\">Autorizar ".$colaboracoes_professores_pendentes."</a>" : "Nada pendente"); ?></td>
+		<td><?= (($colaboracoes_professores_pendentes > 0) ? "<a href=\"".CONFIG_URL."admin-colaboracoes-professor\" target=\"_blank\">Autorizar ".$colaboracoes_professores_pendentes."</a>" : "Nada pendente"); ?></td>
 	</tr>
 	<tr>
 		<td><label>Colabora&ccedil;&otilde;es Oferecimento</label></td>
 		<td><?= ColaboracaoOferecimento::Numero(); ?></td>
-		<td><?= (($colaboracoes_oferecimentos_pendentes > 0) ? "<a href=\"admin-colaboracoes-oferecimento.php\" target=\"_blank\">Autorizar ".$colaboracoes_oferecimentos_pendentes."</a>" : "Nada pendente"); ?></td>
+		<td><?= (($colaboracoes_oferecimentos_pendentes > 0) ? "<a href=\"".CONFIG_URL."admin-colaboracoes-oferecimento\" target=\"_blank\">Autorizar ".$colaboracoes_oferecimentos_pendentes."</a>" : "Nada pendente"); ?></td>
 	</tr>
 </table>
 <?= $FIM; ?>

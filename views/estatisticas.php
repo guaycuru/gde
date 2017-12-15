@@ -7,10 +7,6 @@ define('TITULO', 'Estat&iacute;sticas');
 require_once('../common/common.inc.php');
 
 $dados = Dado::Pega_Dados();
-$alunos = $dados['alunos'];
-$ativos = $dados['ativos'];
-$oferecimentos = $dados['materias'];
-$disciplinas = $dados['disciplinas'];
 $professores = $dados['professores'];
 $salas = $dados['salas'];
 $usuarios = $dados['usuarios'];
@@ -103,9 +99,9 @@ $Periodo = Periodo::getAtual();
 	</tr>
 	<tr>
 		<td>Oferecimentos</td>
-		<td><strong><?= $dados['materias_grad']; ?></strong></td>
-		<td><strong><?= $dados['materias_pos']; ?></strong></td>
-		<td><strong><?= $dados['materias']; ?></strong></td>
+		<td><strong><?= $dados['oferecimentos_grad']; ?></strong></td>
+		<td><strong><?= $dados['oferecimentos_pos']; ?></strong></td>
+		<td><strong><?= $dados['oferecimentos']; ?></strong></td>
 	</tr>
 	<tr>
 		<td>Professores</td>

@@ -67,21 +67,21 @@ class Dado extends Base {
 	 *
 	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 */
-	protected $materias;
+	protected $oferecimentos;
 
 	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 */
-	protected $materias_grad;
+	protected $oferecimentos_grad;
 
 	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=false)
 	 */
-	protected $materias_pos;
+	protected $oferecimentos_pos;
 
 	/**
 	 * @var integer
@@ -299,20 +299,20 @@ class Dado extends Base {
 			return false;
 		$Dados->setAtivos_Pos($ativos_pos['total']);
 
-		$materias = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos WHERE id_periodo = ?", array($periodo))->fetch();
-		if($materias === false)
+		$oferecimentos = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos WHERE id_periodo = ?", array($periodo))->fetch();
+		if($oferecimentos === false)
 			return false;
-		$Dados->setMaterias($materias['total']);
+		$Dados->setOferecimentos($oferecimentos['total']);
 
-		$materias_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel IN (?, ?)", array($periodo, Disciplina::NIVEL_GRAD, Disciplina::NIVEL_TEC))->fetch();
-		if($materias_grad === false)
+		$oferecimentos_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel IN (?, ?)", array($periodo, Disciplina::NIVEL_GRAD, Disciplina::NIVEL_TEC))->fetch();
+		if($oferecimentos_grad === false)
 			return false;
-		$Dados->setMaterias_Grad($materias_grad['total']);
+		$Dados->setOferecimentos_Grad($oferecimentos_grad['total']);
 
-		$materias_pos = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel IN (?, ?)", array($periodo, Disciplina::NIVEL_POS, Disciplina::NIVEL_MP))->fetch();
-		if($materias_pos === false)
+		$oferecimentos_pos = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel IN (?, ?)", array($periodo, Disciplina::NIVEL_POS, Disciplina::NIVEL_MP))->fetch();
+		if($oferecimentos_pos === false)
 			return false;
-		$Dados->setMaterias_Pos($materias_pos['total']);
+		$Dados->setOferecimentos_Pos($oferecimentos_pos['total']);
 
 		$disciplinas = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_disciplinas")->fetch();
 		if($disciplinas === false)
