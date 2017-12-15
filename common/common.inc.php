@@ -197,7 +197,7 @@ $(document).ready(function(){
 					<li><a href="#" onclick="return false;">Admin</a>
 						<ul>
 							<li><a href="<?= CONFIG_URL; ?>admin/">Super P&aacute;gina!!!</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminAcontecimento.php">Novo Acontecimento</a></li>
+							<li><a href="<?= CONFIG_URL; ?>admin-acontecimento/">Novo Acontecimento</a></li>
 							<li><a href="<?= CONFIG_URL; ?>admin-colaboracoes-oferecimento/">Colabora&ccedil;&otilde;es de Oferecimento</a></li>
 							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>admin-colaboracoes-professor/">Colabora&ccedil;&otilde;es de Professor</a></li>
 						</ul>
