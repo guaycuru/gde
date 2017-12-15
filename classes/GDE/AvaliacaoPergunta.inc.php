@@ -52,6 +52,9 @@ class AvaliacaoPergunta extends Base {
 	const ERRO_NAO_CURSOU = 2;
 	const ERRO_NAO_ALUNO = 3;
 
+	const TIPO_PROFESSOR = 'p';
+	const TIPO_DISCIPLINA = 'd';
+
 	// Caches
 	private $MediaP = array(); //array('R' => 0, 'v' => 0, 'C' => 0, 'm' => 0, 'W' => 0);
 	private $MediaD = array(); //array('R' => 0, 'v' => 0, 'C' => 0, 'm' => 0, 'W' => 0);
@@ -205,11 +208,11 @@ class AvaliacaoPergunta extends Base {
 		if($Disciplina !== null)
 			$param['disciplina'] = $Disciplina->getID();
 		$lista = true;
-		if($this->getTipo(false) == 'p') { // Ranking de Professor
+		if($this->getTipo(false) == self::TIPO_PROFESSOR) { // Ranking de Professor
 			if($Professor != null) { // Ranking deste professor
 				$lista = false;
 			}
-		} elseif($this->getTipo(false) == 'd') { // Ranking de Disciplina
+		} elseif($this->getTipo(false) == self::TIPO_DISCIPLINA) { // Ranking de Disciplina
 			if($Disciplina != null) {
 				$lista = false;
 			}

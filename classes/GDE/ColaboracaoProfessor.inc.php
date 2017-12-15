@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
  * ColaboracaoProfessor
  *
  * @ORM\Table(name="gde_colaboracao_professores",
- *     indexes={@ORM\Index(name="professor_campo_status", columns={"id_professor", "campo", "status"})}
+ *  indexes={
+ *     @ORM\Index(name="professor_campo_status", columns={"id_professor", "campo", "status"}),
+ *     @ORM\Index(name="status", columns={"status"})
+ *  }
  * )
  * @ORM\Entity
  */
@@ -89,7 +92,7 @@ class ColaboracaoProfessor extends Base {
 	 * @return bool
 	 */
 	public static function Existe_Colaboracao($id_professor, $campo) {
-		$dql = 'SELECT COUNT(C.id_colaboracao) FROM GDE\\ColaboracaoProfessor AS C '.
+		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.get_class().' AS C '.
 			'WHERE C.professor = ?1 AND C.campo = ?2 AND C.status != ?3';
 
 		$query = self::_EM()->createQuery($dql)
@@ -102,6 +105,22 @@ class ColaboracaoProfessor extends Base {
 
 	public static function Campo_Valido($campo) {
 		return in_array($campo, self::$_campos);
+	}
+
+	public static function Pendentes() {
+		return self::FindBy(array('status' => self::STATUS_PENDENTE));
+	}
+
+	public static function Numero($status = null) {
+		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.get_class().' AS C';
+		if($status !== null)
+			$dql .= ' WHERE C.status = ?1';
+
+		$query = self::_EM()->createQuery($dql);
+		if($status !== null)
+			$query->setParameter(1, $status);
+
+		return $query->getSingleScalarResult();
 	}
 
 }

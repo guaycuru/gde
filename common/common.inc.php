@@ -67,6 +67,9 @@ if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 		}
 	}
 }
+if(($_Usuario !== null) && ($_Usuario->getAdmin() === true) && (!empty($_SESSION['admin_su']))) {
+	$_Usuario = Usuario::Load($_SESSION['admin_su']);
+}
 
 if((defined('NO_SESSION')) && (NO_SESSION === true))
 	session_write_close();
@@ -134,15 +137,10 @@ var CONFIG_URL = '<?= CONFIG_URL; ?>';
 <script type="text/javascript">
 // <![CDATA[
 // Informacoes para o chat
-<?php if(($_Usuario !== null) && (((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false)))) { ?>
+<?php if(($_Usuario !== null) && (empty($_SESSION['admin_su']))) { ?>
 var meu_id = '<?= $_Usuario->getID(); ?>';
 var meu_status = '<?= (CONFIG_CHAT_ATIVO) ? $_Usuario->getChat_Status(false, true) : 'z'; ?>';
 var minha_foto_th = '<?= $_Usuario->getFoto(true, true, true); ?>';
-<?php }
- if((isset($_SESSION['admin_su'])) && ($_SESSION['admin_su'] !== false)) { ?>
-var Un_SU = function() {
-	$.guaycuru.abreControlador('ControlAdmin.php?unsu');
-};
 <?php } ?>
 $(document).ready(function(){
 	$('body').watcherkeys({callback: $.guaycuru.changeIt});
@@ -167,6 +165,16 @@ $(document).ready(function(){
 			$.getScript('<?= CONFIG_URL; ?>web/js/gravity.js');
 		});
 	});
+<?php } if(!empty($_SESSION['admin_su'])) { ?>
+	$("#admin_unsu").click(function() {
+		$.post('<?= CONFIG_URL; ?>/ajax/admin.php', {unsu: 1}, function(res) {
+			if(res && res.ok) {
+				alert('UnSU executado com sucesso!');
+				document.location = '<?= CONFIG_URL; ?>';
+			} else
+				alert('Erro!');
+		});
+	});
 <?php } ?>
 });
 // ]]>
@@ -183,20 +191,17 @@ $(document).ready(function(){
 	?>
 			<div id="top_menu" class="menu ui-corner-bottom">
 				<ul>
-		<?php if($_Usuario->getAdmin() === true) { ?>
+		<?php if(!empty($_SESSION['admin_su'])) { ?>
+					<li><a href="#" id="admin_unsu">Un-SU</a></li>
+		<?php } elseif($_Usuario->getAdmin() === true) { ?>
 					<li><a href="#" onclick="return false;">Admin</a>
 						<ul>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdmin.php">Super P&aacute;gina!!!</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminUsuario.php">Novo Usu&aacute;rio</a></li>
+							<li><a href="<?= CONFIG_URL; ?>admin/">Super P&aacute;gina!!!</a></li>
 							<li><a href="<?= CONFIG_URL; ?>visoes/VisaoAdminAcontecimento.php">Novo Acontecimento</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/AdminAutorizarColaboracoes.php">Autorizar Colabora&ccedil;&otilde;es</a></li>
-							<li><a href="<?= CONFIG_URL; ?>stats/awstats.gde.html">Estat&iacute;sticas</a></li>
-							<li><a href="<?= CONFIG_URL; ?>visoes/desenha_grafico_cadastros.php?dt=2011-01-1">Gr&aacute;fico Cadastros</a></li>
-							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>visoes/desenha_grafico_cadastros2.php?dt=2011-01-1">Gr&aacute;fico dCadastros/dt</a></li>
+							<li><a href="<?= CONFIG_URL; ?>admin-colaboracoes-oferecimento/">Colabora&ccedil;&otilde;es de Oferecimento</a></li>
+							<li><a class="ui-corner-bottom" href="<?= CONFIG_URL; ?>admin-colaboracoes-professor/">Colabora&ccedil;&otilde;es de Professor</a></li>
 						</ul>
 					</li>
-		<?php } elseif((isset($_SESSION['admin_su'])) && ($_SESSION['admin_su'] !== false)) { ?>
-					<li><a href="#" onclick="Un_SU(); return false;">Un-SU</a></li>
 		<?php } ?>
 					<li><a href="#" onclick="return false;">Acad&ecirc;mico</a>
 						<ul>

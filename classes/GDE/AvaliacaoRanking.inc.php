@@ -73,5 +73,58 @@ class AvaliacaoRanking extends Base {
 	 */
 	protected $votos;
 
+	/**
+	 * @return bool
+	 */
+	public static function Atualizar() {
+		if(!defined('CONFIG_AVALIACAO_MINIMO'))
+			return false;
+		self::_EM()->getConnection()->executeUpdate("TRUNCATE TABLE gde_avaliacao_rankings"); // TODO: tirar isto, sem isto ta bugando...
+		foreach(AvaliacaoPergunta::Listar() as $Pergunta) {
+			if($Pergunta->getTipo(false) == AvaliacaoPergunta::TIPO_PROFESSOR) {
+				$qr = "
+INSERT INTO gde_avaliacao_rankings
+(id_pergunta, id_professor, id_disciplina, ranking, nota, votos)
+	SELECT id_pergunta, id_professor, NULL, IF(@last_w != W, @numero := @numero + 1, @numero) AS ranking, IF(@last_w != W, @last_w := W, @last_w) AS nota, votos
+	FROM
+		(SELECT id_pergunta, id_professor, ((X.V / (X.V + Z.M)) * X.r + (Z.M / (X.V + Z.M)) * Y.C) AS W, X.V AS votos
+		FROM
+			(SELECT id_pergunta, id_professor, AVG(resposta) AS R, COUNT(*) AS V FROM gde_avaliacao_respostas WHERE id_pergunta = ? GROUP BY id_professor) AS X,
+			(SELECT AVG(resposta) AS C FROM gde_avaliacao_respostas WHERE id_pergunta = ?) AS Y,
+			(SELECT (COUNT(*) * 0.001) AS M FROM gde_avaliacao_respostas WHERE id_pergunta = ? GROUP BY id_professor ORDER BY M DESC LIMIT 1) AS Z,
+			(SELECT @numero := 0) AS R,
+			(SELECT @last_w := 0.00) AS U
+		WHERE X.V >= ".CONFIG_AVALIACAO_MINIMO."
+		ORDER BY W DESC) AS A
+ON DUPLICATE KEY UPDATE ranking = ranking";
+			} elseif($Pergunta->getTipo(false) == AvaliacaoPergunta::TIPO_DISCIPLINA) {
+				// ToDo
+				continue;
+			} else {
+				$qr = "
+INSERT INTO gde_avaliacao_rankings
+(id_pergunta, id_professor, ranking, id_disciplina, nota, votos)
+	SELECT id_pergunta, id_professor, IF(@last_sigla != id_disciplina, @numero := 1, IF(@last_w != W, @numero := @numero + 1, @numero)) AS ranking, IF(@last_sigla != id_disciplina, @last_sigla := id_disciplina, id_disciplina) AS id_disciplina, IF(@last_w != W, @last_w := W, @last_w) AS nota, votos
+	FROM
+		(SELECT id_pergunta, id_professor, IF(@last_sigla = id_disciplina, @numero := @numero + 1, @numero := 1) AS ranking, IF(@last_sigla != id_disciplina, @last_sigla := id_disciplina, id_disciplina) AS id_disciplina, W, votos
+		FROM
+			(SELECT id_pergunta, id_professor, id_disciplina, ((X.V / (X.V + Z.M)) * X.r + (Z.M / (X.V + Z.M)) * Y.C) AS W, X.V AS votos
+			FROM
+				(SELECT id_pergunta, id_professor, id_disciplina, AVG(resposta) AS R, COUNT(*) AS V FROM gde_avaliacao_respostas WHERE id_pergunta = ? GROUP BY id_disciplina, id_professor) AS X,
+				(SELECT AVG(resposta) AS C FROM gde_avaliacao_respostas WHERE id_pergunta = ?) AS Y,
+				(SELECT (COUNT(*) * 0.001) AS M FROM gde_avaliacao_respostas WHERE id_pergunta = ? GROUP BY id_disciplina, id_professor ORDER BY M DESC LIMIT 1) AS Z
+				WHERE X.V >= ".CONFIG_AVALIACAO_MINIMO."
+				ORDER BY id_disciplina ASC, W DESC) AS A,
+			(SELECT @numero := 0) AS R,
+			(SELECT @last_sigla := '') AS S,
+			(SELECT @last_w := 0.00) AS U
+		ORDER BY id_pergunta ASC, id_disciplina ASC, W DESC) AS A
+ON DUPLICATE KEY UPDATE ranking = A.ranking";
+			}
+			if(self::_EM()->getConnection()->executeUpdate($qr, array($Pergunta->getID(), $Pergunta->getID(), $Pergunta->getID())) === false)
+				return false;
+		}
+		return true;
+	}
 
 }
