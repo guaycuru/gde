@@ -14,6 +14,8 @@ $online = Usuario::Conta_Online(false);
 
 $Periodo = Periodo::getAtual();
 
+$connection = Base::_EM()->getConnection();
+
 ?>
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -123,7 +125,8 @@ $Periodo = Periodo::getAtual();
 
 <?php
 
-die($FIM);
+if(($_Usuario === null) || ($_Usuario->getAdmin() === false))
+	die($FIM);
 
 // ToDo
 
@@ -143,26 +146,23 @@ foreach($Cadastros as $Usr) {
 
 $total = $dados['usuarios'];
 
-$alunos_por_curso = $_GDE['DB']->Execute("SELECT COUNT(*) AS total, curso FROM ".Aluno::$tabela." WHERE nivel IS NOT NULL GROUP BY curso ORDER BY curso ASC");
+$alunos_por_curso = $connection->executeQuery("SELECT COUNT(*) AS total, id_curso FROM gde_alunos WHERE nivel IS NOT NULL GROUP BY id_curso ORDER BY id_curso ASC")->fetchAll();
 foreach($alunos_por_curso as $linha)
-	$alunos_curso[$linha['curso']] = $linha['total'];
+	$alunos_curso[$linha['id_curso']] = $linha['total'];
 
-//$alunos_por_curso_ativos = $_GDE['DB']->Execute("SELECT COUNT(*) AS total, curso FROM ".Aluno::$tabela." WHERE nivel IS NOT NULL AND ".Aluno::$chave." IN (SELECT ".Aluno::$chave." FROM ".Aluno::$tabela_r_oferecimentos." WHERE ".Oferecimento::$chave." IN (SELECT ".Oferecimento::$chave." FROM ".Oferecimento::$tabela." WHERE periodo = '".$Periodo->getPeriodo()."')) GROUP BY curso ORDER BY curso ASC");
-$alunos_por_curso_ativos = $_GDE['DB']->Execute("SELECT COUNT(DISTINCT A.".Aluno::$chave.") AS total, A.curso FROM ".Aluno::$tabela." AS A INNER JOIN ".Aluno::$tabela_r_oferecimentos." AS AO ON (AO.".Aluno::$chave." = A.".Aluno::$chave.") INNER JOIN ".Oferecimento::$tabela." AS O ON (O.".Oferecimento::$chave." = AO.".Oferecimento::$chave.") WHERE A.nivel IS NOT NULL AND O.periodo = '".$Periodo->getPeriodo()."' GROUP BY A.curso ORDER BY A.curso ASC");
+$alunos_por_curso_ativos = $connection->executeQuery("SELECT COUNT(DISTINCT A.ra) AS total, A.id_curso FROM gde_alunos AS A INNER JOIN gde_r_alunos_oferecimentos AS AO ON (AO.ra = A.ra) INNER JOIN gde_oferecimentos AS O ON (O.id_oferecimento = AO.id_oferecimento) WHERE A.nivel IS NOT NULL AND O.id_periodo = ? GROUP BY A.id_curso ORDER BY A.id_curso ASC", array($Periodo->getPeriodo()))->fetchAll();
 foreach($alunos_por_curso_ativos as $linha)
-	$alunos_curso_ativos[$linha['curso']] = $linha['total'];
+	$alunos_curso_ativos[$linha['id_curso']] = $linha['total'];
 
-//$usuarios_por_curso = $_GDE['DB']->Execute("SELECT COUNT(curso) AS total, curso FROM ".Aluno::$tabela." WHERE nivel IS NOT NULL AND ".Aluno::$chave." IN (SELECT ".Aluno::$chave." FROM gde_usuarios) GROUP BY curso");
-$usuarios_por_curso = $_GDE['DB']->Execute("SELECT COUNT(A.".Aluno::$chave.") AS total, A.curso FROM ".Aluno::$tabela." AS A INNER JOIN ".Usuario::$tabela." AS U ON (U.".Aluno::$chave." = A.".Aluno::$chave.") WHERE A.nivel IS NOT NULL GROUP BY A.curso ORDER BY A.curso ASC");
+$usuarios_por_curso = $connection->executeQuery("SELECT COUNT(A.ra) AS total, A.id_curso FROM gde_alunos AS A INNER JOIN gde_usuarios AS U ON (U.ra = A.ra) WHERE A.nivel IS NOT NULL GROUP BY A.id_curso ORDER BY A.id_curso ASC")->fetchAll();
 foreach($usuarios_por_curso as $linha)
-	$usuarios_curso[$linha['curso']] = $linha['total'];
+	$usuarios_curso[$linha['id_curso']] = $linha['total'];
 
-//$usuarios_por_curso_ativos = $_GDE['DB']->Execute("SELECT COUNT(curso) AS total, curso FROM ".Aluno::$tabela." WHERE nivel IS NOT NULL AND ".Aluno::$chave." IN (SELECT ".Aluno::$chave." FROM ".Usuario::$tabela.") AND ".Aluno::$chave." IN (SELECT ".Aluno::$chave." FROM ".Aluno::$tabela_r_oferecimentos." WHERE ".Oferecimento::$chave." IN (SELECT ".Oferecimento::$chave." FROM ".Oferecimento::$tabela." WHERE periodo = '".$Periodo->getPeriodo()."')) GROUP BY curso");
-$usuarios_por_curso_ativos = $_GDE['DB']->Execute("SELECT COUNT(DISTINCT A.".Aluno::$chave.") AS total, A.curso FROM ".Aluno::$tabela." AS A INNER JOIN ".Aluno::$tabela_r_oferecimentos." AS AO ON (AO.".Aluno::$chave." = A.".Aluno::$chave.") INNER JOIN ".Oferecimento::$tabela." AS O ON (O.".Oferecimento::$chave." = AO.".Oferecimento::$chave.") WHERE A.nivel IS NOT NULL AND O.periodo = '".$Periodo->getPeriodo()."' AND A.".Aluno::$chave." IN (SELECT ".Aluno::$chave." FROM ".Usuario::$tabela.") GROUP BY A.curso ORDER BY A.curso ASC");
+$usuarios_por_curso_ativos = $connection->executeQuery("SELECT COUNT(DISTINCT A.ra) AS total, A.id_curso FROM gde_alunos AS A INNER JOIN gde_r_alunos_oferecimentos AS AO ON (AO.ra = A.ra) INNER JOIN gde_oferecimentos AS O ON (O.id_oferecimento = AO.id_oferecimento) WHERE A.nivel IS NOT NULL AND O.id_periodo = ? AND A.ra IN (SELECT ra FROM gde_usuarios) GROUP BY A.id_curso ORDER BY A.id_curso ASC", array($Periodo->getPeriodo()))->fetchAll();
 foreach($usuarios_por_curso_ativos as $linha)
-	$usuarios_curso_ativos[$linha['curso']] = $linha['total'];
+	$usuarios_curso_ativos[$linha['id_curso']] = $linha['total'];
 
-$res2 = $_GDE['DB']->Execute("SELECT COUNT(catalogo) AS total, catalogo FROM ".Usuario::$tabela." WHERE catalogo IS NOT NULL GROUP BY catalogo");
+$res2 = $connection->executeQuery("SELECT COUNT(catalogo) AS total, catalogo FROM gde_usuarios WHERE catalogo IS NOT NULL GROUP BY catalogo")->fetchAll();
 foreach($res2 as $linha)
 	$catalogos[$linha['catalogo']] = $linha['total'];
 
@@ -182,12 +182,16 @@ $vagas = array(
 	'2010' => 3320,
 	'2011' => 3320,
 	'2012' => 3320,
-	'2013' => 3320
+	'2013' => 3320,
+	'2014' => 3320,
+	'2015' => 3320,
+	'2016' => 3320,
+	'2017' => 3330,
+	'2018' => 3330
 );
 
 arsort($usuarios_curso);
 arsort($catalogos);
-// <td><img src="../web/images/barra.gif" width=" ceil(($quantos / $total)*400); " height="12" alt="." /></td>
 ?>
 
 <br />
@@ -210,24 +214,27 @@ arsort($catalogos);
 	</tr>
 	</thead>
 	<tbody>
-	<?php foreach($usuarios_curso as $curso => $quantos) {
-		if(!isset($alunos_curso_ativos[$curso]))
-			$alunos_curso_ativos[$curso] = 0;
-		if(!isset($usuarios_curso_ativos[$curso]))
-			$usuarios_curso_ativos[$curso] = 0;
-		$Curso = new Curso($_GDE['DB'], $curso, 'G');
-		if($Curso->getCurso() == null)
-			$Curso = new Curso($_GDE['DB'], $curso, 'T');
+	<?php foreach($usuarios_curso as $id_curso => $quantos) {
+		if(!isset($alunos_curso_ativos[$id_curso]))
+			$alunos_curso_ativos[$id_curso] = 0;
+		if(!isset($usuarios_curso_ativos[$id_curso]))
+			$usuarios_curso_ativos[$id_curso] = 0;
+		$Curso = Curso::Load($id_curso);
+		if($Curso->getID() == null) {
+			$Curso = new Curso;
+			$Curso->setNome('Egressado');
+			$Curso->setNumero(0);
+		}
 		?>
 		<tr>
-			<td><?= $Curso->getCurso(); ?> (<?= $curso; ?>)</td>
-			<td><?= $alunos_curso[$curso]; ?></td>
-			<td><?= $usuarios_curso[$curso]; ?></td>
-			<td><?= number_format(($usuarios_curso[$curso] / $alunos_curso[$curso])*100, 2); ?>%</td>
-			<td><?= $alunos_curso_ativos[$curso]; ?></td>
-			<td><?= $usuarios_curso_ativos[$curso]; ?></td>
-			<td><?= ($alunos_curso_ativos[$curso] != 0) ? number_format(($usuarios_curso_ativos[$curso] / $alunos_curso_ativos[$curso])*100, 2) : '0.00'; ?>%</td>
-			<td><?= number_format(($usuarios_curso[$curso] / $usuarios)*100, 2); ?> %</td>
+			<td><?= $Curso->getNome(true); ?> (<?= $Curso->getNumero(true); ?>)</td>
+			<td><?= $alunos_curso[$id_curso]; ?></td>
+			<td><?= $usuarios_curso[$id_curso]; ?></td>
+			<td><?= number_format(($usuarios_curso[$id_curso] / $alunos_curso[$id_curso])*100, 2); ?>%</td>
+			<td><?= $alunos_curso_ativos[$id_curso]; ?></td>
+			<td><?= $usuarios_curso_ativos[$id_curso]; ?></td>
+			<td><?= ($alunos_curso_ativos[$id_curso] != 0) ? number_format(($usuarios_curso_ativos[$id_curso] / $alunos_curso_ativos[$id_curso])*100, 2) : '0.00'; ?>%</td>
+			<td><?= number_format(($usuarios_curso[$id_curso] / $usuarios)*100, 2); ?> %</td>
 		</tr>
 	<?php } ?>
 	</tbody>
