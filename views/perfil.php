@@ -527,12 +527,6 @@ if($Usr !== null) {
 								<td width="30%"><strong>Outras Informa&ccedil;&otilde;es:</strong></td>
 								<td><?= $Usr->getMais(true); ?></td>
 							</tr>
-							<?php if($_Usuario->getAdmin() === true) { ?>
-								<tr>
-									<td width="30%"><strong>Admin:</strong></td>
-									<td><a href="VisaoAdminUsuario.php?login=<?=$Usr->getLogin(); ?>">Editar Usu&aacute;rio</a></td>
-								</tr>
-							<?php } ?>
 						</table>
 					</div>
 					<div id="tab_social" class="tab_content">
@@ -654,11 +648,6 @@ if($Usr !== null) {
 								<tr>
 									<td width="30%"><strong>Modalidade (P&oacute;s):</strong></td>
 									<td><?= $Aluno->getModalidade_Pos(true); ?></td>
-								</tr>
-							<?php } if($_Usuario->getAdmin() === true) { ?>
-								<tr>
-									<td width="30%"><strong>Admin:</strong></td>
-									<td><a href="VisaoAdminAluno.php?ra=<?=$Aluno->getRA(); ?>">Editar Aluno</a></td>
 								</tr>
 							<?php } ?>
 						</table>

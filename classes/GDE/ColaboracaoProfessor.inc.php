@@ -123,4 +123,31 @@ class ColaboracaoProfessor extends Base {
 		return $query->getSingleScalarResult();
 	}
 
+	public function Copiar($flush = true) {
+		if($this->getStatus(false) == self::STATUS_RECUSADA)
+			return false;
+		$Professor = $this->getProfessor();
+		switch($this->getCampo(false)) {
+			case self::CAMPO_EMAIL:
+				$Professor->setEmail($this->getValor(false));
+				break;
+			case self::CAMPO_INSTITUTO:
+				$Instituto = Instituto::Load($this->getValor(false));
+				if($Instituto === null)
+					return false;
+				$Professor->setInstituto($Instituto);
+				break;
+			case self::CAMPO_LATTES:
+				$Professor->setLattes($this->getValor(false));
+				break;
+			case self::CAMPO_PAGINA:
+				$Professor->setPagina($this->getValor(false));
+				break;
+			case self::CAMPO_SALA:
+				$Professor->setSala($this->getValor(false));
+				break;
+		}
+		return $Professor->Save($flush);
+	}
+
 }

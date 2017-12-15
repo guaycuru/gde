@@ -12,10 +12,11 @@ if($_Usuario->getAdmin() === false)
 $Colaboracao = ColaboracaoOferecimento::Load($_POST['id']);
 if($Colaboracao->getID() == null)
 	Base::Error_JSON('Colaboracao nao encontrada!');
-if($_POST['tipo'] == 'a') {
+if($_POST['tipo'] == 'a') { // Autorizar
 	$Colaboracao->setStatus(ColaboracaoOferecimento::STATUS_AUTORIZADA);
+	$Colaboracao->Copiar(false);
 	$Colaboracao->Save_JSON();
-} else {
+} else { // Recusar
 	$Colaboracao->setStatus(ColaboracaoOferecimento::STATUS_RECUSADA);
 	$Colaboracao->Save_JSON();
 }

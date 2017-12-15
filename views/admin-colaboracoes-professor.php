@@ -75,7 +75,7 @@ $(document).ready(function(){
 		<table cellspacing="0" class="tabela_bonyta_branca">
 			<tr>
 				<td width="20%"><strong>Professor:</strong></td>
-				<td><a href="http://gde.ir/p/<?= $Colaboracao->getProfessor()->getID(); ?>" target="_blank"><?= $Colaboracao->getProfessor()->getNome(true); ?></a></td>
+				<td><a href="<?= CONFIG_URL; ?>perfil/?professor=<?= $Colaboracao->getProfessor()->getID(); ?>" target="_blank"><?= $Colaboracao->getProfessor()->getNome(true); ?></a></td>
 			</tr>
 			<tr>
 				<td width="20%"><strong>Usuario Colaborador:</strong></td>

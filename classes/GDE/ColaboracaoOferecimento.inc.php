@@ -113,4 +113,16 @@ class ColaboracaoOferecimento extends Base {
 		return $query->getSingleScalarResult();
 	}
 
+	public function Copiar($flush = true) {
+		if($this->getStatus(false) == self::STATUS_RECUSADA)
+			return false;
+		$Oferecimento = $this->getOferecimento();
+		switch($this->getCampo(false)) {
+			case self::CAMPO_PAGINA:
+				$Oferecimento->setPagina($this->getValor(false));
+				break;
+		}
+		return $Oferecimento->Save($flush);
+	}
+
 }

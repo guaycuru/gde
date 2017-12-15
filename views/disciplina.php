@@ -200,11 +200,6 @@ if(isset($_GET['m'])) {
 									<input type="radio" name="eliminada" value="0" id="eliminada_0"<?php if((($cursada === false) && ($eliminada === false)) || (($cursada !== false) && ($cursada[1] === true))) echo " checked=\"checked\""; ?> /><label for="eliminada_0">Nenhuma das Anteriores</label><br />
 								</td>
 							</tr>
-						<?php } if(($_Usuario->getAdmin() === true) && ($Disciplina->getCreditos() != -1)) { ?>
-							<tr>
-								<td width="25%"><b>Admin:</b></td>
-								<td><a href="VisaoAdminDisciplina.php?sigla=<?=$Disciplina->getSigla(true); ?>">Editar Disciplina</a></td>
-							</tr>
 						<?php } ?>
 					</table>
 				</div>

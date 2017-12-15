@@ -26,9 +26,9 @@ $(document).ready(function(){
 	
 	$("span.ui-icon").css({'display': 'none'});
 	
-	$("a.autorizaOferecimento").click(function() {
+	$("a.autorizar").click(function() {
 		var id = $(this).data("id");
-		$.post("<?= CONFIG_URL; ?>ajax/ax_admin_autorizar_colaboracao_oferecimento.php", {id: id, tipo: 'a'}, function(res) {
+		$.post("<?= CONFIG_URL; ?>ajax/admin_autorizar_colaboracao_oferecimento.php", {id: id, tipo: 'a'}, function(res) {
 			if(res && res.ok) {
 				$("#autorizar_"+id).hide();
 				$("#recusar_"+id).hide();
@@ -39,9 +39,9 @@ $(document).ready(function(){
 		return false;
 	});
 	
-	$("a.recusaOferecimento").click(function() {
+	$("a.recusar").click(function() {
 		var id = $(this).data("id");
-		$.post("<?= CONFIG_URL; ?>ajax/ax_admin_autorizar_colaboracao_oferecimento.php", {id: id, tipo: 'r'}, function(res) {
+		$.post("<?= CONFIG_URL; ?>ajax/admin_autorizar_colaboracao_oferecimento.php", {id: id, tipo: 'r'}, function(res) {
 			if(res && res.ok) {
 				$("#autorizar_"+id).hide();
 				$("#recusar_"+id).hide();
@@ -69,7 +69,7 @@ $(document).ready(function(){
 		<table cellspacing="0" class="tabela_bonyta_branca">
 			<tr>
 				<td width="20%"><strong>Oferecimento:</strong></td>
-				<td><a href="http://gde.ir/o/<?= $Colaboracao->getOferecimento()->getID(); ?>" target="_blank"><?= $Colaboracao->getOferecimento()->getDisciplina()->getSigla().$Colaboracao->getOferecimento()->getTurma()." - ".$Colaboracao->getOferecimento()->getPeriodo()->getNome(); ?></a></td>
+				<td><a href="<?= CONFIG_URL; ?>oferecimento/<?= $Colaboracao->getOferecimento()->getID(); ?>" target="_blank"><?= $Colaboracao->getOferecimento()->getDisciplina()->getSigla().$Colaboracao->getOferecimento()->getTurma()." - ".$Colaboracao->getOferecimento()->getPeriodo()->getNome(); ?></a></td>
 			</tr>
 			<tr>
 				<td width="20%"><strong>Usuario Colaborador:</strong></td>

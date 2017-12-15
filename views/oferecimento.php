@@ -151,7 +151,6 @@ if($oferecimento_pagina == null) {
 							<tr><td width="25%"><b>Desist&ecirc;ncias:</b></td><td><?= $Oferecimento->Desistencias(); ?></td></tr>
 							<tr><td width="25%"><b>Reservas:</b></td><td><?= $Oferecimento->getReservas(true); ?></td></tr>
 							<tr><td width="25%"><b>P&aacute;gina:</b></td><td><?= $html_oferecimento_pagina; ?></td></tr>
-							<?php if($_Usuario->getAdmin() === true) { ?><tr><td width="25%"><b>Admin:</b></td><td><a href="VisaoAdminOferecimento.php?id=<?=$Oferecimento->getID(); ?>">Editar Oferecimento</a></td></tr><?php } ?>
 						</table>
 					</div>
 					<div id="tab_disciplina" class="tab_content">
