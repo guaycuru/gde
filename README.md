@@ -3,13 +3,13 @@
  - Apache 2.4 ou mais novo;
    - Módulo `mod_rewrite` ativado;
    - Configuração `AllowOverride` definida como `All`;
- - PHP 5.6.30 ou mais novo (recomendável o uso do PHP 7.1);
+ - PHP 5.6.30 ou mais novo (recomendável o uso do PHP 7.2);
    - Extensão mysql_pdo;
    - Extensão mbstring;
    - Extensão curl;
    - Extensão GD;
  - MySQL 5.6.4 ou mais novo (recomendável o uso do MySQL 5.7) ou MariaDB 10.0.5 ou mais novo;
-   - InnoDB ativado
+   - InnoDB ativado com suporte a Full Text Indexes
 
 ## Instalação ##
 
@@ -41,53 +41,16 @@ P: Quando o GDE 2.5 vai ao ar?
 R: Assim que algumas burocracias envolvidas forem resolvidas. Espero que isso ocorra antes de 2018!  
 
 P: Já foi tudo reescrito?  
-R: Não, esse é um processo lento e trabalhoso, e infelizmente estou fazendo tudo sozinho.  
-  
-P: E falta muito?  
-R: Depende do ponto de vista. Veja a próxima pergunta.  
-  
-P: O que já funciona nesta versão e o que não funciona?  
-R: Segue a lista que vou manter atualizada:  
+R: Sim, com exceção de algumas coisas menos importantes ou que não serão portadas para a nova versão.  
 
-Funciona:
+P: Cadê o chat?  
+R: O chat da forma como foi escrito consumia muitos recursos de CPU e memória do servidor, então ele não será levado para a versão 2.5, no entanto buscaremos uma alternativa mais moderna para as próximas versões.  
 
- - Acontecimentos e Status
- - Amigos
- - Árvore / Integralização (pouco testada)
- - Avaliar Professores
- - Calendário
- - Configurações da Conta
- - Contato (não testada)
- - Convidar um Amigo (não testada)
- - Disciplina
- - Editar Perfil (pouco testada)
- - Eliminar Disciplinas
- - Enquetes
- - Estatísticas (parcial)
- - Frase do Dia
- - Login
- - Inicial
- - Mapa do Campus
- - Notas
- - Oferecimento
- - Perfil (Usuário, Aluno e Professor)
- - Perguntas Frequentes (FAQ)
- - Planejador (pouco testado)
- - Sala
- - Sobre o GDE
-
-Ainda não funciona:
-
- - Admin
- - API
- - Chat
-
-  
-P: E qual o prazo pra isso ser concluído?  
-R: Gostaria de dar um prazo, mas isso é impossível. Quero concluir o mais rápido possível para que todos possam colaborar com o projeto.  
+P: Onde encontro o código dos crawlers / robôs que pegam os dados?  
+R: Por requisição da DAC, essa parte do código não será disponibilizada.  
 
 P: Por que isso está sendo feito?  
-R: Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu (e meus amigos que me ajudaram) sou capaz (por questões de tempo, conhecimento, ideias, etc).  
+R: Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu e meus amigos que me ajudaram somos capazes, por questões de tempo, conhecimento, ideias, etc.  
   
 P: Posso colaborar?  
 R: Sim, por favor! Faça fork e envie seu pull request!  
