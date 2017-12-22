@@ -57,7 +57,6 @@ class PlanejadoEliminada extends Base {
 		$UE->setDisciplina($this->getDisciplina(false));
 		$UE->setPeriodo($this->getPlanejado()->getPeriodo_Atual(false));
 		$UE->setParcial(false);
-		$UE->setTipo();
 		return $UE;
 	}
 
