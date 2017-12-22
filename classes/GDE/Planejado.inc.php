@@ -224,4 +224,20 @@ class Planejado extends Base {
 		return $Horario;
 	}
 
+	public function Amigos_Por_Oferecimento(Oferecimento $Oferecimento) {
+		/*$Lista = array();
+		$res = self::$db->Execute("SELECT DISTINCT UA.amigo FROM ".Usuario::$tabela_r_amigos." AS UA JOIN ".self::$tabela." AS P ON (P.".Usuario::$chave." = UA.amigo) JOIN ".self::$tabela_r_oferecimentos." AS PO ON (PO.".self::$chave." = P.".self::$chave.") WHERE PO.".Oferecimento::$chave." = ".$Oferecimento->getID()." AND UA.".Usuario::$chave." = ".$this->getID_Usuario()." AND UA.ativo = 't'");
+		foreach($res as $linha)
+			$Lista[] = new Usuario_Amigo(self::$db, $this->getID_Usuario(), $linha['amigo']);
+		return $Lista;*/
+		// ToDo
+		return array();
+	}
+
+	public function Total_Por_Oferecimento(Oferecimento $Oferecimento) {
+		//return self::$db->Execute("SELECT COUNT(DISTINCT P.".Usuario::$chave.") AS total FROM ".self::$tabela." AS P JOIN ".self::$tabela_r_oferecimentos." AS PM ON (PM.".self::$chave." = P.".self::$chave.") WHERE PM.".Oferecimento::$chave." = '".$Oferecimento->getID()."'")->fields['total'];
+		// ToDo
+		return 0;
+	}
+
 }
