@@ -72,7 +72,7 @@ class CurriculoEletiva extends Base {
 	 * @return CurriculoEletiva[]
 	 */
 	public static function Consultar($param) {
-		$dql = 'SELECT C FROM GDE\\CurriculoEletiva C INNER JOIN C.curso U LEFT JOIN C.modalidade M ';
+		$dql = 'SELECT C FROM '.get_class().' C INNER JOIN C.curso U LEFT JOIN C.modalidade M ';
 		if($param['curso'] == 51) {
 			$dql .= 'WHERE U.numero = 28 ';
 			unset($param['curso'], $param['modalidade']);
