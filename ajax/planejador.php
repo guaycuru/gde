@@ -6,10 +6,6 @@ define('JSON', true);
 
 require_once('../common/common.inc.php');
 
-function Sort_Nomes($A, $B) {
-	return strcasecmp($A->getApelido(), $B->getApelido());
-}
-
 if(!isset($_POST['a']))
 	die(json_encode(false));
 
@@ -541,7 +537,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Oferecimento = Oferecimento::Load($_POST['oid']);
 		
 		$Amigos = $Planejado->Amigos_Por_Oferecimento($Oferecimento);
-		usort($Amigos, "Sort_Nomes");
+		usort($Amigos, "\GDE\UsuarioAmigo::Ordenar_Por_Nome");
 		$lista = array();
 		foreach($Amigos as $Amigo)
 			$lista[] = "<a href=\"Perfil.php?l=".$Amigo->getAmigo()->getLogin()."\" target=\"_blank\" style=\"text-decoration: none;\" title=\"".$Amigo->getAmigo()->getNome_Completo()."\">".$Amigo->getApelido()."</a>";

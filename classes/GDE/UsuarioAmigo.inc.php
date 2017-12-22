@@ -70,14 +70,21 @@ class UsuarioAmigo extends Base {
 	}
 
 	/**
+	 * @param UsuarioAmigo $A
+	 * @param UsuarioAmigo $B
+	 * @return int
+	 */
+	public static function Order_Por_Nome_Sort(UsuarioAmigo $A, UsuarioAmigo $B) {
+		return strcasecmp($A->Apelido_Ou_Nome(true, false), $B->Apelido_Ou_Nome(true, false));
+	}
+
+	/**
 	 * @param $Amigos
 	 * @return ArrayCollection|UsuarioAmigo[]
 	 */
 	public static function Ordenar_Por_Nome($Amigos) {
 		$iterator = $Amigos->getIterator();
-		$iterator->uasort(function ($A, $B) {
-			return strcmp($A->Apelido_Ou_Nome(true, false), $B->Apelido_Ou_Nome(true, false));
-		});
+		$iterator->uasort('\GDE\UsuarioAmigo::Ordenar_Por_Nome');
 		return new ArrayCollection(iterator_to_array($iterator));
 	}
 
