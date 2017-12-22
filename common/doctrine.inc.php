@@ -10,6 +10,9 @@ use \Doctrine\Common\Annotations\AnnotationRegistry,
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
 
+// Uncaught exception handler
+require_once(__DIR__.'/exceptions.inc.php');
+
 // Default namespace
 $_namespace = 'GDE';
 
