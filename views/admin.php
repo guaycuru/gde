@@ -62,4 +62,5 @@ $(document).ready(function() {
 		<td><?= (($colaboracoes_oferecimentos_pendentes > 0) ? "<a href=\"".CONFIG_URL."admin-colaboracoes-oferecimento\" target=\"_blank\">Autorizar ".$colaboracoes_oferecimentos_pendentes."</a>" : "Nada pendente"); ?></td>
 	</tr>
 </table>
+<br /><br />Caches em uso: <pre><?= print_r($_cache->getStats(), true); ?></pre>
 <?= $FIM; ?>
