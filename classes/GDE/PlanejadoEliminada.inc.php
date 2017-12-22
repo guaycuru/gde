@@ -48,4 +48,17 @@ class PlanejadoEliminada extends Base {
 	 */
 	protected $parcial = false;
 
+	/**
+	 * @return UsuarioEliminada
+	 */
+	public function Para_UsuarioEliminada() {
+		$UE = new UsuarioEliminada();
+		$UE->setUsuario($this->getPlanejado()->getUsuario(false));
+		$UE->setDisciplina($this->getDisciplina(false));
+		$UE->setPeriodo($this->getPlanejado()->getPeriodo_Atual(false));
+		$UE->setParcial(false);
+		$UE->setTipo();
+		return $UE;
+	}
+
 }

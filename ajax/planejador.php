@@ -110,7 +110,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Cria a arvore personalizada para o planejador
 			$Usr = $_Usuario->Copia();
 			foreach($EliminadasAdd as $EAdd)
-				$Usr->addEliminadas($EAdd);
+				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID(), $times['arvore1']);
 			$Disciplinas = $Disciplinas + $Arvore->getDisciplinas();
