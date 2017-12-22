@@ -84,7 +84,9 @@ class UsuarioAmigo extends Base {
 	 */
 	public static function Ordenar_Por_Nome($Amigos) {
 		$iterator = $Amigos->getIterator();
-		$iterator->uasort('\GDE\UsuarioAmigo::Ordenar_Por_Nome');
+		$iterator->uasort(function (UsuarioAmigo $A, UsuarioAmigo $B) {
+			return strcasecmp($A->Apelido_Ou_Nome(true, false), $B->Apelido_Ou_Nome(true, false));
+		});
 		return new ArrayCollection(iterator_to_array($iterator));
 	}
 
