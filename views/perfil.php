@@ -419,7 +419,7 @@ if($Usr !== null) {
 	$_nome = $Usr->getNome_Completo(true);
 	$_status = $Usr->getStatus();
 
-	if($_Usuario->Pode_Ver($Usr, $Usr->getCompartilha_Arvore()) === true)
+	if($_Usuario->Pode_Ver($Usr, 'arvore') === true)
 		$link_arvore = '<a href="'.CONFIG_URL.'arvore/?us='.$Usr->getLogin().'">Ver</a>';
 	else
 		$link_arvore = '&Aacute;rvore n&atilde;o compartilhada...';

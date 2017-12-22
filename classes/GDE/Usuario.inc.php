@@ -1043,6 +1043,8 @@ class Usuario extends Base {
 	 */
 	public function getCompartilha($campo) {
 		$campo = 'compartilha_'.$campo;
+		if(property_exists(get_class(), $campo) === false)
+			return false;
 		return $this->{'get'.$campo}(false);
 	}
 
@@ -1504,7 +1506,6 @@ class Usuario extends Base {
 	 * @return array|bool
 	 */
 	public function Pode_Ver(Usuario $Usuario, $campo) {
-		// Depois vou pegar a permissao de um conjunto, classe, sei la...
 		if(($this->getID() == $Usuario->getID()) || ($this->getAdmin() === true))
 			return true;
 		$minha = $this->getCompartilha($campo);
