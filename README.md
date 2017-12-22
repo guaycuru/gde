@@ -32,16 +32,10 @@
 ## Sobre este projeto ##
 
 P: Este é o GDE "de verdade"?  
-R: Sim e não: Esta é a versão 2.5 do GDE, atualmente a versão "em produção" é a 2.3.  
+R: Sim. A versão 2.5 substituiu a 2.3 no dia 22/12/2017.  
   
 P: Qual a diferença entre a versão 2.3 e a 2.5?  
 R: Em termos de funcionalidades: "avisos", "fóruns", "grupos" e "oportunidades" foram removidos (não eram utilizados). Em termos de backend: a versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, às vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 foi tudo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/). Além disso, a versão 2.5 suporta disciplinas com a mesma sigla e níveis diferentes, cursos com o mesmo número e níveis diferentes e oferecimentos com mais de um professor ou com turmas com mais de 2 caracteres, além de várias outras correções menores.  
-  
-P: Quando o GDE 2.5 vai ao ar?  
-R: Assim que algumas burocracias envolvidas forem resolvidas. Espero que isso ocorra antes de 2018!  
-
-P: Já foi tudo reescrito?  
-R: Sim, com exceção de algumas coisas menos importantes ou que não serão portadas para a nova versão.  
 
 P: Cadê o chat?  
 R: O chat da forma como foi escrito consumia muitos recursos de CPU e memória do servidor, então ele não será levado para a versão 2.5, no entanto buscaremos uma alternativa mais moderna para as próximas versões.  
@@ -49,7 +43,7 @@ R: O chat da forma como foi escrito consumia muitos recursos de CPU e memória d
 P: Onde encontro o código dos crawlers / robôs que pegam os dados?  
 R: Por requisição da DAC, essa parte do código não será disponibilizada.  
 
-P: Por que isso está sendo feito?  
+P: Por que isso foi feito?  
 R: Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu e meus amigos que me ajudaram somos capazes, por questões de tempo, conhecimento, ideias, etc.  
   
 P: Posso colaborar?  
