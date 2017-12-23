@@ -65,5 +65,6 @@ $(document).ready(function() {
 	</tr>
 </table>
 <br /><br />Erros: <?= $erros; ?>
+<br /><br />Result cache dispon&iacute;vel: <?= (RESULT_CACHE_AVAILABLE) ? 'Sim' : 'N&atilde;o'; ?>
 <br /><br />Caches em uso: <pre><?= print_r($_cache->getStats(), true); ?></pre>
 <?= $FIM; ?>

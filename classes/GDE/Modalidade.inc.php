@@ -75,6 +75,8 @@ class Modalidade extends Base {
 		$query->setParameter(2, $curso);
 		if($catalogo != null)
 			$query->setParameter(3, $catalogo);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

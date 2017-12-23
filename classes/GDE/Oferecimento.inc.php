@@ -227,7 +227,10 @@ class Oferecimento extends Base {
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins." WHERE ".$where;
-			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
+			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$total = $queryt->getSingleScalarResult();
 		}
 		$dql = "SELECT DISTINCT O FROM ".get_class()." AS O ".$joins." WHERE ".$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
@@ -235,6 +238,8 @@ class Oferecimento extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -342,6 +347,8 @@ class Oferecimento extends Base {
 			$rsmt->addScalarResult('total', 'total');
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
+			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 
@@ -349,6 +356,8 @@ class Oferecimento extends Base {
 		$rsm->addRootEntityFromClassMetadata(get_class(), 'O');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

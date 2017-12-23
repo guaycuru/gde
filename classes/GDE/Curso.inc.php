@@ -85,6 +85,8 @@ class Curso extends Base {
 			$query->setParameter(1, $niveis);
 		if($sem_especial)
 			$query->setParameter(2, self::NUMERO_EGRESSADO);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

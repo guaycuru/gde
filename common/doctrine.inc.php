@@ -34,6 +34,7 @@ if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
 }
 
 // Initialize the Redis caching mechanism
+$resultCache = null;
 if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
 	try {
 		$redis = new \Redis();
@@ -41,6 +42,7 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
 		$redisCache = new \Doctrine\Common\Cache\RedisCache();
 		$redisCache->setRedis($redis);
 		$availableCaches[] = $redisCache;
+		$resultCache = $redisCache;
 		unset($redis);
 	} catch(\Exception $e) {
 		// Nao foi possivel conectar ao REDIS
@@ -56,6 +58,7 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
 		$redis->connect();
 		$redisCache = new \Doctrine\Common\Cache\PredisCache($redis);
 		$availableCaches[] = $redisCache;
+		$resultCache = $redisCache;
 		unset($redis);
 	} catch(\Predis\Connection\ConnectionException $e) {
 		// Nao foi possivel conectar ao REDIS
@@ -100,6 +103,12 @@ $config->setMetadataDriverImpl($driver);
 $config->setQueryCacheImpl($_cache);
 $config->setProxyDir(__DIR__.'/../proxies');
 $config->setProxyNamespace('Proxies');
+if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && ($resultCache !== null)) {
+	$config->setResultCacheImpl($resultCache);
+	define('RESULT_CACHE_AVAILABLE', true);
+} else
+	define('RESULT_CACHE_AVAILABLE', false);
+unset($resultCache);
 
 // Set the appropriated Proxy auto-generating method
 if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === true))

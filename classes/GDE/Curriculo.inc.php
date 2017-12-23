@@ -83,9 +83,10 @@ class Curriculo extends Base {
 			$dql .= 'AND M.sigla = :modalidade ';
 		$dql .= 'AND C.catalogo = :catalogo ';
 		$dql .= 'ORDER BY C.semestre ASC';
-		return self::_EM()->createQuery($dql)
-			->setParameters($param)
-			->getResult();
+		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+		return $query->getResult();
 	}
 
 	/**
@@ -115,6 +116,8 @@ class Curriculo extends Base {
 		$query->setParameter(2, $catalogo);
 		if($modalidade != null)
 			$query->setParameter(3, $modalidade);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return ($query->getSingleScalarResult() > 0);
 	}
 

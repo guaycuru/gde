@@ -137,6 +137,7 @@ class Professor extends Base {
 				->setParameter('periodo', $Periodo->getID());
 			$Oferecimentos = $qb->getQuery()->getResult();
 		}
+		// ToDo: Vale a pena usar o result cache aqui? Acho que nao...
 		if($formatado === false)
 			return $Oferecimentos;
 		else {
@@ -176,7 +177,10 @@ class Professor extends Base {
 		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
-			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
+			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$total = $queryt->getSingleScalarResult();
 		}
 		$dql = "SELECT DISTINCT P FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
 		if($ordem != null)
@@ -186,6 +190,8 @@ class Professor extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -245,6 +251,8 @@ class Professor extends Base {
 			$rsmt->addScalarResult('total', 'total');
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
+			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 
@@ -252,6 +260,8 @@ class Professor extends Base {
 		$rsm->addRootEntityFromClassMetadata(get_class(), 'P');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

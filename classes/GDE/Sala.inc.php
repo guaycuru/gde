@@ -110,7 +110,10 @@ class Sala extends Base {
 		$param = array(1 => "%".str_replace(' ', '%', $q)."%");
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT S.id_sala) FROM ".get_class()." AS S WHERE S.nome LIKE ?1";
-			$total = self::_EM()->createQuery($dqlt)->setParameters($param)->getSingleScalarResult();
+			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
+			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$total = $queryt->getSingleScalarResult();
 		}
 		$dql = "SELECT DISTINCT S FROM ".get_class()." AS S WHERE S.nome LIKE ?1";
 		if($ordem != null)
@@ -120,6 +123,8 @@ class Sala extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

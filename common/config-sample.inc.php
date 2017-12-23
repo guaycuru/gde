@@ -26,6 +26,10 @@ define('CONFIG_REDIS_ENABLED', false);
 define('CONFIG_REDIS_HOST', '127.0.0.1');
 define('CONFIG_REDIS_PORT', '6379');
 
+// Cache de resultados de query, ative somente se o REDIS estiver disponivel
+define('CONFIG_RESULT_CACHE', false);
+define('CONFIG_RESULT_CACHE_TTL', 3600);
+
 // URL base do sistema, tem que ter trailing slash
 define('CONFIG_URL', 'http://localhost/Web/gde/');
 define('CONFIG_URL_LOGIN', 'login/');
