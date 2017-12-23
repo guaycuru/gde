@@ -191,7 +191,7 @@ class Planejado extends Base {
 	}
 
 	public function Limpar_Eliminadas($flush = true) {
-		$this->setEliminadas(new ArrayCollection());
+		$this->clearEliminadas();
 		return ($this->Save($flush) !== false);
 	}
 
