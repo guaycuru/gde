@@ -67,9 +67,12 @@ if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 		}
 	}
 }
-if(($_Usuario !== null) && ($_Usuario->getAdmin() === true) && (!empty($_SESSION['admin_su']))) {
-	$_Usuario = Usuario::Load($_SESSION['admin_su']);
-}
+if(($_Usuario !== null) && ($_Usuario->getAdmin() === true)) {
+	define('GDE_ADMIN', true);
+	if(!empty($_SESSION['admin_su']))
+		$_Usuario = Usuario::Load($_SESSION['admin_su']);
+} else
+	define('GDE_ADMIN', false);
 
 if((defined('NO_SESSION')) && (NO_SESSION === true))
 	session_write_close();
