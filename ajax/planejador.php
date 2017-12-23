@@ -18,7 +18,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Periodo = Periodo::Load($pp);
 		$pa = $Periodo->Anterior()->getPeriodo();
 	}
-	$Planejado = Planejado::Novo($_Usuario, $pp, $pa);
+	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, true);
 	$Ret['ok'] = ($Planejado !== false);
 	if($Ret['ok'] === true)
 		$Ret['id'] = $Planejado->getID();
@@ -489,13 +489,14 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
 		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
-		$Ret = $Planejado->Limpar_Eliminadas();
+		$Planejado->Limpar_Eliminadas(false);
 		if(isset($_POST['conf'])) {
 			foreach($_POST['conf'] as $sigla) {
 				$D = Disciplina::Por_Sigla($sigla);
-				$Ret = $Ret && $Planejado->Adicionar_Eliminada($D, ((isset($_POST['parciais'])) && (in_array($sigla, $_POST['parciais']))));
+				$Planejado->Adicionar_Eliminada($D, ((isset($_POST['parciais'])) && (in_array($sigla, $_POST['parciais']))), false);
 			}
 		}
+		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'ae') { // Adicionar Extra
 		$erros = array();
 		if(strlen($_POST['nome']) < 2)

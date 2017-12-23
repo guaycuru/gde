@@ -115,12 +115,12 @@ class Planejado extends Base {
 		if(count($Planejados) == 0) {
 			if($periodo_atual == null)
 				$periodo_atual = Dado::Pega_Dados('planejador_periodo_atual');
-			return self::Novo($Usuario, $periodo, $periodo_atual);
+			return self::Novo($Usuario, $periodo, $periodo_atual, true);
 		} else
 			return $Planejados[0];
 	}
 
-	public static function Novo($Usuario, $periodo, $periodo_atual = null, $salvar = true) {
+	public static function Novo($Usuario, $periodo, $periodo_atual = null, $flush = true) {
 		$Novo = new self();
 		$Novo->setUsuario($Usuario);
 		$Novo->setPeriodo(Periodo::Load($periodo));
@@ -131,8 +131,8 @@ class Planejado extends Base {
 			$Atual = Periodo::Load($periodo_atual);
 		$Novo->setPeriodo_Atual($Atual);
 		foreach($Usuario->getAluno(true)->getOferecimentos($periodo_atual) as $Atual)
-			$Novo->Adicionar_Eliminada($Atual->getDisciplina(true));
-		return (($salvar === false) || ($Novo->Save(true) !== false)) ? $Novo : false;
+			$Novo->Adicionar_Eliminada($Atual->getDisciplina(true), false, false);
+		return ($Novo->Save($flush) !== false) ? $Novo : false;
 	}
 
 	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, $salvar = true) {
@@ -171,7 +171,7 @@ class Planejado extends Base {
 		return false;
 	}
 
-	public function Adicionar_Eliminada(Disciplina $Disciplina, $parcial = false, $salvar = true) {
+	public function Adicionar_Eliminada(Disciplina $Disciplina, $parcial = false, $flush = true) {
 		$Tem = $this->Tem_Eliminada($Disciplina);
 		if($Tem !== false)
 			return false;
@@ -179,26 +179,20 @@ class Planejado extends Base {
 		$Nova->setDisciplina($Disciplina);
 		$Nova->setParcial($parcial);
 		$this->addEliminadas($Nova);
-		if($salvar === false)
-			return true;
-		return ($this->Save(true) !== false);
+		return ($this->Save($flush) !== false);
 	}
 
-	public function Remover_Eliminada(Disciplina $Disciplina, $salvar = true) {
+	public function Remover_Eliminada(Disciplina $Disciplina, $flush = true) {
 		$Eliminada = $this->Tem_Eliminada($Disciplina);
 		if($Eliminada === false)
 			return false;
 		$this->removeEliminadas($Eliminada);
-		if($salvar === false)
-			return true;
-		return ($this->Save(true) !== false);
+		return ($this->Save($flush) !== false);
 	}
 
-	public function Limpar_Eliminadas($salvar = true) {
+	public function Limpar_Eliminadas($flush = true) {
 		$this->setEliminadas(new ArrayCollection());
-		if($salvar === false)
-			return true;
-		return ($this->Save(true) !== false);
+		return ($this->Save($flush) !== false);
 	}
 
 	public function Tem_Eliminada(Disciplina $Disciplina) {
