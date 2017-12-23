@@ -11,6 +11,8 @@ if($_Usuario->getAdmin() === false)
 
 $colaboracoes_professores_pendentes = ColaboracaoProfessor::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
 $colaboracoes_oferecimentos_pendentes = ColaboracaoOferecimento::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
+
+$erros = iterator_count(new \FilesystemIterator(__DIR__.'/../errors/', \FilesystemIterator::SKIP_DOTS)) - 1;
 ?>
 <script type="text/javascript">
 var debug = function(d) {
@@ -62,5 +64,6 @@ $(document).ready(function() {
 		<td><?= (($colaboracoes_oferecimentos_pendentes > 0) ? "<a href=\"".CONFIG_URL."admin-colaboracoes-oferecimento\" target=\"_blank\">Autorizar ".$colaboracoes_oferecimentos_pendentes."</a>" : "Nada pendente"); ?></td>
 	</tr>
 </table>
+<br /><br />Erros: <?= $erros; ?>
 <br /><br />Caches em uso: <pre><?= print_r($_cache->getStats(), true); ?></pre>
 <?= $FIM; ?>
