@@ -15,9 +15,12 @@ if(isset($_POST['e'])) {
 	if($_POST['e'] == 1) {
 		if((!isset($_POST['a'])) || (!isset($_POST['r'])))
 			exit;
-		$Eliminada = new UsuarioEliminada();
-		$Eliminada->setUsuario($_Usuario);
-		$Eliminada->setDisciplina($Disciplina);
+		$Eliminada = UsuarioEliminada::Por_Unique($_Usuario, $Disciplina);
+		if(!is_object($Eliminada)) {
+			$Eliminada = new UsuarioEliminada();
+			$Eliminada->setUsuario($_Usuario);
+			$Eliminada->setDisciplina($Disciplina);
+		}
 		$Eliminada->setParcial($_POST['a'] == 1);
 		$Eliminada->setProficiencia($_POST['r'] == 1);
 		if($Eliminada->Save(true) === false)
@@ -29,7 +32,7 @@ if(isset($_POST['e'])) {
 		else
 			echo 'normalmente';
 	} else {
-		$Eliminada = UsuarioEliminada::FindOneBy(array('usuario' => $_Usuario, 'disciplina' => $Disciplina));
+		$Eliminada = UsuarioEliminada::Por_Unique($_Usuario, $Disciplina);
 		if(is_object($Eliminada)) {
 			$Eliminada->Delete(true);
 		}

@@ -71,6 +71,15 @@ class UsuarioEliminada extends Base {
 	protected $tipo;
 
 	/**
+	 * @param Usuario $Usuario
+	 * @param Disciplina $Disciplina
+	 * @return false|null|UsuarioEliminada
+	 */
+	public static function Por_Unique(Usuario $Usuario, Disciplina $Disciplina) {
+		return self::FindOneBy(array('usuario' => $Usuario, 'disciplina' => $Disciplina));
+	}
+
+	/**
 	 * Elimina
 	 *
 	 * Verifica se esta eliminada elimina $Disciplina, possivelmente junto com as $Outras
