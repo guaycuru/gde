@@ -25,9 +25,12 @@ unset($loader);
 // Initialize the caching mechanism
 $availableCaches = array(new \Doctrine\Common\Cache\ArrayCache());
 
-// Initialize the APCu caching mechanism
 if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
+	// Initialize the APCu caching mechanism
 	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
+} elseif((defined('CONFIG_APC_ENABLED')) && (CONFIG_APC_ENABLED === true)) {
+	// Initialize the APC caching mechanism
+	$availableCaches[] = new \Doctrine\Common\Cache\ApcCache();
 }
 
 // Initialize the Redis caching mechanism
@@ -110,21 +113,23 @@ if((defined('CONFIG_DB_LOGGER')) && (CONFIG_DB_LOGGER === true))
 
 // DB connection options
 $connection = array(
-	'driver' => 'pdo_mysql',
+	'driver' => CONFIG_DB_DRIVER,
 	'user' => CONFIG_DB_USER,
 	'password' => CONFIG_DB_PASS,
 	'dbname' => CONFIG_DB_NAME,
-	'charset' => 'utf8',
-	'driverOptions' => array(
-		// ToDo: Remover a mudanca do SQL Mode
-		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8,sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))'
-	)
+	'charset' => 'utf8'
 );
-if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
+if(CONFIG_DB_DRIVER == 'mysql_pdo') {
+	$connection['driverOptions'] = array(
+		// ToDo: Remover a mudanca do SQL Mode
+		PDO::MYSQL_ATTR_INIT_COMMAND => 'sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))'
+	);
+}
+if((defined('CONFIG_DB_SOCKET')) && (CONFIG_DB_SOCKET != null))
 	$connection['unix_socket'] = CONFIG_DB_SOCKET;
-elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {
+elseif((defined('CONFIG_DB_HOST')) && (CONFIG_DB_HOST != null)) {
 	$connection['host'] = CONFIG_DB_HOST;
-	if((defined('CONFIG_DB_PORT')) && (!empty(CONFIG_DB_PORT)))
+	if((defined('CONFIG_DB_PORT')) && (CONFIG_DB_PORT != null))
 		$connection['port'] = CONFIG_DB_PORT;
 }
 

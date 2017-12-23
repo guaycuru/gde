@@ -86,7 +86,8 @@ abstract class Base {
 	 * @return void
 	 */
 	public static function OK_JSON($id = null, $http = 200, $extra = array()) {
-		http_response_code($http);
+		if(function_exists('http_response_code'))
+			http_response_code($http);
 		die(self::To_JSON(array(
 			'ok' => true,
 			'id' => $id
@@ -104,7 +105,8 @@ abstract class Base {
 	 * @return void
 	 */
 	public static function Error_JSON($message, $http = 200, $extra = array()) {
-		http_response_code($http);
+		if(function_exists('http_response_code'))
+			http_response_code($http);
 		die(self::To_JSON(array(
 			'ok' => false,
 			'error' => $message

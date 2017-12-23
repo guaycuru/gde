@@ -82,12 +82,12 @@ if($Usuario !== null) {
 		foreach($niveis_pos as $c => $d)
 			$lista_niveis_pos .= "<option value=\"".$c."\"".((($Aluno->getNivel_Pos() != null) && ($Aluno->getNivel_Pos() == $c))?" selected=\"selected\"":null).">".$d." (".$c.")</option>";
 
-		$Cursos = Curso::Listar(Curso::NIVEIS_GRAD);
+		$Cursos = Curso::Listar(Curso::$NIVEIS_GRAD);
 		$lista_cursos = "<option value=\"\">-</option>";
 		foreach($Cursos as $Curso)
 			$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(($Aluno->getCurso(true)->getID() == $Curso->getID())?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
 
-		$Cursos_pos = Curso::Listar(Curso::NIVEIS_POS);
+		$Cursos_pos = Curso::Listar(Curso::$NIVEIS_POS);
 		$lista_cursos_pos = "<option value=\"\">-</option>";
 		foreach($Cursos_pos as $Curso_Pos)
 			$lista_cursos_pos .= "<option value=\"".$Curso_Pos->getNumero(true)."\"".(($Aluno->getCurso_Pos(true)->getID() == $Curso_Pos->getID())?" selected=\"selected\"":null).">".$Curso_Pos->getNome(true)." (".$Curso_Pos->getNumero(true).")</option>";

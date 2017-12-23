@@ -89,7 +89,8 @@ class Util {
 	public static function Dia_Da_Semana($d) {
 		if($d < 0 || $d > 6)
 			return '';
-		return array('Domingo', 'Segunda-feira', 'Ter&ccedil;a-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'S&aacute;bado')[$d];
+		$dias = array('Domingo', 'Segunda-feira', 'Ter&ccedil;a-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'S&aacute;bado');
+		return $dias[$d];
 	}
 
 }

@@ -273,6 +273,26 @@ class Oferecimento extends Base {
 					$sql .= " LIMIT " . $limit;
 			}
 			$q = '%' . $q . '%';
+		} elseif(CONFIG_FTS_ENABLED === false) {
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$ordem = ($ordem != 'rank DESC')
+					? 'O.`id_periodo` ASC, DI.`sigla` DESC, O.`turma` DESC'
+					: 'O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC';
+			} elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
+				$ordem = ($ordem != "DI.sigla DESC")
+					? "DI.`sigla` ASC, O.`turma` ASC"
+					: "DI.`sigla` DESC, O.`turma` DESC";
+			}
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`) LEFT JOIN `gde_r_oferecimentos_professores` AS OP ON (OP.`id_oferecimento` = O.`id_oferecimento`) LEFT JOIN `gde_professores` AS P ON (P.`id_professor` = OP.`id_professor`) WHERE DI.`sigla` LIKE :q OR DI.`nome` LIKE :q OR P.`nome` LIKE :q";
+			$sql = "SELECT O.* FROM `gde_oferecimentos` AS O INNER JOIN `gde_disciplinas` AS DI ON (O.`id_disciplina` = DI.`id_disciplina`) LEFT JOIN `gde_r_oferecimentos_professores` AS OP ON (OP.`id_oferecimento` = O.`id_oferecimento`) LEFT JOIN `gde_professores` AS P ON (P.`id_professor` = OP.`id_professor`) WHERE DI.`sigla` LIKE :q OR DI.`nome` LIKE :q OR P.`nome` LIKE :q ORDER BY " . $ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT " . $start . "," . $limit;
+				else
+					$sql .= " LIMIT " . $limit;
+			}
+			$q = '%' . $q . '%';
 		} else {
 			//$q = preg_replace('/(\w+)/', '+$1*', $q);
 			$q = preg_replace('/(\p{L}{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $q);

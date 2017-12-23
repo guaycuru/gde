@@ -43,7 +43,7 @@ class EquivalenciaEquivalente extends Base {
 	protected $sigla;
 
 	public function getDisciplina($vazio = true) {
-		$Disciplina = Disciplina::Por_Sigla($this->getSigla(false), Disciplina::NIVEIS_GRAD, $vazio);
+		$Disciplina = Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
 		if($Disciplina->getID() == null) {
 			$Disciplina->setSigla($this->getSigla(false));
 		}

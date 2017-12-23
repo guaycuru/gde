@@ -12,7 +12,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  * @ORM\Table(
  *  name="gde_alunos",
  *  indexes={
- *     @ORM\Index(name="nome", columns={"nome"}, flags={"fulltext"})
+ *     @ORM\Index(name="nome", columns={"nome"})
  *  }
  * )
  * @ORM\Entity
@@ -321,7 +321,7 @@ class Aluno extends Base {
 				else
 					$sql .= " LIMIT ".$limit;
 			}
-		} elseif(mb_strlen($q) < CONFIG_FT_MIN_LENGTH) {
+		} elseif((CONFIG_FTS_ENABLED === false) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
 				$ordem = ($ordem == 'rank DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
 			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
@@ -329,6 +329,8 @@ class Aluno extends Base {
 				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
 			} else
 				$extra_select = "";
+			if(CONFIG_FTS_ENABLED === false)
+				$q = '%'.$q.'%';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q";
 			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;

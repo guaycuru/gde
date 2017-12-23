@@ -4,19 +4,24 @@
 define('CONFIG_DEV_MODE', true);
 
 // DB
-define('CONFIG_DB_TYPE', 'mysqli');
+define('CONFIG_DB_DRIVER', 'pdo_mysql');
 define('CONFIG_DB_SOCKET', ''); // Usado se for definido
 define('CONFIG_DB_HOST', '127.0.0.1'); // Usado se nao for definido um socket
 define('CONFIG_DB_PORT', ''); // Padrao
 define('CONFIG_DB_USER', 'Web');
 define('CONFIG_DB_PASS', '');
 define('CONFIG_DB_NAME', 'gde');
-define('CONFIG_FTS_ENABLED', true);
+define('CONFIG_FTS_ENABLED', false);
+define('CONFIG_DB_LOGGER', false);
 
+// APC (cache) somente para PHP < 5.5
+define('CONFIG_APC_ENABLED', false);
 // APCu (cache)
 define('CONFIG_APCU_ENABLED', false);
 
-// Redis (cache)
+// Redis (cache) com a biblioteca PRedis
+define('CONFIG_PREDIS_ENABLED', false);
+// Redis (cache) com a extensao php_redis
 define('CONFIG_REDIS_ENABLED', false);
 define('CONFIG_REDIS_HOST', '127.0.0.1');
 define('CONFIG_REDIS_PORT', '6379');

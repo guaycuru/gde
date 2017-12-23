@@ -48,7 +48,7 @@ class Quote extends Base {
 	 */
 	protected $texto;
 
-	const CACHE_DIR = __DIR__.'/../../cache/rss';
+	const CACHE_DIR = '/../../cache/rss';
 	const CACHE_TIME = 900;
 
 	private static $_urls = array(
@@ -66,7 +66,7 @@ class Quote extends Base {
 	public static function Qualquer_Uma($html = true) {
 		require_once(__DIR__."/../../common/lastRSS.php");
 		$rss = new \lastRSS;
-		$rss->cache_dir = self::CACHE_DIR;
+		$rss->cache_dir = __DIR__.self::CACHE_DIR;
 		$rss->cache_time = self::CACHE_TIME;
 		$urls = self::$_urls;
 		$onde = mt_rand(0, 3);

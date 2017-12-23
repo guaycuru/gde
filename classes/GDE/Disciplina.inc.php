@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  *     @ORM\UniqueConstraint(name="sigla_nivel", columns={"sigla", "nivel"})
  *  },
  *  indexes={
- *     @ORM\Index(name="sigla_nome_ementa_fts", columns={"sigla", "nome", "ementa"}, flags={"fulltext"}),
+ *     @ORM\Index(name="sigla_nome", columns={"sigla", "nome"}),
  *     @ORM\Index(name="nome", columns={"nome"}),
  *     @ORM\Index(name="creditos", columns={"creditos"}),
  *     @ORM\Index(name="periodicidade", columns={"periodicidade"}),
@@ -156,8 +156,8 @@ class Disciplina extends Base {
 	const NIVEL_POS = 'P';
 	const NIVEL_MP = 'S';
 	const NIVEL_TEC = 'T';
-	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
-	const NIVEIS_POS = array(self::NIVEL_POS, self::NIVEL_MP);
+	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
+	public static $NIVEIS_POS = array(self::NIVEL_POS, self::NIVEL_MP);
 	private static $_niveis = array(
 		self::NIVEL_TEC => 'Tecnologia',
 		self::NIVEL_GRAD => 'Gradua&ccedil;&atilde;o',
@@ -329,20 +329,35 @@ class Disciplina extends Base {
 				$ordem = ($ordem == 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q";
-			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY ".$ordem;
+			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q ORDER BY " . $ordem;
+			if($limit > 0) {
+				if($start > 0)
+					$sql .= " LIMIT " . $start . "," . $limit;
+				else
+					$sql .= " LIMIT " . $limit;
+			}
+			$q = '%' . $q . '%';
+		} elseif(CONFIG_FTS_ENABLED === false) {
+			$q = '%' . $q . '%';
+			if($ordem == null)
+				$ordem = 'rank DESC';
+			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
+				$ordem = ($ordem != 'rank DESC') ? 'D.`sigla` ASC' : 'D.`sigla` DESC';
+			if($total !== null)
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q OR D.`nome` LIKE :q";
+			$sql = "SELECT D.* FROM `gde_disciplinas` AS D WHERE D.`sigla` LIKE :q OR D.`nome` LIKE :q ORDER BY ".$ordem;
 			if($limit > 0) {
 				if($start > 0)
 					$sql .= " LIMIT ".$start.",".$limit;
 				else
 					$sql .= " LIMIT ".$limit;
 			}
-			$q = '%'.$q.'%';
 		} else {
 			$q = preg_replace('/(\p{L}{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $q);
 			if($ordem == null)
 				$ordem = 'rank DESC';
 			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
-				$extra_select = ", MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q) AS `rank`";
+				$extra_select = ", MATCH(D.`sigla`, D.`nome`) AGAINST(:q) AS `rank`";
 				if($ordem == 'rank ASC')
 					$ordem = '`rank` ASC, D.`sigla` DESC';
 				else
@@ -350,8 +365,8 @@ class Disciplina extends Base {
 			} else
 				$extra_select = "";
 			if($total !== null)
-				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE)";
-			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`, D.`ementa`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem;
+				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`) AGAINST(:q IN BOOLEAN MODE)";
+			$sql = "SELECT D.*".$extra_select." FROM `gde_disciplinas` AS D WHERE MATCH(D.`sigla`, D.`nome`) AGAINST(:q IN BOOLEAN MODE) ORDER BY ".$ordem;
 			if($limit > 0) {
 				if($start > 0)
 					$sql .= " LIMIT ".$start.",".$limit;
@@ -401,7 +416,7 @@ class Disciplina extends Base {
 				$Pre_Requisitos[$Conjunto->getCatalogo(false)] = array();
 			$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()] = array();
 			foreach($Conjunto->getLista() as $Lista) {
-				$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()][] = array(Disciplina::Por_Sigla($Lista->getSigla(false), Disciplina::NIVEIS_GRAD), $Lista->getParcial(), $Lista->getSigla(false));
+				$Pre_Requisitos[$Conjunto->getCatalogo(false)][$Conjunto->getID()][] = array(Disciplina::Por_Sigla($Lista->getSigla(false), Disciplina::$NIVEIS_GRAD), $Lista->getParcial(), $Lista->getSigla(false));
 			}
 		}
 		return $Pre_Requisitos;

@@ -54,9 +54,10 @@ class Curso extends Base {
 	const NIVEL_MESTRADO = 'M';
 	const NIVEL_DOUTORADO = 'D';
 	const NIVEL_PROFISSIONAL = 'S';
-	const NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
+
+	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
 	// Evitar de usar, pois os numeros se repetem entre mestrado e doutorado!
-	const NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
+	public static $NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
 
 	/**
 	 * Listar
@@ -85,7 +86,9 @@ class Curso extends Base {
 	 * @param array $niveis
 	 * @return self|null
 	 */
-	public static function Por_Numero($numero, $niveis = self::NIVEIS_GRAD) {
+	public static function Por_Numero($numero, $niveis = null) {
+		if($niveis === null)
+			$niveis = self::$NIVEIS_GRAD;
 		$dql = 'SELECT C FROM GDE\\Curso C WHERE C.numero = ?1';
 		if(count($niveis) > 0)
 			$dql .= ' AND C.nivel IN (?2)';

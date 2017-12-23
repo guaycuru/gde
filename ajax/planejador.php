@@ -164,7 +164,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				foreach($lista as $k => $Disciplina) {
 					$sigla = $Disciplina->getSigla();
 					if($Disciplina instanceof CurriculoEletivaConjunto)
-						$Disciplina = Disciplina::Por_Sigla($Disciplina->getSigla(false), Disciplina::NIVEIS_GRAD, true);
+						$Disciplina = Disciplina::Por_Sigla($Disciplina->getSigla(false), Disciplina::$NIVEIS_GRAD, true);
 					if(!isset($Raw[$sem]))
 						$Raw[$sem] = array();
 					if(in_array($sigla, $siglas) === true)
