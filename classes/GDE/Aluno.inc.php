@@ -258,8 +258,9 @@ class Aluno extends Base {
 				$usou_periodo = true;
 			}
 			unset($param['oferecimentos']);
-		}
-		if(!empty($param['amigos'])) {
+		} else
+			unset($param['oferecimentos']);
+		if((isset($param['amigos'])) && ($param['amigos'] === true)) {
 			$jns[] = " INNER JOIN U.amigos AS UA";
 			$qrs[] = " UA.amigo = :id_usuario";
 			unset($param['amigos']);
@@ -284,7 +285,7 @@ class Aluno extends Base {
 			$ordem = ($ordem == 'A.ra ASC') ? "ORD ASC" : "ORD DESC";
 		}
 
-		$dql = "SELECT DISTINCT A".$extra_select." FROM GDE\\Aluno AS A ".$joins." ".$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT A".$extra_select." FROM ".get_class()." AS A ".$joins." ".$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
