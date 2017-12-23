@@ -63,7 +63,7 @@ class Modalidade extends Base {
 	 * @return Modalidade[]
 	 */
 	public static function Listar($niveis, $curso, $catalogo = null) {
-		$dql = 'SELECT M FROM GDE\\Modalidade M INNER JOIN M.curso C '.
+		$dql = 'SELECT M FROM '.get_class().' M INNER JOIN M.curso C '.
 			'WHERE C.nivel IN (?1) AND C.numero = ?2 ';
 		if($catalogo != null)
 			$dql .= 'AND M.catalogo = ?3 ';

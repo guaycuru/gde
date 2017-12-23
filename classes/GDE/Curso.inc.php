@@ -8,7 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Curso
  *
- * @ORM\Table(name="gde_cursos", uniqueConstraints={@ORM\UniqueConstraint(name="numero_nivel", columns={"numero", "nivel"})})
+ * @ORM\Table(
+ *  name="gde_cursos",
+ *  uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="numero_nivel", columns={"numero", "nivel"})
+ *  }
+ * )
  * @ORM\Entity
  */
 class Curso extends Base {
@@ -55,6 +60,8 @@ class Curso extends Base {
 	const NIVEL_DOUTORADO = 'D';
 	const NIVEL_PROFISSIONAL = 'S';
 
+	const NUMERO_EGRESSADO = 99;
+
 	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
 	// Evitar de usar, pois os numeros se repetem entre mestrado e doutorado!
 	public static $NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
@@ -67,29 +74,32 @@ class Curso extends Base {
 	 * @return Curso[]
 	 */
 	public static function Listar($niveis = array(), $sem_especial = false) {
-		$dql = 'SELECT C FROM GDE\\Curso C ';
+		$dql = 'SELECT C FROM '.get_class().' C ';
 		if(count($niveis) > 0)
 			$dql .= 'WHERE C.nivel IN (?1) ';
 		if($sem_especial)
-			$dql .= 'AND C.numero != 99 ';
+			$dql .= 'AND C.numero != ?2 ';
 		$dql .= 'ORDER BY C.nome ASC';
 		$query = self::_EM()->createQuery($dql);
 		if(count($niveis) > 0)
 			$query->setParameter(1, $niveis);
+		if($sem_especial)
+			$query->setParameter(2, self::NUMERO_EGRESSADO);
 		return $query->getResult();
 	}
-	
+
 	/**
 	 * Por_Numero
 	 *
 	 * @param integer $numero
 	 * @param array $niveis
 	 * @return self|null
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Por_Numero($numero, $niveis = null) {
 		if($niveis === null)
 			$niveis = self::$NIVEIS_GRAD;
-		$dql = 'SELECT C FROM GDE\\Curso C WHERE C.numero = ?1';
+		$dql = 'SELECT C FROM '.get_class().' C WHERE C.numero = ?1';
 		if(count($niveis) > 0)
 			$dql .= ' AND C.nivel IN (?2)';
 		$query = self::_EM()->createQuery($dql);

@@ -722,6 +722,7 @@ class Usuario extends Base {
 	 * @param boolean $verificar (Opcional) Se for false, nao ira verificar o Usuario
 	 * @param $atualizar_acesso (Opcional) Se for true, ira atualizar o ultimo acesso
 	 * @return self O Usuario atualmente logado
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Ping($verificar = true, $atualizar_acesso = true) {
 		$Usuario = new self();
@@ -756,6 +757,7 @@ class Usuario extends Base {
 	 * @param bool $lembrar (Opcional) Se for true, ira definir a duracao do cookie
 	 * @param bool|string $erro (Opcional) Se for passado, sera preenchido com o codigo de erro
 	 * @return Usuario
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Verificar_Login($login, $senha, $lembrar = false, &$erro = false) {
 		$Usuario = self::Por_Unique($login, null);
@@ -893,6 +895,7 @@ class Usuario extends Base {
 	 * Atualiza o ultimo acesso do Usuario, diretamente no banco para evitar uma transacao desncessaria
 	 *
 	 * @return boolean Se deu certo
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	private function Acesso() {
 		if(time() - $this->getUltimo_Acesso('U') < CONFIG_ACESSSO_ATUALIZAR)
@@ -923,6 +926,7 @@ class Usuario extends Base {
 	/**
 	 * @param bool|false $live
 	 * @return int
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Conta_Online($live = false) {
 		if(($live === false) && (file_exists(__DIR__.'../../cache/online.txt') === true))
@@ -1103,6 +1107,7 @@ class Usuario extends Base {
 	 * @param bool $ativo
 	 * @param bool $flush
 	 * @return bool
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Adicionar_Amigo(Usuario $Usuario, $ativo = false, $flush = true) {
 		if(($this->Quase_Amigo($Usuario) !== false) || ($this->Amigo_Pendente($Usuario) !== false)) // Ja tem uma autorizacao pendente...
@@ -1130,6 +1135,7 @@ class Usuario extends Base {
 	 * @param Usuario $Usuario
 	 * @param bool $flush
 	 * @return bool
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Remover_Amigo(Usuario $Usuario, $flush = true) {
 		$Usuario_Amigo = $this->Amigo($Usuario);
@@ -1164,6 +1170,7 @@ class Usuario extends Base {
 	 * @param Usuario $Usuario
 	 * @param bool $flush
 	 * @return bool
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Autorizar_Amigo(Usuario $Usuario, $flush = true) {
 		$Quase_Amigo = $this->Amigo_Pendente($Usuario);
@@ -1276,6 +1283,7 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool|string $obs
 	 * @return bool
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
 		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!
@@ -1333,6 +1341,7 @@ class Usuario extends Base {
 	 * @param bool $parcial
 	 * @param bool $novo_formato
 	 * @return UsuarioEliminada|false
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false) {
 		if($Disciplina->getID() == null)
@@ -1363,6 +1372,7 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
 	 * @return array|false
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Eliminou(Disciplina $Disciplina, $parcial = false) {
 		if($Disciplina->getID() == null)

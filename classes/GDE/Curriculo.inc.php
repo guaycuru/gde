@@ -68,7 +68,7 @@ class Curriculo extends Base {
 	 * @return Curriculo[]
 	 */
 	public static function Consultar($param) {
-		$dql = 'SELECT C FROM GDE\\Curriculo C INNER JOIN C.curso U ';
+		$dql = 'SELECT C FROM '.get_class().' C INNER JOIN C.curso U ';
 		if(!empty($param['modalidade']))
 			$dql .= 'INNER JOIN C.modalidade M ';
 		if($param['curso'] == 51) {
@@ -93,15 +93,16 @@ class Curriculo extends Base {
 	 * @param $modalidade
 	 * @param $catalogo
 	 * @return bool
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Existe($curso, $modalidade, $catalogo) {
 		// Se for cursao, utilizar o curriculo da matematica aplicada
-		// ToDo: Fazer isso de uma forma melhor
 		if($curso == 51) {
+			// ToDo: Fazer isso de uma forma melhor
 			$curso = 28;
 			$modalidade = null;
 		}
-		$dql = 'SELECT COUNT(C) FROM GDE\\Curriculo C INNER JOIN C.curso U ';
+		$dql = 'SELECT COUNT(C) FROM '.get_class().' C INNER JOIN C.curso U ';
 		if($modalidade != null)
 			$dql .= 'INNER JOIN C.modalidade M ';
 		$dql .= 'WHERE U.numero = ?1 AND C.catalogo = ?2 ';
@@ -120,6 +121,7 @@ class Curriculo extends Base {
 	/**
 	 * @param bool $vazio
 	 * @return Disciplina|null
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function getDisciplina($vazio = false) {
 		return Disciplina::Por_Sigla($this->getSigla(false), $this->getCurso(true)->getNivel(false), $vazio);

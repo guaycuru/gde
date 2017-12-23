@@ -209,6 +209,7 @@ class Disciplina extends Base {
 	 * @param string|array|null $nivel
 	 * @param bool $vazio
 	 * @return self|null|false
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
 		if(empty($nivel)) {
@@ -260,6 +261,7 @@ class Disciplina extends Base {
 	 * @param int $start
 	 * @param string $tipo
 	 * @return Disciplina[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1, $tipo = 'AND') {
 		$qrs = $jns = array();
@@ -319,6 +321,7 @@ class Disciplina extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Disciplina[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations

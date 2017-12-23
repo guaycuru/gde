@@ -108,6 +108,7 @@ class Cardapio extends Base {
 
 	/**
 	 * @return Cardapio
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Atual() {
 		$hora = date('H');
@@ -177,6 +178,7 @@ class Cardapio extends Base {
 
 	/**
 	 * @return int
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Ultimo_ID() {
 		$dql = "SELECT MAX(C.id_cardapio) FROM GDE\\Cardapio C";
@@ -199,6 +201,7 @@ class Cardapio extends Base {
 
 	/**
 	 * @return bool|int
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function ID_Proximo() {
 		if($this->getID() == null)

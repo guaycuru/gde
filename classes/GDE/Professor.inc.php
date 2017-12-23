@@ -107,6 +107,7 @@ class Professor extends Base {
 	/**
 	 * @param $nome
 	 * @return Professor|false
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Nome_Unico($nome) {
 		$Professores = self::Por_Nome($nome);
@@ -169,6 +170,7 @@ class Professor extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Professor[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Por_Nome($nome, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");
@@ -194,6 +196,7 @@ class Professor extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Professor[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations

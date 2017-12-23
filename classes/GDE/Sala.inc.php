@@ -104,6 +104,7 @@ class Sala extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Sala[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $q)."%");

@@ -182,6 +182,7 @@ class Aluno extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Aluno[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
@@ -228,7 +229,7 @@ class Aluno extends Base {
 		if(!empty($param['id_oferecimento'])) {
 			$jns[] = "JOIN A.oferecimentos AS O";
 			$qrs[] = "O.id_oferecimento = :id_oferecimento";
-		} elseif((isset($param['oferecimentos'])) && (count($param['oferecimentos'][1] > 0))) {
+		} elseif((isset($param['oferecimentos'])) && (count($param['oferecimentos'][1]) > 0)) {
 			$mts = array();
 			if($param['oferecimentos'][0]) { // AND
 				$i = 0;
@@ -296,6 +297,7 @@ class Aluno extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Aluno[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -568,6 +570,7 @@ class Aluno extends Base {
 	 * @param null $periodo
 	 * @param array $niveis
 	 * @return mixed
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Creditos_Atuais($periodo = null, $niveis = array()) {
 		if(is_object($periodo))
@@ -613,6 +616,7 @@ class Aluno extends Base {
 	 *
 	 * @param Disciplina $Disciplina
 	 * @return bool
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Cursou(Disciplina $Disciplina) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
@@ -634,6 +638,7 @@ class Aluno extends Base {
 	 *
 	 * @param Disciplina $Disciplina
 	 * @return bool
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Trancou(Disciplina $Disciplina) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
@@ -656,6 +661,7 @@ class Aluno extends Base {
 	 * @param Professor $Professor
 	 * @param Disciplina $Disciplina
 	 * @return bool
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Cursou_Com(Professor $Professor, Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
@@ -685,6 +691,7 @@ class Aluno extends Base {
 	 * @param Professor $Professor
 	 * @param Disciplina $Disciplina
 	 * @return bool
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Trancou_Com(Professor $Professor, Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.

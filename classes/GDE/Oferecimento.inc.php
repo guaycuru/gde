@@ -168,6 +168,7 @@ class Oferecimento extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Oferecimento[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
@@ -243,7 +244,8 @@ class Oferecimento extends Base {
 	 * @param null $total
 	 * @param int $limit
 	 * @param int $start
-	 * @return Disciplina[]
+	 * @return Oferecimento[]
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -508,6 +510,7 @@ class Oferecimento extends Base {
 	 * @return integer
 	 */
 	public function Matriculados() {
+		// ToDo: Fazer uma query e usar o result cache
 		return $this->getAlunos()->count();
 	}
 
@@ -519,6 +522,7 @@ class Oferecimento extends Base {
 	 * @return integer
 	 */
 	public function Desistencias() {
+		// ToDo: Fazer uma query e usar o result cache
 		return $this->getAlunos_Trancados()->count();
 	}
 
