@@ -6,11 +6,12 @@
     "ext-gd": "*",
     "doctrine/orm": "^2.5 || 2.4.8",
     "doctrine/dbal": "^2.5 || 2.5.13",
-    "doctrine/common": "^2.7 || 2.5.3"
+    "doctrine/common": "^2.7 || 2.5.3",
+    "predis/predis": "^1.1",
+    "ircmaxell/password-compat": "^1.0"
   },
   "suggest": {
     "ext-mysqli": "*",
-    "ext-pdo_mysql": "*",
-    "predis/predis": "1.1.1"
+    "ext-pdo_mysql": "*"
   }
 }
