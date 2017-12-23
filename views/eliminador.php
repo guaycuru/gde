@@ -49,7 +49,7 @@ require_once('../common/common.inc.php');
 <h2>Eliminar Disciplinas</h2>
 <?php
 if($_Usuario->getAluno(false) === null)
-	echo "<strong>Erro:</strong> Apenas Alunos podem avaliar Professores!<br />";
+	echo "<strong>Erro:</strong> Apenas Alunos podem eliminar Disciplinas!<br />";
 else {
 ?>
 Aqui est&atilde;o listadas (unicamente) todas as disciplinas que voc&ecirc; cursou (desde 2007).<br />

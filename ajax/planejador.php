@@ -48,9 +48,6 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	if($Planejado->getUsuario(true)->getID() != $_Usuario->getID())
 		die('forbidden');
 	
-	if($_POST['a'] != 'c')
-		$Planejado->setUsuario($_Usuario);
-	
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 		$tt += $times['load'] = microtime(true) - $times['start'] - $tt;
 
@@ -489,7 +486,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
 		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
-		$Planejado->Limpar_Eliminadas(false);
+		$Planejado->Limpar_Eliminadas(true);
 		if(isset($_POST['conf'])) {
 			foreach($_POST['conf'] as $sigla) {
 				$D = Disciplina::Por_Sigla($sigla);
