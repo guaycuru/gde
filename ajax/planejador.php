@@ -515,7 +515,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		if(count($erros) > 0)
 			$Ret = false;
 		elseif($Extra->Save(true) !== false) {
-			$Ret = $Extra->Evento($cores_extras[intval($_POST['c'])]);
+			$Ret = (!empty($cores_extras[intval($_POST['c'])])) ? $Extra->Evento($cores_extras[intval($_POST['c'])]) : '';
 		} else
 			$Ret = false;
 	} elseif($_POST['a'] == 're') { // Remover Extra
