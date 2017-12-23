@@ -142,6 +142,22 @@ class Oferecimento extends Base {
 	}
 
 	/**
+	 * Por_Disciplina_Periodo
+	 *
+	 * Encontra um Oferecimento por disciplina, turma e periodo
+	 *
+	 * @param Disciplina $Disciplina
+	 * @param Periodo $Periodo
+	 * @return false|null|Oferecimento
+	 */
+	public static function Por_Disciplina_Periodo(Disciplina $Disciplina, Periodo $Periodo) {
+		return self::FindBy(array(
+			'disciplina' => $Disciplina,
+			'periodo' => $Periodo
+		));
+	}
+
+	/**
 	 * Consultar
 	 *
 	 * Efetua uma consulta por Oferecimentos

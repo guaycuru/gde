@@ -627,18 +627,21 @@ abstract class Base {
 				case 'clear':
 					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
 						throw new \Exception("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
-					if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY) {
-						if(!empty($_association['mappedBy'])) {
-							foreach($this->{$property} as $Obj)
-								$Obj->{$_association['mappedBy']} = null;
-						}
-					} else { // ManyToMany
-						if(!empty($_association['mappedBy'])) { // Inverse Side, clear the other side so Doctrine detects the change
-							foreach($this->{$property} as $Obj)
-								$Obj->{$_association['mappedBy']}->removeElement($this);
-						} elseif(!empty($_association['inversedBy'])) { // Owning Side, clear the other side
-							foreach($this->{$property} as $Obj)
-								$Obj->{$_association['inversedBy']}->removeElement($this);
+					$clear_other_side = ((!isset($args[0])) || ($args[0] === true));
+					if($clear_other_side) {
+						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY) {
+							if(!empty($_association['mappedBy'])) {
+								foreach($this->{$property} as $Obj)
+									$Obj->{$_association['mappedBy']} = null;
+							}
+						} else { // ManyToMany
+							if(!empty($_association['mappedBy'])) { // Inverse Side, clear the other side so Doctrine detects the change
+								foreach($this->{$property} as $Obj)
+									$Obj->{$_association['mappedBy']}->removeElement($this);
+							} elseif(!empty($_association['inversedBy'])) { // Owning Side, clear the other side
+								foreach($this->{$property} as $Obj)
+									$Obj->{$_association['inversedBy']}->removeElement($this);
+							}
 						}
 					}
 					$this->{$property}->clear();
