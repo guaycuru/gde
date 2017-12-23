@@ -102,6 +102,13 @@ class Usuario extends Base {
 	protected $empregos;
 
 	/**
+	 * @var ArrayCollection|Planejado[]
+	 *
+	 * @ORM\OneToMany(targetEntity="Planejado", mappedBy="usuario")
+	 */
+	protected $planejados;
+
+	/**
 	 * @var ArrayCollection|AvaliacaoResposta[]
 	 *
 	 * @ORM\OneToMany(targetEntity="AvaliacaoResposta", mappedBy="usuario")

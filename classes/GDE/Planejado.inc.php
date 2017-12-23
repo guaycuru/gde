@@ -224,20 +224,29 @@ class Planejado extends Base {
 		return $Horario;
 	}
 
+	/**
+	 * @param Oferecimento $Oferecimento
+	 * @return UsuarioAmigo[]
+	 */
 	public function Amigos_Por_Oferecimento(Oferecimento $Oferecimento) {
-		/*$Lista = array();
-		$res = self::$db->Execute("SELECT DISTINCT UA.amigo FROM ".Usuario::$tabela_r_amigos." AS UA JOIN ".self::$tabela." AS P ON (P.".Usuario::$chave." = UA.amigo) JOIN ".self::$tabela_r_oferecimentos." AS PO ON (PO.".self::$chave." = P.".self::$chave.") WHERE PO.".Oferecimento::$chave." = ".$Oferecimento->getID()." AND UA.".Usuario::$chave." = ".$this->getID_Usuario()." AND UA.ativo = 't'");
-		foreach($res as $linha)
-			$Lista[] = new Usuario_Amigo(self::$db, $this->getID_Usuario(), $linha['amigo']);
-		return $Lista;*/
-		// ToDo
-		return array();
+		$dql = "SELECT UA FROM GDE\\UsuarioAmigo UA JOIN UA.amigo AS A JOIN A.planejados AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos AND UA.usuario = :id_usuario AND UA.ativo = TRUE";
+		return self::_EM()
+			->createQuery($dql)
+			->setParameters(array('id_oferecimento' => $Oferecimento->getID(), 'id_usuario' => $this->getUsuario()->getID()))
+			->getResult();
 	}
 
-	public function Total_Por_Oferecimento(Oferecimento $Oferecimento) {
-		//return self::$db->Execute("SELECT COUNT(DISTINCT P.".Usuario::$chave.") AS total FROM ".self::$tabela." AS P JOIN ".self::$tabela_r_oferecimentos." AS PM ON (PM.".self::$chave." = P.".self::$chave.") WHERE PM.".Oferecimento::$chave." = '".$Oferecimento->getID()."'")->fields['total'];
-		// ToDo
-		return 0;
+	/**
+	 * @param Oferecimento $Oferecimento
+	 * @return int
+	 * @throws \Doctrine\ORM\Query\QueryException
+	 */
+	public static function Total_Por_Oferecimento(Oferecimento $Oferecimento) {
+		$dqlt = "SELECT COUNT(DISTINCT P.usuario) FROM ".get_class()." AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos";
+		return self::_EM()
+			->createQuery($dqlt)
+			->setParameters(array('id_oferecimento' => $Oferecimento->getID()))
+			->getSingleScalarResult();
 	}
 
 }
