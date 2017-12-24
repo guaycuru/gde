@@ -804,17 +804,16 @@ class Usuario extends Base {
 	 * Efetua login proveniente do portal da DAC
 	 *
 	 * @param string $token O token fornecido pelo portal da DAC
-	 * @param boolean $verificar_horario (Opcional) Se for false, nao ira verificar o horario do token (nao recomendado)
 	 * @param bool $erro
 	 * @return false|Usuario O Usuario logado (podendo ser vazio ou nao) ou false se o token for invalido
 	 */
-	public static function Efetuar_Login_DAC($token, $verificar_horario = true, &$erro = false) {
+	public static function Efetuar_Login_DAC($token, &$erro = false) {
 		if($token == null) {
 			if($erro !== false)
 				$erro = self::ERRO_LOGIN_TOKEN_INVALIDO;
 			return false;
 		}
-		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token, $verificar_horario);
+		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token, true);
 		if($resultado === false) {
 			$Usuario = self::Logout();
 			if($erro !== false)

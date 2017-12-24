@@ -10,7 +10,7 @@ require_once('../common/common.inc.php');
 if(empty($_GET['token']))
 	die('TOKEN Inv&aacute;lido!'.$FIM);
 
-list($resultado, $identificador, $tipo) = DAC::Validar_Token($_GET['token']);
+list($resultado, $identificador, $tipo) = DAC::Validar_Token($_GET['token'], false);
 
 if($resultado === false)
 	die('TOKEN Inv&aacute;lido!');

@@ -5,7 +5,7 @@ namespace GDE;
 define('JSON', true);
 
 if(isset($_POST['token'])) {
-	if(DAC::Validar_Token($_POST['token']) === false)
+	if(DAC::Validar_Token($_POST['token'], false) === false)
 		die('ERRO');
 	define('NO_LOGIN_CHECK', true);
 }

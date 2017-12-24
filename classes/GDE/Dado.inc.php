@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Dado extends Base {
 	/**
-	 * @var boolean
+	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", nullable=false)
 	 * @ORM\Id

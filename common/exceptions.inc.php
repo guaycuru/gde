@@ -9,7 +9,7 @@ function exception_handler($exception) {
 	if(!file_exists($file))
 		file_put_contents($file, $exception_string);
 	$msg = 'Erro: Infelizmente um erro grave e inesperado ocorreu. Por favor, tente novamente.';
-	if((defined('GDE_ADMIN')) && (GDE_ADMIN === true))
+	if((php_sapi_name() == 'cli') || ((defined('GDE_ADMIN')) && (GDE_ADMIN === true)))
 		$msg .= "\n\n".$exception_string;
 	if(defined('JSON'))
 		\GDE\Base::Error_JSON($msg);
