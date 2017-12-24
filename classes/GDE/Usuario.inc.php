@@ -940,11 +940,11 @@ class Usuario extends Base {
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Conta_Online($live = false) {
-		if(($live === false) && (file_exists(__DIR__.'../../cache/online.txt') === true))
-			return intval(file_get_contents(__DIR__.'../../cache/online.txt'));
+		if(($live === false) && (file_exists(__DIR__.'/../../cache/online.txt') === true))
+			return intval(file_get_contents(__DIR__.'/../../cache/online.txt'));
 		$Data = new \DateTime();
 		$Data->modify('-'.CONFIG_TIME_ONLINE.' seconds');
-		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM GDE\\Usuario U WHERE U.ultimo_acesso >= ?1')
+		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM '.get_class().' U WHERE U.ultimo_acesso >= ?1')
 			->setParameter(1, $Data)
 			->getSingleScalarResult();
 		// Recorde

@@ -97,6 +97,12 @@ $(document).ready(function() {
 
 	// Auto Forms
 	$("form.auto-form").each(auto_form_handler);
+
+	if($("#contador_usuarios_online").length > 0) {
+		setInterval(function() {
+			$("#contador_usuarios_online").load(CONFIG_URL + 'ajax/online.php');
+		}, 60000);
+	}
 });
 
 jQuery.extend(jQuery.validator.messages, {

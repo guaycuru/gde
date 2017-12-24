@@ -18,13 +18,13 @@ var Tamanho_Abas = function(id) {
 	$("#"+id+" > ul > li > a").each(function() {
 		$(this).width(tamanho);
 	});*/
-}
+};
 
 var Abas_Embaixo = function() {
 	$(".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *") 
  		.removeClass("ui-corner-all ui-corner-top") 
   		.addClass("ui-corner-bottom");
-}
+};
 
 var RegExpAcentos = function(str) {
 	return str.replace(/a/gi, '[a\u00E0\u00E1\u00E2\u00E3\u00E4\u00E5]')
@@ -35,11 +35,11 @@ var RegExpAcentos = function(str) {
 		.replace(/o/gi, '[o\u00F2\u00F3\u00F4\u00F5\u00F6]')
 		.replace(/u/gi, '[u\u00F9\u00FA\u00FB\u00FC]')
 		.replace(/y/gi, '[y\u00FD\u00FF]');
-}
+};
 
 var LimpaPraRegExp = function(str) {
 	return str.replace(/[^a-z0-9 ]/gi, '.');
-}
+};
 
 ;(function($){
 	$.fn.Procura_Amigo = function(lista) {
@@ -181,7 +181,7 @@ var LimpaPraRegExp = function(str) {
 			} else {
 				return opcoes.source;
 			}
-		}
+		};
 		var meu_padrao = this.val();
 		if(opcoes.hiddenField)
 			var meu_hidden_padrao = $("#"+opcoes.hiddenField).val();
