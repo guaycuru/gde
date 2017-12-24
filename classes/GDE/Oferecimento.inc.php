@@ -517,10 +517,14 @@ class Oferecimento extends Base {
 	 * Retorna o numero de Alunos matriculados neste Oferecimento
 	 *
 	 * @return integer
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Matriculados() {
-		// ToDo: Fazer uma query e usar o result cache
-		return $this->getAlunos()->count();
+		$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS O JOIN O.alunos AS A WHERE O.id_oferecimento = :id_oferecimento";
+		$queryt = self::_EM()->createQuery($dqlt)->setParameters(array('id_oferecimento' => $this->getID()));
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+		return $queryt->getSingleScalarResult();
 	}
 
 	/**
@@ -529,10 +533,14 @@ class Oferecimento extends Base {
 	 * Retorna o numero de Alunos que trancaram este Oferecimento
 	 *
 	 * @return integer
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Desistencias() {
-		// ToDo: Fazer uma query e usar o result cache
-		return $this->getAlunos_Trancados()->count();
+		$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS O JOIN O.alunos_trancados AS A WHERE O.id_oferecimento = :id_oferecimento";
+		$queryt = self::_EM()->createQuery($dqlt)->setParameters(array('id_oferecimento' => $this->getID()));
+		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+		return $queryt->getSingleScalarResult();
 	}
 
 	/**

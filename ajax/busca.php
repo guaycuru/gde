@@ -242,7 +242,7 @@ while($lower <= $range + 1)
 	$lower++;
 while($upper >= $pgs - $range)
 	$upper--;
-	
+
 if(($apg[$tp] + 1) - $lower == $range && ($apg[$tp] + 1) != $lower && $lower != ($range + 2))
 	$paginas .= ' ... ';
 
@@ -421,7 +421,6 @@ if($qts['alunos'] != 0) {
 		if($tp != 'tudo')
 			echo '<br />Nenhum resultado encontrado!';
 	} else {
-		$niveis_oferecimentos = array('G' => 'Grad', 'P' => 'P&oacute;s', 'T' => 'Tecnol.', 'S' => 'Mes. Prof.');
 		echo ($tp == 'tudo') ? '<h2>Oferecimentos ('.$total['oferecimentos'].'):</h2>' : '<span class="cabecalho_resultados_busca">Exibindo resultados '.($sta['oferecimentos']+1).' - '.$fim['oferecimentos'].' de '.$total['oferecimentos'].' ('.$tempo.' segundos)</span>';
 ?>
 <table border="1" width="100%" class="tabela_busca">
@@ -439,8 +438,7 @@ if($qts['alunos'] != 0) {
 		foreach($Oferecimentos as $Oferecimento) {
 			$vagas = $Oferecimento->getVagas();
 			$matriculados = $Oferecimento->Matriculados();
-			$nivel_of = $Oferecimento->getDisciplina()->getNivel(false);
-			$nivel_of = ($nivel_of != null) ? $niveis_oferecimentos[$nivel_of] : '?';
+			$nivel_of = $Oferecimento->getDisciplina()->getNivel(true);
 			if($Oferecimento->getFechado())
 				$situacao = "Fechada";
 			elseif($matriculados >= $vagas)
