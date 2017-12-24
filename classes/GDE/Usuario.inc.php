@@ -893,6 +893,8 @@ class Usuario extends Base {
 		if(!empty($_COOKIE[CONFIG_COOKIE_NOME]))
 			UsuarioToken::Excluir(trim($_COOKIE[CONFIG_COOKIE_NOME]));
 		setcookie(CONFIG_COOKIE_NOME, '', time() - 3600, self::Cookie_Path(), '', false, true);
+		session_unset();
+		session_destroy();
 		return new self();
 	}
 

@@ -9,7 +9,7 @@ require_once('../common/common.inc.php');
 if((!isset($_POST['logout'])) && (!isset($_POST['login'])) && (!isset($_POST['token'])))
 	Base::Error_JSON('Faltando acao.');
 
-$erro = null;
+$erro = $return = null;
 if(!empty($_POST['token'])) {
 	$_Usuario = Usuario::Efetuar_Login_DAC($_POST['token'], true, $erro);
 } elseif(isset($_POST['logout'])) {
@@ -17,11 +17,14 @@ if(!empty($_POST['token'])) {
 	die(Base::To_JSON(array('ok' => true)));
 } elseif((empty($_POST['login'])) || (empty($_POST['senha'])))
 	Base::Error_JSON('Faltando login ou senha.');
-else
-	$_Usuario = Usuario::Verificar_Login($_POST['login'], $_POST['senha'], false, $erro);
+else {
+	if(!empty($_SESSION['last_pg']))
+		$return = $_SESSION['last_pg'];
+	$_Usuario = Usuario::Verificar_Login($_POST['login'], $_POST['senha'], ((!empty($_POST['lembrar'])) && ($_POST['lembrar'] == 't')), $erro);
+}
 
 if((is_object($_Usuario)) && ($_Usuario->getID() != null)) { // Login OK
-	Base::OK_JSON();
+	Base::OK_JSON(null, 200, array('destino' => $return));
 } else { // Login falhou
 	$extra = array('destino' => '');
 	switch($erro) {

@@ -66,7 +66,7 @@ $(document).ready(function(){
 				<td><input type="password" name="senha" class="required" /> <span class="formInfo"><a href="#" id="TT_senha">?</a></span></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="checkbox" name="lembrar" value="1" id="lembrar_1" /><label for="lembrar_1">Permanecer logado</label></td>
+				<td colspan="2"><input type="checkbox" name="lembrar" value="t" id="lembrar_t" /><label for="lembrar_t">Permanecer logado</label></td>
 			</tr>
 			<tr>
 				<td colspan="2"><input type="submit" name="OK" value=" " alt="OK" class="botao_ok" /></td>

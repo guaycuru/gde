@@ -10,6 +10,7 @@ var erro_comum = function(mensagem, destino) {
 };
 
 var Logout = function() {
+	$.guaycuru.aguarde();
 	$.post(CONFIG_URL + 'ajax/login.php', {logout: 1}, function() {
 		document.location = CONFIG_URL;
 	});
