@@ -223,16 +223,16 @@ class Oferecimento extends Base {
 			$qrs[] = "D.horario = :horario";
 		if(!empty($param['sala']))
 			$qrs[] = "D.sala LIKE :sala";
-		$where = (count($qrs) > 0) ? implode(" AND ", $qrs) : "TRUE";
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
+		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins." WHERE ".$where;
+			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT O FROM ".get_class()." AS O ".$joins." WHERE ".$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT O FROM ".get_class()." AS O ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);

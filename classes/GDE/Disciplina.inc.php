@@ -298,8 +298,8 @@ class Disciplina extends Base {
 			$qrs[] = "D.ementa LIKE :ementa";
 			$param['ementa'] = '%'.$param['ementa'].'%';
 		}
-		$where = (count($qrs) > 0) ? " WHERE ".implode(" ".$tipo." ", $qrs) : "";
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
+		$where = (count($qrs) > 0) ? " WHERE ".implode(" ".$tipo." ", $qrs) : "";
 
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM ".get_class()." AS D ".$joins.$where;

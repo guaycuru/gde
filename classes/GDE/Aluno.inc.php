@@ -270,10 +270,10 @@ class Aluno extends Base {
 			unset($param['periodo']);
 
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
-		$where = (count($qrs) > 0) ? "WHERE ".implode(" AND ", $qrs) : "";
+		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins." ".$where;
+			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
@@ -285,7 +285,7 @@ class Aluno extends Base {
 			$ordem = ($ordem == 'A.ra ASC') ? "ORD ASC" : "ORD DESC";
 		}
 
-		$dql = "SELECT DISTINCT A".$extra_select." FROM ".get_class()." AS A ".$joins." ".$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT A".$extra_select." FROM ".get_class()." AS A ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
