@@ -535,7 +535,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Oferecimento = Oferecimento::Load($_POST['oid']);
 		
 		$Amigos = $Planejado->Amigos_Por_Oferecimento($Oferecimento);
-		usort($Amigos, "\GDE\UsuarioAmigo::Ordenar_Por_Nome");
+		usort($Amigos, "\GDE\UsuarioAmigo::Order_Por_Nome_Sort");
 		$lista = array();
 		foreach($Amigos as $Amigo)
 			$lista[] = "<a href=\"Perfil.php?l=".$Amigo->getAmigo()->getLogin()."\" target=\"_blank\" style=\"text-decoration: none;\" title=\"".$Amigo->getAmigo()->getNome_Completo()."\">".$Amigo->Apelido_Ou_Nome(true, true)."</a>";
