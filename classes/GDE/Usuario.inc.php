@@ -946,7 +946,7 @@ class Usuario extends Base {
 
 		$Data = new \DateTime();
 		$Data->modify('-'.CONFIG_TIME_ONLINE.' seconds');
-		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM '.get_class().' U WHERE U.ultimo_acesso >= ?1')
+		$online = self::_EM()->createQuery('SELECT COUNT(U) FROM '.get_class().' U WHERE U.ultimo_acesso >= ?1')
 			->setParameter(1, $Data)
 			->getSingleScalarResult();
 
