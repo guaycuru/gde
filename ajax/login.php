@@ -44,9 +44,11 @@ if((is_object($_Usuario)) && ($_Usuario->getID() != null)) { // Login OK
 			break;
 		case Usuario::ERRO_LOGIN_TOKEN_INVALIDO:
 			$erro = 'Token inválido.';
+			$extra['destino'] = CONFIG_URL . 'login/';
 			break;
 		default:
 			$erro = 'Erro desconhecido.';
+			$extra['destino'] = CONFIG_URL . 'login/';
 			break;
 	}
 	Base::Error_JSON($erro, 200, $extra);

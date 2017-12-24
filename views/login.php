@@ -23,6 +23,7 @@ if(isset($_GET['token'])) { ?>
 	<input type="hidden" name="token" id="token" value="<?php if(!empty($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
 </form>
 <script type="text/javascript">
+	$.guaycuru.aguarde();
 	<?php if(isset($_SESSION['trocar_senha'])) { ?>
 	document.location = '<?= CONFIG_URL; ?>cadastro/?token=' + $("#token").val();
 	<?php } else { ?>

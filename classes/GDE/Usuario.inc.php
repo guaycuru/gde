@@ -813,7 +813,7 @@ class Usuario extends Base {
 				$erro = self::ERRO_LOGIN_TOKEN_INVALIDO;
 			return false;
 		}
-		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token, true);
+		list($resultado, $matricula, $tipo) = DAC::Validar_Token($token);
 		if($resultado === false) {
 			$Usuario = self::Logout();
 			if($erro !== false)
@@ -839,6 +839,9 @@ class Usuario extends Base {
 
 			// Salva o cookie do login
 			$Usuario->Salvar_Cookie(false);
+
+			// Salva o token
+			DAC::Novo_Token($token, true);
 		}
 		return $Usuario;
 	}

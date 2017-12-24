@@ -12,7 +12,7 @@ if(isset($_POST['alterar'])) {
 }
 
 if(isset($_POST['enviar'])) {
-	list($resultado, $identificador, $tipo) = DAC::Validar_Token($_POST['token'], false);
+	list($resultado, $identificador, $tipo) = DAC::Validar_Token($_POST['token']);
 	$campo = null;
 	if($tipo == 'A')
 		$campo = 'ra';

@@ -48,10 +48,9 @@ class DAC extends Base {
 	 * Valida o token fornecido pela DAC
 	 *
 	 * @param string $token O token fornecido pela DAC
-	 * @param bool $salvar_token Se deve marcar o token como usado
 	 * @return array
 	 */
-	public static function Validar_Token($token, $salvar_token = true) {
+	public static function Validar_Token($token) {
 		// Retorna sempre false
 		return array(false, 0, 0);
 	}
