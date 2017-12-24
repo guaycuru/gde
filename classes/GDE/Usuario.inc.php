@@ -940,20 +940,27 @@ class Usuario extends Base {
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Conta_Online($live = false) {
-		if(($live === false) && (file_exists(__DIR__.'/../../cache/online.txt') === true))
-			return intval(file_get_contents(__DIR__.'/../../cache/online.txt'));
+		$arquivo = __DIR__.'/../../cache/online.txt';
+		if(($live === false) && (file_exists($arquivo) === true))
+			return intval(file_get_contents($arquivo));
+
 		$Data = new \DateTime();
 		$Data->modify('-'.CONFIG_TIME_ONLINE.' seconds');
 		$online = self::_EM()->createQuery('SELECT COUNT(U.id_usuario) FROM '.get_class().' U WHERE U.ultimo_acesso >= ?1')
 			->setParameter(1, $Data)
 			->getSingleScalarResult();
-		// Recorde
+
+		// Salva no arquivo
+		file_put_contents($arquivo, $online);
+
+		// Eh recorde?
 		$Dados = Dado::Load(1);
 		if($Dados->getMax_Online(false) < $online) {
 			$Dados->setMax_Online($online);
 			$Dados->setMax_Online_TS();
 			$Dados->Save(true);
 		}
+
 		return $online;
 	}
 
