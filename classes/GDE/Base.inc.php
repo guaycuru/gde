@@ -499,7 +499,7 @@ abstract class Base {
 									break;
 								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
-										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
+										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).': '.gettype($value));
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if($set_other_side === true) {
 										if(!empty($_association['mappedBy'])) {

@@ -437,7 +437,7 @@ if($qts['alunos'] != 0) {
 <?php
 		foreach($Oferecimentos as $Oferecimento) {
 			$vagas = $Oferecimento->getVagas();
-			$matriculados = $Oferecimento->Matriculados();
+			$matriculados = $Oferecimento->getMatriculados();
 			$nivel_of = $Oferecimento->getDisciplina()->getNivel(true);
 			if($Oferecimento->getFechado())
 				$situacao = "Fechada";

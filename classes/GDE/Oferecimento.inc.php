@@ -12,7 +12,8 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  * @ORM\Table(
  *   name="gde_oferecimentos",
  *   indexes={
- *     @ORM\Index(name="turma", columns={"turma"})
+ *     @ORM\Index(name="turma", columns={"turma"}),
+ *     @ORM\Index(name="fechado", columns={"fechado"})
  *   },
  *   uniqueConstraints={
  *     @ORM\UniqueConstraint(name="disciplina_periodo_turma", columns={"id_disciplina", "id_periodo", "turma"})
@@ -99,7 +100,7 @@ class Oferecimento extends Base {
 	/**
 	 * @var integer
 	 *
-	 * @ORM\Column(type="smallint", options={"default"=0}, nullable=false)
+	 * @ORM\Column(type="integer", options={"default"=0}, nullable=false)
 	 */
 	protected $vagas = 0;
 
@@ -116,6 +117,13 @@ class Oferecimento extends Base {
 	 * @ORM\Column(type="string", length=255, nullable=true)
 	 */
 	protected $pagina;
+
+	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(type="integer", options={"default"=0}, nullable=false)
+	 */
+	protected $matriculados = 0;
 
 	const SALA_DESCONHECIDA = '????';
 
@@ -191,6 +199,9 @@ class Oferecimento extends Base {
 		if(!empty($param['periodo'])) {
 			$qrs[] = "O.periodo = :periodo";
 		}
+		if(isset($param['fechado'])) {
+			$qrs[] = "O.fechado = :fechado";
+		}
 		if((!empty($param['sigla'])) || (!empty($param['nome'])) || (!empty($param['creditos'])) || (!empty($param['instituto'])) || (!empty($param['nivel'])) || ($ordem == "DI.nome ASC") || ($ordem == "DI.nome DESC"))
 			$join_disciplina = true;
 		if($join_disciplina === true)
@@ -232,7 +243,7 @@ class Oferecimento extends Base {
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT O FROM ".get_class()." AS O ".$joins.$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT O".(($join_disciplina) ? ", DI" : "")." FROM ".get_class()." AS O ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
