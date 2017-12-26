@@ -541,7 +541,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 				<table border="0">
 					<tr>
 						<td>Per&iacute;odo:</td>
-						<td><select id="oferecimento_periodo" name="periodo"><option value="0">Indiferente</option><?=$periodos; ?></select></td>
+						<td><select id="oferecimento_periodo" name="periodo"><?=$periodos; ?></select></td>
 					</tr>
 					<tr>
 						<td>Sigla:</td>

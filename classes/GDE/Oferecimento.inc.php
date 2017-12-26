@@ -128,8 +128,8 @@ class Oferecimento extends Base {
 	const SALA_DESCONHECIDA = '????';
 
 	// ToDo: Remover isto!
-	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor(es)', 'Per&iacute;odo');
-	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome', 'O.periodo');
+	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla e Turma', 'Nome', 'Professor(es)');
+	static $ordens_inte = array('rank', 'DI.sigla', 'DI.nome', 'P.nome');
 
 	/**
 	 * Por_Unique
