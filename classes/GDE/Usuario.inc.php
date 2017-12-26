@@ -1418,7 +1418,7 @@ class Usuario extends Base {
 	 */
 	public function Token_Email() {
 		// ToDo: Nao usar mais sha1
-		return sha1($this->login.'GDE'.$this->senha);
+		return sha1(CONFIG_SALT.$this->login.CONFIG_SALT.$this->senha.CONFIG_SALT);
 	}
 
 	/**
