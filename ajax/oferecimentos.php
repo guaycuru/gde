@@ -55,7 +55,7 @@ if(!isset($_POST['tp'])) {
 <?php
 	foreach($Oferecimentos as $Oferecimento) {
 		$vagas = $Oferecimento->getVagas();
-		$matriculados = $Oferecimento->Matriculados();
+		$matriculados = $Oferecimento->getMatriculados();
 		if($Oferecimento->getFechado())
 			$situacao = "Fechada";
 		elseif($matriculados >= $vagas)

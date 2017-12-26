@@ -147,7 +147,7 @@ if($oferecimento_pagina == null) {
 							<tr><td width="25%"><b>Turma:</b></td><td><?= $Oferecimento->getTurma(true); ?></td></tr>
 							<tr><td width="25%"><b>Professor(es):</b></td><td><?= $Oferecimento->getProfessores(true); ?></td></tr>
 							<tr><td width="25%"><b>Vagas:</b></td><td><?= $Oferecimento->getVagas().(($Oferecimento->getFechado())?' - <b>Fechada</b>':null); ?></td></tr>
-							<tr><td width="25%"><b>Alunos:</b></td><td><?= $Oferecimento->Matriculados(); ?></td></tr>
+							<tr><td width="25%"><b>Alunos:</b></td><td><?= $Oferecimento->getMatriculados(); ?></td></tr>
 							<tr><td width="25%"><b>Desist&ecirc;ncias:</b></td><td><?= $Oferecimento->Desistencias(); ?></td></tr>
 							<tr><td width="25%"><b>Reservas:</b></td><td><?= $Oferecimento->getReservas(true); ?></td></tr>
 							<tr><td width="25%"><b>P&aacute;gina:</b></td><td><?= $html_oferecimento_pagina; ?></td></tr>

@@ -523,22 +523,6 @@ class Oferecimento extends Base {
 	}
 
 	/**
-	 * Matriculados
-	 *
-	 * Retorna o numero de Alunos matriculados neste Oferecimento
-	 *
-	 * @return integer
-	 * @throws \Doctrine\ORM\Query\QueryException
-	 */
-	public function Matriculados() {
-		$dqlt = "SELECT COUNT(A) FROM ".get_class()." AS O JOIN O.alunos AS A WHERE O.id_oferecimento = :id_oferecimento";
-		$queryt = self::_EM()->createQuery($dqlt)->setParameters(array('id_oferecimento' => $this->getID()));
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
-		return $queryt->getSingleScalarResult();
-	}
-
-	/**
 	 * Desistencias
 	 *
 	 * Retorna o numero de Alunos que trancaram este Oferecimento
