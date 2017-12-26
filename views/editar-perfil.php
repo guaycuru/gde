@@ -33,7 +33,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 		$("#validar_email").click(function(){
 			if($("#validar_email").hasClass("clickable")) {
 				$.post('<?= CONFIG_URL; ?>ajax/validar.php', {}, function(data){
-					$("#texto_validar").text("Aguardando confirma\u00E7\u00E3o.");
+					$("#validar_email").html("Aguardando confirma&ccedil;&atilde;o, por favor, verifique sua caixa de email.");
 				});
 			}
 			$("#validar_email").removeClass("clickable");
@@ -172,7 +172,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 					<td>
 						<input type="text" name="email" value="<?=$_Usuario->getEmail();?>" size="40" /> <span class="formInfo"><a href="#" id="TT_email">?</a></span>
 						<?php if ($_Usuario->getEmail_Validado() == false) { ?>
-							<a href="#" id="validar_email" class="clickable" ><label id="texto_validar"><?= ((isset($_SESSION['validaEmail'])) && ($_SESSION['validaEmail'] === true)) ? 'Aguardando confirma&ccedil;&atilde;o' : 'Valide seu email' ?></label></a>
+							<a href="#" id="validar_email" class="clickable" ><?= ((isset($_SESSION['validaEmail'])) && ($_SESSION['validaEmail'] === true)) ? 'Aguardando confirma&ccedil;&atilde;o' : 'Valide seu email' ?></a>
 						<?php } else { ?>
 							<label>Seu email j&aacute; foi validado</label>
 						<?php } ?>

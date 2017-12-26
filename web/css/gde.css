@@ -1550,3 +1550,7 @@ div.Informacao {
 #TT_planejador_dicas {
 	float: right;
 }
+
+.clickable {
+	cursor: pointer;
+}
