@@ -20,7 +20,7 @@ var Logout = function() {
 var auto_form_handler = function() {
 	$(this).validate({
 		submitHandler: function(form) {
-			$(form).find('button').prop('disabled', true);
+			$(form).find('button,input[type=submit]').prop('disabled', true);
 			var parse_res = function(res) {
 				if((typeof res !== 'object') || (res === null))
 					res.ok = false;
@@ -52,7 +52,7 @@ var auto_form_handler = function() {
 					else
 						var destino = null;
 					erro_comum(msg, destino);
-					$(form).find('button').prop('disabled', false);
+					$(form).find('button,input[type=submit]').prop('disabled', false);
 				}
 			};
 			var multipart = ($(form).find('input[type=file]').length > 0);
