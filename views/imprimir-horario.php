@@ -31,7 +31,7 @@ $Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $n);
 
 $UsuarioAluno = ($Aluno->getUsuario(false) !== null) ? $Aluno->getUsuario(false) : new Usuario();
 $pode_ver = $_Usuario->Pode_Ver($UsuarioAluno, 'horario');
-if((is_array($pode_ver) && !$pode_ver[0]) || !$pode_ver)
+if($pode_ver !== true)
 	exit;
 
 $meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());

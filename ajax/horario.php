@@ -36,14 +36,10 @@ if($Periodos !== null) {
 
 if($_tipo == 'A') {
 	$Aluno = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Aluno::Load($_POST['ra']) : $_Usuario->getAluno(true);
-	$Usuario = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Usuario::Por_RA($_POST['ra'], false, true) : $_Usuario;
-	/* if(($Usuario === false) && ($_Usuario->getCompartilha('horario') != 't') && ($_Usuario->getAdmin() === false))
-		die("Voc&ecirc; n&atilde;o pode ver o Hor&aacute;rio deste(a) Aluno(a) devido &agrave;s suas configura&ccedil;&otilde;es de compartilhamento de hor&aacute;rio.");
-	elseif($Usuario !== false) { */
-		$pode_ver = $_Usuario->Pode_Ver($Usuario, 'horario');
-		if($pode_ver[0] === false)
-			die("Voc&ecirc; n&atilde;o pode ver o Hor&aacute;rio deste(a) Aluno(a) devido &agrave;s ".(($pode_ver[1] == 1) ? "suas" : "")." configura&ccedil;&otilde;es de compartilhamento de hor&aacute;rio".(($pode_ver[1] == 2) ? " dele(a)" : "")."! Para mais informa&ccedil;&otilde;es, consulte o site da DAC.");
-	//}
+	$Usuario = ((isset($_POST['ra'])) && ($_POST['ra'] > 0)) ? Usuario::Por_RA($_POST['ra'], null, true) : $_Usuario;
+	$pode_ver = $_Usuario->Pode_Ver($Usuario, 'horario');
+	if($pode_ver !== true)
+		die("Voc&ecirc; n&atilde;o pode ver o Hor&aacute;rio deste(a) Aluno(a) devido &agrave;s ".(($pode_ver == Usuario::NAO_PODE_VER_MEU) ? "suas" : "")." configura&ccedil;&otilde;es de compartilhamento de hor&aacute;rio".((Usuario::NAO_PODE_VER_ALHEIO) ? " dele(a)" : "")."! Para mais informa&ccedil;&otilde;es, consulte o site da DAC.");
 	$tem_grad = ($Aluno->getNivel(false) != null);
 	$tem_pos = ($Aluno->getNivel_Pos(false) != null);
 	if(empty($_POST['n'])) {

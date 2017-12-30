@@ -66,7 +66,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = Usuario::Por_Login($_GET['us']);
 	if($Usr->getID() == null)
 		die("<h2>Usu&aacute;rio n&atilde;o encontrado.</h2>");
-	if($_Usuario->Posso_Ver($Usr, $Usr->getCompartilha_Arvore()) === false)
+	if($_Usuario->Pode_Ver($Usr, 'arvore') !== true)
 		die("<h2>Vo&ccedil;&ecirc; n&atilde;o tem permiss&atilde;o para ver esta &aacute;rvore!</h2>");
 	$curso = $Usr->getCurso(true)->getNumero(true);
 	$modalidade = $Usr->getModalidade(true)->getSigla(true);

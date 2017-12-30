@@ -209,10 +209,11 @@ class Aluno extends Base {
 			$qrs[] = "A.modalidade_pos = :modalidade_pos";
 		if((!empty($param['gde'])) || (!empty($param['sexo'])) || (!empty($param['relacionamento'])) ||
 			(!empty($param['cidade'])) || (!empty($param['estado'])) || (!empty($param['amigos']))) {
-
 			$jns[] = " LEFT JOIN A.usuario AS U";
-			if(!empty($param['gde']))
-				$qrs[] = "U.usuario IS".(($param['gde'] == 't')?" NOT":null)." EMPTY";
+			if(!empty($param['gde'])) {
+				$qrs[] = "U.id_usuario IS" . (($param['gde'] == 't') ? " NOT" : null) . " NULL";
+				unset($param['gde']);
+			}
 			if(!empty($param['sexo']))
 				$qrs[] = "U.sexo = :sexo";
 			if(!empty($param['relacionamento']))

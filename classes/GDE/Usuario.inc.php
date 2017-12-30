@@ -428,6 +428,10 @@ class Usuario extends Base {
 		self::ESTADO_CIVIL_LIBERAL => 'Relacionamento Liberal'
 	);
 
+	// Entidade de nao compartilhamento
+	const NAO_PODE_VER_MEU = 'meu';
+	const NAO_PODE_VER_ALHEIO = 'alheio';
+
 	public static function Listar_Estados_Civis() {
 		return self::$_estados_civis;
 	}
@@ -1516,41 +1520,32 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * @param Usuario $Usuario
-	 * @param $campo
-	 * @return bool
-	 */
-	public function Posso_Ver(Usuario $Usuario, $campo) {
-		return (($this->getAdmin()) || (($campo == 't') || (($campo == 'a') && ($this->Amigo($Usuario) !== false))));
-	}
-
-	/**
 	 * Pode_Ver
 	 *
 	 * Determina se este usuario pode ver $campo do $Usuario
 	 *
 	 * @param Usuario $Usuario
 	 * @param $campo
-	 * @return array|bool
+	 * @return bool|string
 	 */
 	public function Pode_Ver(Usuario $Usuario, $campo) {
 		if(($this->getID() == $Usuario->getID()) || ($this->getAdmin() === true))
 			return true;
 		$minha = $this->getCompartilha($campo);
 		if($Usuario->getID() == null) // Aluno sem usuario
-			return ($minha != 't') ? array(false, 1) : array(true, null);
+			return ($minha != 't') ? self::NAO_PODE_VER_MEU : true;
 		$alheia = $Usuario->getCompartilha($campo);
 		if($minha == 'f')
-			return array(false, 1);
+			return self::NAO_PODE_VER_MEU;
 		if($alheia == 'f')
-			return array(false, 2);
+			return self::NAO_PODE_VER_ALHEIO;
 		if($this->Amigo($Usuario) === false) {
 			if($minha == 'a')
-				return array(false, 1);
+				return self::NAO_PODE_VER_MEU;
 			if($alheia == 'a')
-				return array(false, 2);
+				return self::NAO_PODE_VER_ALHEIO;
 		}
-		return array(true, null);
+		return true;
 	}
 
 	/**
