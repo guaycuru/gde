@@ -7,12 +7,8 @@ define('REVISION', 1);
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
 
-// Doctrine (ORM)
-require_once(__DIR__.'/doctrine.inc.php');
-
-// Util
-// ToDo: Why you no autoload?
-require_once(__DIR__.'/../classes/GDE/Util.inc.php');
+// Uncaught exception handler
+require_once(__DIR__.'/exceptions.inc.php');
 
 // Define o timezone e o encoding padrao
 date_default_timezone_set('America/Sao_Paulo');
@@ -20,6 +16,12 @@ mb_internal_encoding("UTF-8");
 
 session_name('GDES');
 session_start();
+
+if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 3))
+	define('DEBUG_DB_LOGGER', true);
+
+// Doctrine (ORM)
+require_once(__DIR__.'/doctrine.inc.php');
 
 if((defined('JSON')) && (JSON === true)) {
 	define('AJAX', true);

@@ -101,9 +101,6 @@ if($simples) {
 		if(isset($_POST['periodo']))
 			$parametros['periodo'] = intval($_POST['periodo']);
 		
-		if((isset($_POST['ano'])) && ($_POST['ano'] != '-1'))
-			$parametros['ano'] = intval($_POST['ano']);
-		
 		if((isset($_POST['sexo'])) && ($_POST['sexo'] != ''))
 			$parametros['sexo'] = $_POST['sexo'][0];
 		

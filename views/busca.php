@@ -56,18 +56,12 @@ foreach($niveis_pos as $c => $d)
 $Cursos = Curso::Listar(array('G', 'T'), "curso ASC");
 $lista_cursos = "<option value=\"-1\">Indiferente</option>";
 foreach($Cursos as $Curso)
-	$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(((isset($_GET['curso'])) && ($_GET['curso'] == $Curso->getNumero(false)))?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
+	$lista_cursos .= "<option value=\"".$Curso->getID()."\"".(((isset($_GET['curso'])) && ($_GET['curso'] == $Curso->getID()))?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
 
 $Cursos_Pos = Curso::Listar(array('M', 'D'), "curso ASC");
 $lista_cursos_pos = "<option value=\"-1\">Indiferente</option>";
 foreach($Cursos_Pos as $Curso_Pos)
-	$lista_cursos_pos .= "<option value=\"".$Curso_Pos->getNumero(true)."\"".(((isset($_GET['curso_pos'])) && ($_GET['curso_pos'] == $Curso_Pos->getNumero(false)))?" selected=\"selected\"":null).">".$Curso_Pos->getNome(true)." (".$Curso_Pos->getNumero(true).")</option>";
-
-$anos = "<option value=\"-1\">Indiferente</option>";
-for($i = date('Y')+2; $i > 1980; $i--) {
-	$v = ($i < 2000) ? $i - 1900 : $i - 2000;
-	$anos .= "<option value=\"".$v."\"".((isset($_GET['ano'])) && ($v == $_GET['ano'])?" selected=\"selected\"":null).">".(($v<10)?'0':null).$v."</option>";
-}
+	$lista_cursos_pos .= "<option value=\"".$Curso_Pos->getID()."\"".(((isset($_GET['curso_pos'])) && ($_GET['curso_pos'] == $Curso_Pos->getID()))?" selected=\"selected\"":null).">".$Curso_Pos->getNome(true)." (".$Curso_Pos->getNumero(true).")</option>";
 
 $periodos = "";
 $Periodos = Periodo::Listar();
@@ -320,11 +314,11 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						<td><input type="text" id="aluno_ra" name="ra" maxlength="6" value="<?=((isset($_GET['ra']))?htmlspecialchars($_GET['ra']):null); ?>" /></td>
 					</tr>
 					<tr>
-						<td>N&iacute;vel:</td>
+						<td>N&iacute;vel Grad.:</td>
 						<td><select id="aluno_nivel" name="nivel"><?=$lista_niveis;?></select></td>
 					</tr>
 					<tr>
-						<td>Curso:</td>
+						<td>Curso Grad.:</td>
 						<td><select id="aluno_curso" name="curso"><?=$lista_cursos; ?></select></td>
 					</tr>
 					<tr>
@@ -350,10 +344,6 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 					<tr>
 						<td>Modalidade P&oacute;s:</td>
 						<td><input type="text" name="modalidade_pos" value="<?=((isset($_GET['modalidade_pos']))?htmlspecialchars($_GET['modalidade_pos']):null); ?>" /></td>
-					</tr>
-					<tr>
-						<td>In&iacute;cio do RA:</td>
-						<td><select id="aluno_ano" name="ano"><?=$anos; ?></select></td>
 					</tr>
 					<tr>
 						<td>Cadastro no GDE:</td>

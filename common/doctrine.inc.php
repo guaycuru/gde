@@ -117,8 +117,12 @@ else
 	$config->setAutoGenerateProxyClasses(\Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER);
 
 // Set the query logger
-if((defined('CONFIG_DB_LOGGER')) && (CONFIG_DB_LOGGER === true))
+if(
+	((defined('CONFIG_DB_LOGGER')) && (CONFIG_DB_LOGGER === true)) ||
+	((defined('DEBUG_DB_LOGGER')) && (DEBUG_DB_LOGGER === true))
+) {
 	$config->setSQLLogger(new \Doctrine\DBAL\Logging\EchoSQLLogger());
+}
 
 // DB connection options
 $connection = array(
