@@ -156,7 +156,7 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 					<label>Hor&aacute;rio:</label>
 				</td>
 				<td>
-					<input type="text" name="horario1" id="extra_horario1" size="9" /> &agrave;s <input type="text" name="horario2" id="extra_horario2" size="9" />
+					<input type="text" name="horario1" id="extra_horario1" size="5" placeholder="8:00" /> &agrave;s <input type="text" name="horario2" id="extra_horario2" size="5" placeholder="9:00" />
 				</td>
 			</tr>
 			<tr>

@@ -352,8 +352,15 @@ var PlanejadorAdicionarExtraPopUpFechar = function(botao) {
 			else
 				var e = $("#extra_lista_nomes").val();
 			$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ae', c: Extras[e].cor, nome: Extras[e].nome, dia: $("#extra_dia_da_semana").val(), inicio: $("#extra_horario1").val()+':00', fim: $("#extra_horario2").val()+':00'}, function(res) {
-				if(res !== false) 
-					PlanejadorAdicionarExtra(res);
+				if(res && res.ok)
+					PlanejadorAdicionarExtra(res.c ? res.c : '');
+				else {
+					if (res.error)
+						var msg = res.error;
+					else
+						var msg = 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.';
+					$.guaycuru.confirmacao(msg);
+				}
 			});
 		}
 	}
@@ -482,8 +489,15 @@ $(document).ready(function() {
 				PlanejadorRemoverOferecimento(Oferecimento, true, true, false);
 			} else {
 				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 're', ide: event.id.replace('extra_', '')}, function(res) {
-					if(res !== false)
+					if(res && res.ok)
 						PlanejadorRemoverExtra(event);
+					else {
+						if (res.error)
+							var msg = res.error;
+						else
+							var msg = 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.';
+						$.guaycuru.confirmacao(msg);
+					}
 				});
 			}
 		},
@@ -492,8 +506,14 @@ $(document).ready(function() {
 				revertFunc();
 			else {
 				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'r', dd: dayDelta, md: minuteDelta}, function(res) {
-					if(res === false)
+					if(!res || !res.ok) {
+						if (res.error)
+							var msg = res.error;
+						else
+							var msg = 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.';
+						$.guaycuru.confirmacao(msg);
 						revertFunc();
+					}
 				});
 			}
 		},
@@ -502,8 +522,14 @@ $(document).ready(function() {
 				revertFunc();
 			else {
 				$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'ee', ide: event.id.replace('extra_', ''), t: 'd', dd: dayDelta, md: minuteDelta}, function(res) {
-					if(res === false)
+					if(!res || !res.ok) {
+						if (res.error)
+							var msg = res.error;
+						else
+							var msg = 'Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.';
+						$.guaycuru.confirmacao(msg);
 						revertFunc();
+					}
 				});
 			}
 		},

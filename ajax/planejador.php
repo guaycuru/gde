@@ -500,9 +500,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$erros[] = "O Nome informado &eacute; inv&aacute;lido.";
 		if(($_POST['dia'] < 1) || ($_POST['dia'] > 7))
 			$erros[] = "O dia informado &eacute; inv&aacute;lido.";
-		if(preg_match('/^\d{2}:\d{2}:\d{2}$/i', $_POST['inicio']) == 0)
+		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $_POST['inicio']) == 0)
 			$erros[] = "O in&iacute;cio informado &eacute; inv&aacute;lido.";
-		if(preg_match('/^\d{2}:\d{2}:\d{2}$/i', $_POST['fim']) == 0)
+		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $_POST['fim']) == 0)
 			$erros[] = "O fim informado &eacute; inv&aacute;lido.";
 		$Extra = new PlanejadoExtra();
 		$Extra->setPlanejado($Planejado);
@@ -511,25 +511,29 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Extra->setInicio($_POST['inicio']);
 		$Extra->setFim($_POST['fim']);
 		if(count($erros) > 0)
-			$Ret = false;
-		elseif($Extra->Save(true) !== false) {
-			$Ret = (!empty($cores_extras[intval($_POST['c'])])) ? $Extra->Evento($cores_extras[intval($_POST['c'])]) : '';
-		} else
-			$Ret = false;
+			Base::Error_JSON(implode(' ', $erros));
+		elseif($Extra->Save(true) === false)
+			Base::Error_JSON('Ocorreu um erro. Por favor, tente novamente.');
+		else {
+			$extra = array('c' => (!empty($cores_extras[intval($_POST['c'])])) ? $Extra->Evento($cores_extras[intval($_POST['c'])]) : '');
+			Base::OK_JSON(null, 200, $extra);
+		}
 	} elseif($_POST['a'] == 're') { // Remover Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
-		if($Extra->getPlanejado()->getID() != $Planejado->getID())
-			$Ret = false;
+		if(($Extra->getPlanejado()->getID() != $Planejado->getID()) || ($Extra->Delete(true) === false))
+			Base::Error_JSON('Ocorreu um erro. Por favor, tente novamente.');
 		else
-			$Ret = $Extra->Delete();
-		//$Planejado->Remover_Extra($Extra); // Meio inutil nao?
+			Base::OK_JSON(null);
 	} elseif($_POST['a'] == 'ee') { // Editar Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
 		if($Extra->getPlanejado()->getID() != $Planejado->getID())
-			$Ret = false;
+			Base::Error_JSON('Acesso negado.');
 		else {
 			$Extra->Mover(intval($_POST['dd']), intval($_POST['md']), ($_POST['t'] == 'd'));
-			$Ret = ($Extra->Save(true) !== false);
+			if($Extra->Save(true) === false)
+				Base::Error_JSON('Ocorreu um erro. Por favor, tente novamente.');
+			else
+				Base::OK_JSON(null);
 		}
 	} elseif($_POST['a'] == 'cd') { // Carregar Dados extendidos do Oferecimento
 		$Oferecimento = Oferecimento::Load($_POST['oid']);
