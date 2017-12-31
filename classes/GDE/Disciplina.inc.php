@@ -286,10 +286,8 @@ class Disciplina extends Base {
 			else
 				$qrs[] = "D.nivel = :nivel";
 		}
-		if(isset($param['instituto'])) {
-			$jns[] = "D.instituto AS I";
-			$qrs[] = "INNER JOIN I.id_instituto = :instituto";
-		}
+		if(isset($param['instituto']))
+			$qrs[] = "D.instituto = :instituto";
 		if(isset($param['creditos']))
 			$qrs[] = "D.creditos = :creditos";
 		if(isset($param['periodicidade']))
