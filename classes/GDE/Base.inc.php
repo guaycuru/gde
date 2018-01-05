@@ -203,19 +203,22 @@ abstract class Base {
 	 * Searches the DB for only one object
 	 *
 	 * @param array $params Search parameters
-	 * @return object|null|false Object found, null if not found or false on query error
+	 * @return static|object|null|false Object found, null if not found or false on query error
 	 */
 	public static function FindOneBy($params) {
 		return self::_EM()->getRepository(get_called_class())->findOneBy($params);
 	}
-	
-	/** 
+
+	/**
 	 * Load
 	 *
 	 * Loads the object
 	 *
 	 * @param mixed $id The ID to load into the object
 	 * @return static This object
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws \Doctrine\ORM\TransactionRequiredException
 	 */
 	public static function Load($id = null) {
 		if($id == null) { // No data, new object

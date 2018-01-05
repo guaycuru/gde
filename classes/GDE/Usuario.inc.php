@@ -510,7 +510,7 @@ class Usuario extends Base {
 	 * @return null|Usuario
 	 */
 	public static function Por_Matricula($matricula, $ativo = true, $vazio = false) {
-		$dql = 'SELECT U FROM GDE\\Usuario U INNER JOIN GDE\\Professor P WHERE P.matricula = ?1';
+		$dql = 'SELECT U FROM '.get_class().' U INNER JOIN U.professor P WHERE P.matricula = ?1';
 		if($ativo !== null)
 			$dql .= ' AND U.ativo = ?2';
 		$query = self::_EM()->createQuery($dql)
@@ -519,7 +519,7 @@ class Usuario extends Base {
 		if($ativo !== null)
 			$query->setParameter(2, $ativo);
 		$Usuario = $query->getOneOrNullResult();
-		if($Usuario === null && $vazio === true)
+		if(($Usuario === null) && ($vazio === true))
 			return new self;
 		return $Usuario;
 	}
@@ -825,10 +825,10 @@ class Usuario extends Base {
 		} else {
 			switch($tipo) {
 				case 'A': // Aluno
-					$Usuario = self::Por_Unique($matricula, 'ra');
+					$Usuario = self::Por_Unique($matricula, 'ra', null);
 					break;
 				case 'D': // Docente
-					$Usuario = self::Por_Unique($matricula, 'matricula');
+					$Usuario = self::Por_Unique($matricula, 'matricula', null);
 					break;
 				default: // Outros (Funcionarios, etc)
 					if($erro !== false)
