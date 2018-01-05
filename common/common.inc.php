@@ -2,7 +2,7 @@
 
 namespace GDE;
 
-define('REVISION', '20171231');
+define('REVISION', '20180105');
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
