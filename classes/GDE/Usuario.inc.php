@@ -1317,16 +1317,17 @@ class Usuario extends Base {
 		$Pre = $Disciplina->getPre_Requisitos($this);
 		if(count($Pre) == 0)
 			return true;
-		$soh_aa200 = false;
+		$soh_aa200 = $aa200 = false;
 		foreach($Pre as $conjunto) {
 			$sobrou = false;
 			foreach($conjunto as $pre) {
 				$aa200 = false;
-				if($this->Eliminou($pre[0], $pre[1]) === false) {
+				if($pre[0]->getSigla(false) == 'AA200')
+					$aa200 = true;
+				elseif($this->Eliminou($pre[0], $pre[1]) === false) {
 					$sobrou = true;
 					break; // Vai pro proximo conjunto, este esta incompleto!
-				} elseif($pre[0]->getSigla(false) == 'AA200')
-					$aa200 = true;
+				}
 			}
 			if($sobrou === false) { // Nao sobrou pre requisito
 				if($aa200 === false)
