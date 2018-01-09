@@ -10,7 +10,7 @@ if($_Usuario->getAdmin() === false)
 
 $dir = __DIR__.'/../errors/';
 foreach(array_diff(scandir($dir), array('..', '.', '.htaccess')) as $erro) {
-	echo '<h2>'.$erro.'</h2>';
+	echo '<h2>'.$erro.' - '.date("d/m/Y H:i:s.", filemtime($dir.$erro)).'</h2>';
 	echo '<pre>'.file_get_contents($dir.$erro).'</pre>';
 	echo '<hr>';
 }
