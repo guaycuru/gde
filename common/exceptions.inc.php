@@ -29,3 +29,12 @@ function exception_error_handler($severity, $message, $file, $line) {
 	throw new \ErrorException($message, 0, $severity, $file, $line);
 }
 set_error_handler("exception_error_handler");
+
+function exception_fatal_handler() {
+	$error = error_get_last();
+	if(($error !== null) && ($error['type'] === E_ERROR)) {
+		throw new \ErrorException($error["message"], 0, $error["type"], $error["file"], $error["line"]);
+	}
+}
+
+register_shutdown_function("exception_fatal_handler");
