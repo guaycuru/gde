@@ -159,9 +159,10 @@ class Arvore {
 				$this->creditos_linguas[$For_Curriculo->getSemestre()]++;
 				$this->creditos_totais++;
 			} else { // Disciplina Obrigatoria
-				$this->Disciplinas[$For_Curriculo->getSemestre()][] = $For_Curriculo->getDisciplina();
+				$Disciplina = $For_Curriculo->getDisciplina(true);
+				$this->Disciplinas[$For_Curriculo->getSemestre()][] = $Disciplina;
 				$this->siglas_obrigatorias[] = $For_Curriculo->getSigla();
-				$this->creditos_totais += intval($For_Curriculo->getDisciplina()->getCreditos());
+				$this->creditos_totais += intval($Disciplina->getCreditos());
 			}
 		}
 		$this->numero_semestres = $maior_semestre;

@@ -127,6 +127,6 @@ class Curriculo extends Base {
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function getDisciplina($vazio = false) {
-		return Disciplina::Por_Sigla($this->getSigla(false), $this->getCurso(true)->getNivel(false), $vazio);
+		return Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
 	}
 }
