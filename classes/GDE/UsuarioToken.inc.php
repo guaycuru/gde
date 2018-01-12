@@ -7,7 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * UsuarioToken
  *
- * @ORM\Table(name="gde_usuarios_tokens")
+ * @ORM\Table(
+ *  name="gde_usuarios_tokens",
+ *   indexes={
+ *     @ORM\Index(name="data_criacao", columns={"data_criacao"})
+ *   }
+ * )
  * @ORM\Entity
  */
 class UsuarioToken extends Base {
@@ -23,7 +28,7 @@ class UsuarioToken extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
 	 */
 	protected $token;
 
@@ -58,6 +63,14 @@ class UsuarioToken extends Base {
 	}
 
 	/**
+	 * @param $token
+	 * @return bool
+	 */
+	public static function Existe($token) {
+		return self::FindOneBy(array('token' => $token)) !== null;
+	}
+
+	/**
 	 * Novo
 	 *
 	 * Gera um novo token para o $Usuario
@@ -72,7 +85,10 @@ class UsuarioToken extends Base {
 		$Novo = new self;
 		$Novo->setUsuario($Usuario);
 		$Novo->setData_Criacao();
-		$Novo->setToken(self::Gerar_Valor());
+		do {
+			$valor = self::Gerar_Valor();
+		} while (self::Existe($valor));
+		$Novo->setToken($valor);
 		if(($salvar === true) && ($Novo->Save(true) === false))
 			return false;
 		return $Novo;
@@ -162,5 +178,15 @@ class UsuarioToken extends Base {
 	 */
 	public function Em_String() {
 		return $this->getID().self::SEPARADOR.$this->getUsuario()->getID().self::SEPARADOR.$this->getToken();
+	}
+
+	/**
+	 * @return void
+	 */
+	public static function Remover_Tokens_Antigos() {
+		$Data = new \DateTime();
+		$Data->modify('-'.(CONFIG_COOKIE_DIAS+1).' days');
+		$dql = "DELETE ".get_class()." AS T WHERE T.data_criacao < ?1";
+		self::_EM()->createQuery($dql)->setParameters(array(1 => $Data))->execute();
 	}
 }
