@@ -281,6 +281,7 @@ class Aluno extends Base {
 			$total = $queryt->getSingleScalarResult();
 		}
 
+		$extra_select = "";
 		if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
 			$extra_select =  ", (CASE WHEN A.ra<500000 THEN A.ra+1000000 ELSE A.ra END) AS HIDDEN ORD ";
 			$ordem = ($ordem == 'A.ra ASC') ? "ORD ASC" : "ORD DESC";
