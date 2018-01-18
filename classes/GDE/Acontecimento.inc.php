@@ -73,11 +73,25 @@ class Acontecimento extends Base {
 	 */
 	protected $original;
 
+	/**
+	 * @var ArrayCollection|Acontecimento[]
+	 *
+	 * @ORM\OneToMany(targetEntity="Acontecimento", mappedBy="original", cascade={"remove"})
+	 */
+	protected $respostas;
+
 	const TIPO_GDE = 'ga';
 	const TIPO_USUARIO_AMIZADE = 'ua';
 	const TIPO_USUARIO_MENSAGEM = 'um';
 	const TIPO_USUARIO_STATUS = 'us';
 
+	/**
+	 * @param bool $html
+	 * @param bool $processa
+	 * @param bool $meu
+	 * @param Usuario|null $Usuario
+	 * @return string
+	 */
 	public function getTexto($html = false, $processa = false, $meu = false, Usuario $Usuario = null) {
 		global $_Usuario;
 		if(!$html)
@@ -110,6 +124,9 @@ class Acontecimento extends Base {
 			return "";
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getLink() {
 		if($this->getOrigem() !== null)
 			return CONFIG_URL."perfil/?usuario=".$this->getOrigem()->getLogin();
@@ -117,6 +134,10 @@ class Acontecimento extends Base {
 			return "";
 	}
 
+	/**
+	 * @param bool $completo
+	 * @return string
+	 */
 	public function getNome($completo = false) {
 		global $_Usuario;
 		if($this->getOrigem() !== null)
@@ -127,6 +148,10 @@ class Acontecimento extends Base {
 			return "";
 	}
 
+	/**
+	 * @param bool $th
+	 * @return string
+	 */
 	public function getFoto($th = true) {
 		if($this->getOrigem() !== null)
 			return $this->getOrigem()->getFoto(true, $th, true);
@@ -136,6 +161,10 @@ class Acontecimento extends Base {
 			return '';
 	}
 
+	/**
+	 * @param Usuario $Usuario
+	 * @return bool
+	 */
 	public function Pode_Responder(Usuario $Usuario) {
 		if($this->getTipo(false) == self::TIPO_USUARIO_AMIZADE)
 			return false;
@@ -153,6 +182,10 @@ class Acontecimento extends Base {
 		return false;
 	}
 
+	/**
+	 * @param Usuario $Quem
+	 * @return bool
+	 */
 	public function Pode_Apagar(Usuario $Quem) {
 		if($Quem->getAdmin())
 			return true;
@@ -173,7 +206,7 @@ class Acontecimento extends Base {
 			(($this->getOrigem() !== null) && ($this->getOrigem()->getID() == $Usuario->getID())) ||
 			(($this->getDestino() !== null) && ($this->getDestino()->getID() == $Usuario->getID()))
 		);
-		$dql = "SELECT A FROM GDE\\Acontecimento A WHERE A.original = ?1";
+		$dql = "SELECT A FROM ".get_class()." A WHERE A.original = ?1";
 		if($todas === false) {
 			$dql .= " AND (A.origem = ?2 OR A.destino = ?3";
 			if($this->getTipo(false) != self::TIPO_GDE)
@@ -312,6 +345,10 @@ class Acontecimento extends Base {
 		return $Lista;
 	}*/
 
+	/**
+	 * @return mixed
+	 * @throws \Doctrine\ORM\Query\QueryException
+	 */
 	public static function Ultimo_ID() {
 		return self::_EM()->createQuery("SELECT MAX(A.id_acontecimento) FROM GDE\\Acontecimento A")->getSingleScalarResult();
 	}
