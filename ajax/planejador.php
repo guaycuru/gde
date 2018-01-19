@@ -171,7 +171,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 						unset($Disciplinas[$sem][$k]);
 					$Raw[$sem][$sigla]['Disciplina'] = $Disciplina;
 					$obs = null;
-					$Raw[$sem][$sigla]['pode'] = $Usr->Pode_Cursar($Disciplina, $obs);
+					$Raw[$sem][$sigla]['pode'] = $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
 					$Raw[$sem][$sigla]['obs'] = $obs;
 					if($Raw[$sem][$sigla]['pode']) 
 						$Raw[$sem][$sigla]['Oferecimentos'] = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo(true)->getID()), "O.turma ASC", $total);
@@ -368,7 +368,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Disciplina = Disciplina::Por_Sigla($sigla);
 			
 			$obs = null;
-			$pode = $Usr->Pode_Cursar($Disciplina, $obs);
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			$pode = $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
 			$total = 0;
 			if($pode)
 				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo(true)->getID()), "O.turma ASC", $total);

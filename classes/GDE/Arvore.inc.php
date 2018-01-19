@@ -928,6 +928,10 @@ class Arvore {
 		return number_format($this->cp, $digitos, ',', '.');
 	}
 
+	public function getCPAA400() {
+		return floor($this->cp * 100);
+	}
+
 	public function getCPF($digitos) {
 		return number_format($this->cpf, $digitos, ',', '.');
 	}

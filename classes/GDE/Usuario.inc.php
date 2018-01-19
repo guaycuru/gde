@@ -1304,10 +1304,11 @@ class Usuario extends Base {
 	 *
 	 * @param Disciplina $Disciplina
 	 * @param bool|string $obs
+	 * @param Arvore|null $Arvore
 	 * @return bool
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
+	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false, Arvore $Arvore = null) {
 		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!
 		if(($this->Eliminada($Disciplina, false) !== false) && ($Disciplina->getNivel(false) != Disciplina::NIVEL_POS)) {
 			if($obs !== false)
@@ -1322,7 +1323,13 @@ class Usuario extends Base {
 			$sobrou = false;
 			foreach($conjunto as $pre) {
 				$aa200 = false;
-				if($pre[0]->getSigla(false) == 'AA200')
+				if(substr($pre[0]->getSigla(false), 0, 3) == 'AA4') {
+					$precisa = intval(str_replace('AA4', '', $pre[0]->getSigla(false)));
+					if(($Arvore === null) || ($precisa > $Arvore->getCPAA400())) {
+						$sobrou = true;
+						break; // Vai pro proximo conjunto, este esta incompleto!
+					}
+				} elseif($pre[0]->getSigla(false) == 'AA200')
 					$aa200 = true;
 				elseif($this->Eliminou($pre[0], $pre[1]) === false) {
 					$sobrou = true;
