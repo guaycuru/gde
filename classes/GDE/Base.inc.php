@@ -635,7 +635,8 @@ abstract class Base {
 				default:
 					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 			}
+		} else {
+			throw new \Exception("Method " . $name . " not found on class " . get_class($this) . '.');
 		}
-		throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 	}
 }
