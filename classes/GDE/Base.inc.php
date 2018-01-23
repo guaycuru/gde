@@ -1,9 +1,12 @@
 <?php
 
 namespace GDE;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 /**
- * Base class with Timezone support
+ * Base class with timezone support
  *
  * @author Guaycuru
  */
@@ -12,9 +15,7 @@ abstract class Base {
 	// EM
 	private $_meta;
 	protected static $_EM;
-	protected static $_LOGs = array();
 	private static $_trans_count = 0;
-	protected static $_loggable = true;
 	
 	// Display Timezone
 	protected static $_TZ = null;
@@ -24,13 +25,61 @@ abstract class Base {
 	 *
 	 * Gets or Sets the Entity Manager
 	 *
-	 * @param object $EM (optional) Entity Manager
-	 * @return \Doctrine\ORM\EntityManager Entity Manager
+	 * @param EntityManager $EM (optional) Entity Manager
+	 * @return EntityManager Entity Manager
 	 */
-	public static function _EM($EM = null) {
+	public static function _EM(EntityManager $EM = null) {
 		if($EM != null)
 			self::$_EM = $EM;
 		return self::$_EM;
+	}
+
+	/**
+	 * StartTrans
+	 *
+	 * Starts a Transaction block
+	 *
+	 */
+	public static function StartTrans() {
+		self::$_trans_count++;
+
+		self::_EM()->getConnection()->beginTransaction();
+	}
+
+	/**
+	 * CompleteTrans
+	 *
+	 * Completes a Transaction block
+	 *
+	 * @param boolean $commit True to commit, false to rollback
+	 * @return boolean True if the transaction was committed, false otherwise
+	 * @throws \Doctrine\DBAL\ConnectionException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public static function CompleteTrans($commit = true) {
+		self::$_trans_count--;
+
+		// Finish the transaction
+		if($commit) {
+			self::_EM()->flush();
+			self::_EM()->getConnection()->commit();
+			return true;
+		} else {
+			self::_EM()->getConnection()->rollback();
+		}
+
+		return $commit;
+	}
+
+	/**
+	 * TransCount
+	 *
+	 * Returns the number os transactions currently open
+	 *
+	 * @return integer Number of transactions currently open
+	 */
+	public static function TransCount() {
+		return self::$_trans_count;
 	}
 	
 	/** 
@@ -38,8 +87,8 @@ abstract class Base {
 	 *
 	 * Gets or Sets the Display Timezone
 	 *
-	 * @param DateTimeZone|string $Timezone (optional) Timezone
-	 * @return DateTimeZone|null Current display Timezone
+	 * @param \DateTimeZone|string $Timezone (optional) Timezone
+	 * @return \DateTimeZone|null Current display Timezone
 	 */
 	public static function _TZ($Timezone = null) {
 		if($Timezone !== null) {
@@ -51,19 +100,6 @@ abstract class Base {
 	}
 
 	/**
-	 * __construct
-	 *
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->_meta = self::_EM()->getClassMetadata(get_class($this));
-		foreach($this->_meta->associationMappings as $property => $data) {
-			if(($this->$property === null) && ($data['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY)) // OneToMany or ManyToMany
-				$this->$property = new \Doctrine\Common\Collections\ArrayCollection();
-		}
-	}
-	
-	/** 
 	 * To_JSON
 	 *
 	 * Returns the input in JSON
@@ -74,8 +110,8 @@ abstract class Base {
 	public static function To_JSON($input) {
 		return json_encode($input, JSON_FORCE_OBJECT & JSON_NUMERIC_CHECK);
 	}
-	
-	/** 
+
+	/**
 	 * OK_JSON
 	 *
 	 * Outputs a JSON OK and terminates the execution
@@ -89,12 +125,12 @@ abstract class Base {
 		if(function_exists('http_response_code'))
 			http_response_code($http);
 		die(self::To_JSON(array(
-			'ok' => true,
-			'id' => $id
-		) + $extra));
+				'ok' => true,
+				'id' => $id
+			) + $extra));
 	}
-	
-	/** 
+
+	/**
 	 * Erro_JSON
 	 *
 	 * Outputs a JSON error and terminates the execution
@@ -108,9 +144,125 @@ abstract class Base {
 		if(function_exists('http_response_code'))
 			http_response_code($http);
 		die(self::To_JSON(array(
-			'ok' => false,
-			'error' => $message
-		) + $extra));
+				'ok' => false,
+				'error' => $message
+			) + $extra));
+	}
+
+	/**
+	 * __construct
+	 *
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->_meta = self::_EM()->getClassMetadata(get_class($this));
+		foreach($this->_meta->associationMappings as $property => $data) {
+			if(($this->$property === null) && ($data['type'] & ClassMetadataInfo::TO_MANY)) // OneToMany or ManyToMany
+				$this->$property = new ArrayCollection();
+		}
+	}
+	
+	/** 
+	 * FindBy
+	 *
+	 * Searches the Repository for objects
+	 *
+	 * @param array $params (optional) Search parameters
+	 * @param array $order (optional) Results order
+	 * @param integer $limit (optional) Results limit
+	 * @param integer $offset (optional) Results offset
+	 * @return array|false Array of objects found, or false on query error
+	 */
+	public static function FindBy($params = array(), array $order = null, $limit = null, $offset = null) {
+		return self::_EM()->getRepository(get_called_class())->findBy($params, $order, $limit, $offset);
+	}
+	
+	/** 
+	 * FindOneBy
+	 *
+	 * Searches the Repository for a single object by a unique field
+	 *
+	 * @param array $params Search parameters
+	 * @return static|object|null|false Object found, null if not found or false on query error
+	 */
+	public static function FindOneBy($params) {
+		return self::_EM()->getRepository(get_called_class())->findOneBy($params);
+	}
+
+	/**
+	 * Load
+	 *
+	 * Loads an object with the given ID
+	 *
+	 * @param mixed $id The object ID to look for
+	 * @return static|object The found object, or a new empty object if not found
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws \Doctrine\ORM\TransactionRequiredException
+	 * @throws \Exception
+	 */
+	public static function Load($id) {
+		if($id === null) {
+			throw new \Exception("Method Load() called without ID on class ".get_called_class().'.');
+		}
+		$Obj = self::_EM()->find(get_called_class(), $id);
+		// ToDo: Don't return an empty object when no object is found
+		return ($Obj !== null) ? $Obj : new static();
+	}
+
+	/**
+	 * getID
+	 *
+	 * Returns the object's primary key value
+	 *
+	 * @return mixed The object's primary key value
+	 * @throws \Doctrine\ORM\Mapping\MappingException
+	 */
+	public function getID() {
+		if($this->_meta === null)
+			$this->_meta = self::_EM()->getClassMetadata(get_class($this));
+		$identifier = $this->_meta->getSingleIdentifierFieldName();
+		return $this->{$identifier};
+	}
+
+	/**
+	 * Save
+	 *
+	 * Persists the object to the EM, optionally writing the changes to the DB
+	 *
+	 * @param boolean $flush (optional) Whether to write the changes to the DB
+	 * @return boolean True in case of success or false in case of error
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function Save($flush = true) {
+		if(self::_EM()->persist($this) === false)
+			return false;
+		
+		if(($flush) && (self::_EM()->flush() === false))
+			return false;
+		
+		return true;
+	}
+
+	/**
+	 * Delete
+	 *
+	 * Removes the object from the EM, optionally writing the changes to the DB
+	 *
+	 * @param boolean $flush (optional) Whether to write the changes to the DB
+	 * @return boolean True in case of success or false in case of error
+	 * @throws \Doctrine\ORM\Mapping\MappingException
+	 * @throws \Doctrine\ORM\OptimisticLockException
+	 */
+	public function Delete($flush = true) {
+		if($this->getID() == null)
+			return true;
+
+		self::_EM()->remove($this);
+		if($flush)
+			self::_EM()->flush();
+		
+		return true;
 	}
 
 	/**
@@ -121,6 +273,8 @@ abstract class Base {
 	 * @param bool $flush
 	 * @param array $extra
 	 * @return void
+	 * @throws \Doctrine\ORM\Mapping\MappingException
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Save_JSON($flush = true, $extra = array()) {
 		if($this->Save($flush) === true) {
@@ -138,6 +292,8 @@ abstract class Base {
 	 *
 	 * @param bool $flush
 	 * @return void
+	 * @throws \Doctrine\ORM\Mapping\MappingException
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Delete_JSON($flush = true) {
 		if($this->Delete($flush) === true)
@@ -147,204 +303,13 @@ abstract class Base {
 	}
 
 	/**
-	 * Required_Fields
-	 *
-	 * @param $campos
-	 * @return bool
-	 */
-	public static function Required_Fields($campos) {
-		foreach($campos as $campo)
-			if((!isset($_POST[$campo])) || ($_POST[$campo] === ''))
-				return false;
-		return true;
-	}
-	
-	/** 
-	 * Download_Headers
-	 *
-	 * Outputs the HTTP headers for downloading a file
-	 *
-	 * @param string $filename The file name
-	 * @param integer $filesize The file size (in bytes)
-	 * @param string $mime (Optional) The mime type
-	 * @return void
-	 */
-	public static function Download_Headers($filename, $filesize, $mime = 'application/octet-stream') {
-		header("Content-type: ".$mime);
-		header('Content-Disposition: attachment; filename="'.$filename.'"');
-		header("Content-Length: ".$filesize);
-		header("Content-Transfer-Encoding: binary");
-		// Avoid cache
-		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT'); 
-		header('Last-Modified: '.gmdate('D, d M Y H:i:s' ).' GMT'); 
-		header('Cache-Control: no-store, no-cache, must-revalidate'); 
-		header('Cache-Control: post-check=0, pre-check=0', false); 
-		header('Pragma: no-cache'); 
-	}
-	
-	/** 
-	 * FindBy
-	 *
-	 * Searches the DB for objects
-	 *
-	 * @param array $params (optional) Search parameters
-	 * @param array $order (optional) Results order
-	 * @param integer $limit (optional) Results limit
-	 * @param integer $offset (optional) Results offset
-	 * @return array|false Array of objects found, or false on query error
-	 */
-	public static function FindBy($params = array(), array $order = null, $limit = null, $offset = null) {
-		return self::_EM()->getRepository(get_called_class())->findBy($params, $order, $limit, $offset);
-	}
-	
-	/** 
-	 * FindOneBy
-	 *
-	 * Searches the DB for only one object
-	 *
-	 * @param array $params Search parameters
-	 * @return static|object|null|false Object found, null if not found or false on query error
-	 */
-	public static function FindOneBy($params) {
-		return self::_EM()->getRepository(get_called_class())->findOneBy($params);
-	}
-
-	/**
-	 * Load
-	 *
-	 * Loads the object
-	 *
-	 * @param mixed $id The ID to load into the object
-	 * @return static This object
-	 * @throws \Doctrine\ORM\ORMException
-	 * @throws \Doctrine\ORM\OptimisticLockException
-	 * @throws \Doctrine\ORM\TransactionRequiredException
-	 */
-	public static function Load($id = null) {
-		if($id == null) { // No data, new object
-			return new static();
-		}
-		$Obj = self::_EM()->find(get_called_class(), $id);
-		return ($Obj !== null) ? $Obj : new static();
-	}
-	
-	/** 
-	 * StartTrans
-	 *
-	 * Starts a Transaction block -> Should be avoided because LOGs may not be saved if the trans fails!
-	 *
-	 */
-	public static function StartTrans() {
-		self::$_trans_count++;
-		return self::_EM()->getConnection()->beginTransaction();
-	}
-	
-	/** 
-	 * CompleteTrans
-	 *
-	 * Completes a Transaction block
-	 *
-	 * @param boolean $commit True to commit, false to rollback
-	 * @return boolean True if the transaction was committed, false otherwise
-	 */
-	public static function CompleteTrans($commit = true) {
-		self::$_trans_count--;
-		
-		// Finish the transaction
-		if($commit) {
-			self::_EM()->flush();
-			self::_EM()->getConnection()->commit();
-			return true;
-		} else {
-			self::_EM()->getConnection()->rollback();
-		}
-		
-		// Check if there are any LOGs that need to be flushed
-		if(count(self::$_LOGs) > 0) {
-			foreach(self::$_LOGs as $Log) {
-				self::_EM()->persist($Log);
-				self::_EM()->flush($Log);
-			}
-		}
-		
-		return $commit;
-	}
-	
-	/**
-	 * TransCount
-	 * 
-	 * Returns the number os transactions currently open
-	 * 
-	 * @return integer Number of transactions currently open
-	 */
-	public static function TransCount() {
-		return self::$_trans_count;
-	}
-	
-	public static function Loggable() {
-		return static::$_loggable;
-	}
-	
-	/** 
-	 * getID
-	 *
-	 * Returns the object primary key's value
-	 *
-	 * @return integer This object primary key's value
-	 */
-	public function getID() {
-		if($this->_meta === null)
-			$this->_meta = self::_EM()->getClassMetadata(get_class($this));
-		$identifier = $this->_meta->getSingleIdentifierFieldName();
-		return $this->{$identifier};
-	}
-	
-	/** 
-	 * Save
-	 *
-	 * Saves the object properties to the DB
-	 *
-	 * @param boolean $flush (optional) Whether to write the changes to the DB
-	 * @return boolean True in case of success or false in case of error
-	 */
-	public function Save($flush = true) {
-		if(self::_EM()->persist($this) === false)
-			return false;
-		
-		if(($flush) && (self::_EM()->flush() === false))
-			return false;
-		
-		return true;
-	}
-	
-	/** 
-	 * Delete
-	 *
-	 * Deletes the object properties from the DB
-	 *
-	 * @param boolean $flush (optional) Whether to write the changes to the DB
-	 * @return boolean True in case of success or false in case of error
-	 */
-	public function Delete($flush = true) {
-		if($this->getID() == null)
-			return true;
-
-		// Delete data from the DB
-		self::_EM()->remove($this);
-		if($flush)
-			self::_EM()->flush();
-		
-		return true;
-	}
-
-	/**
 	 * __call
 	 *
-	 * handles GET's and SET's
+	 * Automagically handle some generic method calls
 	 *
 	 * @param $name
 	 * @param $args
-	 * @return mixed O valor da propriedade
+	 * @return mixed
 	 * @throws \Exception
 	 */
 	public function __call($name, $args) {
@@ -369,7 +334,7 @@ abstract class Base {
 						$res = $this->{$property};
 						if($res === null) { // Empty
 							switch($_association['type']) {
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE: // OneToOne (mappedBy)
+								case ClassMetadataInfo::ONE_TO_ONE: // OneToOne (mappedBy)
 									if((isset($args[0])) && ($args[0] === true)) {
 										// Create a new object
 										$New = new $_association['targetEntity']();
@@ -381,7 +346,7 @@ abstract class Base {
 									} else
 										return $res;
 									break;
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE: // OneToOne / ManyToOne (inversedBy)
+								case ClassMetadataInfo::MANY_TO_ONE: // OneToOne / ManyToOne (inversedBy)
 									if((isset($args[0])) && ($args[0] === true)) {
 										// Create a new object
 										$New = new $_association['targetEntity']();
@@ -390,18 +355,18 @@ abstract class Base {
 										if(!empty($_association['inversedBy'])) { // It's inversed by
 											$inversed = $_association['inversedBy'];
 											$there = self::_EM()->getClassMetadata($_association['targetEntity'])->associationMappings[$inversed]['type'];
-											if($there == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE) // The other side is an One-To-One
+											if($there == ClassMetadataInfo::ONE_TO_ONE) // The other side is an One-To-One
 												$New->{'set'.$inversed}($this);
-											elseif($there == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY) // The other side is an One-To-Many
+											elseif($there == ClassMetadataInfo::ONE_TO_MANY) // The other side is an One-To-Many
 												$New->{'get'.$inversed}()->add($this);
 										}
 										return $this->{$property} = $New;
 									} else
 										return $res;
 									break;
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY: // OneToMany
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
-									return $this->{$property} = new \Doctrine\Common\Collections\ArrayCollection();
+								case ClassMetadataInfo::ONE_TO_MANY: // OneToMany
+								case ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
+									return $this->{$property} = new ArrayCollection();
 									break;
 								default:
 									die('Base: '.get_class($this).'->'.$property.': '.$_association['type']);
@@ -461,12 +426,12 @@ abstract class Base {
 					} else { // Value passed
 						$value = $args[0];
 						// Convert value from array to ArrayCollection
-						if(($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY) && (is_array($value)))
-							$value = new \Doctrine\Common\Collections\ArrayCollection($value);
+						if(($_association['type'] & ClassMetadataInfo::TO_MANY) && (is_array($value)))
+							$value = new ArrayCollection($value);
 						$set_other_side = ((!isset($args[1])) || ($args[1] === true));
 						if($_association !== false) { // Is Association
 							switch($_association['type']) {
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_ONE: // OneToOne
+								case ClassMetadataInfo::ONE_TO_ONE: // OneToOne
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation, if needed
@@ -475,8 +440,8 @@ abstract class Base {
 											$value->{$_association['mappedBy']} = $this;
 									}
 									break;
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY: // OneToMany
-									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
+								case ClassMetadataInfo::ONE_TO_MANY: // OneToMany
+									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if($set_other_side === true) {
@@ -488,9 +453,9 @@ abstract class Base {
 									}
 									// Convert value from array to ArrayCollection
 									if(is_array($value))
-										$value = new \Doctrine\Common\Collections\ArrayCollection($value);
+										$value = new ArrayCollection($value);
 									break;
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_ONE: // ManyToOne
+								case ClassMetadataInfo::MANY_TO_ONE: // ManyToOne
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
@@ -500,8 +465,8 @@ abstract class Base {
 												$value->{$_association['inversedBy']}->add($this);
 									}
 									break;
-								case \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
-									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof \Doctrine\Common\Collections\ArrayCollection))))
+								case ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
+									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).': '.gettype($value));
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if($set_other_side === true) {
@@ -586,7 +551,7 @@ abstract class Base {
 						return $value;
 					break;
 				case 'add':
-					if($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_ONE)
+					if($_association['type'] & ClassMetadataInfo::TO_ONE)
 						throw new \Exception("Can't add".$name."() for property TO_ONE on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
 						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
@@ -596,7 +561,7 @@ abstract class Base {
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
-						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY)
+						if($_association['type'] == ClassMetadataInfo::MANY_TO_MANY)
 							$Obj->{$_association['mappedBy']}->add($this);
 						else // OneToMany
 							$Obj->{$_association['mappedBy']} = $this;
@@ -604,11 +569,11 @@ abstract class Base {
 					if(!empty($_association['inversedBy'])) // Always a ManyToMany
 						$Obj->{$_association['inversedBy']}->add($this);
 					if($this->{$property} === null)
-						$this->{$property} = new \Doctrine\Common\Collections\ArrayCollection();
+						$this->{$property} = new ArrayCollection();
 					return $this->{$property}->add($Obj);
 					break;
 				case 'remove':
-					if($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_ONE)
+					if($_association['type'] & ClassMetadataInfo::TO_ONE)
 						throw new \Exception("Can't remove".$name."() for property TO_ONE on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
 						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
@@ -618,7 +583,7 @@ abstract class Base {
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
-						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::MANY_TO_MANY)
+						if($_association['type'] == ClassMetadataInfo::MANY_TO_MANY)
 							$Obj->{$_association['mappedBy']}->removeElement($this);
 						else // OneToMany
 							$Obj->{$_association['mappedBy']} = null;
@@ -630,11 +595,11 @@ abstract class Base {
 					return $this->{$property}->removeElement($Obj);
 					break;
 				case 'clear':
-					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
+					if(!($_association['type'] & ClassMetadataInfo::TO_MANY))
 						throw new \Exception("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
 					$clear_other_side = ((!isset($args[0])) || ($args[0] === true));
 					if($clear_other_side) {
-						if($_association['type'] == \Doctrine\ORM\Mapping\ClassMetadataInfo::ONE_TO_MANY) {
+						if($_association['type'] == ClassMetadataInfo::ONE_TO_MANY) {
 							if(!empty($_association['mappedBy'])) {
 								foreach($this->{$property} as $Obj)
 									$Obj->{$_association['mappedBy']} = null;
@@ -652,7 +617,7 @@ abstract class Base {
 					$this->{$property}->clear();
 					break;
 				case 'has':
-					if(!($_association['type'] & \Doctrine\ORM\Mapping\ClassMetadataInfo::TO_MANY))
+					if(!($_association['type'] & ClassMetadataInfo::TO_MANY))
 						throw new \Exception("Can't has".$name."() for a not TO_MANY property on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
 						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
@@ -670,8 +635,7 @@ abstract class Base {
 				default:
 					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 			}
-		} else {
-			throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 		}
+		throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 	}
 }
