@@ -143,7 +143,7 @@ class Planejado extends Base {
 			if($Tem->getID() == $Oferecimento->getID()) // Ta tentando adicionar uma que ja esta la!
 				return array('ok' => false, 'Removido' => false);
 			else { // Ta tentando adicionar uma outra turma
-				$this->Remover_Oferecimento($Tem);
+				$this->Remover_Oferecimento($Tem, false);
 				$Removido = array('id' => $Tem->getID());
 			}
 		} else

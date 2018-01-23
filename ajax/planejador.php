@@ -474,7 +474,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Ret['ok'] = ($Planejado->Remover_Oferecimento($Oferecimento) !== false);
 		if($Ret['ok'] !== false) {
 			$Usr = $_Usuario->Copia();
-			$Usr->remover_Oferecimentos(array($Oferecimento));
+			$Usr->Remover_Oferecimentos(array($Oferecimento));
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());
 			$Ret['Arvore'] = array(
 				'cp' => $Arvore->getCP(4),
