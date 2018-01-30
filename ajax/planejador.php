@@ -280,7 +280,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 								'events' => $Oferecimento->Eventos(true),
 								'editable' => false,
 								'textColor' => '#000000',
-								'color' => $cores[$c]
+								'color' => (isset($cores[$c])) ? $cores[$c] : $cores[0]
 							),
 							'Amigos' => array(),
 							'total' => -1
@@ -295,7 +295,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 							'semestre' => $semestre,
 							'quinzenal' => $Dados['Disciplina']->getQuinzenal(),
 							'c' => $c,
-							'cor' => $cores[$c],
+							'cor' => (isset($cores[$c])) ? $cores[$c] : $cores[0],
 							'tem' => $Dados['tem'],
 							'pode' => $Dados['pode'],
 							'obs' => $Dados['obs']
@@ -429,7 +429,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 						'events' => $Oferecimento->Eventos(true),
 						'editable' => false,
 						'textColor' => '#000000',
-						'color' => $cores[$c]
+						'color' => (isset($cores[$c])) ? $cores[$c] : $cores[0]
 					),
 					'Amigos' => array(),
 					'total' => -1
@@ -443,7 +443,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					'creditos' => $Disciplina->getCreditos(false, true),
 					'semestre' => 'N',
 					'c' => $c,
-					'cor' => $cores[$c],
+					'cor' => (isset($cores[$c])) ? $cores[$c] : $cores[0],
 					'tem' => $tem,
 					'pode' => $pode,
 					'obs' => $obs

@@ -127,6 +127,13 @@ class Usuario extends Base {
 	protected $enquetes_opcoes;
 
 	/**
+	 * @var ArrayCollection|Evento[]
+	 *
+	 * @ORM\OneToMany(targetEntity="Evento", mappedBy="usuario", cascade={"remove"})
+	 */
+	protected $eventos;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(type="string", length=16, unique=true, nullable=false)

@@ -28,7 +28,7 @@ class Evento extends Base {
 	/**
 	 * @var Usuario
 	 *
-	 * @ORM\ManyToOne(targetEntity="Usuario")
+	 * @ORM\ManyToOne(targetEntity="Usuario", inversedBy="eventos")
 	 * @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_usuario")
 	 */
 	protected $usuario;
