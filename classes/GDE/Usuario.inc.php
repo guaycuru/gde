@@ -1384,6 +1384,17 @@ class Usuario extends Base {
 		if($Disciplina->getID() == null)
 			return false;
 
+		// Se ja estao carregadas, preciso consultar a lista pois o Planejador altera ela
+		if(($this->eliminadas instanceof ArrayCollection) || ($this->eliminadas->isInitialized())) {
+			foreach($this->getEliminadas() as $Eliminada) {
+				if($Eliminada->getDisciplina(true)->getID() == $Disciplina->getID())
+					return ($novo_formato)
+						? $Eliminada
+						: $Eliminada->toOld();
+			}
+			return false;
+		}
+
 		$dql = 'SELECT E FROM GDE\\UsuarioEliminada E WHERE E.usuario = ?1 AND E.disciplina = ?2';
 		$Eliminada = self::_EM()->createQuery($dql)
 			->setParameter(1, $this->getID())

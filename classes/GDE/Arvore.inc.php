@@ -122,7 +122,7 @@ class Arvore {
 
 		$Possiveis_Eletivas = array();
 
-		if($completa === false) { // Adiciona as Atuais como se fossem Eliminadas... Sao varios motivos, nem tente entender...
+		if($completa === false) {
 			$this->Eliminadas = $this->Usuario->getEliminadas(false, false, $this->nivel)->toArray();
 			$siglas_old_eliminadas = array();
 			// Organiza as eliminadas por periodo, credito e sigla
@@ -132,14 +132,15 @@ class Arvore {
 			}
 			uasort($this->Eliminadas, array("GDE\\UsuarioEliminada", "Ordenar_DAC"));
 			$Old_Eliminadas = $this->Eliminadas;
-			foreach($this->Atuais as $Mtr) {
-				if($this->Usuario->Eliminada($Mtr->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
+			// Adiciona as Atuais como se fossem Eliminadas... Sao varios motivos, nem tente entender...
+			foreach($this->Atuais as $Ofrc) {
+				if($this->Usuario->Eliminada($Ofrc->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
 					$El = new UsuarioEliminada();
 					//$El->setUsuario($Usuario);
-					$El->setDisciplina($Mtr->getDisciplina());
+					$El->setDisciplina($Ofrc->getDisciplina());
 					$El->setPeriodo($this->Periodo);
-					$this->Eliminadas[$Mtr->getDisciplina()->getSigla()] = $El;
-					$this->siglas_atuais[] = $Mtr->getDisciplina()->getSigla();
+					$this->Eliminadas[$Ofrc->getDisciplina()->getSigla()] = $El;
+					$this->siglas_atuais[] = $Ofrc->getDisciplina()->getSigla();
 				}
 			}
 			// Sim, eu tenho que organizar duas vezes, pq pela DAC, verao vem depois dos semestres normais!
@@ -179,9 +180,10 @@ class Arvore {
 
 		if($completa === false) {
 			// Verifica quais Disciplinas Obrigatorias do curriculo foram eliminadas pelo usuario, e faz as correcoes necessarias para Equivalencias
+			// Aqui as disciplinas do semestre atual tambem contam como eliminadas
 			foreach($this->Disciplinas as $semestre => &$For_Deste_Semestre) {
 				foreach($For_Deste_Semestre as $k => &$For_Disciplina) {
-					$Cursou = $Usuario->Eliminou($For_Disciplina, false); // Nao conta as eliminadas parcialmente
+					$Cursou = $this->Usuario->Eliminou($For_Disciplina, false); // Nao conta as eliminadas parcialmente
 					if($Cursou !== false) { // A Disciplina ja foi cursada
 						$sigla = $For_Disciplina->getSigla();
 						if($Cursou[1] === true) { // Foi por equivalencia
@@ -189,8 +191,9 @@ class Arvore {
 							unset($this->siglas_obrigatorias[$s]); // Remove do Curriculo a Obrigatoria que nao foi cursada
 							$this->siglas_por_equivalencia[] = $sigla;
 							$this->creditos_totais -= $For_Disciplina->getCreditos();
-						} else
+						} else {
 							$this->siglas_todas_eliminadas[] = $sigla;
+						}
 						if(in_array($sigla, $this->siglas_atuais) === false) { // Soh se ela nao eh uma Atual
 							unset($this->Disciplinas[$semestre][$k]); // Remove ela das Disciplinas Faltantes
 						}
