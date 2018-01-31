@@ -2,8 +2,13 @@
 
 namespace GDE;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\MappingException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\TransactionRequiredException;
 
 /**
  * Base class with timezone support
@@ -19,7 +24,7 @@ abstract class Base {
 	
 	// Display Timezone
 	protected static $_TZ = null;
-	
+
 	/** 
 	 * _EM
 	 *
@@ -53,15 +58,13 @@ abstract class Base {
 	 *
 	 * @param boolean $commit True to commit, false to rollback
 	 * @return boolean True if the transaction was committed, false otherwise
-	 * @throws \Doctrine\DBAL\ConnectionException
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws ConnectionException
 	 */
 	public static function CompleteTrans($commit = true) {
 		self::$_trans_count--;
 
 		// Finish the transaction
 		if($commit) {
-			self::_EM()->flush();
 			self::_EM()->getConnection()->commit();
 			return true;
 		} else {
@@ -81,8 +84,8 @@ abstract class Base {
 	public static function TransCount() {
 		return self::$_trans_count;
 	}
-	
-	/** 
+
+	/**
 	 * _TZ
 	 *
 	 * Gets or Sets the Display Timezone
@@ -196,16 +199,13 @@ abstract class Base {
 	 *
 	 * @param mixed $id The object ID to look for
 	 * @return static|object The found object, or a new empty object if not found
-	 * @throws \Doctrine\ORM\ORMException
-	 * @throws \Doctrine\ORM\OptimisticLockException
-	 * @throws \Doctrine\ORM\TransactionRequiredException
-	 * @throws \Exception
+	 * @throws ORMException
+	 * @throws OptimisticLockException
+	 * @throws TransactionRequiredException
 	 */
 	public static function Load($id) {
-		if($id === null) {
-			throw new \Exception("Method Load() called without ID on class ".get_called_class().'.');
-		}
 		$Obj = self::_EM()->find(get_called_class(), $id);
+
 		// ToDo: Don't return an empty object when no object is found
 		return ($Obj !== null) ? $Obj : new static();
 	}
@@ -216,12 +216,16 @@ abstract class Base {
 	 * Returns the object's primary key value
 	 *
 	 * @return mixed The object's primary key value
-	 * @throws \Doctrine\ORM\Mapping\MappingException
 	 */
 	public function getID() {
 		if($this->_meta === null)
 			$this->_meta = self::_EM()->getClassMetadata(get_class($this));
-		$identifier = $this->_meta->getSingleIdentifierFieldName();
+		try {
+			$identifier = $this->_meta->getSingleIdentifierFieldName();
+		} catch(MappingException $Exception) {
+			// ToDo: Should this be handled like that?
+			return null;
+		}
 		return $this->{$identifier};
 	}
 
@@ -232,7 +236,7 @@ abstract class Base {
 	 *
 	 * @param boolean $flush (optional) Whether to write the changes to the DB
 	 * @return boolean True in case of success or false in case of error
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws OptimisticLockException
 	 */
 	public function Save($flush = true) {
 		if(self::_EM()->persist($this) === false)
@@ -251,16 +255,20 @@ abstract class Base {
 	 *
 	 * @param boolean $flush (optional) Whether to write the changes to the DB
 	 * @return boolean True in case of success or false in case of error
-	 * @throws \Doctrine\ORM\Mapping\MappingException
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws OptimisticLockException
 	 */
 	public function Delete($flush = true) {
-		if($this->getID() == null)
-			return true;
+		try {
+			if($this->getID() == null)
+				return true;
+		} catch(\Exception $exception) {
+			return false;
+		}
 
 		self::_EM()->remove($this);
-		if($flush)
-			self::_EM()->flush();
+
+		if(($flush) && (self::_EM()->flush() === false))
+			return false;
 		
 		return true;
 	}
@@ -271,10 +279,9 @@ abstract class Base {
 	 * Saves and outputs JSON
 	 *
 	 * @param bool $flush
-	 * @param array $extra
+	 * @param array|callable $extra
 	 * @return void
-	 * @throws \Doctrine\ORM\Mapping\MappingException
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws ORMException
 	 */
 	public function Save_JSON($flush = true, $extra = array()) {
 		if($this->Save($flush) === true) {
@@ -292,8 +299,8 @@ abstract class Base {
 	 *
 	 * @param bool $flush
 	 * @return void
-	 * @throws \Doctrine\ORM\Mapping\MappingException
-	 * @throws \Doctrine\ORM\OptimisticLockException
+	 * @throws ORMException
+	 * @throws OptimisticLockException
 	 */
 	public function Delete_JSON($flush = true) {
 		if($this->Delete($flush) === true)
@@ -435,21 +442,21 @@ abstract class Base {
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation, if needed
-									if($set_other_side === true) {
-										if((!empty($_association['mappedBy'])) && (is_object($value)))
+									if(($set_other_side === true) && (is_object($value))) {
+										if(!empty($_association['mappedBy']))
 											$value->{$_association['mappedBy']} = $this;
+										if(!empty($_association['inversedBy']))
+											$value->{$_association['inversedBy']} = $this;
 									}
 									break;
 								case ClassMetadataInfo::ONE_TO_MANY: // OneToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($set_other_side === true) {
-										if(!empty($_association['mappedBy'])) {
-											foreach($value as $object)
-												if(is_object($object))
-													$object->{$_association['mappedBy']} = $this;
-										}
+									if(($set_other_side === true) && (!empty($_association['mappedBy']))) {
+										foreach($value as $object)
+											if(is_object($object))
+												$object->{$_association['mappedBy']} = $this;
 									}
 									// Convert value from array to ArrayCollection
 									if(is_array($value))
@@ -459,22 +466,18 @@ abstract class Base {
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($set_other_side === true) {
-										if(!(empty($_association['inversedBy'])) && (is_object($value)))
-											if($value->{$_association['inversedBy']}->contains($this) === false)
-												$value->{$_association['inversedBy']}->add($this);
-									}
+									if(($set_other_side === true) && (!(empty($_association['inversedBy']))) && (is_object($value)))
+										if($value->{$_association['inversedBy']}->contains($this) === false)
+											$value->{$_association['inversedBy']}->add($this);
 									break;
 								case ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
 										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).': '.gettype($value));
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if($set_other_side === true) {
-										if(!empty($_association['mappedBy'])) {
-											foreach($value as $object) {
-												if((is_object($object)) && ($object->{$_association['mappedBy']}->contains($this) === false))
-													$object->{$_association['mappedBy']}->add($this);
-											}
+									if(($set_other_side === true) && (!empty($_association['mappedBy']))) {
+										foreach($value as $object) {
+											if((is_object($object)) && ($object->{$_association['mappedBy']}->contains($this) === false))
+												$object->{$_association['mappedBy']}->add($this);
 										}
 									}
 									break;
@@ -636,7 +639,7 @@ abstract class Base {
 					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 			}
 		} else {
-			throw new \Exception("Method " . $name . " not found on class " . get_class($this) . '.');
+			throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
 		}
 	}
 }

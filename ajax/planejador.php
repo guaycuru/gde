@@ -369,7 +369,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			$obs = null;
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
-			$pode = $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
+			$pode = $Arvore->Pode_Cursar($Disciplina, $obs);
 			$total = 0;
 			if($pode)
 				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo(true)->getID()), "O.turma ASC", $total);
@@ -456,23 +456,29 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 'a') { // Adicionar
 		$Oferecimento = Oferecimento::Load($_POST['o']);
-		$Ret = $Planejado->Adicionar_Oferecimento($Oferecimento);
-		if($Ret['ok'] !== false) {
-			// Posso ter removido alguma outra...
+		if($Oferecimento->getID() == null) {
+			$Ret = array('ok' => false, 'Removido' => false, 'motivo' => 'nao_encontrado');
+		} else {
 			$Usr = $_Usuario->Copia();
-			$Usr->Adicionar_Oferecimentos(array($Oferecimento));
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());
-			$Ret['Arvore'] = array(
-				'cp' => $Arvore->getCP(4),
-				'cpf' => $Arvore->getCPF(4),
-				'integralizacao' => $Arvore->Integralizacao(),
-				'tipos' => array($Oferecimento->getSigla(true) => $Arvore->getTipo($Oferecimento->getSigla(), false))
-			);
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			$Ret = $Planejado->Adicionar_Oferecimento($Oferecimento, $Arvore, true);
+			if($Ret['ok'] !== false) {
+				// Posso ter removido alguma outro, preciso recalcular a Arvore
+				$Usr->Adicionar_Oferecimentos(array($Oferecimento));
+				$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+				$Ret['Arvore'] = array(
+					'cp' => $Arvore->getCP(4),
+					'cpf' => $Arvore->getCPF(4),
+					'integralizacao' => $Arvore->Integralizacao(),
+					'tipos' => array($Oferecimento->getSigla(true) => $Arvore->getTipo($Oferecimento->getSigla(), false))
+				);
+			}
 		}
 	} elseif($_POST['a'] == 'r') { // Remover
 		$Oferecimento = Oferecimento::Load($_POST['o']);
 		$Ret['ok'] = ($Planejado->Remover_Oferecimento($Oferecimento) !== false);
 		if($Ret['ok'] !== false) {
+			// Preciso recalcular a Arvore
 			$Usr = $_Usuario->Copia();
 			$Usr->Remover_Oferecimentos(array($Oferecimento));
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());

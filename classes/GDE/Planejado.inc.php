@@ -135,21 +135,32 @@ class Planejado extends Base {
 		return ($Novo->Save($flush) !== false) ? $Novo : false;
 	}
 
-	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, $salvar = true) {
-		if($this->getUsuario(true)->Pode_Cursar($Oferecimento->getDisciplina(true)) === false)
-			return array('ok' => false, 'Removido' => false);
+	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, Arvore $Arvore, $salvar = true) {
+		$obs = '';
+		if($Arvore->Pode_Cursar($Oferecimento->getDisciplina(true), $obs) === false)
+			return array('ok' => false, 'Removido' => false, 'motivo' => 'nao_pode_cursar: '.$obs);
 		$Tem = $this->Tem_Oferecimento($Oferecimento, true);
 		if($Tem !== false) {
 			if($Tem->getID() == $Oferecimento->getID()) // Ta tentando adicionar uma que ja esta la!
-				return array('ok' => false, 'Removido' => false);
-			else { // Ta tentando adicionar uma outra turma
-				$this->Remover_Oferecimento($Tem, false);
+				return array('ok' => false, 'Removido' => false, 'motivo' => 'ja_esta');
+			else // Ta tentando adicionar uma outra turma
 				$Removido = array('id' => $Tem->getID());
-			}
 		} else
 			$Removido = false;
-		$this->addOferecimentos($Oferecimento);
-		$ok = (($salvar === false) || ($this->Save(true) !== false));
+
+		// Limpa o EM para evitar problemas por causa da Arovre
+		self::_EM()->clear();
+		// Faz attach do Planejado e do Oferecimento
+		$Planejado = self::_EM()->merge($this);
+		$Oferecimento = self::_EM()->merge($Oferecimento);
+
+		// Atualiza o Planejado por via das duvidas
+		self::_EM()->refresh($Planejado);
+		
+		if((isset($Removido)) && (!empty($Removido['id'])))
+			$Planejado->removeOferecimentos(Oferecimento::Load($Removido['id']));
+		$Planejado->addOferecimentos($Oferecimento);
+		$ok = (($salvar === false) || ($Planejado->Save(true) !== false));
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
 

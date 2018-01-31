@@ -1317,7 +1317,7 @@ class Usuario extends Base {
 	 */
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false, Arvore $Arvore = null) {
 		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!
-		if(($this->Eliminada($Disciplina, false) !== false) && ($Disciplina->getNivel(false) != Disciplina::NIVEL_POS)) {
+		if(($Disciplina->getNivel(false) != Disciplina::NIVEL_POS) && ($this->Eliminada($Disciplina, false) !== false)) {
 			if($obs !== false)
 				$obs = 'ja_cursou';
 			return false;

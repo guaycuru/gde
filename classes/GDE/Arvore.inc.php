@@ -12,6 +12,7 @@ class Arvore {
 	private $nome_modalidade;
 	private $catalogo;
 	private $ingresso;
+	private $nivel;
 
 	private $Usuario;
 
@@ -28,6 +29,7 @@ class Arvore {
 	private $Atuais;
 	private $Periodo;
 
+	private $periodo;
 	private $creditos_totais;
 	private $creditos_feitos;
 	private $creditos_eletivas_eliminados;
@@ -39,6 +41,7 @@ class Arvore {
 	private $siglas_eletivas;
 	private $siglas_todas_eliminadas;
 	private $siglas_atuais;
+	private $siglas_por_equivalencia;
 
 	private $creditos_eletivas;
 	private $creditos_eletivas_atuais;
@@ -60,6 +63,9 @@ class Arvore {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
+		// Garante que estamos trabalhando numa copia detached do $Usuario
+		$Usuario = $Usuario->Copia();
+
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getAluno(true)->getRA(true);
 		$this->curso = $Usuario->getCurso(true)->getNumero(true);
@@ -71,7 +77,6 @@ class Arvore {
 		$this->nivel = 'G';
 
 		$this->Usuario = $Usuario;
-		//$this->Usuario->getEliminadas(false, false, $this->nivel); // Pra nao considerar a AA200
 
 		if($times !== false)
 			$times['usuario'] = microtime(true) - $times['start'];
@@ -130,7 +135,7 @@ class Arvore {
 			foreach($this->Atuais as $Mtr) {
 				if($this->Usuario->Eliminada($Mtr->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
 					$El = new UsuarioEliminada();
-					$El->setUsuario($Usuario);
+					//$El->setUsuario($Usuario);
 					$El->setDisciplina($Mtr->getDisciplina());
 					$El->setPeriodo($this->Periodo);
 					$this->Eliminadas[$Mtr->getDisciplina()->getSigla()] = $El;
@@ -139,7 +144,7 @@ class Arvore {
 			}
 			// Sim, eu tenho que organizar duas vezes, pq pela DAC, verao vem depois dos semestres normais!
 			uasort($this->Eliminadas, array("GDE\\UsuarioEliminada", "Ordenar_DAC"));
-			$this->Usuario->setEliminadas($this->Eliminadas);
+			$this->Usuario->setEliminadas($this->Eliminadas, false);
 		}
 		if($times !== false)
 			$times['eliminadas'] = microtime(true) - $times['start'];
@@ -263,7 +268,7 @@ class Arvore {
 
 			// Reseta as Eliminadas para as realmente eliminadas
 			$this->Eliminadas = $Old_Eliminadas;
-			$this->Usuario->setEliminadas($Old_Eliminadas);
+			$this->Usuario->setEliminadas($Old_Eliminadas, false);
 			$this->siglas_todas_eliminadas = $siglas_old_eliminadas;
 
 			foreach($this->Atuais as $k => &$For_Mtr) {
@@ -308,7 +313,7 @@ class Arvore {
 				if($this->cp >= $i) {
 					$sigla = 'AA4'.($i*100);
 					$El = new UsuarioEliminada();
-					$El->setUsuario($this->Usuario);
+					//$El->setUsuario($this->Usuario);
 					$DisciplinaT = new Disciplina();
 					$DisciplinaT->setSigla($sigla);
 					$El->setDisciplina($DisciplinaT);
@@ -317,7 +322,7 @@ class Arvore {
 					$this->siglas_todas_eliminadas[] = $sigla;
 				}
 			}
-			$this->Usuario->setEliminadas($this->Eliminadas);
+			$this->Usuario->setEliminadas($this->Eliminadas, false);
 
 			if($times !== false) {
 				$times['setEliminadas'] = microtime(true) - $times['start'];
@@ -943,5 +948,9 @@ class Arvore {
 			return ($simbolo) ? '*' : 'Eletiva';
 		else
 			return ($simbolo) ? 'X' : 'Extra-Curricular';
+	}
+
+	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
+		return $this->Usuario->Pode_Cursar($Disciplina, $obs, $this);
 	}
 }
