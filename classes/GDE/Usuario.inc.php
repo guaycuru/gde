@@ -1378,28 +1378,15 @@ class Usuario extends Base {
 	 * @param bool $parcial
 	 * @param bool $novo_formato
 	 * @return UsuarioEliminada|false
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false) {
 		if($Disciplina->getID() == null)
 			return false;
 
-		// Se ja estao carregadas, preciso consultar a lista pois o Planejador altera ela
-		if(($this->eliminadas instanceof ArrayCollection) || ($this->eliminadas->isInitialized())) {
-			foreach($this->getEliminadas() as $Eliminada) {
-				if($Eliminada->getDisciplina(true)->getID() == $Disciplina->getID())
-					return ($novo_formato)
-						? $Eliminada
-						: $Eliminada->toOld();
-			}
-			return false;
-		}
-
-		$dql = 'SELECT E FROM GDE\\UsuarioEliminada E WHERE E.usuario = ?1 AND E.disciplina = ?2';
-		$Eliminada = self::_EM()->createQuery($dql)
-			->setParameter(1, $this->getID())
-			->setParameter(2, $Disciplina->getID())
-			->getOneOrNullResult();
+		$criteria = Criteria::create()->where(Criteria::expr()->eq("disciplina", $Disciplina));
+		$criteria->setMaxResults(1);
+		$Eliminadas = $this->getEliminadas()->matching($criteria);
+		$Eliminada = ($Eliminadas->count() > 0) ? $Eliminadas->first() : null;
 
 		if(
 			($Eliminada !== null) &&
@@ -1420,7 +1407,6 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
 	 * @return array|false
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Eliminou(Disciplina $Disciplina, $parcial = false) {
 		if($Disciplina->getID() == null)
