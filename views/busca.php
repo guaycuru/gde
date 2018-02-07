@@ -221,7 +221,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 		});
 		<?php
 		$adicionadas_cursando = 0;
-		if(isset($_GET['cursando_sigla'])) {
+		if((!empty($_GET['cursando_sigla'])) && (!empty($_GET['cursando_turma']))) {
 		foreach($_GET['cursando_sigla'] as $k => $sigla)
 		if($sigla != '') {
 		$adicionadas_cursando++;
