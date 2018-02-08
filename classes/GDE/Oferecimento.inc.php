@@ -13,7 +13,8 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  *   name="gde_oferecimentos",
  *   indexes={
  *     @ORM\Index(name="turma", columns={"turma"}),
- *     @ORM\Index(name="fechado", columns={"fechado"})
+ *     @ORM\Index(name="fechado", columns={"fechado"}),
+ *     @ORM\Index(name="periodo_fechado", columns={"id_periodo", "fechado"})
  *   },
  *   uniqueConstraints={
  *     @ORM\UniqueConstraint(name="disciplina_periodo_turma", columns={"id_disciplina", "id_periodo", "turma"})
