@@ -482,7 +482,7 @@ class Usuario extends Base {
 	 * Por_Login
 	 *
 	 * @param $login
-	 * @param bool $ativo
+	 * @param bool $ativo (Opcional) Se nao for null, filtra pelo valor do campo $ativo
 	 * @param bool $vazio Se nenhum resultado for encontrado, retorna um objeto vazio
 	 * @return null|Usuario
 	 */

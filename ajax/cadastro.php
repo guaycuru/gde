@@ -43,8 +43,12 @@ if(isset($_POST['enviar'])) {
 				$Usuario = new Usuario();
 			else
 				$Usuario = $Ja_tem;
-			if($Ja_tem === null)
-				$Usuario->setLogin($_POST['login']);
+			if($Ja_tem === null) {
+				$login = mb_strtolower($_POST['login']);
+				if(Usuario::Por_Login($login, null, false) !== null)
+					Base::Error_JSON("Já existe um usuário cadastrado com o login informado.");
+				$Usuario->setLogin($login);
+			}
 			if(strlen($_POST['senha']) < 3)
 				Base::Error_JSON("A senha precisa ter no m&iacute;nimo 3 caracteres.");
 			if((empty($_POST['email'])) || (Util::Validar_Email($_POST['email']) === false))
@@ -53,6 +57,8 @@ if(isset($_POST['enviar'])) {
 				Base::Error_JSON("J&aacute; existe um usu&aacute;rio cadastrado com o email informado.");
 			$Usuario->setSenha($_POST['senha']);
 			$Usuario->setEmail($_POST['email']);
+			if(empty($_POST['nome']))
+				Base::Error_JSON("Por favor digite seu nome.");
 			$Usuario->setNome($_POST['nome']);
 			$Usuario->setSobrenome($_POST['sobrenome']);
 			if(!empty($_POST['ingresso']))
