@@ -137,6 +137,13 @@ class Curriculo extends Base {
 	 * @return Disciplina|null
 	 */
 	public function getDisciplina($vazio = true) {
+		$inicial = strtolower(substr($this->getSigla(false), 0, 4));
+		if(($inicial == 'elet') || ($inicial == 'ling')) {
+			$Disciplina = new Disciplina();
+			$Disciplina->setSigla($this->getSigla(false));
+			return $Disciplina;
+		}
+
 		if(parent::getDisciplina(false) !== null) {
 			return parent::getDisciplina();
 		}
