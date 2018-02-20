@@ -34,6 +34,16 @@ class EquivalenciaEquivalente extends Base {
 	protected $equivalencia;
 
 	/**
+	 * @var Disciplina
+	 *
+	 * Nem sempre estara preenchida pois existem disciplinas do curriculo que nao temos em nosso DB
+	 *
+	 * @ORM\ManyToOne(targetEntity="Disciplina")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
+	 */
+	protected $disciplina;
+
+	/**
 	 * @var string
 	 *
 	 * Nao utilizamos uma relation com disciplina aqui pois existem disciplinas equivalentes que nao temos em nosso DB
@@ -42,11 +52,27 @@ class EquivalenciaEquivalente extends Base {
 	 */
 	protected $sigla;
 
+	/**
+	 * @param bool $vazio
+	 * @return Disciplina|null
+	 */
 	public function getDisciplina($vazio = true) {
+		if(parent::getDisciplina(false) !== null) {
+			return parent::getDisciplina();
+		}
+
 		$Disciplina = Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
-		if($Disciplina->getID() == null) {
+
+		if((parent::getDisciplina(false) === null) && ($Disciplina->getID() != null)) {
+			$this->setDisciplina($Disciplina);
+			$this->Save(false);
+			self::_EM()->flush($this);
+		}
+
+		if(($vazio === true) && ($Disciplina->getID() == null)) {
 			$Disciplina->setSigla($this->getSigla(false));
 		}
+
 		return $Disciplina;
 	}
 

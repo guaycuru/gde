@@ -40,6 +40,17 @@ class Curriculo extends Base {
 	protected $modalidade;
 
 	/**
+	 * @var Disciplina
+	 *
+	 * Nem sempre estara preenchida pois existem disciplinas do curriculo que nao temos em nosso DB
+	 * Inclusive "ELET." e "LING."
+	 *
+	 * @ORM\ManyToOne(targetEntity="Disciplina")
+	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
+	 */
+	protected $disciplina;
+
+	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="smallint", nullable=false)
@@ -124,9 +135,25 @@ class Curriculo extends Base {
 	/**
 	 * @param bool $vazio
 	 * @return Disciplina|null
-	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
-	public function getDisciplina($vazio = false) {
-		return Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
+	public function getDisciplina($vazio = true) {
+		if(parent::getDisciplina(false) !== null) {
+			return parent::getDisciplina();
+		}
+
+		$Disciplina = Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
+
+		if((parent::getDisciplina(false) === null) && ($Disciplina->getID() != null)) {
+			$this->setDisciplina($Disciplina);
+			$this->Save(false);
+			self::_EM()->flush($this);
+		}
+
+		if(($vazio === true) && ($Disciplina->getID() == null)) {
+			$Disciplina->setSigla($this->getSigla(false));
+		}
+
+		return $Disciplina;
 	}
+
 }
