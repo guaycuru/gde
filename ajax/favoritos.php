@@ -10,7 +10,7 @@ require_once('../common/common.inc.php');
 
 $Favoritos = $_Usuario->getFavoritos();
 
-$pc = intval($_POST['pc']);
+$pc = (!empty($_POST['pc'])) ? intval($_POST['pc']) : 0;
 
 if(count($Favoritos) == 0)
 	die('null');
