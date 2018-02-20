@@ -313,7 +313,7 @@ if($qts['alunos'] != 0) {
 				</tr>
 				<tr>
 					<td width="25%" height="20%"><strong>Usa o GDE:</strong></td>
-					<td height="20%"><?= ($Aluno->getUsuario(false) !== null) ? 'Sim' : 'N&atilde;o - <a href="'.CONFIG_URL.'recomendar/?ra='.$Aluno->getRA().'">Convidar</a>' ?></td>
+					<td height="20%"><?= ($Aluno->getUsuario(false) !== null) ? 'Sim' : 'N&atilde;o'; ?></td>
 				</tr>
 			</table>
 		</td>
