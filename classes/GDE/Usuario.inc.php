@@ -104,7 +104,7 @@ class Usuario extends Base {
 	/**
 	 * @var ArrayCollection|Planejado[]
 	 *
-	 * @ORM\OneToMany(targetEntity="Planejado", mappedBy="usuario")
+	 * @ORM\OneToMany(targetEntity="Planejado", mappedBy="usuario", cascade={"remove"})
 	 */
 	protected $planejados;
 
