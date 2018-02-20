@@ -10,6 +10,9 @@ require_once(__DIR__.'/../vendor/autoload.php');
 // Uncaught exception handler
 require_once(__DIR__.'/exceptions.inc.php');
 
+// Aumenta o tempo limite para 90 segundos
+set_time_limit(90);
+
 // Define o timezone e o encoding padrao
 date_default_timezone_set('America/Sao_Paulo');
 mb_internal_encoding("UTF-8");
