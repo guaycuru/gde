@@ -130,8 +130,11 @@ class Planejado extends Base {
 		} else
 			$Atual = Periodo::Load($periodo_atual);
 		$Novo->setPeriodo_Atual($Atual);
-		foreach($Usuario->getAluno(true)->getOferecimentos($periodo_atual) as $Atual)
-			$Novo->Adicionar_Eliminada($Atual->getDisciplina(true), false, false);
+		if($Usuario->getAluno(false) !== null) {
+			foreach($Usuario->getAluno()->getOferecimentos($periodo_atual) as $Atual)
+				if($Atual->getDisciplina(false) !== null)
+					$Novo->Adicionar_Eliminada($Atual->getDisciplina(), false, false);
+		}
 		return ($Novo->Save($flush) !== false) ? $Novo : false;
 	}
 
@@ -160,7 +163,12 @@ class Planejado extends Base {
 		if((isset($Removido)) && (!empty($Removido['id'])))
 			$Planejado->removeOferecimentos(Oferecimento::Load($Removido['id']));
 		$Planejado->addOferecimentos($Oferecimento);
-		$ok = (($salvar === false) || ($Planejado->Save(true) !== false));
+		if($salvar === false)
+			$ok = true;
+		else {
+			$ok = $Planejado->Save(false) !== false;
+			Base::_EM()->flush($Planejado);
+		}
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
 
