@@ -43,7 +43,9 @@ if(isset($_POST['enviar'])) {
 				$Usuario = new Usuario();
 			else
 				$Usuario = $Ja_tem;
-			if($Ja_tem === null) {
+			if($Usuario->getLogin(false) == null) {
+				if(empty($_POST['login']))
+					Base::Error_JSON("Por favor digite um login.");
 				$login = mb_strtolower($_POST['login']);
 				if(Usuario::Por_Login($login, null, false) !== null)
 					Base::Error_JSON("Já existe um usuário cadastrado com o login informado.");
@@ -76,7 +78,7 @@ if(isset($_POST['enviar'])) {
 					$Modalidade = null;
 				$Usuario->setModalidade($Modalidade);
 			}
-			if($Ja_tem === null)
+			if($Usuario->getData_Cadastro(false) === null)
 				$Usuario->setData_Cadastro();
 			$Usuario->setAtivo(true);
 			if($tipo == 'A') {
