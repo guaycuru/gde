@@ -30,7 +30,7 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 			// This error code is not included in error_reporting
 			return;
 		}
-		throw new \ErrorException($message, 0, $severity, $file, $line);
+		exception_handler(new \ErrorException($message, 0, $severity, $file, $line));
 	}
 
 	set_error_handler("exception_error_handler");
@@ -38,7 +38,7 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 	function exception_fatal_handler() {
 		$error = error_get_last();
 		if(($error !== null) && ($error['type'] === E_ERROR)) {
-			throw new \ErrorException($error["message"], 0, $error["type"], $error["file"], $error["line"]);
+			exception_handler(new \ErrorException($error["message"], 0, $error["type"], $error["file"], $error["line"]));
 		}
 	}
 
