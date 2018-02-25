@@ -527,7 +527,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 're') { // Remover Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
-		if(($Extra->getPlanejado()->getID() != $Planejado->getID()) || ($Extra->Delete(true) === false))
+		if(($Extra->getID() == null)  || ($Extra->getPlanejado(false) === null) || ($Extra->getPlanejado()->getID() != $Planejado->getID()) || ($Extra->Delete(true) === false))
 			Base::Error_JSON('Ocorreu um erro. Por favor, tente novamente.');
 		else
 			Base::OK_JSON(null);

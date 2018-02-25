@@ -64,7 +64,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$meu = true;
 } else {
 	$Usr = Usuario::Por_Login($_GET['us']);
-	if($Usr->getID() == null)
+	if($Usr === null)
 		die("<h2>Usu&aacute;rio n&atilde;o encontrado.</h2>");
 	if($_Usuario->Pode_Ver($Usr, 'arvore') !== true)
 		die("<h2>Vo&ccedil;&ecirc; n&atilde;o tem permiss&atilde;o para ver esta &aacute;rvore!</h2>");

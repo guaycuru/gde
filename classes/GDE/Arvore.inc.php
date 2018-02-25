@@ -809,7 +809,7 @@ class Arvore {
 				continue;
 			$i++;
 			$url = Disciplina::URL_Disciplina($sigla);
-			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina(true)->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina(true)->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$Eliminada->getPeriodo()->getNome(true); //  MC102S06+  9,2150 4 1S07
+			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina(true)->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina(true)->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$Eliminada->getPeriodo(true)->getNome(true); //  MC102S06+  9,2150 4 1S07
 			if($i % 4 == 0) $ret .= "<br />"; // normal eh 3
 		}
 

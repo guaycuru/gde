@@ -9,7 +9,7 @@ require_once('../common/common.inc.php');
 $Cursos = Curso::Listar(array('G', 'T'), "curso ASC");
 $lista_cursos = "<option value=\"0\">-</option>";
 foreach($Cursos as $Curso)
-	$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(($_Usuario->getCurso()->getID() == $Curso->getID())?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
+	$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(($_Usuario->getCurso(false) !== null) && ($_Usuario->getCurso()->getID() == $Curso->getID())?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
 
 $lim_cat = Dado::Limites_Catalogo();
 
