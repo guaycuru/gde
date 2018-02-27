@@ -89,7 +89,7 @@ if($simples) {
 		if((isset($_POST['id_oferecimento'])) && ($_POST['id_oferecimento'] > 0))
 			$parametros['id_oferecimento'] = intval($_POST['id_oferecimento']);
 		
-		if((isset($_POST['cursando_tipo'])) && (isset($_POST['cursando_sigla']))) {
+		if((isset($_POST['cursando_tipo'])) && (isset($_POST['cursando_sigla'])) && (isset($_POST['cursando_turma']))) {
 			$parametros['oferecimentos'][0] = ($_POST['cursando_tipo'] == 'E');
 			$parametros['oferecimentos'][1] = array();
 			foreach($_POST['cursando_sigla'] as $k => $sigla) {
