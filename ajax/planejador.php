@@ -533,7 +533,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			Base::OK_JSON(null);
 	} elseif($_POST['a'] == 'ee') { // Editar Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
-		if($Extra->getPlanejado()->getID() != $Planejado->getID())
+		if(($Extra->getID() == null)  || ($Extra->getPlanejado(false) === null) || ($Extra->getPlanejado()->getID() != $Planejado->getID()))
 			Base::Error_JSON('Acesso negado.');
 		else {
 			$Extra->Mover(intval($_POST['dd']), intval($_POST['md']), ($_POST['t'] == 'd'));
