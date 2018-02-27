@@ -17,6 +17,9 @@ set_time_limit(90);
 date_default_timezone_set('America/Sao_Paulo');
 mb_internal_encoding("UTF-8");
 
+// Ignora erros irrelevantes relativos a imagens
+ini_set('gd.jpeg_ignore_warning', 1);
+
 session_name('GDES');
 session_start();
 
