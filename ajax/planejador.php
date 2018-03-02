@@ -61,7 +61,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			if($Planejado->getPeriodo_Atual(false) === null) {
 				$pa = intval($_POST['pa']);
 				if($pa == 0) {
-					$PA = new Periodo(Dado::Pega_Dados('planejador_periodo_atual'));
+					$PA = Periodo::Load(Dado::Pega_Dados('planejador_periodo_atual'));
 					$Planejado->setPeriodo_Atual($PA);
 					$Planejado->Save(true);
 				}
@@ -161,7 +161,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				foreach($lista as $k => $Disciplina) {
 					$sigla = $Disciplina->getSigla();
 					if($Disciplina instanceof CurriculoEletivaConjunto)
-						$Disciplina = Disciplina::Por_Sigla($Disciplina->getSigla(false), Disciplina::$NIVEIS_GRAD, true);
+						$Disciplina = $Disciplina->getDisciplina();
 					if(!isset($Raw[$sem]))
 						$Raw[$sem] = array();
 					if(in_array($sigla, $siglas) === true)
@@ -197,7 +197,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Removo os oferecimentos que eu nao posso cursar!
 			foreach($Planejado->getOferecimentos() as $Oferecimento)
 				if(isset($nao_pode[$Oferecimento->getSigla()]))
-					// ToDo: Preciso salver isso de alguma forma, sem causar um problema de cascade
+					// ToDo: Preciso salvar isso de alguma forma, sem causar um problema de cascade
 					$Planejado->Remover_Oferecimento($Oferecimento, false);
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -310,9 +310,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
-			
 
-			$Usr->Adicionar_Oferecimentos($Adicionados);
+			$Usr->Substituir_Oferecimentos($Adicionados);
 			
 			// Re-faz a arvore porque mudei as atuais
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID(), $times['arvore2']);

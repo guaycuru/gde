@@ -151,14 +151,17 @@ class Planejado extends Base {
 		} else
 			$Removido = false;
 
-		// Limpa o EM para evitar problemas por causa da Arovre
+		// ToDo: Fazer isto de uma forma melhor!
+
+		// Limpa o EM para evitar problemas por causa da Arvore
 		self::_EM()->clear();
 		// Faz attach do Planejado e do Oferecimento
 		$Planejado = self::_EM()->merge($this);
 		$Oferecimento = self::_EM()->merge($Oferecimento);
-
 		// Atualiza o Planejado por via das duvidas
 		self::_EM()->refresh($Planejado);
+		// Marca o Oferecimento como read only
+		Base::_EM()->getUnitOfWork()->markReadOnly($Oferecimento);
 		
 		if((isset($Removido)) && (!empty($Removido['id'])))
 			$Planejado->removeOferecimentos(Oferecimento::Load($Removido['id']));
@@ -175,6 +178,10 @@ class Planejado extends Base {
 	public function Remover_Oferecimento(Oferecimento $Oferecimento, $salvar = true) {
 		if($this->Tem_Oferecimento($Oferecimento, false) === false)
 			return false;
+
+		// Marca o Oferecimento como read only
+		Base::_EM()->getUnitOfWork()->markReadOnly($Oferecimento);
+
 		$this->removeOferecimentos($Oferecimento);
 		if($salvar === false)
 			return true;
@@ -266,6 +273,15 @@ class Planejado extends Base {
 			->createQuery($dqlt)
 			->setParameters(array('id_oferecimento' => $Oferecimento->getID()))
 			->getSingleScalarResult();
+	}
+
+	public function Save($flush = true) {
+		// Marca algumas coisas como read only
+		Base::_EM()->getUnitOfWork()->markReadOnly($this->getUsuario());
+		Base::_EM()->getUnitOfWork()->markReadOnly($this->getPeriodo());
+		Base::_EM()->getUnitOfWork()->markReadOnly($this->getPeriodo_Atual());
+
+		return parent::Save($flush);
 	}
 
 }

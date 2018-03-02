@@ -1659,4 +1659,9 @@ class Usuario extends Base {
 			$this->getAluno()->removeOferecimentos($Oferecimento);
 	}
 
+	// Soh pra Planejador... Nao salva!
+	public function Substituir_Oferecimentos($Oferecimentos = array()) {
+		$this->getAluno()->setOferecimentos($Oferecimentos, false);
+	}
+
 }
