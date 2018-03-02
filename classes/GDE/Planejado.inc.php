@@ -138,6 +138,11 @@ class Planejado extends Base {
 		return ($Novo->Save($flush) !== false) ? $Novo : false;
 	}
 
+	// Metodo que passa no cheap check do ProxyGenerator
+	public function getId_planejado() {
+		return $this->id_planejado;
+	}
+
 	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, Arvore $Arvore, $salvar = true) {
 		$obs = '';
 		if($Arvore->Pode_Cursar($Oferecimento->getDisciplina(true), $obs) === false)
@@ -151,26 +156,16 @@ class Planejado extends Base {
 		} else
 			$Removido = false;
 
-		// ToDo: Fazer isto de uma forma melhor!
-
-		// Limpa o EM para evitar problemas por causa da Arvore
-		self::_EM()->clear();
-		// Faz attach do Planejado e do Oferecimento
-		$Planejado = self::_EM()->merge($this);
-		$Oferecimento = self::_EM()->merge($Oferecimento);
-		// Atualiza o Planejado por via das duvidas
-		self::_EM()->refresh($Planejado);
 		// Marca o Oferecimento como read only
-		Base::_EM()->getUnitOfWork()->markReadOnly($Oferecimento);
+		$Oferecimento->markReadOnly();
 		
 		if((isset($Removido)) && (!empty($Removido['id'])))
-			$Planejado->removeOferecimentos(Oferecimento::Load($Removido['id']));
-		$Planejado->addOferecimentos($Oferecimento);
+			$this->removeOferecimentos(Oferecimento::Load($Removido['id']));
+		$this->addOferecimentos($Oferecimento);
 		if($salvar === false)
 			$ok = true;
 		else {
-			$ok = $Planejado->Save(false) !== false;
-			Base::_EM()->flush($Planejado);
+			$ok = $this->Save(false) !== false;
 		}
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
@@ -180,7 +175,7 @@ class Planejado extends Base {
 			return false;
 
 		// Marca o Oferecimento como read only
-		Base::_EM()->getUnitOfWork()->markReadOnly($Oferecimento);
+		$Oferecimento->markReadOnly();
 
 		$this->removeOferecimentos($Oferecimento);
 		if($salvar === false)
@@ -276,12 +271,16 @@ class Planejado extends Base {
 	}
 
 	public function Save($flush = true) {
-		// Marca algumas coisas como read only
-		Base::_EM()->getUnitOfWork()->markReadOnly($this->getUsuario());
-		Base::_EM()->getUnitOfWork()->markReadOnly($this->getPeriodo());
-		Base::_EM()->getUnitOfWork()->markReadOnly($this->getPeriodo_Atual());
+		// ToDo: Fazer isto de uma forma melhor!
 
-		return parent::Save($flush);
+		// Marca algumas coisas como read only
+		$this->getUsuario()->markReadOnly();
+		$this->getPeriodo()->markReadOnly();
+		$this->getPeriodo_Atual()->markReadOnly();
+
+		$ok = parent::Save(false) !== false;
+		Base::_EM()->flush($this);
+		return $ok;
 	}
 
 }

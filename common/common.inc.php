@@ -7,6 +7,9 @@ define('REVISION', '20180105');
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
 
+// Config
+require_once(__DIR__.'/config.inc.php');
+
 // Uncaught exception handler
 require_once(__DIR__.'/exceptions.inc.php');
 

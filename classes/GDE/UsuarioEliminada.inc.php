@@ -123,6 +123,7 @@ class UsuarioEliminada extends Base {
 		$ret = array('creditos' => 0, 'diff_creditos' => 0, 'siglas' => array());
 		foreach($Faltantes as $c => $Faltante) {
 			// Cria (ou usa uma copia anterior) desta CurriculoEletiva
+			// ToDo: Adianta substituir por ->markReadOnly() ?
 			$Faltantes[$c] = $Faltante = $Faltante->Copia();
 			$Conjunto = $Faltante->getConjuntos(true);
 			foreach($Conjunto as $indice => $Bloco) {

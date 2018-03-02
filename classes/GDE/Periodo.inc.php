@@ -51,6 +51,11 @@ class Periodo extends Base {
 		return $Periodo;
 	}
 
+	// Metodo que passa no cheap check do ProxyGenerator
+	public function getId_periodo() {
+		return $this->id_periodo;
+	}
+
 	/**
 	 * getPeriodo
 	 *

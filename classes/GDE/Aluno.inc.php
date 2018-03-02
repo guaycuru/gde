@@ -110,9 +110,6 @@ class Aluno extends Base {
 	 */
 	protected $modalidade_pos;
 
-	// Determina se esta eh uma copia da entidade original, que pode ser modificada
-	private $_copia;
-
 	const NIVEL_EGRESSADO = 'E';
 	const NIVEL_GRAD = 'G';
 	const NIVEL_POS = 'P';
@@ -437,23 +434,21 @@ class Aluno extends Base {
 	 * @return ArrayCollection|Oferecimento[]|string
 	 */
 	public function getOferecimentos($periodo = null, $niveis = array(), $formatado = false, $links = true) {
-		if($niveis == self::NIVEL_GRAD)
-			$niveis = array_keys(self::$_niveis_grad);
+		if($niveis == Disciplina::NIVEL_GRAD)
+			$niveis = array_keys(Disciplina::$NIVEIS_GRAD);
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
 		if(($periodo == null) && (count($niveis) == 0))
 			$Oferecimentos = parent::getOferecimentos();
-		elseif($this->_copia === true) {
-			// Nao posso usar o Query Builder em uma copia do Aluno, pois ela esta detached e nao foi persisted
-			$Oferecimentos = parent::getOferecimentos();
-			foreach($Oferecimentos as $o => $Oferecimento) {
-				if(($periodo != null) && ($Oferecimento->getPeriodo()->getID() != $periodo))
-					unset($Oferecimentos[$o]);
-				if((count($niveis) > 0) && (in_array($Oferecimento->getDisciplina()->getNivel(false), $niveis) === false))
-					unset($Oferecimentos[$o]);
-			}
-			return $Oferecimentos;
+		elseif($this->oferecimentos->isInitialized()) {
+			// Nao posso usar o Query Builder pois a colecao ja foi carregada do DB
+			$Oferecimentos = parent::getOferecimentos()->filter(function($Oferecimento) use ($periodo, $niveis) {
+				return (
+					(($periodo === null) || ($Oferecimento->getPeriodo()->getId_Periodo() == $periodo)) &&
+					((count($niveis) == 0) || (in_array($Oferecimento->getDisciplina()->getNivel(false), $niveis)))
+				);
+			});
 		} else {
 			$qb = self::_EM()->createQueryBuilder()
 				->select('o')
@@ -462,8 +457,7 @@ class Aluno extends Base {
 				->where('a.ra = :ra')
 				->setParameter('ra', $this->getRA(false));
 			if($periodo != null) {
-				$qb->join('o.periodo', 'p')
-					->andWhere('p.id_periodo = :periodo')
+				$qb->andWhere('o.periodo = :periodo')
 					->setParameter('periodo', $periodo);
 			}
 			if(count($niveis) > 0) {
@@ -535,22 +529,6 @@ class Aluno extends Base {
 					$Trancado->getSigla(true).$Trancado->getTurma(true)."</a> (".$Trancado->getDisciplina()->getCreditos(true).")";
 			return (count($lista) > 0) ? implode(", ", $lista) : '-';
 		}
-	}
-
-	/**
-	 * Copia
-	 *
-	 * Se esta ja eh uma copia, retorna-a, caso contraria, cria uma copia e retorna-a
-	 *
-	 * @return $this|Usuario
-	 */
-	public function Copia() {
-		if($this->_copia === true)
-			return $this;
-		$Copia = clone $this;
-		$Copia->_copia = true;
-		Base::_EM()->detach($Copia);
-		return $Copia;
 	}
 
 	/**

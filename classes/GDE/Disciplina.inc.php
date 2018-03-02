@@ -463,6 +463,11 @@ class Disciplina extends Base {
 			: 'busca/?t=tab_disciplinas&sigla='.urlencode($sigla).'&buscar#tab_disciplinas');
 	}
 
+	// Metodo que passa no cheap check do ProxyGenerator
+	public function getId_disciplina() {
+		return $this->id_disciplina;
+	}
+
 	/**
 	 * @param bool $html
 	 * @param bool $vazio

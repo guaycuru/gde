@@ -157,6 +157,7 @@ class CurriculoEletiva extends Base {
 	 * @return $this|CurriculoEletiva
 	 */
 	public function Copia() {
+		// ToDo: Remover isto
 		if($this->_copia === true)
 			return $this;
 		$Copia = clone $this;

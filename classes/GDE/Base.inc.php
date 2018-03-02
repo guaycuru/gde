@@ -217,7 +217,7 @@ abstract class Base {
 	 *
 	 * @return mixed The object's primary key value
 	 */
-	public function getID() {
+	public function getId() {
 		if($this->_meta === null)
 			$this->_meta = self::_EM()->getClassMetadata(get_class($this));
 		try {
@@ -227,6 +227,19 @@ abstract class Base {
 			return null;
 		}
 		return $this->{$identifier};
+	}
+
+	/**
+	 * markReadOnly
+	 *
+	 * Marks this object as read only
+	 * It'll not be considered for updates, but it can be inserted and/or deleted
+	 *
+	 * @return void
+	 */
+	public function markReadOnly() {
+		if(self::_EM()->contains($this))
+			self::_EM()->getUnitOfWork()->markReadOnly($this);
 	}
 
 	/**

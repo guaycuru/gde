@@ -71,7 +71,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['verifica1'] = microtime(true) - $times['start'] - $tt;
 			
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), 'G');
+			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
 			$Config = array();
 			$Disciplinas = array();
 			$Disciplinas['N'] = array();
@@ -105,7 +105,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['processa_atuais'] = microtime(true) - $times['start'] - $tt;
 			
 			// Cria a arvore personalizada para o planejador
-			$Usr = $_Usuario->Copia();
+			$Usr = $_Usuario;
+			$Usr->markReadOnly();
+			$Usr->getAluno()->markReadOnly();
 			foreach($EliminadasAdd as $EAdd)
 				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);
@@ -151,6 +153,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			foreach($Disciplinas as &$Lista)
 				usort($Lista, array('GDE\\Disciplina', 'Organiza'));
 
+			// ToDo: Pra que serve $siglas se aqui eu reseto!?
 			$siglas = $nao_pode = array();
 			$total = 0;
 			
@@ -311,7 +314,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
 
-			$Usr->Substituir_Oferecimentos($Adicionados);
+			$Usr->Substituir_Oferecimentos($Adicionados, $Planejado->getPeriodo()->getID());
 			
 			// Re-faz a arvore porque mudei as atuais
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID(), $times['arvore2']);
@@ -361,7 +364,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			}
 		
 		} else { // Apenas uma disciplina
-			$Usr = $_Usuario->Copia();
+			$Usr = $_Usuario;
+			$Usr->markReadOnly();
+			$Usr->getAluno()->markReadOnly();
 			
 			$sigla = $_POST['s'];
 			$Disciplina = Disciplina::Por_Sigla($sigla);
@@ -458,11 +463,36 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		if($Oferecimento->getID() == null) {
 			$Ret = array('ok' => false, 'Removido' => false, 'motivo' => 'nao_encontrado');
 		} else {
-			$Usr = $_Usuario->Copia();
+			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
+			$EliminadasAdd = array();
+			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
+
+			// Processa as disciplinas atualmente em curso
+			foreach($Atuais as $Atual) {
+				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
+					continue;
+				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
+				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
+					$EliminadasAdd[] = $Tem;
+				}
+			}
+
+			// Cria a arvore personalizada para o planejador
+			$Usr = $_Usuario;
+			$Usr->markReadOnly();
+			$Usr->getAluno()->markReadOnly();
+			foreach($EliminadasAdd as $EAdd)
+				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
+			$Planejado->setUsuario($Usr);
+			$Oferecimentos = array();
+			foreach($Planejado->getOferecimentos() as $Of)
+				$Oferecimentos[] = $Of;
+			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+
 			$Ret = $Planejado->Adicionar_Oferecimento($Oferecimento, $Arvore, true);
 			if($Ret['ok'] !== false) {
-				// Posso ter removido alguma outro, preciso recalcular a Arvore
+				// Preciso recalcular a Arvore para atualizar a integralizacao
 				$Usr->Adicionar_Oferecimentos(array($Oferecimento));
 				$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
 				$Ret['Arvore'] = array(
@@ -477,9 +507,31 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Oferecimento = Oferecimento::Load($_POST['o']);
 		$Ret['ok'] = ($Planejado->Remover_Oferecimento($Oferecimento) !== false);
 		if($Ret['ok'] !== false) {
-			// Preciso recalcular a Arvore
-			$Usr = $_Usuario->Copia();
-			$Usr->Remover_Oferecimentos(array($Oferecimento));
+			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
+			$EliminadasAdd = array();
+			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
+
+			// Processa as disciplinas atualmente em curso
+			foreach($Atuais as $Atual) {
+				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
+					continue;
+				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
+				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
+					$EliminadasAdd[] = $Tem;
+				}
+			}
+
+			// Cria a arvore personalizada para o planejador
+			$Usr = $_Usuario;
+			$Usr->markReadOnly();
+			$Usr->getAluno()->markReadOnly();
+			foreach($EliminadasAdd as $EAdd)
+				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
+			$Planejado->setUsuario($Usr);
+			$Oferecimentos = array();
+			foreach($Planejado->getOferecimentos() as $Of)
+				$Oferecimentos[] = $Of;
+			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());
 			$Ret['Arvore'] = array(
 				'cp' => $Arvore->getCP(4),

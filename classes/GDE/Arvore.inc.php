@@ -63,8 +63,8 @@ class Arvore {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
-		// Garante que estamos trabalhando numa copia detached do $Usuario
-		$Usuario = $Usuario->Copia();
+		// Garante que estamos trabalhando em read only no $Usuario
+		$Usuario->markReadOnly();
 
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getAluno(true)->getRA(true);

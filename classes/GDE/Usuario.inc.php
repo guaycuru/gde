@@ -400,9 +400,6 @@ class Usuario extends Base {
 	 */
 	protected $beta = false;
 
-	// Determina se esta eh uma copia da entidade original, que pode ser modificada
-	private $_copia;
-
 	// Erros de login
 	const ERRO_LOGIN_NAO_ENCONTRADO = 1; // Usuario nao encontrado
 	const ERRO_LOGIN_SENHA_INCORRETA = 2; // Usuario ou senha incorretos
@@ -532,24 +529,6 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * Copia
-	 *
-	 * Se esta ja eh uma copia, retorna-a, caso contraria, cria uma copia e retorna-a
-	 *
-	 * @return $this|Usuario
-	 */
-	public function Copia() {
-		if($this->_copia === true)
-			return $this;
-		$Copia = clone $this;
-		$Copia->_copia = true;
-		$AlunoCopia = $this->getAluno(true)->Copia();
-		$Copia->setAluno($AlunoCopia);
-		Base::_EM()->detach($Copia);
-		return $Copia;
-	}
-
-	/**
 	 * @return bool
 	 */
 	public function Online() {
@@ -576,6 +555,11 @@ class Usuario extends Base {
 				$retorno = $status;
 		}
 		return $retorno;
+	}
+
+	// Metodo que passa no cheap check do ProxyGenerator
+	public function getId_usuario() {
+		return $this->id_usuario;
 	}
 
 	/**
@@ -1660,8 +1644,9 @@ class Usuario extends Base {
 	}
 
 	// Soh pra Planejador... Nao salva!
-	public function Substituir_Oferecimentos($Oferecimentos = array()) {
-		$this->getAluno()->setOferecimentos($Oferecimentos, false);
+	public function Substituir_Oferecimentos($Oferecimentos = array(), $periodo) {
+		$this->Remover_Oferecimentos($this->getAluno()->getOferecimentos($periodo));
+		$this->Adicionar_Oferecimentos($Oferecimentos);
 	}
 
 }
