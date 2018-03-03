@@ -124,7 +124,8 @@ class UsuarioEliminada extends Base {
 		foreach($Faltantes as $c => $Faltante) {
 			// Cria (ou usa uma copia anterior) desta CurriculoEletiva
 			// ToDo: Adianta substituir por ->markReadOnly() ?
-			$Faltantes[$c] = $Faltante = $Faltante->Copia();
+			$Faltantes[$c] = $Faltante;// = $Faltante->Copia();
+			$Faltante->markReadOnly();
 			$Conjunto = $Faltante->getConjuntos(true);
 			foreach($Conjunto as $indice => $Bloco) {
 				$sigla = $Bloco->getSigla(false);
