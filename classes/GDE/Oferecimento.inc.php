@@ -206,7 +206,7 @@ class Oferecimento extends Base {
 		if((!empty($param['sigla'])) || (!empty($param['nome'])) || (!empty($param['creditos'])) || (!empty($param['instituto'])) || (!empty($param['nivel'])) || ($ordem == "DI.nome ASC") || ($ordem == "DI.nome DESC"))
 			$join_disciplina = true;
 		if($join_disciplina === true)
-			$jns[] = " JOIN O.disciplina AS DI";
+			$jns[] = "JOIN O.disciplina AS DI";
 		if(!empty($param['nome'])) {
 			$qrs[] = "DI.nome LIKE :nome";
 			$param['nome'] = '%'.$param['nome'].'%';
@@ -226,15 +226,17 @@ class Oferecimento extends Base {
 		if(!empty($param['professor']))
 			$qrs[] = "P.nome LIKE :professor";
 		if(!empty($param['professor']) || ($ordem == "P.nome ASC") || ($ordem == "P.nome DESC"))
-			$jns[] = " JOIN O.professores AS P";
+			$jns[] = "JOIN O.professores AS P";
 		if((!empty($param['dia'])) || (!empty($param['horario'])) || (!empty($param['sala'])))
-			$jns[] = " JOIN O.dimensoes AS D";
+			$jns[] = "JOIN O.dimensoes AS D";
 		if(!empty($param['dia']))
 			$qrs[] = "D.dia = :dia";
 		if(!empty($param['horario']))
 			$qrs[] = "D.horario = :horario";
-		if(!empty($param['sala']))
-			$qrs[] = "D.sala LIKE :sala";
+		if(!empty($param['sala'])) {
+			$jns[] = "JOIN D.sala AS S";
+			$qrs[] = "S.nome LIKE :sala";
+		}
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 		if($total !== null) {
