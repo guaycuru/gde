@@ -62,7 +62,7 @@ class AvaliacaoPergunta extends Base {
 
 	/**
 	 * @param $tipo
-	 * @return mixed
+	 * @return AvaliacaoPergunta[]
 	 */
 	public static function Listar($tipo = null) {
 		$params = array();
@@ -72,30 +72,31 @@ class AvaliacaoPergunta extends Base {
 	}
 
 	/**
-	 * @param null $id_professor
-	 * @param null $sigla
+	 * @param integer|null $id_professor
+	 * @param integer|null $id_disciplina
 	 * @param bool $cache
 	 * @return array
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
-	public function getMedia($id_professor = null, $sigla = null, $cache = true) {
+	public function getMedia($id_professor = null, $id_disciplina = null, $cache = true) {
 		// ToDo: Pegar tabelas da metadata
 		$param = array('pergunta' => $this->getID());
-		if(($id_professor != null) && ($sigla != null)) {
+		if(($id_professor != null) && ($id_disciplina != null)) {
 			$cond_rv = "A.professor = :professor AND A.disciplina = :disciplina";
 			$param['professor'] = $id_professor;
-			$param['disciplina'] = $sigla;
+			$param['disciplina'] = $id_disciplina;
 			$group = "A.professor, A.disciplina";
-			$Media =& $this->MediaO[$id_professor][$sigla];
+			$Media =& $this->MediaO[$id_professor][$id_disciplina];
 		} elseif($id_professor != null) {
 			$cond_rv = "A.professor = :professor";
 			$param['professor'] = $id_professor;
 			$group = "A.professor";
 			$Media =& $this->MediaP[$id_professor];
-		} elseif($sigla != null) {
+		} elseif($id_disciplina != null) {
 			$cond_rv = "A.disciplina = :disciplina";
-			$param['disciplina'] = $sigla;
+			$param['disciplina'] = $id_disciplina;
 			$group = "A.disciplina";
-			$Media =& $this->MediaD[$sigla];
+			$Media =& $this->MediaD[$id_disciplina];
 		} else
 			return array('r' => 0, 'v' => 0, 'c' => 0, 'm' => 0, 'w' => 0);
 		if($cache) {

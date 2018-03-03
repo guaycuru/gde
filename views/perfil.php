@@ -71,27 +71,21 @@ if($_tipo == 'A') {
 	$siglas = array();
 	foreach($Oferecimentos as $Oferecimento) {
 		if(!in_array($Oferecimento->getSigla(), $siglas)) {
-			$siglas[] = $Oferecimento->getSigla(true);
+			$siglas[$Oferecimento->getDisciplina()->getId_Disciplina()] = $Oferecimento->getSigla(true);
 			$nomes[$Oferecimento->getSigla(true)] = $Oferecimento->getDisciplina(true)->getNome(true);
 		}
 	}
 	natsort($siglas);
 
 	$ofs = "";
-	foreach($siglas as $sigla)
-		$ofs .= "<option value=\"".$sigla."\">".$sigla." - ".$nomes[$sigla]."</option>";
+	foreach($siglas as $id_disciplina => $sigla)
+		$ofs .= "<option value=\"".$id_disciplina."\">".$sigla." - ".$nomes[$sigla]."</option>";
 
 	$Professor_Instituto = $Professor->getInstituto(false);
 	$professor_sala = $Professor->getSala();
 	$professor_email = $Professor->getEmail();
 	$professor_pagina = $Professor->getPagina();
 	$professor_lattes = $Professor->getLattes();
-
-	$html_professor_instituto = "";
-	$html_professor_sala = "";
-	$html_professor_email = "";
-	$html_professor_pagina = "";
-	$html_professor_lattes = "";
 
 	if($Professor->getInstituto(false) === null) {
 		if(ColaboracaoProfessor::Existe_Colaboracao($_matricula, 'instituto') == false) {  // Ninguem colaborou

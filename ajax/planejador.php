@@ -235,6 +235,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 
 						// ToDo: Suporte a multiplos professores
 						$Professor = $Oferecimento->getProfessor(false);
+						$id_disciplina = $Oferecimento->getDisciplina(true)->getId_Disciplina();
 						if($Professor !== null) {
 							if(!isset($media_professor[$Professor->getID()])) {
 								$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
@@ -242,20 +243,20 @@ if($_POST['a'] == 'n') { // Nova Opcao
 								$media_professor[$Professor->getID()] = $mediap;
 							} else
 								$mediap = $media_professor[$Professor->getID()];
-							if(!isset($media_prof_disci[$Professor->getID()][$sigla])) {
-								$Media = $Perguntas[1]->getMedia($Professor->getID(), $sigla);
+							if(!isset($media_prof_disci[$Professor->getID()][$id_disciplina])) {
+								$Media = $Perguntas[1]->getMedia($Professor->getID(), $id_disciplina);
 								$media1 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$sigla][1] = $media1;
-								$Media = $Perguntas[2]->getMedia($Professor->getID(), $sigla);
+								$media_prof_disci[$Professor->getID()][$id_disciplina][1] = $media1;
+								$Media = $Perguntas[2]->getMedia($Professor->getID(), $id_disciplina);
 								$media2 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$sigla][2] = $media2;
-								$Media = $Perguntas[3]->getMedia($Professor->getID(), $sigla);
+								$media_prof_disci[$Professor->getID()][$id_disciplina][2] = $media2;
+								$Media = $Perguntas[3]->getMedia($Professor->getID(), $id_disciplina);
 								$media3 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$sigla][3] = $media3;
+								$media_prof_disci[$Professor->getID()][$id_disciplina][3] = $media3;
 							} else {
-								$media1 = $media_prof_disci[$Professor->getID()][$sigla][1];
-								$media2 = $media_prof_disci[$Professor->getID()][$sigla][2];
-								$media3 = $media_prof_disci[$Professor->getID()][$sigla][3];
+								$media1 = $media_prof_disci[$Professor->getID()][$id_disciplina][1];
+								$media2 = $media_prof_disci[$Professor->getID()][$id_disciplina][2];
+								$media3 = $media_prof_disci[$Professor->getID()][$id_disciplina][3];
 							}
 						} else
 							$mediap = $media1 = $media2 = $media3 = -1;
@@ -383,10 +384,11 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			$Perguntas = AvaliacaoPergunta::Listar();
 			
-			$Ret['Oferecimentos'] = $Ofs = array();
+			$Ret['Oferecimentos'] = $Ofs = $media_prof_disci = $media_professor = array();
 			foreach($Oferecimentos as $Oferecimento) {
 				// ToDo: Suporte a multiplos professores
 				$Professor = $Oferecimento->getProfessor(false);
+				$id_disciplina = $Oferecimento->getDisciplina(true)->getId_Disciplina();
 				if($Professor !== null) {
 					if(!isset($media_professor[$Professor->getID()])) {
 						$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
@@ -394,20 +396,20 @@ if($_POST['a'] == 'n') { // Nova Opcao
 						$media_professor[$Professor->getID()] = $mediap;
 					} else
 						$mediap = $media_professor[$Professor->getID()];
-					if(!isset($media_prof_disci[$Professor->getID()][$sigla])) {
-						$Media = $Perguntas[1]->getMedia($Professor->getID(), $sigla);
+					if(!isset($media_prof_disci[$Professor->getID()][$id_disciplina])) {
+						$Media = $Perguntas[1]->getMedia($Professor->getID(), $id_disciplina);
 						$media1 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$sigla][1] = $media1;
-						$Media = $Perguntas[2]->getMedia($Professor->getID(), $sigla);
+						$media_prof_disci[$Professor->getID()][$id_disciplina][1] = $media1;
+						$Media = $Perguntas[2]->getMedia($Professor->getID(), $id_disciplina);
 						$media2 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$sigla][2] = $media2;
-						$Media = $Perguntas[3]->getMedia($Professor->getID(), $sigla);
+						$media_prof_disci[$Professor->getID()][$id_disciplina][2] = $media2;
+						$Media = $Perguntas[3]->getMedia($Professor->getID(), $id_disciplina);
 						$media3 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$sigla][3] = $media3;
+						$media_prof_disci[$Professor->getID()][$id_disciplina][3] = $media3;
 					} else {
-						$media1 = $media_prof_disci[$Professor->getID()][$sigla][1];
-						$media2 = $media_prof_disci[$Professor->getID()][$sigla][2];
-						$media3 = $media_prof_disci[$Professor->getID()][$sigla][3];
+						$media1 = $media_prof_disci[$Professor->getID()][$id_disciplina][1];
+						$media2 = $media_prof_disci[$Professor->getID()][$id_disciplina][2];
+						$media3 = $media_prof_disci[$Professor->getID()][$id_disciplina][3];
 					}
 				} else
 					$mediap = $media1 = $media2 = $media3 = -1;

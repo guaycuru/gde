@@ -208,7 +208,7 @@ class Disciplina extends Base {
 	 * @param $sigla
 	 * @param string|array|null $nivel
 	 * @param bool $vazio
-	 * @return self|null|false
+	 * @return Disciplina|null|false
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {

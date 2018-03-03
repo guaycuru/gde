@@ -5,7 +5,7 @@ var Carregar_Avaliacoes = function() {
 	if($(this).val() != '') {
 		var ids = $(this).attr('id').split('_');
 		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).Carregando();
-		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load(CONFIG_URL + 'ajax/avaliacoes.php', 'id_professor='+ids[1]+'&sigla='+$(this).val(), function() {
+		$("#div_avaliacoes_"+ids[1]+"_"+ids[2]).load(CONFIG_URL + 'ajax/avaliacoes.php', 'id_professor='+ids[1]+'&id_disciplina='+$(this).val(), function() {
 			$("#div_avaliacoes_"+ids[1]+"_"+ids[2]+" div.nota_slider").each(function() {
 				Criar_Slider($(this));
 			});
@@ -14,7 +14,7 @@ var Carregar_Avaliacoes = function() {
 			});
 		});
 	}
-}
+};
 
 var Enviar_Avaliacao = function(link, idp, professor, sigla) {
 	if(!professor)
@@ -32,7 +32,7 @@ var Enviar_Avaliacao = function(link, idp, professor, sigla) {
 			$("#votando_aguarde_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).remove();
 		}
 	});
-}
+};
 
 var Criar_Slider = function(el) {
 	var id = el.attr('id');
@@ -48,7 +48,7 @@ var Criar_Slider = function(el) {
 	});
 	$("#span_"+id).html(avaliacao_valores[el.slider("value")]);
 	$("#"+id).css('background', avaliacao_cores[el.slider("value")]);
-}
+};
 
 var Criar_Slider_Fixo = function(el, valor) {
 	var id = el.attr('id');
@@ -60,4 +60,4 @@ var Criar_Slider_Fixo = function(el, valor) {
 		disabled: true
 	});
 	$("#"+id).css('background', avaliacao_cores[Math.round(valor / 100)]);
-}
+};

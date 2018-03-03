@@ -69,30 +69,30 @@ else {
 								<td rowspan="2" style="width: 50%; padding: 0px 5px 0px 5px; border: 1px solid #A6C9E2">
 									<div class="gde_jquery_ui">
 										<h2>Como Professor(a) em <?= $Oferecimento->getDisciplina(true)->getSigla(true); ?></h2>
-										<input type="hidden" class="avaliacao_oferecimento" id="selectoferecimento_<?= $Professor->getID(); ?>_<?= $p; ?>" value="<?= str_replace(" ", "_", $Oferecimento->getDisciplina(true)->getSigla(true)); ?>" />
+										<input type="hidden" class="avaliacao_oferecimento" id="selectoferecimento_<?= $Professor->getID(); ?>_<?= $p; ?>" value="<?= $Oferecimento->getDisciplina(true)->getId_Disciplina(); ?>" />
 										<div class="div_avaliacoes" id="div_avaliacoes_<?= $Professor->getID(); ?>_<?= $p++; ?>">
 											<?php
 											foreach($Perguntas as $Pergunta) {
 												$Disciplina = $Oferecimento->getDisciplina(true);
-												$sigla = $Disciplina->getSigla(true);
-												$Media = $Pergunta->getMedia($Professor->getID(), $sigla);
+												$id_disciplina = $Disciplina->getId_Disciplina();
+												$Media = $Pergunta->getMedia($Professor->getID(), $id_disciplina);
 												echo "<strong>".$Pergunta->getPergunta(true)."</strong><br />";
 												if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
 													echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";
 												else {
-													echo "Pontua&ccedil;&atilde;o: <span id=\"span_fixo_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" style=\"font-weight: bold;\">".number_format($Media['w'], 2, ',', '.')."</span> (".$Media['v']." votos)";
+													echo "Pontua&ccedil;&atilde;o: <span id=\"span_fixo_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\" style=\"font-weight: bold;\">".number_format($Media['w'], 2, ',', '.')."</span> (".$Media['v']." votos)";
 													if($_Usuario->getAdmin() === true)
-														echo " - Ranking: <strong>".$Pergunta->Ranking($Professor, $Disciplina)."/".$Pergunta->Max_Ranking($Disciplina)."</strong><div id=\"fixo_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"nota_slider_fixo\"></div>";
+														echo " - Ranking: <strong>".$Pergunta->Ranking($Professor, $Disciplina)."/".$Pergunta->Max_Ranking($Disciplina)."</strong><div id=\"fixo_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\" class=\"nota_slider_fixo\"></div>";
 													echo "<br />";
 												}
 												$pode = $Pergunta->Pode_Votar($_Usuario, $Professor, $Disciplina);
 
 												if($pode === true)
-													echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Professor->getID()."_".str_replace(" ", "-", $sigla)."\" class=\"link_votar\">Votar</a></div>";
+													echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Professor->getID()."_".$id_disciplina."\" class=\"link_votar\">Votar</a></div>";
 												elseif($pode == AvaliacaoPergunta::ERRO_JA_VOTOU)
 													echo "Voc&ecirc; j&aacute; votou nesta pergunta! Seu voto: ".$Pergunta->Meu_Voto($_Usuario, $Professor, $Disciplina)."<br />";
 												elseif($pode == AvaliacaoPergunta::ERRO_NAO_CURSOU)
-													echo "Voc&ecirc; n&atilde;o pode votar pois ainda n&atilde;o cursou ".$sigla." com ".$Professor->getNome(true).".";
+													echo "Voc&ecirc; n&atilde;o pode votar pois ainda n&atilde;o cursou ".$Disciplina->getSigla(true)." com ".$Professor->getNome(true).".";
 												elseif($pode == AvaliacaoPergunta::ERRO_NAO_ALUNO)
 													echo "Voc&ecirc; n&atilde;o pode votar pois apenas alunos podem avaliar Professores.";
 												echo "<br /><br />";

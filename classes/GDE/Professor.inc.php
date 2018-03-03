@@ -116,6 +116,11 @@ class Professor extends Base {
 		return $Professores->first();
 	}
 
+	// Metodo que passa no cheap check do ProxyGenerator
+	public function getId_Professor() {
+		return $this->id_professor;
+	}
+
 	/**
 	 * @param null|Periodo $Periodo
 	 * @param bool $formatado
