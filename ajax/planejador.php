@@ -200,8 +200,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Removo os oferecimentos que eu nao posso cursar!
 			foreach($Planejado->getOferecimentos() as $Oferecimento)
 				if(isset($nao_pode[$Oferecimento->getSigla()]))
-					// ToDo: Preciso salvar isso de alguma forma, sem causar um problema de cascade
-					$Planejado->Remover_Oferecimento($Oferecimento, false);
+					$Planejado->Remover_Oferecimento($Oferecimento, true);
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['limpa_nao_pode'] = microtime(true) - $times['start'] - $tt;
