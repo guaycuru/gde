@@ -313,7 +313,7 @@ class Oferecimento extends Base {
 				else
 					$sql .= " LIMIT " . $limit;
 			}
-			$q = '%' . $q . '%';
+			$q = '%' . str_replace(' ', '%', $q) . '%';
 		} else {
 			//$q = preg_replace('/(\w+)/', '+$1*', $q);
 			$q = preg_replace('/(\p{L}{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $q);

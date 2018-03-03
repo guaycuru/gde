@@ -337,7 +337,7 @@ class Aluno extends Base {
 			} else
 				$extra_select = "";
 			if(CONFIG_FTS_ENABLED === false)
-				$q = '%'.$q.'%';
+				$q = '%'.str_replace(' ', '%', $q).'%';
 			if($total !== null)
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q";
 			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;

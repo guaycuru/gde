@@ -344,7 +344,7 @@ class Disciplina extends Base {
 			}
 			$q = '%' . $q . '%';
 		} elseif(CONFIG_FTS_ENABLED === false) {
-			$q = '%' . $q . '%';
+			$q = '%' . str_replace(' ', '%', $q) . '%';
 			if($ordem == null)
 				$ordem = 'rank DESC';
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
