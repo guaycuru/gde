@@ -318,6 +318,7 @@ class Arvore {
 					$El = new UsuarioEliminada();
 					//$El->setUsuario($this->Usuario);
 					$DisciplinaT = new Disciplina();
+					$DisciplinaT->markReadOnly();
 					$DisciplinaT->setSigla($sigla);
 					$El->setDisciplina($DisciplinaT);
 					$El->setPeriodo($this->Periodo);
@@ -485,6 +486,7 @@ class Arvore {
 				if(in_array($Atual->getDisciplina()->getSigla(), $this->siglas_eletivas)) {
 					$this->creditos_eletivas_atuais += $Atual->getDisciplina()->getCreditos();
 					$Nova = new Disciplina();
+					$Nova->markReadOnly();
 					$Nova->setSigla($Atual->getSigla());
 					$Nova->setNome($Atual->getDisciplina()->getNome());
 					$Nova->setCreditos($Atual->getDisciplina()->getCreditos());
@@ -511,6 +513,7 @@ class Arvore {
 		// Cria as pseudo-disciplinas eletivas
 		foreach($this->creditos_eletivas as $semestre => $creditos) {
 			$Nova = new Disciplina();
+			$Nova->markReadOnly();
 			$Nova->setSigla('ELET');
 			$Nova->setNome('Eletiva');
 			$Nova->setCreditos($creditos);
@@ -520,6 +523,7 @@ class Arvore {
 		// Cria as pseudo-disciplinas de linguagem
 		foreach($this->creditos_linguas as $semestre => $creditos) {
 			$Nova = new Disciplina();
+			$Nova->markReadOnly();
 			$Nova->setSigla('LING');
 			$Nova->setNome('Linguas');
 			$Nova->setCreditos($creditos);

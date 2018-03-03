@@ -140,6 +140,7 @@ class Curriculo extends Base {
 		$inicial = strtolower(substr($this->getSigla(false), 0, 4));
 		if(($inicial == 'elet') || ($inicial == 'ling')) {
 			$Disciplina = new Disciplina();
+			$Disciplina->markReadOnly();
 			$Disciplina->setSigla($this->getSigla(false));
 			return $Disciplina;
 		}

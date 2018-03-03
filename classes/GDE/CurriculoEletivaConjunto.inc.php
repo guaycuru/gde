@@ -59,6 +59,7 @@ class CurriculoEletivaConjunto extends Base {
 	public function getDisciplina() {
 		if(strpos($this->getSigla(false), '-') !== false) {
 			$Disciplina = new Disciplina();
+			$Disciplina->markReadOnly();
 			$Disciplina->setSigla($this->getSigla(false));
 			return $Disciplina;
 		}
