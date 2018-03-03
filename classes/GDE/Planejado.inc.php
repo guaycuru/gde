@@ -279,7 +279,7 @@ class Planejado extends Base {
 		$this->getPeriodo_Atual()->markReadOnly();
 
 		$ok = parent::Save(false) !== false;
-		Base::_EM()->flush($this);
+		Base::_EM()->flush();
 		return $ok;
 	}
 

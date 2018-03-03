@@ -545,7 +545,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
 		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
-		$Planejado->Limpar_Eliminadas(true);
+		$Planejado->Limpar_Eliminadas(false);
 		if(isset($_POST['conf'])) {
 			foreach($_POST['conf'] as $sigla) {
 				$D = Disciplina::Por_Sigla($sigla);
