@@ -165,7 +165,15 @@ class Planejado extends Base {
 		if($salvar === false)
 			$ok = true;
 		else {
-			$ok = $this->Save(false) !== false;
+			// ToDo: Fazer isto de uma forma melhor!
+
+			// Marca algumas coisas como read only
+			$this->getUsuario()->markReadOnly();
+			$this->getPeriodo()->markReadOnly();
+			$this->getPeriodo_Atual()->markReadOnly();
+
+			$ok = parent::Save(false) !== false;
+			Base::_EM()->flush($this);
 		}
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
@@ -180,7 +188,16 @@ class Planejado extends Base {
 		$this->removeOferecimentos($Oferecimento);
 		if($salvar === false)
 			return true;
-		return ($this->Save(true) !== false);
+		// ToDo: Fazer isto de uma forma melhor!
+
+		// Marca algumas coisas como read only
+		$this->getUsuario()->markReadOnly();
+		$this->getPeriodo()->markReadOnly();
+		$this->getPeriodo_Atual()->markReadOnly();
+
+		$ok = parent::Save(false) !== false;
+		Base::_EM()->flush($this);
+		return $ok;
 	}
 
 	public function Tem_Oferecimento(Oferecimento $Oferecimento, $checa_disciplina = false) {
