@@ -441,15 +441,20 @@ class Aluno extends Base {
 
 		if(($periodo == null) && (count($niveis) == 0))
 			$Oferecimentos = parent::getOferecimentos();
-		elseif($this->oferecimentos->isInitialized()) {
+		//elseif($this->oferecimentos->isInitialized()) {
+		else {
+			// ToDo: Melhorar isto. Eu nao posso usar o queryBuilder pq se o Aluno nao tem Oferecimentos
+			// A collection nunca eh initialized!
 			// Nao posso usar o Query Builder pois a colecao ja foi carregada do DB
-			$Oferecimentos = parent::getOferecimentos()->filter(function($Oferecimento) use ($periodo, $niveis) {
+			$Oferecimentos = parent::getOferecimentos()->filter(function ($Oferecimento) use ($periodo, $niveis) {
 				return (
 					(($periodo === null) || ($Oferecimento->getPeriodo()->getId_Periodo() == $periodo)) &&
 					((count($niveis) == 0) || (in_array($Oferecimento->getDisciplina()->getNivel(false), $niveis)))
 				);
 			});
-		} else {
+		}
+		/*} else {
+			echo "\nNOT INITIALIZED\n";
 			$qb = self::_EM()->createQueryBuilder()
 				->select('o')
 				->from('GDE\\Oferecimento', 'o')
@@ -466,7 +471,7 @@ class Aluno extends Base {
 					->setParameter('niveis', $niveis);
 			}
 			$Oferecimentos = $qb->getQuery()->getResult();
-		}
+		}*/
 
 		if($formatado === false)
 			return $Oferecimentos;
