@@ -435,7 +435,7 @@ class Aluno extends Base {
 	 */
 	public function getOferecimentos($periodo = null, $niveis = array(), $formatado = false, $links = true) {
 		if($niveis == Disciplina::NIVEL_GRAD)
-			$niveis = array_keys(Disciplina::$NIVEIS_GRAD);
+			$niveis = Disciplina::$NIVEIS_GRAD;
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
