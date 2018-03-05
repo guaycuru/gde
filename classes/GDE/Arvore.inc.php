@@ -63,13 +63,14 @@ class Arvore {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
-		if(($Usuario->getAluno(false) === null) || ($Usuario->getCurso(false) === null))
+		if($Usuario->getAluno(false) === null)
 			return;
 
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getAluno()->getRA(true);
-		$this->curso = $Usuario->getCurso()->getNumero(true);
-		$this->nome_curso = $Usuario->getCurso()->getNome(true);
+		$Curso = ($Usuario->getCurso(false) !== null) ? $Usuario->getCurso() : $Usuario->getAluno()->getCurso();
+		$this->curso = $Curso->getNumero(true);
+		$this->nome_curso = $Curso->getNome(true);
 		$this->modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getSigla(true) : '';
 		$this->nome_modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getNome(true) : '';
 		$this->catalogo = $Usuario->getCatalogo(true);
