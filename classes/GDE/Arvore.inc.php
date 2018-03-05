@@ -19,7 +19,7 @@ class Arvore {
 	private $cp;
 	private $cpf;
 
-	private $Disciplinas; // Array do tipo $Disciplinas[$semestre] = array(Disciplina, Disciplina, Disciplina);
+	private $Disciplinas = array(); // Array do tipo $Disciplinas[$semestre] = array(Disciplina, Disciplina, Disciplina);
 	private $Pre_Requisitos; //  Array do tipo $Pre_Requisitos[$sigla] = array($sigla, $sigla);
 	private $Pos_Requisitos; //  Array do tipo $Pos_Requisitos[$sigla] = array();
 	private $Curriculos;
@@ -965,6 +965,8 @@ class Arvore {
 	}
 
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
+		if(!($this->Usuario instanceof Usuario))
+			return false;
 		return $this->Usuario->Pode_Cursar($Disciplina, $obs, $this);
 	}
 }
