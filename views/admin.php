@@ -26,6 +26,7 @@ var debug = function(d) {
 };
 $(document).ready(function() {
 	$("#botao_atualizar").click(function() {
+		$.guaycuru.aguarde();
 		var curss = $("#curss").is(':checked') ? 1 : 0;
 		var ranks = $("#ranks").is(':checked') ? 1 : 0;
 		$.post("<?= CONFIG_URL; ?>ajax/admin.php", {info: 1, curss: curss, ranks: ranks}, function(res) {
