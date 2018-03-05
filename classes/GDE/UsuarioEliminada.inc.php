@@ -156,7 +156,7 @@ class UsuarioEliminada extends Base {
 							unset($Faltantes[$c]);
 						else {
 							$Conjunto->remove($indice);
-							$lconjuntos[$falthash]->remove($Bloco);
+							//$lconjuntos[$falthash]->removeElement($Bloco);
 							$lcreditos[$falthash] = $creditos;
 						}
 						$ret['eliminada'] = $sigla;
