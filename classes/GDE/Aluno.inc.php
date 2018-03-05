@@ -454,7 +454,6 @@ class Aluno extends Base {
 			});
 		}
 		/*} else {
-			echo "\nNOT INITIALIZED\n";
 			$qb = self::_EM()->createQueryBuilder()
 				->select('o')
 				->from('GDE\\Oferecimento', 'o')

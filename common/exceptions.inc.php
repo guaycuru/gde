@@ -7,19 +7,18 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 		$files_dir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR;
 		$exception_string = $exception->__toString();
 		$hash = md5($exception_string);
+		if(!empty($_Usuario))
+			$exception_string .= "\n\nUsuario: ".$_Usuario->getID();
+		if(!empty($_GET))
+			$exception_string .= "\n\n\$_GET: ".print_r($_GET, true);
+		if(!empty($_POST))
+			$exception_string .= "\n\n\$_POST: ".print_r($_POST, true);
 		$file = $files_dir . str_replace(array($base_dir, DIRECTORY_SEPARATOR), array('', '$'), $exception->getFile()) . '#' . $exception->getLine() . '#' . $hash . '.log';
 		if(!file_exists($file))
 			file_put_contents($file, $exception_string);
 		$msg = 'Erro: Infelizmente um erro grave e inesperado ocorreu. Por favor, tente novamente.';
-		if((php_sapi_name() == 'cli') || ((defined('GDE_ADMIN')) && (GDE_ADMIN === true))) {
-			if(!empty($_Usuario))
-				$msg .= "\n\nUsuario: ".$_Usuario->getID();
-			if(!empty($_GET))
-				$msg .= "\n\n\$_GET: ".print_r($_GET, true);
-			if(!empty($_POST))
-				$msg .= "\n\n\$_POST: ".print_r($_POST, true);
+		if((php_sapi_name() == 'cli') || ((defined('GDE_ADMIN')) && (GDE_ADMIN === true)))
 			$msg .= "\n\n" . $exception_string;
-		}
 		if(defined('JSON'))
 			\GDE\Base::Error_JSON($msg);
 		else {
