@@ -233,6 +233,7 @@ class Disciplina extends Base {
 			if(count($Disciplinas) == 0) {
 				if($vazio === true) {
 					$Disciplina = new self;
+					$Disciplina->markReadOnly();
 					$Disciplina->setSigla($sigla);
 					return $Disciplina;
 				} else
@@ -246,6 +247,7 @@ class Disciplina extends Base {
 			$Disciplina = self::FindOneBy(array('sigla' => $sigla, 'nivel' => $nivel));
 			if(($Disciplina === null) && ($vazio === true)) {
 				$Disciplina = new self;
+				$Disciplina->markReadOnly();
 				$Disciplina->setSigla($sigla);
 				return $Disciplina;
 			}

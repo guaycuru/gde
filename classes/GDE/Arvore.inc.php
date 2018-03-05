@@ -63,20 +63,21 @@ class Arvore {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
-		// Garante que estamos trabalhando em read only no $Usuario
-		$Usuario->markReadOnly();
+		if(($Usuario->getAluno(false) === null) || ($Usuario->getCurso(false) === null))
+			return;
 
 		$this->nome = $Usuario->getNome_Completo(true);
-		$this->ra = $Usuario->getAluno(true)->getRA(true);
-		$this->curso = $Usuario->getCurso(true)->getNumero(true);
-		$this->nome_curso = $Usuario->getCurso(true)->getNome(true);
-		$this->modalidade = $Usuario->getModalidade(true)->getSigla(true);
-		$this->nome_modalidade = $Usuario->getModalidade(true)->getNome(true);
+		$this->ra = $Usuario->getAluno()->getRA(true);
+		$this->curso = $Usuario->getCurso()->getNumero(true);
+		$this->nome_curso = $Usuario->getCurso()->getNome(true);
+		$this->modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getSigla(true) : '';
+		$this->nome_modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getNome(true) : '';
 		$this->catalogo = $Usuario->getCatalogo(true);
 		$this->ingresso = $Usuario->getIngresso(true);
 		$this->nivel = 'G';
 
 		$this->Usuario = $Usuario;
+		$this->Usuario->markReadOnly();
 
 		if($times !== false)
 			$times['usuario'] = microtime(true) - $times['start'];
@@ -95,7 +96,7 @@ class Arvore {
 		$this->Eletivas = CurriculoEletiva::Consultar(array("curso" => $this->curso, "modalidade" => $this->modalidade, "catalogo" => $this->catalogo));
 		$this->Eliminadas = array();
 		$this->Eletivas_Faltantes = $this->Eletivas;
-		$this->Atuais = $Usuario->getAluno(true)->getOferecimentos($this->periodo, $this->nivel);
+		$this->Atuais = $this->Usuario->getAluno()->getOferecimentos($this->periodo, $this->nivel);
 
 		if($times !== false)
 			$times['disciplina'] = microtime(true) - $times['start'];
@@ -123,12 +124,12 @@ class Arvore {
 		$Possiveis_Eletivas = array();
 
 		if($completa === false) {
-			$this->Eliminadas = $this->Usuario->getEliminadas(false, false, $this->nivel)->toArray();
+			$this->Eliminadas = $this->Usuario->getEliminadas()->toArray();
 			$siglas_old_eliminadas = array();
 			// Organiza as eliminadas por periodo, credito e sigla
 			foreach($this->Eliminadas as $Eli) {
 				if($Eli->getParcial() === false)
-					$siglas_old_eliminadas[] = $Eli->getDisciplina(true)->getSigla();
+					$siglas_old_eliminadas[] = $Eli->getDisciplina()->getSigla();
 			}
 			uasort($this->Eliminadas, array("GDE\\UsuarioEliminada", "Ordenar_DAC"));
 			$Old_Eliminadas = $this->Eliminadas;
@@ -136,7 +137,8 @@ class Arvore {
 			foreach($this->Atuais as $Ofrc) {
 				if($this->Usuario->Eliminada($Ofrc->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
 					$El = new UsuarioEliminada();
-					//$El->setUsuario($Usuario);
+					$El->markReadOnly();
+					//$El->setUsuario($this->Usuario);
 					$El->setDisciplina($Ofrc->getDisciplina());
 					$El->setPeriodo($this->Periodo);
 					$this->Eliminadas[$Ofrc->getDisciplina()->getSigla()] = $El;
@@ -224,9 +226,9 @@ class Arvore {
 
 			// Percorre a lista de disciplinas eliminadas do usuario em busca de possiveis Eletivas
 			foreach($this->Eliminadas as $Eliminada) {
-				if(in_array($Eliminada->getDisciplina(true)->getSigla(false), $this->siglas_obrigatorias) === false)
-					$Possiveis_Eletivas[$Eliminada->getDisciplina(true)->getSigla(false)] = $Eliminada;
-				if(($Eliminada->getProficiencia() === true) && (!isset($equivalencias_adicionadas[$Eliminada->getDisciplina(true)->getSigla(false)])))
+				if(in_array($Eliminada->getDisciplina()->getSigla(false), $this->siglas_obrigatorias) === false)
+					$Possiveis_Eletivas[$Eliminada->getDisciplina()->getSigla(false)] = $Eliminada;
+				if(($Eliminada->getProficiencia() === true) && (!isset($equivalencias_adicionadas[$Eliminada->getDisciplina()->getSigla(false)])))
 					$this->creditos_proficiencia += $Eliminada->getDisciplina()->getCreditos();
 			}
 
@@ -241,18 +243,20 @@ class Arvore {
 			$volta_eletivas = 0;
 
 			// Verifica quais das possiveis eletivas sao realmente eletivas
+			$lcreditos = array();
+			$lconjuntos = array();
 			foreach($Possiveis_Eletivas as $sigla => $Eliminada) {
-				//echo "<br />\n".$sigla." possivel eletiva (".count($Possiveis_Eletivas)." restantes): ";
+				//echo "\n".$sigla." possivel eletiva (".count($Possiveis_Eletivas)." restantes): ";
 				if(in_array($sigla, $this->siglas_eletivas))
 					continue;
-				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas);
+				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas, $lcreditos, $lconjuntos);
 				if($Elimina !== false) {
-					//echo "<br />\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
+					//echo "\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
 					$this->siglas_eletivas = array_merge($this->siglas_eletivas, $Elimina['siglas']);
 					$this->creditos_eletivas_eliminados += $Elimina['creditos'];
 					// Se foram eliminados mais creditos do que eram necessarios, soma creditos nos creditos totais e evita que a arvore fique incorreta
 					if($Elimina['diff_creditos'] > 0) {
-						//echo "<br />Foi mais do que deveria! Volta ".$Elimina['diff_creditos']."!";
+						//echo "\nFoi mais do que deveria! Volta ".$Elimina['diff_creditos']."!";
 						$this->creditos_totais += $Elimina['diff_creditos'];
 						$volta_eletivas += $Elimina['diff_creditos'];
 					}
@@ -271,7 +275,7 @@ class Arvore {
 
 			// Reseta as Eliminadas para as realmente eliminadas
 			$this->Eliminadas = $Old_Eliminadas;
-			$this->Usuario->setEliminadas($Old_Eliminadas, false);
+			$this->Usuario->setEliminadas($this->Eliminadas, false);
 			$this->siglas_todas_eliminadas = $siglas_old_eliminadas;
 
 			foreach($this->Atuais as $k => &$For_Mtr) {
@@ -312,10 +316,12 @@ class Arvore {
 				$times['cpecpf'] = microtime(true) - $times['start'];
 
 			// Remove os pre-requisitos do tipo AAnxx
-			for($i = 0.1; $i < 1; $i += 0.05) {
+			// Isto nao eh mais necessario pois calculamos AA4** em Usuario->Pode_Cursar()
+			/*for($i = 0.1; $i < 1; $i += 0.05) {
 				if($this->cp >= $i) {
 					$sigla = 'AA4'.($i*100);
 					$El = new UsuarioEliminada();
+					$El->markReadOnly();
 					//$El->setUsuario($this->Usuario);
 					$DisciplinaT = new Disciplina();
 					$DisciplinaT->markReadOnly();
@@ -326,7 +332,7 @@ class Arvore {
 					$this->siglas_todas_eliminadas[] = $sigla;
 				}
 			}
-			$this->Usuario->setEliminadas($this->Eliminadas, false);
+			$this->Usuario->setEliminadas($this->Eliminadas, false);*/
 
 			if($times !== false) {
 				$times['setEliminadas'] = microtime(true) - $times['start'];
@@ -805,7 +811,7 @@ class Arvore {
 		//$ret = "  HISTORICO ATUAL:\r\n";
 		$ret = "  <strong>Disciplinas j&aacute; cursadas:</strong>\r\n";
 		foreach($this->Eliminadas as $Eliminada) {
-			$sigla = $Eliminada->getDisciplina(true)->getSigla(true);
+			$sigla = $Eliminada->getDisciplina()->getSigla(true);
 			if(($sigla == 'AA200') || ($Eliminada->getParcial() === true)) // Pula as eliminadas parcialmente
 				continue;
 			$eliminadas[] = $sigla;
@@ -813,7 +819,8 @@ class Arvore {
 				continue;
 			$i++;
 			$url = Disciplina::URL_Disciplina($sigla);
-			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina(true)->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina(true)->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$Eliminada->getPeriodo(true)->getNome(true); //  MC102S06+  9,2150 4 1S07
+			$eli_periodo = ($Eliminada->getPeriodo(false) !== null) ? $Eliminada->getPeriodo()->getNome(true) : Periodo::PERIODO_DESCONHECIDO_DAC;
+			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina()->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina()->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$eli_periodo; //  MC102S06+  9,2150 4 1S07
 			if($i % 4 == 0) $ret .= "<br />"; // normal eh 3
 		}
 
@@ -849,7 +856,7 @@ class Arvore {
 					$url = Disciplina::URL_Disciplina($Falta->getSigla(false));
 					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Falta->getDisciplina()->getNome(true)."\" target=\"_blank\">".$Falta->getSigla(true)."</a>(".(($Falta->getDisciplina()->getCreditos() > 0)?(sprintf("%02d", $Falta->getDisciplina()->getCreditos(false))):'??').")";
 					$i++;
-					if($i % 5 == 0) $ret .= "\r\n                                                             ";
+					if($i % 4 == 0) $ret .= "\r\n                                                             ";
 				}
 			}
 			$ret .= "\r\n";
@@ -861,7 +868,7 @@ class Arvore {
 		if($this->completa === false) {
 			$i = 0;
 			foreach($this->Atuais as $Atual) {
-				$ret .= "  <a href=\"".CONFIG_URL."oferecimento/".$Atual->getID()."\" class=\"sigla\" title=\"".$Atual->getDisciplina(true)->getNome()."\" target=\"_blank\">".$Atual->getDisciplina(true)->getSigla(true).$Atual->getTurma(true)."</a>(".(sprintf("%02d", $Atual->getDisciplina(true)->getCreditos(false))).")".$this->getTipo($Atual->getSigla(true), true);
+				$ret .= "  <a href=\"".CONFIG_URL."oferecimento/".$Atual->getID()."\" class=\"sigla\" title=\"".$Atual->getDisciplina()->getNome()."\" target=\"_blank\">".$Atual->getDisciplina()->getSigla(true).$Atual->getTurma(true)."</a>(".(sprintf("%02d", $Atual->getDisciplina()->getCreditos(false))).")".$this->getTipo($Atual->getSigla(true), true);
 				$i++;
 				if($i % 6 == 0) $ret .= "\r\n";
 			}

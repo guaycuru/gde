@@ -1297,7 +1297,6 @@ class Usuario extends Base {
 	 * @param bool|string $obs
 	 * @param Arvore|null $Arvore
 	 * @return bool
-	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false, Arvore $Arvore = null) {
 		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!

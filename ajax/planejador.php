@@ -24,12 +24,12 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Ret['id'] = $Planejado->getID();
 } elseif($_POST['a'] == 'x') { // Excluir Opcao
 	$Planejado = Planejado::Load($_POST['id']);
-	if($Planejado->getUsuario(true)->getID() != $_Usuario->getID())
+	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()))
 		die(json_encode(false));
 	$Ret['ok'] = ($Planejado->Delete(true) != false);
 	$Planejados = null;
 	if($Ret['ok'] === true)
-		$Ret['id'] = Planejado::Algum($_Usuario, $Planejado->getPeriodo(true)->getID(), $Planejados, $Planejado->getPeriodo_Atual(true)->getID())->getID();
+		$Ret['id'] = Planejado::Algum($_Usuario, $Planejado->getPeriodo()->getID(), $Planejados, $Planejado->getPeriodo_Atual()->getID())->getID();
 } else {
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
 		$times = array('arvore1' => array(), 'arvore2' => array());
@@ -45,7 +45,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	
 	$Planejado = Planejado::Load($_POST['id']);
 	
-	if($Planejado->getUsuario(true)->getID() != $_Usuario->getID())
+	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()) || ($_Usuario->getAluno(false) === null))
 		die('forbidden');
 	
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -62,8 +62,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$pa = intval($_POST['pa']);
 				if($pa == 0) {
 					$PA = Periodo::Load(Dado::Pega_Dados('planejador_periodo_atual'));
-					$Planejado->setPeriodo_Atual($PA);
-					$Planejado->Save(true);
+					if($PA->getID() != null) {
+						$Planejado->setPeriodo_Atual($PA);
+						$Planejado->Save(true);
+					}
 				}
 			}
 			
@@ -71,7 +73,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['verifica1'] = microtime(true) - $times['start'] - $tt;
 			
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
+			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
 			$Config = array();
 			$Disciplinas = array();
 			$Disciplinas['N'] = array();
@@ -177,7 +179,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					$Raw[$sem][$sigla]['pode'] = $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
 					$Raw[$sem][$sigla]['obs'] = $obs;
 					if($Raw[$sem][$sigla]['pode']) 
-						$Raw[$sem][$sigla]['Oferecimentos'] = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo(true)->getID()), "O.turma ASC", $total);
+						$Raw[$sem][$sigla]['Oferecimentos'] = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
 					else {
 						$Raw[$sem][$sigla]['Oferecimentos'] = array();
 						$nao_pode[$sigla] = true;
@@ -206,10 +208,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['limpa_nao_pode'] = microtime(true) - $times['start'] - $tt;
 			
 			$Ret['Planejado'] = array(
-				'periodo' => $Planejado->getPeriodo(true)->getID(),
-				'periodo_nome' => $Planejado->getPeriodo(true)->getNome(),
-				'periodo_atual' => $Planejado->getPeriodo_Atual(true)->getID(),
-				'periodo_atual_nome' => $Planejado->getPeriodo_Atual(true)->getNome(),
+				'periodo' => $Planejado->getPeriodo()->getID(),
+				'periodo_nome' => $Planejado->getPeriodo()->getNome(),
+				'periodo_atual' => $Planejado->getPeriodo_Atual()->getID(),
+				'periodo_atual_nome' => $Planejado->getPeriodo_Atual()->getNome(),
 				'compartilhado' => ($Planejado->getCompartilhado()) ? 't' : 'f',
 				'Config' => $Config
 			);
@@ -235,7 +237,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 
 						// ToDo: Suporte a multiplos professores
 						$Professor = $Oferecimento->getProfessor(false);
-						$id_disciplina = $Oferecimento->getDisciplina(true)->getId_Disciplina();
+						$id_disciplina = $Oferecimento->getDisciplina()->getId_Disciplina();
 						if($Professor !== null) {
 							if(!isset($media_professor[$Professor->getID()])) {
 								$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
@@ -314,10 +316,11 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
 
+
 			$Usr->Substituir_Oferecimentos($Adicionados, $Planejado->getPeriodo()->getID());
-			
+
 			// Re-faz a arvore porque mudei as atuais
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID(), $times['arvore2']);
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID(), $times['arvore2']);
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['nova_arvore'] = microtime(true) - $times['start'] - $tt;
@@ -376,7 +379,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$pode = $Arvore->Pode_Cursar($Disciplina, $obs);
 			$total = 0;
 			if($pode)
-				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo(true)->getID()), "O.turma ASC", $total);
+				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
 			else
 				$Oferecimentos = array();
 			$tem = ($pode) && ($total > 0);
@@ -388,7 +391,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			foreach($Oferecimentos as $Oferecimento) {
 				// ToDo: Suporte a multiplos professores
 				$Professor = $Oferecimento->getProfessor(false);
-				$id_disciplina = $Oferecimento->getDisciplina(true)->getId_Disciplina();
+				$id_disciplina = $Oferecimento->getDisciplina()->getId_Disciplina();
 				if($Professor !== null) {
 					if(!isset($media_professor[$Professor->getID()])) {
 						$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
@@ -466,7 +469,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		} else {
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
+			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
 
 			// Processa as disciplinas atualmente em curso
 			foreach($Atuais as $Atual) {
@@ -510,7 +513,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		if($Ret['ok'] !== false) {
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno(true)->getOferecimentos($Planejado->getPeriodo_Atual(true)->getID(), Disciplina::$NIVEIS_GRAD);
+			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
 
 			// Processa as disciplinas atualmente em curso
 			foreach($Atuais as $Atual) {
@@ -533,7 +536,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			foreach($Planejado->getOferecimentos() as $Of)
 				$Oferecimentos[] = $Of;
 			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(true)->getID());
+			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
 			$Ret['Arvore'] = array(
 				'cp' => $Arvore->getCP(4),
 				'cpf' => $Arvore->getCPF(4),

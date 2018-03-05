@@ -145,7 +145,7 @@ class Planejado extends Base {
 
 	public function Adicionar_Oferecimento(Oferecimento $Oferecimento, Arvore $Arvore, $salvar = true) {
 		$obs = '';
-		if($Arvore->Pode_Cursar($Oferecimento->getDisciplina(true), $obs) === false)
+		if($Arvore->Pode_Cursar($Oferecimento->getDisciplina(), $obs) === false)
 			return array('ok' => false, 'Removido' => false, 'motivo' => 'nao_pode_cursar: '.$obs);
 		$Tem = $this->Tem_Oferecimento($Oferecimento, true);
 		if($Tem !== false) {
@@ -164,17 +164,8 @@ class Planejado extends Base {
 		$this->addOferecimentos($Oferecimento);
 		if($salvar === false)
 			$ok = true;
-		else {
-			// ToDo: Fazer isto de uma forma melhor!
-
-			// Marca algumas coisas como read only
-			$this->getUsuario()->markReadOnly();
-			$this->getPeriodo()->markReadOnly();
-			$this->getPeriodo_Atual()->markReadOnly();
-
-			$ok = parent::Save(false) !== false;
-			Base::_EM()->flush($this);
-		}
+		else
+			$ok = $this->Save(true) !== false;
 		return array('ok' => $ok, 'Removido' => $Removido);
 	}
 
@@ -188,16 +179,7 @@ class Planejado extends Base {
 		$this->removeOferecimentos($Oferecimento);
 		if($salvar === false)
 			return true;
-		// ToDo: Fazer isto de uma forma melhor!
-
-		// Marca algumas coisas como read only
-		$this->getUsuario()->markReadOnly();
-		$this->getPeriodo()->markReadOnly();
-		$this->getPeriodo_Atual()->markReadOnly();
-
-		$ok = parent::Save(false) !== false;
-		Base::_EM()->flush($this);
-		return $ok;
+		return ($this->Save(true) !== false);
 	}
 
 	public function Tem_Oferecimento(Oferecimento $Oferecimento, $checa_disciplina = false) {

@@ -43,6 +43,7 @@ class Periodo extends Base {
 	public static function Load($periodo = null) {
 		if($periodo == '?') {
 			$Periodo = new self;
+			$Periodo->markReadOnly();
 			$Periodo->id_periodo = null;
 			$Periodo->nome = self::PERIODO_DESCONHECIDO;
 			$Periodo->tipo = '';
@@ -124,7 +125,7 @@ class Periodo extends Base {
 	 *
 	 * Retorna a lista de periodos
 	 *
-	 * @return ArrayCollection
+	 * @return array
 	 */
 	public static function Listar() {
 		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P ORDER BY P.id_periodo DESC')->getResult();
