@@ -723,7 +723,7 @@ class Usuario extends Base {
 	 *
 	 * @param boolean $verificar (Opcional) Se for false, nao ira verificar o Usuario
 	 * @param $atualizar_acesso (Opcional) Se for true, ira atualizar o ultimo acesso
-	 * @return self O Usuario atualmente logado
+	 * @return Usuario O Usuario atualmente logado
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Ping($verificar = true, $atualizar_acesso = true) {
@@ -1481,11 +1481,11 @@ class Usuario extends Base {
 			return false;
 		list($largura, $altura, $tipo) = getimagesize($arquivo['tmp_name']);
 		if($tipo == IMAGETYPE_JPEG) {
-			$original = imagecreatefromjpeg($arquivo['tmp_name']);
+			$original = @imagecreatefromjpeg($arquivo['tmp_name']);
 		} elseif($tipo == IMAGETYPE_GIF) {
-			$original = imagecreatefromgif($arquivo['tmp_name']);
+			$original = @imagecreatefromgif($arquivo['tmp_name']);
 		} elseif($tipo == IMAGETYPE_PNG) {
-			$original = imagecreatefrompng($arquivo['tmp_name']);
+			$original = @imagecreatefrompng($arquivo['tmp_name']);
 		} else
 			return false;
 		if($this->foto != null) {
