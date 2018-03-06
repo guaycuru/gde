@@ -69,6 +69,8 @@ class Arvore {
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getAluno()->getRA(true);
 		$Curso = ($Usuario->getCurso(false) !== null) ? $Usuario->getCurso() : $Usuario->getAluno()->getCurso();
+		if($Curso === null)
+			return;
 		$this->curso = $Curso->getNumero(true);
 		$this->nome_curso = $Curso->getNome(true);
 		$this->modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getSigla(true) : '';
