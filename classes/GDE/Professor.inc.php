@@ -113,7 +113,7 @@ class Professor extends Base {
 		$Professores = self::Por_Nome($nome);
 		if(count($Professores) != 1)
 			return false;
-		return $Professores->first();
+		return $Professores[0];
 	}
 
 	// Metodo que passa no cheap check do ProxyGenerator
