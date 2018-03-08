@@ -40,6 +40,7 @@ require_once('../common/common.inc.php');
 
 if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = clone $_Usuario;
+	$Usr->markReadOnly();
 	if(isset($_GET['catalogo'])) {
 		$catalogo = intval($_GET['catalogo']);
 		$Usr->setCatalogo($catalogo);
@@ -65,9 +66,9 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 } else {
 	$Usr = Usuario::Por_Login($_GET['us']);
 	if($Usr === null)
-		die("<h2>Usu&aacute;rio n&atilde;o encontrado.</h2>");
+		die("<h2>Usu&aacute;rio n&atilde;o encontrado.</h2>".$FIM);
 	if($_Usuario->Pode_Ver($Usr, 'arvore') !== true)
-		die("<h2>Vo&ccedil;&ecirc; n&atilde;o tem permiss&atilde;o para ver esta &aacute;rvore!</h2>");
+		die("<h2>Vo&ccedil;&ecirc; n&atilde;o tem permiss&atilde;o para ver esta &aacute;rvore!</h2>".$FIM);
 	$curso = $Usr->getCurso(true)->getNumero(true);
 	$modalidade = $Usr->getModalidade(true)->getSigla(true);
 	$catalogo = $Usr->getCatalogo(true);
@@ -89,6 +90,8 @@ $continua = Curriculo::Existe($curso, $modalidade, $catalogo);
 if($continua) {
 	$start = microtime(true);
 	$Arvore = new Arvore($Usr, $completa);
+	if($Arvore->getErro() === true)
+		die("<h2>Erro: N&atilde;o foi poss&iacute;vel montar &aacute;rvore!</h2>".$FIM);
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
 		$construct = microtime(true) - $start;
 		echo "Construct: ".$construct."<br />";

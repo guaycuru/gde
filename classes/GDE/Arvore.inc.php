@@ -57,20 +57,26 @@ class Arvore {
 	private $posicoes;
 	private $setas;
 
+	private $erro = false;
+
 	static $consts = array("inicio_x" => 80, "inicio_y" => 50, "largura" => 90, "altura" => 30, "dist_x" => 55, "dist_y" => 75);
 
 	public function __construct(Usuario $Usuario, $completa = true, $periodo = null, &$times = false) {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
-		if($Usuario->getAluno(false) === null)
+		if($Usuario->getAluno(false) === null) {
+			$this->erro = true;
 			return;
+		}
 
 		$this->nome = $Usuario->getNome_Completo(true);
 		$this->ra = $Usuario->getAluno()->getRA(true);
 		$Curso = ($Usuario->getCurso(false) !== null) ? $Usuario->getCurso() : $Usuario->getAluno()->getCurso();
-		if($Curso === null)
+		if($Curso === null) {
+			$this->erro = true;
 			return;
+		}
 		$this->curso = $Curso->getNumero(true);
 		$this->nome_curso = $Curso->getNome(true);
 		$this->modalidade = ($Usuario->getModalidade(false) !== null) ? $Usuario->getModalidade()->getSigla(true) : '';
@@ -965,6 +971,10 @@ class Arvore {
 			return ($simbolo) ? '*' : 'Eletiva';
 		else
 			return ($simbolo) ? 'X' : 'Extra-Curricular';
+	}
+
+	public function getErro() {
+		return $this->erro;
 	}
 
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {

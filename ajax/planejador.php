@@ -114,6 +114,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID(), $times['arvore1']);
+			if($Arvore->getErro() === true)
+				die(json_encode(false));
 			$Disciplinas = $Disciplinas + $Arvore->getDisciplinas();
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -321,6 +323,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 
 			// Re-faz a arvore porque mudei as atuais
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID(), $times['arvore2']);
+			if($Arvore->getErro() === true)
+				die(json_encode(false));
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['nova_arvore'] = microtime(true) - $times['start'] - $tt;
@@ -376,6 +380,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			$obs = null;
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			if($Arvore->getErro() === true)
+				die(json_encode(false));
 			$pode = $Arvore->Pode_Cursar($Disciplina, $obs);
 			$total = 0;
 			if($pode)
@@ -493,12 +499,16 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$Oferecimentos[] = $Of;
 			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			if($Arvore->getErro() === true)
+				die(json_encode(false));
 
 			$Ret = $Planejado->Adicionar_Oferecimento($Oferecimento, $Arvore, true);
 			if($Ret['ok'] !== false) {
 				// Preciso recalcular a Arvore para atualizar a integralizacao
 				$Usr->Adicionar_Oferecimentos(array($Oferecimento));
 				$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+				if($Arvore->getErro() === true)
+					die(json_encode(false));
 				$Ret['Arvore'] = array(
 					'cp' => $Arvore->getCP(4),
 					'cpf' => $Arvore->getCPF(4),
@@ -537,6 +547,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$Oferecimentos[] = $Of;
 			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
+			if($Arvore->getErro() === true)
+				die(json_encode(false));
 			$Ret['Arvore'] = array(
 				'cp' => $Arvore->getCP(4),
 				'cpf' => $Arvore->getCPF(4),

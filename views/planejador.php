@@ -17,6 +17,9 @@ if(isset($_GET['idi'])) {
 
 require_once('../common/common.inc.php');
 
+if(($_Usuario->getCatalogo(false) == null) || ($_Usuario->getCurso(false) == null))
+	die("<strong>Erro:</strong> N&atilde;o &eacute; poss&iacute;vel montar a &aacute;rvore para o planejador: Cat&aacute;logo ou Curso de Gradua&ccedil;&atilde;o n&atilde;o especificado no Perfil!<br />".$FIM);
+
 $cores = Planejado::getCores();
 $nce = count(PlanejadoExtra::getCores());
 
