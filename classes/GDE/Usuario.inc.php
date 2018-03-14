@@ -134,6 +134,13 @@ class Usuario extends Base {
 	protected $eventos;
 
 	/**
+	 * @var ArrayCollection|UsuarioToken[]
+	 *
+	 * @ORM\OneToMany(targetEntity="UsuarioToken", mappedBy="usuario", cascade={"remove"})
+	 */
+	protected $tokens;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(type="string", length=16, unique=true, nullable=false)
