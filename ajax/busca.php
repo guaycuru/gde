@@ -123,7 +123,7 @@ if($simples) {
 		} else
 			$ordem[$tp] = null;
 		
-		if(isset($_POST['amigos']) && $_POST['amigos'] == 't') {
+		if((isset($_POST['amigos'])) && ($_POST['amigos'] == 't')) {
 			$parametros['amigos'] = true;
 			$parametros['id_usuario'] = $_Usuario->getID();
 		}

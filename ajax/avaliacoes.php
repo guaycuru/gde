@@ -14,7 +14,7 @@ foreach(AvaliacaoPergunta::Listar('t') as $Pergunta) {
 	$Professor = Professor::Load($_GET['id_professor']);
 	if($Professor->getId_Professor() == null)
 		exit;
-	if(!empty($_GET['disciplina'])) {
+	if(!empty($_GET['id_disciplina'])) {
 		$Disciplina = Disciplina::Load($_GET['id_disciplina']);
 		if($Disciplina->getId_Disciplina() == null)
 			exit;

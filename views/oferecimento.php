@@ -82,7 +82,7 @@ if($oferecimento_pagina == null) {
 				Lista_Alunos();
 			});
 			$("a.link_pagina").live('click', function() {
-				var pg = $(this).attr('href').split('$')[1]
+				var pg = $(this).attr('href').split('$')[1];
 				Carrega(tipo, pg);
 				return false;
 			});

@@ -28,7 +28,6 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 		}
 	}
 
-	;
 	set_exception_handler('exception_handler');
 
 	function exception_error_handler($severity, $message, $file, $line) {
