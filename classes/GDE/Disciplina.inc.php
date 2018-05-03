@@ -16,7 +16,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  *     @ORM\UniqueConstraint(name="sigla_nivel", columns={"sigla", "nivel"})
  *  },
  *  indexes={
- *     @ORM\Index(name="sigla_nome", columns={"sigla", "nome"}),
+ *     @ORM\Index(name="sigla_nome", columns={"sigla", "nome"}, flags={"fulltext"}),
  *     @ORM\Index(name="nome", columns={"nome"}),
  *     @ORM\Index(name="creditos", columns={"creditos"}),
  *     @ORM\Index(name="periodicidade", columns={"periodicidade"}),

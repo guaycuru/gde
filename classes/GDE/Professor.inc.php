@@ -13,7 +13,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
  * @ORM\Table(
  *   name="gde_professores",
  *   indexes={
- *     @ORM\Index(name="nome", columns={"nome"})
+ *     @ORM\Index(name="nome", columns={"nome"}, flags={"fulltext"})
  *   }
  * )
  * @ORM\Entity
