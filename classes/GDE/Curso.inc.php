@@ -101,6 +101,8 @@ class Curso extends Base {
 	public static function Por_Numero($numero, $niveis = null) {
 		if($niveis === null)
 			$niveis = self::$NIVEIS_GRAD;
+		elseif(!is_array($niveis))
+			$niveis = array($niveis);
 		$dql = 'SELECT C FROM '.get_class().' C WHERE C.numero = ?1';
 		if(count($niveis) > 0)
 			$dql .= ' AND C.nivel IN (?2)';
