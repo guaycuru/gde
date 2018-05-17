@@ -567,6 +567,9 @@ class Aluno extends Base {
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public function Creditos_Atuais($periodo = null, $niveis = array()) {
+		if(!is_array($niveis))
+			$niveis = array($niveis);
+
 		if(is_object($periodo))
 			$periodo = $periodo->getID();
 
