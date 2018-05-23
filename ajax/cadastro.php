@@ -46,6 +46,8 @@ if(isset($_POST['enviar'])) {
 			if($Usuario->getLogin(false) == null) {
 				if(empty($_POST['login']))
 					Base::Error_JSON("Por favor digite um login.");
+				if(strpos($_POST['login'], '@') !== false)
+					Base::Error_JSON("O login não pode conter um arroba.");
 				$login = mb_strtolower($_POST['login']);
 				if(Usuario::Por_Login($login, null, false) !== null)
 					Base::Error_JSON("Já existe um usuário cadastrado com o login informado.");
