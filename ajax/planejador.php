@@ -18,8 +18,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Periodo = Periodo::Load($pp);
 		$pa = $Periodo->Anterior()->getPeriodo();
 	}
-	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, true);
-	$Ret['ok'] = ($Planejado !== false);
+	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, false);
+	if($_Usuario->getAluno(false) === null)
+		$Planejado->setSimulado(true);
+	$Ret['ok'] = ($Planejado->Save(true) !== false);
 	if($Ret['ok'] === true)
 		$Ret['id'] = $Planejado->getID();
 } elseif($_POST['a'] == 'x') { // Excluir Opcao
@@ -182,7 +184,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 						unset($Disciplinas[$sem][$k]);
 					$Raw[$sem][$sigla]['Disciplina'] = $Disciplina;
 					$obs = null;
-					$Raw[$sem][$sigla]['pode'] = $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
+					$Raw[$sem][$sigla]['pode'] = $Planejado->getSimulado() || $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
 					$Raw[$sem][$sigla]['obs'] = $obs;
 					if($Raw[$sem][$sigla]['pode']) 
 						$Raw[$sem][$sigla]['Oferecimentos'] = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
@@ -219,6 +221,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				'periodo_atual' => $Planejado->getPeriodo_Atual()->getID(),
 				'periodo_atual_nome' => $Planejado->getPeriodo_Atual()->getNome(),
 				'compartilhado' => ($Planejado->getCompartilhado()) ? 't' : 'f',
+				'simulado' => ($Planejado->getSimulado()) ? 't' : 'f',
 				'Config' => $Config
 			);
 			
@@ -387,7 +390,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
 			if($Arvore->getErro() === true)
 				die(json_encode(false));
-			$pode = $Arvore->Pode_Cursar($Disciplina, $obs);
+			$pode = $Planejado->getSimulado() || $Arvore->Pode_Cursar($Disciplina, $obs);
 			$total = 0;
 			if($pode)
 				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
@@ -571,6 +574,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 'm') { // Mudar compartilhado
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
+		$Ret = ($Planejado->Save(true) !== false);
+	} elseif(($_POST['a'] == 's') && ($_Usuario->getAdmin())) { // Mudar simulado
+		$Planejado->setSimulado(($_POST['v'] == 't'));
 		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
 		$Planejado->Limpar_Eliminadas(false);

@@ -80,6 +80,13 @@ class Planejado extends Base {
 	 */
 	protected $compartilhado = false;
 
+	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(type="boolean", options={"default"=0}, nullable=false)
+	 */
+	protected $simulado = false;
+
 	private static $_cores = array(
 		'#D96666', '#E67399', '#E6804D', '#A7A77D', '#B373B3', '#DDDD00', '#65AD89',
 		'#8C66D9', '#C244AB', '#A992A9', '#D1BC36', '#668CB3', '#4650BD', '#59BFB3',
@@ -249,7 +256,7 @@ class Planejado extends Base {
 	 * @return UsuarioAmigo[]
 	 */
 	public function Amigos_Por_Oferecimento(Oferecimento $Oferecimento) {
-		$dql = "SELECT UA FROM GDE\\UsuarioAmigo UA JOIN UA.amigo AS A JOIN A.planejados AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos AND UA.usuario = :id_usuario AND UA.ativo = TRUE";
+		$dql = "SELECT UA FROM GDE\\UsuarioAmigo UA JOIN UA.amigo AS A JOIN A.planejados AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos AND P.simulado = FALSE AND UA.usuario = :id_usuario AND UA.ativo = TRUE";
 		return self::_EM()
 			->createQuery($dql)
 			->setParameters(array('id_oferecimento' => $Oferecimento->getID(), 'id_usuario' => $this->getUsuario()->getID()))
@@ -262,7 +269,7 @@ class Planejado extends Base {
 	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	public static function Total_Por_Oferecimento(Oferecimento $Oferecimento) {
-		$dqlt = "SELECT COUNT(DISTINCT P.usuario) FROM ".get_class()." AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos";
+		$dqlt = "SELECT COUNT(DISTINCT P.usuario) FROM ".get_class()." AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos AND P.simulado = FALSE";
 		return self::_EM()
 			->createQuery($dqlt)
 			->setParameters(array('id_oferecimento' => $Oferecimento->getID()))

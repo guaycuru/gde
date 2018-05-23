@@ -67,6 +67,7 @@ var PlanejadorProcessarPlanejado = function(Planejado) {
 	$("#planejador_periodo").html(Planejado.periodo_nome);
 	$("#planejador_periodo_atual").html(Planejado.periodo_atual_nome);
 	$("#compartilhado_"+Planejado.compartilhado).attr('checked', true);
+	$("#simulado_"+Planejado.simulado).attr('checked', true);
 	$("#form_planejador_configurar > input.configurar_eliminada").remove();
 	$.each(Planejado.Config, function(i, C) {
 		var sr = C.sigla.replace(' ', '_');
@@ -634,6 +635,15 @@ $(document).ready(function() {
 			if(res == false)
 				$("#compartilhado_"+((v == 'f')?'t':'f')).attr('checked', 'checked');
 			tmp.remove();
+		});
+	});
+	$("#simulado_t, #simulado_f").click(function() {
+		var v = $(this).val();
+		$(this).CarregandoL();
+		$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 's', v: v}, function(res) {
+			if(res == false)
+				$("#simulado_"+((v == 'f')?'t':'f')).attr('checked', 'checked');
+			window.location.reload();
 		});
 	});
 	$("#link_novo_extra").fancybox({

@@ -104,6 +104,12 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 			<td width="20%"><b>Compartilhado:</b></td>
 			<td colspan="3"><input type="radio" name="compartilhado" value="f" id="compartilhado_f" /><label for="compartilhado_f">N&atilde;o</label> <input type="radio" name="compartilhado" value="t" id="compartilhado_t" /><label for="compartilhado_t">Com Amigos</label> (Est&aacute;gios e Atividades Extra-Curriculares n&atilde;o ser&atilde;o compartilhados).</td>
 		</tr>
+		<?php if($_Usuario->getAdmin()) { ?>
+		<tr>
+			<td width="20%"><b>Simulado:</b></td>
+			<td colspan="3"><input type="radio" name="simulado" value="f" id="simulado_f" /><label for="simulado_f">N&atilde;o</label> <input type="radio" name="simulado" value="t" id="simulado_t" /><label for="simulado_t">Sim</label> (Permite que sejam adicionadas disciplinas que voc&ecirc; n&atilde;o pode cursar).</td>
+		</tr>
+		<?php } ?>
 		<tr>
 			<td width="50%" colspan="2" align="center"><a href="#" id="visualizar_impressao">Visualizar Para Impress&atilde;o</a></td>
 			<td width="50%" colspan="2" align="center"><a href="#" class="planejador_excluir">Excluir esta op&ccedil;&atilde;o</a></td>
