@@ -51,6 +51,7 @@ if($simples) {
 	$ordem['salas'] = (isset($_POST['ord']['salas_s'])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'S.nome ASC';
 
 	$start = microtime(true);
+	$q = Util::Limpa_Busca($q);
 	$Alunos = ($qts['alunos'] != 0) ? Aluno::Consultar_Simples($q, $ordem['alunos'], $total['alunos'], $qts['alunos'], $sta['alunos']) : array();
 	$Professores = ($qts['professores'] != 0) ? Professor::Consultar_Simples($q, $ordem['professores'], $total['professores'], $qts['professores'], $sta['professores']) : array();
 	$Disciplinas = ($qts['disciplinas'] != 0) ? Disciplina::Consultar_Simples($q, $ordem['disciplinas'], $total['disciplinas'], $qts['disciplinas'], $sta['disciplinas']) : array();
