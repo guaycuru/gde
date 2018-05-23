@@ -3,7 +3,8 @@
 # composer.lock
 
 .svn/
-cache/
+cache/*
+!cache/.htaccess
 common/config.inc.php
 nbproject/
 api/gen/
@@ -14,6 +15,8 @@ web/fts/*
 .idea/
 *.iml
 proxies/*
-vendor/
+!proxies/.htaccess
+vendor/*
+!vendor/.htaccess
 composer.phar
 errors/*
