@@ -1,12 +1,12 @@
 {
   "require": {
-    "php": ">=5.3.29",
+    "php": ">=5.6",
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-gd": "*",
-    "doctrine/orm": "^2.5 || 2.4.8",
-    "doctrine/dbal": "^2.5 || 2.5.13",
-    "doctrine/common": "^2.7 || 2.5.3",
+    "doctrine/orm": "^2.6 || 2.5.14",
+    "doctrine/dbal": "^2.7 || 2.5.13",
+    "doctrine/common": "^2.8 || 2.7.3",
     "predis/predis": "^1.1",
     "ircmaxell/password-compat": "^1.0"
   },
