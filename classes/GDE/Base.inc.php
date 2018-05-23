@@ -6,9 +6,7 @@ use Doctrine\DBAL\ConnectionException;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\TransactionRequiredException;
 
 /**
  * Base class with timezone support
@@ -47,7 +45,6 @@ abstract class Base {
 	 */
 	public static function StartTrans() {
 		self::$_trans_count++;
-
 		self::_EM()->getConnection()->beginTransaction();
 	}
 
@@ -125,12 +122,11 @@ abstract class Base {
 	 * @return void
 	 */
 	public static function OK_JSON($id = null, $http = 200, $extra = array()) {
-		if(function_exists('http_response_code'))
-			http_response_code($http);
+		http_response_code($http);
 		die(self::To_JSON(array(
-				'ok' => true,
-				'id' => $id
-			) + $extra));
+			'ok' => true,
+			'id' => $id
+		) + $extra));
 	}
 
 	/**
@@ -144,12 +140,10 @@ abstract class Base {
 	 * @return void
 	 */
 	public static function Error_JSON($message, $http = 200, $extra = array()) {
-		if(function_exists('http_response_code'))
-			http_response_code($http);
 		die(self::To_JSON(array(
-				'ok' => false,
-				'error' => $message
-			) + $extra));
+			'ok' => false,
+			'error' => $message
+		) + $extra));
 	}
 
 	/**
@@ -174,7 +168,7 @@ abstract class Base {
 	 * @param array $order (optional) Results order
 	 * @param integer $limit (optional) Results limit
 	 * @param integer $offset (optional) Results offset
-	 * @return array|false Array of objects found, or false on query error
+	 * @return static[]|false Array of objects found, or false on query error
 	 */
 	public static function FindBy($params = array(), array $order = null, $limit = null, $offset = null) {
 		return self::_EM()->getRepository(get_called_class())->findBy($params, $order, $limit, $offset);
@@ -200,8 +194,6 @@ abstract class Base {
 	 * @param mixed $id The object ID to look for
 	 * @return static|object The found object, or a new empty object if not found
 	 * @throws ORMException
-	 * @throws OptimisticLockException
-	 * @throws TransactionRequiredException
 	 */
 	public static function Load($id) {
 		$Obj = self::_EM()->find(get_called_class(), $id);
@@ -211,7 +203,7 @@ abstract class Base {
 	}
 
 	/**
-	 * getID
+	 * getId
 	 *
 	 * Returns the object's primary key value
 	 *
@@ -249,12 +241,12 @@ abstract class Base {
 	 *
 	 * @param boolean $flush (optional) Whether to write the changes to the DB
 	 * @return boolean True in case of success or false in case of error
-	 * @throws OptimisticLockException
+	 * @throws ORMException
 	 */
 	public function Save($flush = true) {
 		if(self::_EM()->persist($this) === false)
 			return false;
-		
+
 		if(($flush) && (self::_EM()->flush() === false))
 			return false;
 		
@@ -268,15 +260,11 @@ abstract class Base {
 	 *
 	 * @param boolean $flush (optional) Whether to write the changes to the DB
 	 * @return boolean True in case of success or false in case of error
-	 * @throws OptimisticLockException
+	 * @throws ORMException
 	 */
 	public function Delete($flush = true) {
-		try {
-			if($this->getID() == null)
-				return true;
-		} catch(\Exception $exception) {
-			return false;
-		}
+		if($this->getId() == null)
+			return true;
 
 		self::_EM()->remove($this);
 
@@ -300,7 +288,7 @@ abstract class Base {
 		if($this->Save($flush) === true) {
 			if(is_callable($extra))
 				$extra = $extra();
-			self::OK_JSON($this->getID(), 200, $extra);
+			self::OK_JSON($this->getId(), 200, $extra);
 		} else
 			self::Error_JSON('Um erro desconhecido ocorreu, por favor tente novamente.');
 	}
@@ -313,7 +301,6 @@ abstract class Base {
 	 * @param bool $flush
 	 * @return void
 	 * @throws ORMException
-	 * @throws OptimisticLockException
 	 */
 	public function Delete_JSON($flush = true) {
 		if($this->Delete($flush) === true)
@@ -330,7 +317,6 @@ abstract class Base {
 	 * @param $name
 	 * @param $args
 	 * @return mixed
-	 * @throws \Exception
 	 */
 	public function __call($name, $args) {
 		if(preg_match('/^(get|set|add|remove|clear|has)(.+?)$/i', $name, $matches) > 0) {
@@ -342,7 +328,7 @@ abstract class Base {
 				? $this->_meta->fieldMappings[$property]['type']
 				: null;
 			if(property_exists($this, $property) === false)
-				throw new \Exception('Property '.$property.' not found on class '.get_class($this).'.');
+				throw new \InvalidArgumentException('Property '.$property.' not found on class '.get_class($this).'.');
 			$_association = (isset($this->_meta->associationMappings[$property]))
 				? $this->_meta->associationMappings[$property]
 				: false;
@@ -414,6 +400,7 @@ abstract class Base {
 									$datetime = $this->{$property};
 								if((!isset($args[0])) || ($args[0] === false)) // Return DateTime object
 									return $datetime;
+								// Apply formatting instead
 								if((isset($args[0])) && (is_string($args[0])))
 									$format = $args[0];
 								elseif($type == 'datetime')
@@ -441,7 +428,7 @@ abstract class Base {
 								$value = new \DateTime();
 								break;
 							default:
-								throw new \Exception("Can't set ".$property." without a value on ".get_class($this).'.');
+								throw new \InvalidArgumentException("Can't set ".$property." without a value on ".get_class($this).'.');
 						}
 					} else { // Value passed
 						$value = $args[0];
@@ -453,7 +440,7 @@ abstract class Base {
 							switch($_association['type']) {
 								case ClassMetadataInfo::ONE_TO_ONE: // OneToOne
 									if((!is_object($value)) && (!is_null($value)))
-										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
+										throw new \InvalidArgumentException("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation, if needed
 									if(($set_other_side === true) && (is_object($value))) {
 										if(!empty($_association['mappedBy']))
@@ -464,7 +451,7 @@ abstract class Base {
 									break;
 								case ClassMetadataInfo::ONE_TO_MANY: // OneToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
-										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
+										throw new \InvalidArgumentException("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if(($set_other_side === true) && (!empty($_association['mappedBy']))) {
 										foreach($value as $object)
@@ -477,19 +464,19 @@ abstract class Base {
 									break;
 								case ClassMetadataInfo::MANY_TO_ONE: // ManyToOne
 									if((!is_object($value)) && (!is_null($value)))
-										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).'.');
+										throw new \InvalidArgumentException("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if(($set_other_side === true) && (!(empty($_association['inversedBy']))) && (is_object($value)))
+									if(($set_other_side === true) && (!(empty($_association['inversedBy']))) && (is_object($value->{$_association['inversedBy']})) && (is_object($value)))
 										if($value->{$_association['inversedBy']}->contains($this) === false)
 											$value->{$_association['inversedBy']}->add($this);
 									break;
 								case ClassMetadataInfo::MANY_TO_MANY: // ManyToMany
 									if((is_array($value) === false) && ((!is_object($value)) || (!($value instanceof ArrayCollection))))
-										throw new \Exception("Invalid argument type passed to ".$name." on ".get_class($this).': '.gettype($value));
+										throw new \InvalidArgumentException("Invalid argument type passed to ".$name." on ".get_class($this).': '.gettype($value));
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
 									if(($set_other_side === true) && (!empty($_association['mappedBy']))) {
 										foreach($value as $object) {
-											if((is_object($object)) && ($object->{$_association['mappedBy']}->contains($this) === false))
+											if((is_object($object)) && (!empty($object->{$_association['mappedBy']})) && ($object->{$_association['mappedBy']}->contains($this) === false))
 												$object->{$_association['mappedBy']}->add($this);
 										}
 									}
@@ -512,7 +499,10 @@ abstract class Base {
 											else
 												$format = 'Y-m-d';
 											$value = \DateTime::createFromFormat($format, $value);
-											$value->setTime(0, 0, 0);
+											if($value === false)
+												$value = null;
+											else
+												$value->setTime(0, 0, 0);
 										}
 										if($value instanceof \DateTime)
 											$new = $value->format('d/m/Y');
@@ -568,14 +558,14 @@ abstract class Base {
 					break;
 				case 'add':
 					if($_association['type'] & ClassMetadataInfo::TO_ONE)
-						throw new \Exception("Can't add".$name."() for property TO_ONE on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Can't add".$name."() for property TO_ONE on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
-						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
 						: $_association['targetEntity']::Load($args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
-						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
 						if($_association['type'] == ClassMetadataInfo::MANY_TO_MANY)
 							$Obj->{$_association['mappedBy']}->add($this);
@@ -590,14 +580,14 @@ abstract class Base {
 					break;
 				case 'remove':
 					if($_association['type'] & ClassMetadataInfo::TO_ONE)
-						throw new \Exception("Can't remove".$name."() for property TO_ONE on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Can't remove".$name."() for property TO_ONE on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
-						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
 						: $_association['targetEntity']::Load($args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
-						throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
 						if($_association['type'] == ClassMetadataInfo::MANY_TO_MANY)
 							$Obj->{$_association['mappedBy']}->removeElement($this);
@@ -612,7 +602,7 @@ abstract class Base {
 					break;
 				case 'clear':
 					if(!($_association['type'] & ClassMetadataInfo::TO_MANY))
-						throw new \Exception("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Can't clear".$name."() for a not TO_MANY property on class ".get_class($this).'.');
 					$clear_other_side = ((!isset($args[0])) || ($args[0] === true));
 					if($clear_other_side) {
 						if($_association['type'] == ClassMetadataInfo::ONE_TO_MANY) {
@@ -634,25 +624,25 @@ abstract class Base {
 					break;
 				case 'has':
 					if(!($_association['type'] & ClassMetadataInfo::TO_MANY))
-						throw new \Exception("Can't has".$name."() for a not TO_MANY property on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("Can't has".$name."() for a not TO_MANY property on class ".get_class($this).'.');
 					if(!array_key_exists(0, $args)) // No value passed
-						throw new \Exception("No value passed for ".$name."() on class ".get_class($this).'.');
+						throw new \InvalidArgumentException("No value passed for ".$name."() on class ".get_class($this).'.');
 					if(is_object($args[0])) {
 						if(!($args[0] instanceof $_association['targetEntity']))
-							throw new \Exception("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
+							throw new \InvalidArgumentException("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 						else
-							$id = $args[0]->getID();
+							$id = $args[0]->getId();
 					} else
 						$id = $args[0];
 					return $this->{$property}->exists(function($k, $O) use ($id) {
-						return $O->getID() == $id;
+						return $O->getId() == $id;
 					});
 					break;
 				default:
-					throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
+					throw new \InvalidArgumentException("Method ".$name." not found on class ".get_class($this).'.');
 			}
 		} else {
-			throw new \Exception("Method ".$name." not found on class ".get_class($this).'.');
+			throw new \InvalidArgumentException("Method ".$name." not found on class ".get_class($this).'.');
 		}
 	}
 }
