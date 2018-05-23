@@ -51,7 +51,7 @@ var Atualizar_Calendario = function() {
 			$.guaycuru.simnao2("Voc&ecirc; tem certeza?", 
 				function(){
 					$.post(CONFIG_URL + 'ajax/evento.php', {
-						id_evento: event.id, tp: 'e', data_inicio: $.guaycuru.DateTime(event.start), data_fim: $.guaycuru.DateTime(event.end), allDay: allDay},
+						id_evento: event.id, tp: 'e', data_inicio: $.guaycuru.DateTime(event.start), data_fim: $.guaycuru.DateTime(event.end), ad: allDay},
 						function(data) {
 							if(!data || !data.ok) {
 								$.guaycuru.confirmacao(data.error || 'Erro!');
