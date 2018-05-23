@@ -45,7 +45,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	
 	$Planejado = Planejado::Load($_POST['id']);
 	
-	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()) || ($_Usuario->getAluno(false) === null))
+	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()))
 		die('forbidden');
 	
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -73,7 +73,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['verifica1'] = microtime(true) - $times['start'] - $tt;
 			
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			if($_Usuario->getAluno(false) !== null)
+				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			else
+				$Atuais = array();
 			$Config = array();
 			$Disciplinas = array();
 			$Disciplinas['N'] = array();
@@ -109,7 +112,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Cria a arvore personalizada para o planejador
 			$Usr = $_Usuario;
 			$Usr->markReadOnly();
-			$Usr->getAluno()->markReadOnly();
+			if($Usr->getAluno(false) !== null)
+				$Usr->getAluno()->markReadOnly();
 			foreach($EliminadasAdd as $EAdd)
 				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);
@@ -373,7 +377,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		} else { // Apenas uma disciplina
 			$Usr = $_Usuario;
 			$Usr->markReadOnly();
-			$Usr->getAluno()->markReadOnly();
+			if($Usr->getAluno(false) !== null)
+				$Usr->getAluno()->markReadOnly();
 			
 			$sigla = $_POST['s'];
 			$Disciplina = Disciplina::Por_Sigla($sigla);
@@ -475,7 +480,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		} else {
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			if($_Usuario->getAluno(false) !== null)
+				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			else
+				$Atuais = array();
 
 			// Processa as disciplinas atualmente em curso
 			foreach($Atuais as $Atual) {
@@ -490,7 +498,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Cria a arvore personalizada para o planejador
 			$Usr = $_Usuario;
 			$Usr->markReadOnly();
-			$Usr->getAluno()->markReadOnly();
+			if($Usr->getAluno(false) !== null)
+				$Usr->getAluno()->markReadOnly();
 			foreach($EliminadasAdd as $EAdd)
 				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);
@@ -523,7 +532,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		if($Ret['ok'] !== false) {
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
 			$EliminadasAdd = array();
-			$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			if($_Usuario->getAluno(false) !== null)
+				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			else
+				$Atuais = array();
 
 			// Processa as disciplinas atualmente em curso
 			foreach($Atuais as $Atual) {
@@ -538,7 +550,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Cria a arvore personalizada para o planejador
 			$Usr = $_Usuario;
 			$Usr->markReadOnly();
-			$Usr->getAluno()->markReadOnly();
+			if($Usr->getAluno(false) !== null)
+				$Usr->getAluno()->markReadOnly();
 			foreach($EliminadasAdd as $EAdd)
 				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 			$Planejado->setUsuario($Usr);

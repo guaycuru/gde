@@ -1639,18 +1639,24 @@ class Usuario extends Base {
 
 	// Soh pra Planejador... Nao salva!
 	public function Adicionar_Oferecimentos($Oferecimentos = array()) {
+		if($this->getAluno(false) === null)
+			return;
 		foreach($Oferecimentos as $Oferecimento)
 			$this->getAluno()->addOferecimentos($Oferecimento);
 	}
 
 	// Soh pra Planejador... Nao salva!
 	public function Remover_Oferecimentos($Oferecimentos = array()) {
+		if($this->getAluno(false) === null)
+			return;
 		foreach($Oferecimentos as $Oferecimento)
 			$this->getAluno()->removeOferecimentos($Oferecimento);
 	}
 
 	// Soh pra Planejador... Nao salva!
 	public function Substituir_Oferecimentos($Oferecimentos = array(), $periodo) {
+		if($this->getAluno(false) === null)
+			return;
 		$this->Remover_Oferecimentos($this->getAluno()->getOferecimentos($periodo));
 		$this->Adicionar_Oferecimentos($Oferecimentos);
 	}

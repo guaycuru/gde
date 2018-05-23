@@ -65,14 +65,13 @@ class Arvore {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
-		if($Usuario->getAluno(false) === null) {
-			$this->erro = true;
-			return;
-		}
-
 		$this->nome = $Usuario->getNome_Completo(true);
-		$this->ra = $Usuario->getAluno()->getRA(true);
-		$Curso = ($Usuario->getCurso(false) !== null) ? $Usuario->getCurso() : $Usuario->getAluno()->getCurso();
+		$this->ra = ($Usuario->getAluno(false) !== null) ? $Usuario->getAluno()->getRA(true) : 0;
+		$Curso = null;
+		if($Usuario->getCurso(false) !== null)
+			$Curso =  $Usuario->getCurso();
+		elseif($Usuario->getAluno(false) !== null)
+			$Curso =  $Usuario->getAluno()->getCurso();
 		if($Curso === null) {
 			$this->erro = true;
 			return;
@@ -105,7 +104,7 @@ class Arvore {
 		$this->Eletivas = CurriculoEletiva::Consultar(array("curso" => $this->curso, "modalidade" => $this->modalidade, "catalogo" => $this->catalogo));
 		$this->Eliminadas = array();
 		$this->Eletivas_Faltantes = $this->Eletivas;
-		$this->Atuais = $this->Usuario->getAluno()->getOferecimentos($this->periodo, $this->nivel);
+		$this->Atuais = ($this->Usuario->getAluno(false) !== null) ? $this->Usuario->getAluno()->getOferecimentos($this->periodo, $this->nivel) : array();
 
 		if($times !== false)
 			$times['disciplina'] = microtime(true) - $times['start'];
