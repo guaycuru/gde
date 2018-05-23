@@ -49,7 +49,12 @@ if($_POST['tp'] == 'a') { // Adicionar
 	$Evento = Evento::Load($_POST['id_evento']);
 	if($Evento->Pode_Alterar($_Usuario) === false)
 		Base::Error_JSON('Acesso negado!');
-	$Evento->setData_Inicio($_POST['data_inicio']);
+	if((!isset($_POST['ad']) || $_POST['ad'] != '1') && (isset($_POST['hora_inicio'])))
+		$hora_inicio = $_POST['hora_inicio'];
+	else
+		$hora_inicio = "00:00";
+	$Inicio = \DateTime::createFromFormat('d/m/Y H:i', $_POST['data_inicio'].' '.$hora_inicio);
+	$Evento->setData_Inicio($Inicio);
 	$Evento->setData_Fim($_POST['data_fim']);
 	if(isset($_POST['local']))
 		$Evento->setLocal($_POST['local']);
