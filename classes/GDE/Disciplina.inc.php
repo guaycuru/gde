@@ -77,7 +77,7 @@ class Disciplina extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $nome;
 

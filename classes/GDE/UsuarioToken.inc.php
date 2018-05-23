@@ -28,7 +28,7 @@ class UsuarioToken extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, unique=true, nullable=false)
+	 * @ORM\Column(type="string", unique=true, nullable=false)
 	 */
 	protected $token;
 

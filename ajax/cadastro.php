@@ -44,8 +44,8 @@ if(isset($_POST['enviar'])) {
 			else
 				$Usuario = $Ja_tem;
 			if($Usuario->getLogin(false) == null) {
-				if(empty($_POST['login']))
-					Base::Error_JSON("Por favor digite um login.");
+				if((empty($_POST['login'])) || (strlen($_POST['login']) < 3) || (strlen($_POST['login']) > 32))
+					Base::Error_JSON("Por favor digite um login com no mínimo 3 e no máximo 32 caracteres.");
 				if(strpos($_POST['login'], '@') !== false)
 					Base::Error_JSON("O login não pode conter um arroba.");
 				$login = mb_strtolower($_POST['login']);

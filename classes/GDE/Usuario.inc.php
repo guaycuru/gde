@@ -143,35 +143,35 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=16, unique=true, nullable=false)
+	 * @ORM\Column(type="string", unique=true, nullable=false)
 	 */
 	protected $login;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $senha;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $nome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $sobrenome;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+	 * @ORM\Column(type="string", unique=true, nullable=true)
 	 */
 	protected $email;
 
@@ -220,63 +220,63 @@ class Usuario extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $apelido;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $status;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $orkut;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $gtalk;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $msn;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $blog;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $facebook;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $twitter;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $cidade;
 

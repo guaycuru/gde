@@ -33,7 +33,7 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=false)
+	 * @ORM\Column(type="string", nullable=false)
 	 */
 	protected $nome;
 
@@ -69,14 +69,14 @@ class UsuarioEmprego extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $cargo;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", length=255, nullable=true)
+	 * @ORM\Column(type="string", nullable=true)
 	 */
 	protected $site;
 
