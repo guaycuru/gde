@@ -550,7 +550,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						<td><input type="text" id="oferecimento_nome" name="nome" value="<?=((isset($_GET['nome']))?htmlspecialchars($_GET['nome']):null); ?>" /></td>
 					</tr>
 					<tr>
-						<td>Professor:</td>
+						<td>Professor(a):</td>
 						<td><input type="text" id="oferecimento_professor" name="professor" value="<?=((isset($_GET['professor']))?htmlspecialchars($_GET['professor']):null); ?>" /></td>
 					</tr>
 					<tr>

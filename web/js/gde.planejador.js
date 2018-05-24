@@ -179,27 +179,38 @@ var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflit
 		} else {
 			$.each(Dados.Oferecimentos, function(i, O) {
 				if(O.fechado)
-					O.li = '<a href="#" class="oferecimento_'+O.id+' pso_fechado">'+O.link+' - FECHADO!</a>';
-				else if(O.viola_reserva) {
-					O.link += ' (VIOLA RESERVA!)';
-					O.li = '<a href="#" class="oferecimento_'+O.id+' pso_viola">'+O.link+'</a>';
-				} else
-					O.li = '<a href="#" class="oferecimento_'+O.id+'">'+O.link+'</a>';
-				O.li += '<div class="planejador_estrelas">' +
-					'<div class="planejador_estrelas1">Geral<br />' +
-						((O.mediap > 0) ? '<div class="estrelas" style="width: '+O.mediap+'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
-					'</div>' +
-					'<div class="planejador_estrelas2">Coer&ecirc;ncia<br />' +
-						((O.media1 > 0) ? '<div class="estrelas" style="width: '+O.media1+'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
-					'</div>' +
-					'<div class="planejador_estrelas3">Aprendizado<br />' +
-						((O.media2 > 0) ? '<div class="estrelas" style="width: '+O.media2+'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
-					'</div>' +
-					'<div class="planejador_estrelas4">Facilidade<br />' +
-						((O.media3 > 0) ? '<div class="estrelas" style="width: '+O.media3+'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="planejador_estrelas_fim"></div>';
+					O.li = '<a href="#" class="oferecimento_'+O.id+' pso_fechado">'+O.link+' FECHADO!</a>';
+				else {
+					var classe = (O.viola_reserva) ? ' pso_viola' : '';
+					if (O.viola_reserva)
+						O.link += ' -  VIOLA RESERVA!';
+					O.li = '<a href="#" class="oferecimento_' + O.id + classe + '">' + O.link + '</a>';
+					if (!Array.isArray(O.professores) || O.professores.length === 0)
+						O.li += '<div>Docente(s) Desconhecido(s)</div>';
+					for (p in O.professores) {
+						var nome = O.professores[p]['nome'];
+						var mediap = O.professores[p]['mediap'];
+						var media1 = O.professores[p]['media1'];
+						var media2 = O.professores[p]['media2'];
+						var media3 = O.professores[p]['media3'];
+						O.li += '<div>' + nome + '</div>' +
+							'<div class="planejador_estrelas">' +
+							'<div class="planejador_estrelas1">Geral<br />' +
+							((mediap > 0) ? '<div class="estrelas" style="width: ' + mediap + 'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
+							'</div>' +
+							'<div class="planejador_estrelas2">Coer&ecirc;ncia<br />' +
+							((media1 > 0) ? '<div class="estrelas" style="width: ' + media1 + 'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
+							'</div>' +
+							'<div class="planejador_estrelas3">Aprendizado<br />' +
+							((media2 > 0) ? '<div class="estrelas" style="width: ' + media2 + 'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
+							'</div>' +
+							'<div class="planejador_estrelas4">Facilidade<br />' +
+							((media3 > 0) ? '<div class="estrelas" style="width: ' + media3 + 'px;">' : '<div class=\"estrelas_nd\">') + '&nbsp;</div>' +
+							'</div>' +
+							'</div>' +
+							'<div class="planejador_estrelas_fim"></div>';
+					}
+				}
 				O.Disciplina = Dados.Disciplina;
 				$("#menu_"+Dados.Disciplina.siglan+" ul").append('<li id="li_oferecimento_'+O.id+'" class="planejador_oferecimento">' + O.li + '</li>');
 				$("#li_oferecimento_"+O.id).bind(PlanejadorLiBinds);

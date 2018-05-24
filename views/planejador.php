@@ -183,7 +183,7 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 		<span id="divtip_disciplina"></span>
 	</div>
 	<div class="linha">
-		<span class="divtip_titulo">Professor:</span>
+		<span class="divtip_titulo">Professor(es):</span>
 		<span id="divtip_professor"></span>
 	</div>
 	<div class="linha">
