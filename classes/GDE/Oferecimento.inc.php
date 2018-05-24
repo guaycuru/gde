@@ -413,21 +413,6 @@ class Oferecimento extends Base {
 	}
 
 	/**
-	 * getProfessor
-	 *
-	 * Retrocompatibilidade
-	 *
-	 * @param $vazio bool
-	 * @return Professor
-	 */
-	public function getProfessor($vazio = false) {
-		$Professores = $this->getProfessores(false);
-		if(count($Professores) == 0)
-			return ($vazio) ? new Professor : null;
-		return $Professores->first();
-	}
-
-	/**
 	 * getReservas
 	 *
 	 * Retorna a lista de Reservas deste Oferecimento, opcionalmente formatadas (HTML)
