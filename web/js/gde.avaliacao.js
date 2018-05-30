@@ -16,20 +16,20 @@ var Carregar_Avaliacoes = function() {
 	}
 };
 
-var Enviar_Avaliacao = function(link, idp, professor, sigla) {
+var Enviar_Avaliacao = function(link, idp, professor, disciplina) {
 	if(!professor)
 		professor = '';
-	if(!sigla)
-		sigla = '';
+	if(!disciplina)
+		disciplina = '';
 	link.hide();
-	link.after('<span id="votando_aguarde_'+idp+'_'+professor+((sigla)?"_"+sigla:"")+'">Aguarde...</span>');
-	$.post(CONFIG_URL + 'ajax/avaliacao.php', {idp: idp, professor: professor, sigla: sigla.replace('-', ' '), nota: $("#nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).slider("value")}, function(data) {
+	link.after('<span id="votando_aguarde_'+idp+'_'+professor+((disciplina)?"_"+disciplina:"")+'">Aguarde...</span>');
+	$.post(CONFIG_URL + 'ajax/avaliacao.php', {idp: idp, professor: professor, disciplina: disciplina, nota: $("#nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).slider("value")}, function(data) {
 		if(data == 1) {
-			$("#votar_nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).before("Voto salvo com sucesso!");
-			$("#votar_nota_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).remove();
+			$("#votar_nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).before("Voto salvo com sucesso!");
+			$("#votar_nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).remove();
 		} else {
 			link.show();
-			$("#votando_aguarde_"+idp+"_"+professor+((sigla)?"_"+sigla:"")).remove();
+			$("#votando_aguarde_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).remove();
 		}
 	});
 };
