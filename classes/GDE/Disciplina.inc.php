@@ -536,7 +536,7 @@ class Disciplina extends Base {
 	 * @return array|mixed|string
 	 */
 	public function getPre_Requisitos($Usuario, $formatado = false, $catalogo = null) {
-		$de_pos = in_array($this->getNivel(false), array('M', 'D', 'S'));
+		$de_pos = in_array($this->getNivel(false), self::$NIVEIS_POS);
 
 		if($formatado === false) { // Se nao eh formatado, retorna soh os do Catalogo do Usuario
 			$catalogo = ($de_pos) ? self::NIVEL_POS : $Usuario->getCatalogo(false);
