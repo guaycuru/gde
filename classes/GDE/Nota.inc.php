@@ -46,7 +46,7 @@ class Nota extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="decimal", precision=4, scale=2, nullable=false)
+	 * @ORM\Column(type="decimal", precision=8, scale=3, nullable=false)
 	 */
 	protected $nota;
 
