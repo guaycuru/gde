@@ -16,6 +16,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	$pa = intval($_POST['pa']);
 	if($pa == 0) {
 		$Periodo = Periodo::Load($pp);
+		if(($Periodo->getId_periodo() == null) || ($Periodo->Anterior() === null))
+			die(json_encode(false));
 		$pa = $Periodo->Anterior()->getPeriodo();
 	}
 	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, false);
