@@ -293,7 +293,7 @@ class Oferecimento extends Base {
 				else
 					$sql .= " LIMIT " . $limit;
 			}
-			$q = '%' . $q . '%';
+			$q = $q . '%';
 		} elseif(CONFIG_FTS_ENABLED === false) {
 			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
 				$ordem = ($ordem != 'rank DESC')

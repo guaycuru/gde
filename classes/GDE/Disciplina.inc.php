@@ -344,7 +344,7 @@ class Disciplina extends Base {
 				else
 					$sql .= " LIMIT " . $limit;
 			}
-			$q = '%' . $q . '%';
+			$q = $q . '%';
 		} elseif(CONFIG_FTS_ENABLED === false) {
 			$q = '%' . str_replace(' ', '%', $q) . '%';
 			if($ordem == null)
