@@ -264,7 +264,7 @@ class Oferecimento extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Oferecimento[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations

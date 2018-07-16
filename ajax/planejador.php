@@ -46,6 +46,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	$nc = count($cores);
 	$cores_extras = PlanejadoExtra::getCores();
 	$nce = count($cores_extras);
+
+	if(empty($_POST['id']))
+		die('forbidden');
 	
 	$Planejado = Planejado::Load($_POST['id']);
 	

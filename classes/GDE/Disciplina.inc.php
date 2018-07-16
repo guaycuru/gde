@@ -209,7 +209,7 @@ class Disciplina extends Base {
 	 * @param string|array|null $nivel
 	 * @param bool $vazio
 	 * @return Disciplina|null|false
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Por_Sigla($sigla, $nivel = null, $vazio = true) {
 		if(empty($nivel)) {
@@ -263,7 +263,7 @@ class Disciplina extends Base {
 	 * @param int $start
 	 * @param string $tipo
 	 * @return Disciplina[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1, $tipo = 'AND') {
 		$qrs = $jns = array();
@@ -326,7 +326,7 @@ class Disciplina extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Disciplina[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -420,6 +420,7 @@ class Disciplina extends Base {
 	/**
 	 * @param $Conjuntos
 	 * @return array
+	 * @throws \Doctrine\ORM\Query\QueryException
 	 */
 	private static function Organiza_Pre_Conjuntos($Conjuntos) {
 		$Pre_Requisitos = array();
