@@ -5,6 +5,7 @@ namespace GDE;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 /**
  * Planejado
@@ -272,14 +273,18 @@ class Planejado extends Base {
 	/**
 	 * @param Oferecimento $Oferecimento
 	 * @return int
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Total_Por_Oferecimento(Oferecimento $Oferecimento) {
-		$dqlt = "SELECT COUNT(DISTINCT P.usuario) FROM ".get_class()." AS P WHERE :id_oferecimento MEMBER OF P.oferecimentos AND P.simulado = FALSE";
-		return self::_EM()
-			->createQuery($dqlt)
-			->setParameters(array('id_oferecimento' => $Oferecimento->getID()))
-			->getSingleScalarResult();
+		$sql = 'SELECT COUNT(DISTINCT P.id_usuario) AS `total` FROM `gde_planejados` AS P '.
+				'INNER JOIN `gde_r_planejados_oferecimentos` AS PO ON (PO.`id_planejado` = P.`id_planejado`) '.
+				'WHERE P.`simulado` = FALSE '.
+				'AND PO.`id_oferecimento` = :id_oferecimento';
+		$rsm = new ResultSetMappingBuilder(self::_EM());
+		$rsm->addScalarResult('total', 'total');
+		$query = self::_EM()->createNativeQuery($sql, $rsm);
+		$query->setParameter('id_oferecimento', $Oferecimento->getID());
+		return $query->getSingleScalarResult();
 	}
 
 	public function Save($flush = true) {
