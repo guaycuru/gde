@@ -90,7 +90,7 @@ class Usuario extends Base {
 	/**
 	 * @var ArrayCollection|UsuarioEliminada[]
 	 *
-	 * @ORM\OneToMany(targetEntity="UsuarioEliminada", mappedBy="usuario")
+	 * @ORM\OneToMany(targetEntity="UsuarioEliminada", mappedBy="usuario", cascade={"remove"})
 	 */
 	protected $eliminadas;
 
