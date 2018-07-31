@@ -17,9 +17,10 @@ require_once('../common/common.inc.php');
 		});
 		$("span.ui-icon").css({'display': 'none'});
 		$("input[name^='eliminada']").click(function() {
-			sigla = ($(this).attr("name")).replace("eliminada_", "");
-			siglaO = sigla.replace("_", " ");
-			$("#sigla_"+sigla).html("<strong>"+siglaO+"</strong><br /><img src=\"<?= CONFIG_URL; ?>web/images/loading.gif\" alt=\".\" /> Salvando...");
+			var id = ($(this).attr("id")).replace("eliminada_", "").replace("_1", "").replace("_2", "").replace("_3", "").replace("_0", "");
+			var sigla = ($(this).attr("name")).replace("eliminada_", "");
+			var siglaO = sigla.replace("_", " ");
+			$("#sigla_"+sigla).append("<span id=\"salvando_" + id + "\"><br /><img src=\"<?= CONFIG_URL; ?>web/images/loading.gif\" alt=\".\" /> Salvando...</span>");
 			//opcao = $("input[name='eliminada_'"+sigla+"']:checked").val();
 			opcao = $(this).val();
 			if(opcao == 1) { // Normalmente
@@ -39,8 +40,8 @@ require_once('../common/common.inc.php');
 				a = 0;
 				r = 0;
 			}
-			$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {sigla: siglaO, e: e, a: a, r: r}, function() {
-				$("#sigla_"+sigla).html("<strong>"+siglaO+"</strong>");
+			$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: id, e: e, a: a, r: r}, function() {
+				$("#salvando_"+id).remove();
 			});
 		});
 	});
@@ -81,10 +82,10 @@ Selecione a op&ccedil;&atilde;o apropriada para cada uma delas, para que sua &aa
 						<tr>
 							<td id="sigla_<?= $sigla; ?>" width="30%"><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getId(); ?>"><strong><?= $siglaO; ?></strong><br /><?= $Disciplina->getNome(true); ?></a></td>
 							<td>
-								<input type="radio" name="eliminada_<?= $sigla; ?>" value="1" id="eliminada_<?= $sigla; ?>_1"<?php if(($eliminou !== false) && ($eliminou[1] === false) && ($eliminou[0][0][1] === false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_1">Cursei e passei com Nota >= 5,0</label><br />
-								<input type="radio" name="eliminada_<?= $sigla; ?>" value="2" id="eliminada_<?= $sigla; ?>_2"<?php if(($eliminou === false) && ($parcialmente !== false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_2">Cursei, n&atilde;o passei, mas tive Nota >= 3,0</label><br />
-								<input type="radio" name="eliminada_<?= $sigla; ?>" value="3" id="eliminada_<?= $sigla; ?>_3"<?php if(($eliminou !== false) && ($eliminou[1] === false) && ($eliminou[0][0][1] !== false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_3">Passei em teste de Profici&ecirc;ncia</label><br />
-								<input type="radio" name="eliminada_<?= $sigla; ?>" value="0" id="eliminada_<?= $sigla; ?>_0"<?php if((($eliminou === false) && ($parcialmente === false)) || (($eliminou !== false) && ($eliminou[1] === true))) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_0">Nenhuma das Anteriores</label><br />
+								<input type="radio" name="eliminada_<?= $sigla; ?>" value="1" id="eliminada_<?= $Disciplina->getId(); ?>_1"<?php if(($eliminou !== false) && ($eliminou[1] === false) && ($eliminou[0][0][1] === false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $Disciplina->getId(); ?>_1">Cursei e passei com Nota >= 5,0</label><br />
+								<input type="radio" name="eliminada_<?= $sigla; ?>" value="2" id="eliminada_<?= $Disciplina->getId(); ?>_2"<?php if(($eliminou === false) && ($parcialmente !== false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $Disciplina->getId(); ?>_2">Cursei, n&atilde;o passei, mas tive Nota >= 3,0</label><br />
+								<input type="radio" name="eliminada_<?= $sigla; ?>" value="3" id="eliminada_<?= $Disciplina->getId(); ?>_3"<?php if(($eliminou !== false) && ($eliminou[1] === false) && ($eliminou[0][0][1] !== false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $Disciplina->getId(); ?>_3">Passei em teste de Profici&ecirc;ncia</label><br />
+								<input type="radio" name="eliminada_<?= $sigla; ?>" value="0" id="eliminada_<?= $Disciplina->getId(); ?>_0"<?php if((($eliminou === false) && ($parcialmente === false)) || (($eliminou !== false) && ($eliminou[1] === true))) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $Disciplina->getId(); ?>_0">Nenhuma das Anteriores</label><br />
 							</td>
 						</tr>
 						<?php
