@@ -306,6 +306,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					}
 					$Ret['Oferecimentos'][$sigla] = array(
 						'Disciplina' => array(
+							'id' => $Dados['Disciplina']->getId(),
 							'sigla' => $Dados['Disciplina']->getSigla(false),
 							'siglan' => str_replace(' ', '_', $Dados['Disciplina']->getSigla(false)),
 							'nome' => $Dados['Disciplina']->getNome(false, true),
@@ -463,6 +464,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			}
 			$Ret['Oferecimentos'][$sigla] = array(
 				'Disciplina' => array(
+					'id' => $Disciplina->getId(),
 					'sigla' => $Disciplina->getSigla(false),
 					'siglan' => str_replace(' ', '_', $Disciplina->getSigla(false)),
 					'nome' => $Disciplina->getNome(false, true),

@@ -37,10 +37,10 @@ if($oferecimento_pagina == null) {
 		var tipo = 1;
 		var paginacao = 1;
 		var colaborar_padrao = 'Colabore aqui';
-		var id_oferecimento = '<?= $Oferecimento->getID(); ?>';
+		var id_oferecimento = '<?= $Oferecimento->getId(); ?>';
 
 		var Informacoes = function() {
-			$("#tab_disciplina").load('<?= CONFIG_URL; ?>disciplina/?id=<?= urlencode($Oferecimento->getSigla()); ?>&of #tabela_informacoes');
+			$("#tab_disciplina").load('<?= CONFIG_URL; ?>disciplina/?id=<?= $Oferecimento->getDisciplina(true)->getId(); ?>&of #tabela_informacoes');
 		};
 
 		var Carrega = function(tp, pg) {

@@ -100,7 +100,7 @@ var PlanejadorAdicionarDisciplina = function(Disciplina) {
 		$("#planejador_disciplinas").after('<div id="menu_'+Disciplina.siglan+'" style="display:none;" class="RMenu">' +
 '	<ul>' +
 '		<li>'+Disciplina.nome+quinzenal+AA200+'</li>' +
-'		<li><a href="' + CONFIG_URL + 'disciplina/'+Disciplina.sigla+'" target="_blank">Informa&ccedil;&otilde;es da Disciplina</a></li>' +
+'		<li><a href="' + CONFIG_URL + 'disciplina/'+Disciplina.id+'" target="_blank">Informa&ccedil;&otilde;es da Disciplina</a></li>' +
 '	</ul>' +
 '</div>');
 		$("#disciplina_"+Disciplina.siglan).showMenu({

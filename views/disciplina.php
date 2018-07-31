@@ -10,10 +10,10 @@ define('TITULO', 'Disciplina');
 require_once('../common/common.inc.php');
 
 if(empty($_GET['id']))
-	die("Cad&ecirc; a sigla da Disciplina?".$FIM);
+	die("Cad&ecirc; o ID da Disciplina?".$FIM);
 
-$Disciplina = Disciplina::Por_Sigla($_GET['id'], null, false);
-if($Disciplina === null)
+$Disciplina = Disciplina::Load($_GET['id']);
+if($Disciplina->getId() == null)
 	die("Disciplina não encontrada!".$FIM);
 
 $cursada = $_Usuario->Eliminou($Disciplina);
@@ -111,7 +111,7 @@ if(isset($_GET['m'])) {
 				<div id="perfil_cabecalho_nome"><?=$Disciplina->getSigla(true); ?> - <?=$Disciplina->getNome(true); ?></div>
 			</div>
 		</div>
-		<div class="tip" id="disciplina_tip">Dica: Para acessar diretamente a p&aacute;gina desta disciplina use <span class="link"><a href="http://gde.ir/d/<?= $Disciplina->getSigla(true); ?>">http://gde.ir/d/<?= $Disciplina->getSigla(true); ?></a></span></div>
+		<div class="tip" id="disciplina_tip">Dica: Para acessar diretamente a p&aacute;gina desta disciplina use <span class="link"><a href="http://gde.ir/d/<?= $Disciplina->getId(); ?>">http://gde.ir/d/<?= $Disciplina->getId(); ?></a></span></div>
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>
@@ -124,7 +124,7 @@ if(isset($_GET['m'])) {
 					<table id="tabela_informacoes" cellspacing="0" class="tabela_bonyta_branca">
 						<tr>
 							<td width="25%"><b>Sigla:</b></td>
-							<td><?= ((isset($_GET['of']))?'<a href="'.CONFIG_URL.'disciplina/'.$Disciplina->getSigla(true).'">':null).$Disciplina->getSigla(true).((isset($_GET['of']))?'</a>':null); ?></td>
+							<td><?= ((isset($_GET['of']))?'<a href="'.CONFIG_URL.'disciplina/'.$Disciplina->getId().'">':null).$Disciplina->getSigla(true).((isset($_GET['of']))?'</a>':null); ?></td>
 						</tr>
 						<tr>
 							<td width="25%"><b>Nome:</b></td>
@@ -163,7 +163,7 @@ if(isset($_GET['m'])) {
 						</tr>
 						<?php if(isset($_GET['of'])) { ?>
 							<tr>
-								<td colspan="2" align="center"><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(true); ?>">Mais Informa&ccedil;&otilde;es da Disciplina</a></td>
+								<td colspan="2" align="center"><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getId(); ?>">Mais Informa&ccedil;&otilde;es da Disciplina</a></td>
 							</tr>
 						<?php } ?>
 					</table>

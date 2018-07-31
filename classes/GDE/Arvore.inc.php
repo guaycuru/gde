@@ -707,7 +707,7 @@ class Arvore {
 			foreach($Lista as $Disciplina) {
 				if(($Disciplina->getSigla() == 'ELET') || ($Disciplina->getSigla() == 'LING'))
 					continue;
-				$mapas[$Disciplina->getSigla()] = array($Disciplina->getNome(), array($em_x, $em_y, $em_x+$consts['largura'], $em_y+$consts['altura']));
+				$mapas[$Disciplina->getId()] = array($Disciplina->getNome(), array($em_x, $em_y, $em_x+$consts['largura'], $em_y+$consts['altura']));
 				$em_x += $consts['largura'] + $consts['dist_x'];
 			}
 			$em_x = $consts['inicio_x'];
@@ -715,8 +715,8 @@ class Arvore {
 		}
 
 		$mapa = "";
-		foreach($mapas as $sigla => $dados)
-			$mapa .= "<area shape='rect' coords='".implode(",", $dados[1])."' title='".$dados[0]."' alt='".$dados[0]."' href='".(($meu === true)?"#":CONFIG_URL."disciplina/".$sigla."/' target='_blank'")."' id='Shape_".str_replace(" ", "_", $sigla)."' class='Shapes' />";
+		foreach($mapas as $id => $dados)
+			$mapa .= "<area shape='rect' coords='".implode(",", $dados[1])."' title='".$dados[0]."' alt='".$dados[0]."' href='".(($meu === true)?"#":CONFIG_URL."disciplina/".$id."/' target='_blank'")."' id='Shape_".$id."' class='Shapes' />";
 		return $mapa;
 	}
 
@@ -759,7 +759,7 @@ class Arvore {
 					continue;
 				if($meu)
 					$starters .= "
-	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getSigla())."\").showMenu({
+	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getId())."\").showMenu({
 		opacity: 0.9,
 		left: true,
 		query: \"#Menu_".str_replace(" ", "_", $Disciplina->getSigla())."\"
@@ -767,7 +767,7 @@ class Arvore {
 				if(in_array($Disciplina->getSigla(), $this->siglas_obrigatorias) !== false) {
 					$img_overlay = str_replace('.png', '_'.str_replace(' ', '_', $Disciplina->getSigla()).'.png', $this->arquivo);
 					$starters .= "
-	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getSigla())."\").hover(function() {
+	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getId())."\").hover(function() {
 		\$(\"img.img_ov_arvore\").attr(\"src\", \"".$img_overlay."\");
 		\$(\"div.div_img_ov_arvore\").fadeTo('slow', 0.9);
 	}, function () {
@@ -780,10 +780,10 @@ class Arvore {
 					$menus .= "<div id=\"Menu_".str_replace(" ", "_", $Disciplina->getSigla(true))."\" style=\"display:none;\" class=\"RMenu\">
    <ul>
    <li>".$Disciplina->getNome()."</li>
-   <li><a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."/\" target=\"_blank\">Informa&ccedil;&otilde;es</a></li>
-   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 0 ,0); return false;\">Eliminar Normalmente</a></li>
-   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 1 ,0); return false;\">Eliminar Parcialmente</a></li>
-   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getSigla(true)."', 0 ,1); return false;\">Eliminar Por Profici&ecirc;ncia</a></li>
+   <li><a href=\"".CONFIG_URL."disciplina/".$Disciplina->getId()."/\" target=\"_blank\">Informa&ccedil;&otilde;es</a></li>
+   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getId()."', 0 ,0); return false;\">Eliminar Normalmente</a></li>
+   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getId()."', 1 ,0); return false;\">Eliminar Parcialmente</a></li>
+   <li><a href=\"#\" onclick=\"Elimina('".$Disciplina->getId()."', 0 ,1); return false;\">Eliminar Por Profici&ecirc;ncia</a></li>
    </ul>
 </div>\r\n";
 			}
@@ -826,7 +826,7 @@ class Arvore {
 			if(substr($sigla, 0, 2) == 'AA')
 				continue;
 			$i++;
-			$url = Disciplina::URL_Disciplina($sigla);
+			$url = Disciplina::URL_Disciplina($Eliminada->getDisciplina()->getId(), $sigla);
 			$eli_periodo = ($Eliminada->getPeriodo(false) !== null) ? $Eliminada->getPeriodo()->getNome(true) : Periodo::PERIODO_DESCONHECIDO_DAC;
 			$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Eliminada->getDisciplina()->getNome(true)."\" target=\"_blank\">".$sigla."</a>(".(sprintf("%02d", $Eliminada->getDisciplina()->getCreditos(true))).")".$this->getTipo($sigla, true).' '.$eli_periodo; //  MC102S06+  9,2150 4 1S07
 			if($i % 4 == 0) $ret .= "<br />"; // normal eh 3
@@ -840,7 +840,7 @@ class Arvore {
 			foreach($Deste_Semestre as $Disciplina) {
 				$sigla = $Disciplina->getSigla(true);
 				if(($sigla != 'ELET') && ($sigla != 'LING') && (in_array($sigla, $this->siglas_atuais) === false)) {
-					$url = Disciplina::URL_Disciplina($Disciplina->getSigla(false));
+					$url = Disciplina::URL_Disciplina($Disciplina->getId(), $Disciplina->getSigla(false));
 					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Disciplina->getNome(true)."\" target=\"_blank\">".$Disciplina->getSigla(true)."</a>(".(sprintf("%02d", $Disciplina->getCreditos(false))).")";
 					$i++;
 					if($i % 7 == 0) $ret .= "\r\n";
@@ -861,7 +861,7 @@ class Arvore {
 				//$ret .= "\r\n  OBTER  ".(($creditos<10)?' ':null).$creditos." CREDITO(S) DENTRE";
 				$ret .= "  Obter ".(($creditos<10)?' ':null).$creditos." Cr&eacute;dito(s) dentre a(s) seguinte(s) disciplina(s): ";
 				foreach($Elet->getConjuntos() as $Falta) {
-					$url = Disciplina::URL_Disciplina($Falta->getSigla(false));
+					$url = Disciplina::URL_Disciplina($Falta->getDisciplina()->getId(), $Falta->getSigla(false));
 					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Falta->getDisciplina()->getNome(true)."\" target=\"_blank\">".$Falta->getSigla(true)."</a>(".(($Falta->getDisciplina()->getCreditos() > 0)?(sprintf("%02d", $Falta->getDisciplina()->getCreditos(false))):'??').")";
 					$i++;
 					if($i % 4 == 0) $ret .= "\r\n                                                             ";

@@ -449,7 +449,7 @@ class Disciplina extends Base {
 				if($Disciplina === null)
 					$siglas[] = htmlspecialchars($sigla)." (?)";
 				else
-					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Disciplina->getSigla(true)."/\" title=\"".$Disciplina->getNome()."\">".$Disciplina->getSigla()."</a> (".(($Disciplina->getCreditos() > 0)?$Disciplina->getCreditos():'?').")";
+					$siglas[] = "<a href=\"".CONFIG_URL."disciplina/".$Disciplina->getId()."/\" title=\"".$Disciplina->getNome()."\">".$Disciplina->getSigla()."</a> (".(($Disciplina->getCreditos() > 0)?$Disciplina->getCreditos():'?').")";
 			}
 			$ret[] = implode(" e ", $siglas);
 		}
@@ -460,9 +460,9 @@ class Disciplina extends Base {
 	 * @param $sigla
 	 * @return string
 	 */
-	public static function URL_Disciplina($sigla) {
+	public static function URL_Disciplina($id, $sigla) {
 		return CONFIG_URL.((strpos($sigla, '-') === false)
-			? 'disciplina/'.urlencode($sigla).'/'
+			? 'disciplina/'.$id.'/'
 			: 'busca/?t=tab_disciplinas&sigla='.urlencode($sigla).'&buscar#tab_disciplinas');
 	}
 
@@ -559,7 +559,7 @@ class Disciplina extends Base {
 						$url_sigla = htmlspecialchars($pre[2])." (?)";
 					} else {
 						$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
-						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
+						$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getId() . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos() > 0) ? $pre[0]->getCreditos() : '?') . ")";
 					}
 					if($pre[1] === true)
 						$pres[$n][] = "*".$url_sigla;
@@ -581,7 +581,7 @@ class Disciplina extends Base {
 							$url_sigla = htmlspecialchars($pre[2])." (?)";
 						} else {
 							$cursada = $Usuario->Eliminou($pre[0], $pre[1]);
-							$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getSigla(true) . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos(false) > 0) ? $pre[0]->getCreditos(true) : '?') . ")";
+							$url_sigla = "<a href=\"" . CONFIG_URL . "disciplina/" . $pre[0]->getId() . "/\" class=\"" . (($cursada !== false) ? "disciplina_eliminada" : null) . "\" title=\"" . $pre[0]->getNome(true) . "\">" . $pre[0]->getSigla(true) . "</a>" . " (" . (($pre[0]->getCreditos(false) > 0) ? $pre[0]->getCreditos(true) : '?') . ")";
 						}
 						if($pre[1] === true)
 							$pres[$catalogo][$n][] = "*".$url_sigla;

@@ -142,8 +142,8 @@ if($continua) {
 	limpa_form = function() {
 		document.location = '<?= CONFIG_URL; ?>arvore/';
 	};
-	Elimina = function(sigla, a, r) {
-		$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {sigla: sigla, e: '1', a: a, r: r, v: '1'}, function() {
+	Elimina = function(id, a, r) {
+		$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: id, e: '1', a: a, r: r, v: '1'}, function() {
 			history.go(0);
 		});
 	}

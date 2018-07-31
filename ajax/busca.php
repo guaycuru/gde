@@ -392,6 +392,7 @@ if($qts['alunos'] != 0) {
 ?>
 <table border="1" width="100%" class="tabela_busca">
 	<tr>
+		<th align='center'>N&iacute;vel</th>
 		<th align='center'>Sigla</th>
 		<th align='center'>Nome</th>
 		<th align='center'>Cr&eacute;ditos</th>
@@ -401,8 +402,9 @@ if($qts['alunos'] != 0) {
 		foreach($Disciplinas as $Disciplina) {
 ?>
 	<tr>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(true); ?>/"><?= $Disciplina->getSigla(true); ?></a></td>
-		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getSigla(true); ?>/"><?= $Disciplina->getNome(true); ?></a></td>
+		<td><?= $Disciplina->getNivel(true); ?></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getId(); ?>/"><?= $Disciplina->getSigla(true); ?></a></td>
+		<td><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getId(); ?>/"><?= $Disciplina->getNome(true); ?></a></td>
 		<td><?= $Disciplina->getCreditos(true); ?></td>
 		<td><?= Util::Limita($Disciplina->getEmenta(true), 100); ?></td>
 	</tr>

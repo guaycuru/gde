@@ -79,7 +79,7 @@ Selecione a op&ccedil;&atilde;o apropriada para cada uma delas, para que sua &aa
 						$parcialmente = $_Usuario->Eliminada($Disciplina, true, true);
 						?>
 						<tr>
-							<td id="sigla_<?= $sigla; ?>" width="30%"><a href="<?= CONFIG_URL; ?>disciplina/<?= $siglaO; ?>"><strong><?= $siglaO; ?></strong><br /><?= $Disciplina->getNome(true); ?></a></td>
+							<td id="sigla_<?= $sigla; ?>" width="30%"><a href="<?= CONFIG_URL; ?>disciplina/<?= $Disciplina->getId(); ?>"><strong><?= $siglaO; ?></strong><br /><?= $Disciplina->getNome(true); ?></a></td>
 							<td>
 								<input type="radio" name="eliminada_<?= $sigla; ?>" value="1" id="eliminada_<?= $sigla; ?>_1"<?php if(($eliminou !== false) && ($eliminou[1] === false) && ($eliminou[0][0][1] === false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_1">Cursei e passei com Nota >= 5,0</label><br />
 								<input type="radio" name="eliminada_<?= $sigla; ?>" value="2" id="eliminada_<?= $sigla; ?>_2"<?php if(($eliminou === false) && ($parcialmente !== false)) echo " checked=\"checked\""; ?> /><label for="eliminada_<?= $sigla; ?>_2">Cursei, n&atilde;o passei, mas tive Nota >= 3,0</label><br />

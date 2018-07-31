@@ -9,8 +9,8 @@ define('NO_REDIRECT', true);
 require_once('../common/common.inc.php');
 
 if(isset($_POST['e'])) {
-	$Disciplina = Disciplina::Por_Sigla($_POST['sigla']);
-	if($Disciplina->getID() == null)
+	$Disciplina = Disciplina::Load($_POST['id']);
+	if($Disciplina->getId() == null)
 		exit;
 	if($_POST['e'] == 1) {
 		if((!isset($_POST['a'])) || (!isset($_POST['r'])))
