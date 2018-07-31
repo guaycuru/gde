@@ -200,7 +200,7 @@ class Planejado extends Base {
 		if($checa_disciplina === false)
 			return ($this->getOferecimentos()->contains($Oferecimento)) ? $Oferecimento : false;
 		foreach($this->getOferecimentos() as $Of)
-			if($Of->getDisciplina()->getSigla(false) == $Oferecimento->getSigla(false))
+			if($Of->getDisciplina()->getId() == $Oferecimento->getDisciplina()->getId())
 				return $Of;
 		return false;
 	}
