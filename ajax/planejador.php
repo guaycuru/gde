@@ -87,7 +87,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Config = array();
 			$Disciplinas = array();
 			$Disciplinas['N'] = array();
-			$siglas = array();
+			$id_disciplinas = array();
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['getEliminadas'] = microtime(true) - $times['start'] - $tt;
@@ -100,12 +100,14 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
 					$EliminadasAdd[] = $Tem;
 					$Config[] = array(
+						'id' => $Atual->getDisciplina()->getId(),
 						'sigla' => $Atual->getSigla(),
 						'eliminada' => true,
 						'parcial' => $Tem->getParcial()
 					);
 				} else {
 					$Config[] = array(
+						'id' => $Atual->getDisciplina()->getId(),
 						'sigla' => $Atual->getSigla(),
 						'eliminada' => false,
 						'parcial' => false
@@ -135,7 +137,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Marca as disciplinas constantes na arvore
 			foreach($Disciplinas as $sem => $lista)
 				foreach($lista as $k => $Disciplina)
-					$siglas[] = $Disciplina->getSigla();
+					$id_disciplinas[] = $Disciplina->getId();
 			
 			// Adiciona as eletivas faltantes
 			$Disciplinas['E'] = array();
@@ -143,10 +145,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				if($Elet->getTipo() == CurriculoEletiva::TIPO_LIVRE) // Pula as livres
 					continue;
 				foreach($Elet->getConjuntos(false) as $Falta) {
-					if(($Falta->Fechada() === false) || (in_array($Falta->getSigla(false), $siglas)))
+					if(($Falta->Fechada() === false) || (in_array($Falta->getDisciplina()->getId(), $id_disciplinas)))
 						continue;
 					$Disciplinas['E'][] = $Falta;
-					$siglas[] = $Falta->getSigla();
+					$id_disciplinas[] = $Falta->getDisciplina()->getId();
 				}
 			}
 			
@@ -155,10 +157,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			// Insere as eletivas ja adicionadas
 			foreach($Planejado->getOferecimentos() as $Planejada) {
-				if(in_array($Planejada->getSigla(), $siglas))
+				if(in_array($Planejada->getDisciplina()->getId(), $id_disciplinas))
 					continue;
 				$Disciplinas['N'][] = $Planejada->getDisciplina();
-				$siglas[] = $Planejada->getSigla();
+				$id_disciplinas[] = $Planejada->getDisciplina()->getId();
 			}
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -168,8 +170,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			foreach($Disciplinas as &$Lista)
 				usort($Lista, array('GDE\\Disciplina', 'Organiza'));
 
-			// ToDo: Pra que serve $siglas se aqui eu reseto!?
-			$siglas = $nao_pode = array();
+			// ToDo: Pra que serve $id_disciplinas se aqui eu reseto!?
+			$id_disciplinas = $nao_pode = array();
 			$total = 0;
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
@@ -180,24 +182,25 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					$sigla = $Disciplina->getSigla();
 					if($Disciplina instanceof CurriculoEletivaConjunto)
 						$Disciplina = $Disciplina->getDisciplina();
+					$id_disciplina = $Disciplina->getId();
 					if(!isset($Raw[$sem]))
 						$Raw[$sem] = array();
-					if(in_array($sigla, $siglas) === true)
+					if(in_array($id_disciplina, $id_disciplinas) === true)
 						continue;
-					$siglas[] = $sigla;
+					$id_disciplinas[] = $id_disciplina;
 					if(($sigla == 'ELET') || ($sigla == 'LING'))
 						unset($Disciplinas[$sem][$k]);
-					$Raw[$sem][$sigla]['Disciplina'] = $Disciplina;
+					$Raw[$sem][$id_disciplina]['Disciplina'] = $Disciplina;
 					$obs = null;
-					$Raw[$sem][$sigla]['pode'] = $Planejado->getSimulado() || $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
-					$Raw[$sem][$sigla]['obs'] = $obs;
-					if($Raw[$sem][$sigla]['pode']) 
-						$Raw[$sem][$sigla]['Oferecimentos'] = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
+					$Raw[$sem][$id_disciplina]['pode'] = $Planejado->getSimulado() || $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
+					$Raw[$sem][$id_disciplina]['obs'] = $obs;
+					if($Raw[$sem][$id_disciplina]['pode'])
+						$Raw[$sem][$id_disciplina]['Oferecimentos'] = Oferecimento::Consultar(array("disciplina" => $id_disciplina, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
 					else {
-						$Raw[$sem][$sigla]['Oferecimentos'] = array();
-						$nao_pode[$sigla] = true;
+						$Raw[$sem][$id_disciplina]['Oferecimentos'] = array();
+						$nao_pode[$id_disciplina] = true;
 					}
-					$Raw[$sem][$sigla]['tem'] = (($Raw[$sem][$sigla]['pode']) && ($total > 0));
+					$Raw[$sem][$id_disciplina]['tem'] = (($Raw[$sem][$id_disciplina]['pode']) && ($total > 0));
 				}
 			}
 			
@@ -238,14 +241,14 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			// Retorno dos Oferecimentos
 			$Ret['Oferecimentos'] = $siglas_arvore = array();
 			foreach($Raw as $semestre => $Lista) {
-				foreach($Lista as $sigla => $Dados) {
+				foreach($Lista as $id_disciplina => $Dados) {
 					$Ofs = array();
 					if(!isset($Dados['Oferecimentos'])) // Algo terrivelmente errado...
 						continue;
 					foreach($Dados['Oferecimentos'] as $Oferecimento) {
 						$adicionado = ($Planejado->Tem_Oferecimento($Oferecimento) !== false);
 						if($adicionado) {
-							$siglas_arvore[] = $Oferecimento->getSigla(true);
+							$siglas_arvore[$id_disciplina] = $Oferecimento->getSigla(true);
 							$Adicionados[] = $Oferecimento;
 						}
 
@@ -342,8 +345,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 				$tt += $times['nova_arvore'] = microtime(true) - $times['start'] - $tt;
 			
 			$tipos = array();
-			foreach($siglas_arvore as $sigla)
-				$tipos[$sigla] = $Arvore->getTipo(str_replace('_', ' ', $sigla), false);
+			foreach($siglas_arvore as $id_disciplina => $sigla)
+				$tipos[$id_disciplina] = $Arvore->getTipo(str_replace('_', ' ', $sigla), false);
 			
 			$Ret['Arvore'] = array(
 				'cp' => $Arvore->getCP(4),
@@ -586,9 +589,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
 		$Planejado->Limpar_Eliminadas(false);
 		if(isset($_POST['conf'])) {
-			foreach($_POST['conf'] as $sigla) {
-				$D = Disciplina::Por_Sigla($sigla);
-				$Planejado->Adicionar_Eliminada($D, ((isset($_POST['parciais'])) && (in_array($sigla, $_POST['parciais']))), false);
+			foreach($_POST['conf'] as $id_disciplina) {
+				$D = Disciplina::Load($id_disciplina);
+				$Planejado->Adicionar_Eliminada($D, ((isset($_POST['parciais'])) && (in_array($id_disciplina, $_POST['parciais']))), false);
 			}
 		}
 		$Ret = ($Planejado->Save(true) !== false);

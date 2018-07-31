@@ -53,8 +53,10 @@ class CurriculoEletivaConjunto extends Base {
 	protected $sigla;
 
 	/**
-	 * @param bool $vazio
 	 * @return Disciplina|null
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function getDisciplina() {
 		if(strpos($this->getSigla(false), '-') !== false) {

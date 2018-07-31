@@ -70,16 +70,15 @@ var PlanejadorProcessarPlanejado = function(Planejado) {
 	$("#simulado_"+Planejado.simulado).attr('checked', true);
 	$("#form_planejador_configurar > input.configurar_eliminada").remove();
 	$.each(Planejado.Config, function(i, C) {
-		var sr = C.sigla.replace(' ', '_');
-		$("#form_planejador_configurar").prepend('<input type="checkbox" name="eliminadas[]" class="configurar_eliminada" value="'+C.sigla+'" id="eliminada_'+sr+'"'+((C.eliminada)?' checked="checked"':'')+' /><label for="eliminada_'+sr+'">'+C.sigla+'</label> <input type="checkbox" name="parciais[]" class="configurar_parcial" value="'+C.sigla+'" id="parcial_'+sr+'"'+((C.eliminada && C.parcial)?' checked="checked"':'')+' /><label for="parcial_'+sr+'">Parcialmente (m&eacute;dia entre 3,00 e 5,00)</label><br />');
-		$("#parcial_"+sr).click(function() {
-			if(($(this).is(':checked')) && ($("#eliminada_"+sr).is(':checked') == false)) {
-				$("#eliminada_"+sr).attr('checked', true);
+		$("#form_planejador_configurar").prepend('<input type="checkbox" name="eliminadas[]" class="configurar_eliminada" value="'+C.id+'" id="eliminada_'+C.id+'"'+((C.eliminada)?' checked="checked"':'')+' /><label for="eliminada_'+C.id+'">'+C.sigla+'</label> <input type="checkbox" name="parciais[]" class="configurar_parcial" value="'+C.id+'" id="parcial_'+C.id+'"'+((C.eliminada && C.parcial)?' checked="checked"':'')+' /><label for="parcial_'+C.id+'">Parcialmente (m&eacute;dia entre 3,00 e 5,00)</label><br />');
+		$("#parcial_"+C.id).click(function() {
+			if(($(this).is(':checked')) && ($("#eliminada_"+C.id).is(':checked') == false)) {
+				$("#eliminada_"+C.id).attr('checked', true);
 			}
 		});
-		$("#eliminada_"+sr).click(function() {
-			if(($(this).is(':checked') == false) && ($("#parcial_"+sr).is(':checked'))) {
-				$("#parcial_"+sr).attr('checked', false);
+		$("#eliminada_"+C.id).click(function() {
+			if(($(this).is(':checked') == false) && ($("#parcial_"+C.id).is(':checked'))) {
+				$("#parcial_"+C.id).attr('checked', false);
 			}
 		});
 	});
@@ -157,7 +156,7 @@ var PlanejadorLiBinds = {
 };
 var PlanejadorProcessarConflitos = function(O, P) {
 	// Este ja foi adicionado ou marcado ou eh da mesma disciplina ou eh quinzenal
-	if((P.adicionado) || (!P.possivel) || (P.siglan == O.siglan) || (PlanejadorPodeQuinzenais(O, P)))
+	if((P.adicionado) || (!P.possivel) || (P.id == O.id) || (PlanejadorPodeQuinzenais(O, P)))
 		return true;
 	P.possivel = false;
 	P.eventSources.textColor = '#FFFFFF'; // E mudo a cor para preto
@@ -166,7 +165,7 @@ var PlanejadorProcessarConflitos = function(O, P) {
 var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflitos) {
 	var a = 0;
 	var Adicionar = [];
-	$.each(Oferecimentos, function(sigla, Dados) {
+	$.each(Oferecimentos, function(id_disciplina, Dados) {
 		PlanejadorAdicionarDisciplina(Dados.Disciplina);
 		if(Dados.Disciplina.tem == false) {
 			if(Dados.Disciplina.pode)
@@ -440,7 +439,7 @@ var PlanejadorBindMostrarInfo = function(elemento, Oferecimento) {
 
 			$("#divtip_disciplina").html(Oferecimento.Disciplina.nome);
 			$("#divtip_professor").html(Oferecimento.professor);
-			$("#divtip_tipo").html(planejador_arvore_tipos[Oferecimento.siglan]);
+			$("#divtip_tipo").html(planejador_arvore_tipos[Oferecimento.Disciplina.id]);
 			$("#divtip_viola").html((Oferecimento.viola_reserva) ? '<strong>Sim</strong>' : 'N&atilde;o');
 			$("#divtip_AA200").html((Oferecimento.Disciplina.obs == 'AA200') ? '<strong>Sim</strong>' : 'N&atilde;o');
 			$("#divtip_amigos").html(qts_amigos);
