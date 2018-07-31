@@ -177,7 +177,7 @@ class Oferecimento extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Oferecimento[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
@@ -196,6 +196,10 @@ class Oferecimento extends Base {
 				$qrs[] = "DI.sigla LIKE :sigla";
 				$param['sigla'] = '%' . $param['sigla'] . '%';
 			}
+		}
+		if(!empty($param['disciplina'])) {
+			$join_disciplina = true;
+			$qrs[] = "DI.id_disciplina = :disciplina";
 		}
 		if(!empty($param['periodo'])) {
 			$qrs[] = "O.periodo = :periodo";

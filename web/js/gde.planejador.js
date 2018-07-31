@@ -92,22 +92,22 @@ var PlanejadorAdicionarDisciplina = function(Disciplina) {
 	} else if($("#psd_d"+Disciplina.semestre).parent(':hidden').length > 0) { // Semestre ta escondido (N)
 		$("#psd_d"+Disciplina.semestre).parent().show();
 	}
-	if($("#disciplina_"+Disciplina.siglan).length == 0) { // Ainda nao tem esta disciplina
+	if($("#disciplina_"+Disciplina.id).length == 0) { // Ainda nao tem esta disciplina
 		var ce = (Disciplina.tem) ? '' : ' psd_vazia';
 		var quinzenal = (Disciplina.quinzenal) ? ' (quinzenal)' : '';
 		var AA200 = (Disciplina.obs == 'AA200') ? '<br /><strong>Depende de Autoriza&ccedil;&atilde;o (AA200)</strong>' : '';
-		$("#psd_d"+Disciplina.semestre).append('<div id="disciplina_'+Disciplina.siglan+'" class="planejador_semestre_disciplina psd_cor_'+Disciplina.c+ce+'">'+Disciplina.sigla+' ('+Disciplina.creditos+')</div>');
-		$("#planejador_disciplinas").after('<div id="menu_'+Disciplina.siglan+'" style="display:none;" class="RMenu">' +
+		$("#psd_d"+Disciplina.semestre).append('<div id="disciplina_'+Disciplina.id+'" class="planejador_semestre_disciplina psd_cor_'+Disciplina.c+ce+'">'+Disciplina.sigla+' ('+Disciplina.creditos+')</div>');
+		$("#planejador_disciplinas").after('<div id="menu_'+Disciplina.id+'" style="display:none;" class="RMenu">' +
 '	<ul>' +
 '		<li>'+Disciplina.nome+quinzenal+AA200+'</li>' +
 '		<li><a href="' + CONFIG_URL + 'disciplina/'+Disciplina.id+'" target="_blank">Informa&ccedil;&otilde;es da Disciplina</a></li>' +
 '	</ul>' +
 '</div>');
-		$("#disciplina_"+Disciplina.siglan).showMenu({
+		$("#disciplina_"+Disciplina.id).showMenu({
 			opacity: 0.9,
 			width: 275,
 			left: true,
-			query: "#menu_"+Disciplina.siglan
+			query: "#menu_"+Disciplina.id
 		});
 	}
 };
@@ -175,7 +175,7 @@ var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflit
 				var tmp = '<li>Voc&ecirc; j&aacute; cursou esta Disciplina.</li>';
 			else
 				var tmp = '<li>Voc&ecirc; n&atilde;o poder&aacute; cursar esta Disciplina<br />em '+periodo_nome+', pois n&atilde;o cursou um ou mais de seus pr&eacute;-requisitos.</li>';
-			$("#menu_"+Dados.Disciplina.siglan+" ul").append(tmp);
+			$("#menu_"+Dados.Disciplina.id+" ul").append(tmp);
 		} else {
 			$.each(Dados.Oferecimentos, function(i, O) {
 				if(O.fechado)
@@ -212,7 +212,7 @@ var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflit
 					}
 				}
 				O.Disciplina = Dados.Disciplina;
-				$("#menu_"+Dados.Disciplina.siglan+" ul").append('<li id="li_oferecimento_'+O.id+'" class="planejador_oferecimento">' + O.li + '</li>');
+				$("#menu_"+Dados.Disciplina.id+" ul").append('<li id="li_oferecimento_'+O.id+'" class="planejador_oferecimento">' + O.li + '</li>');
 				$("#li_oferecimento_"+O.id).bind(PlanejadorLiBinds);
 				$("#li_oferecimento_"+O.id).data('Oferecimento', O);
 				$("a.oferecimento_"+O.id).click(function(e) {
@@ -265,7 +265,7 @@ var PlanejadorAdicionarOferecimento = function(Oferecimento, sources, salvar) {
 		});
 	});
 	$("a.oferecimento_"+Oferecimento.id).html("Remover "+Oferecimento.link);
-	$("#disciplina_"+Oferecimento.siglan).addClass('psd_adicionada');
+	$("#disciplina_"+Oferecimento.Disciplina.id).addClass('psd_adicionada');
 	$("#planejador_creditos").html(parseInt($("#planejador_creditos").html()) + parseInt(Disciplina.creditos));
 	$("#planejador_matriculas").append('<div id="matricula_'+Oferecimento.id+'" class="matricula_conjunto mtr_cor_'+Oferecimento.Disciplina.c+'"><div class="matricula_sigla">'+Disciplina.sigla+' '+Oferecimento.turma+' ('+Disciplina.creditos+')</div></div>');
 	PlanejadorBindMostrarInfo($("#matricula_"+Oferecimento.id), Oferecimento);
@@ -310,7 +310,7 @@ var PlanejadorRemoverOferecimento = function(Oferecimento, sources, salvar, auto
 	$("a.oferecimento_"+Oferecimento.id).html(Oferecimento.link);
 	$("#planejador_creditos").html(parseInt($("#planejador_creditos").html()) - parseInt(Oferecimento.Disciplina.creditos));
 	if(automatico === false)
-		$("#disciplina_"+Oferecimento.siglan).removeClass('psd_adicionada');
+		$("#disciplina_"+Oferecimento.Disciplina.id).removeClass('psd_adicionada');
 	Oferecimento.adicionado = false;
 	Oferecimento.possivel = true;
 	Oferecimento.eventSources.textColor = '#000000';
@@ -402,12 +402,12 @@ var PlanejadorAdicionarExtra = function(event, e) {
 var PlanejadorRemoverExtra = function(event) {
 	calendario.fullCalendar('removeEvents', event.id);
 };
-var PlanejadorAdicionarEletiva = function(sigla, after) {
-	if(sigla == undefined)
+var PlanejadorAdicionarEletiva = function(id, after) {
+	if(id == undefined)
 		return;
 	esconde = $.guaycuru.aguarde();
 	$("#sigla_eletiva").val("");
-	$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'c', c: c, s: sigla}, function(data) {
+	$.post(CONFIG_URL + 'ajax/planejador.php', {id: id_planejado, a: 'c', c: c, d: id}, function(data) {
 		if(data == false) {
 			window.location.reload();
 			return;
@@ -694,12 +694,12 @@ $(document).ready(function() {
 				$("#sigla_eletiva").Padrao();
 		},
 		select: function(event, ui) {
-			var sigla = ui.item.id;
-			if($("#disciplina_"+sigla.replace(' ', '_')).length == 0)
-				PlanejadorAdicionarEletiva(sigla, function() { $("#sigla_eletiva").Padrao(); });
+			var id = ui.item.raw.id;
+			console.log(id);
+			if($("#disciplina_"+id).length == 0)
+				PlanejadorAdicionarEletiva(id, function() { $("#sigla_eletiva").Padrao(); });
 			else {
 				$("#sigla_eletiva").Padrao();
-				//$("#disciplina_"+sigla.replace(' ', '_')).triggerHandler('click');
 				return false;
 			}
 		},

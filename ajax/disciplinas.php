@@ -29,7 +29,7 @@ foreach($Disciplinas as $Disciplina)
 	elseif($_POST['tp'] == 2)
 		echo $Disciplina->getNome()."\n";
 	else
-		$res[] = array('sigla' => $Disciplina->getSigla(), 'nome' => $Disciplina->getSigla().' - '.$Disciplina->getNome(false, true).' ('.$Disciplina->getNivel(true).')');
+		$res[] = array('id' => $Disciplina->getId(), 'sigla' => $Disciplina->getSigla(), 'nome' => $Disciplina->getSigla().' - '.$Disciplina->getNome(false, true).' ('.$Disciplina->getNivel(true).')');
 
 if($_POST['tp'] != 2)
 	echo json_encode(array('ok' => true, 'total' => $total, 'resultados' => $res));

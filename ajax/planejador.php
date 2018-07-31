@@ -64,7 +64,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$c = (isset($_POST['c'])) ? intval($_POST['c']) : 0;
 		$ce = (isset($_POST['ce'])) ? intval($_POST['ce']) : 0;
 
-		if(!isset($_POST['s'])) { // Planejador inteiro
+		if(!isset($_POST['d'])) { // Planejador inteiro
 			if($Planejado->getPeriodo_Atual(false) === null) {
 				$pa = intval($_POST['pa']);
 				if($pa == 0) {
@@ -387,9 +387,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Usr->markReadOnly();
 			if($Usr->getAluno(false) !== null)
 				$Usr->getAluno()->markReadOnly();
-			
-			$sigla = $_POST['s'];
-			$Disciplina = Disciplina::Por_Sigla($sigla);
+
+			$Disciplina = Disciplina::Load($_POST['d']);
 			
 			$obs = null;
 			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo()->getID());
@@ -398,7 +397,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$pode = $Planejado->getSimulado() || $Arvore->Pode_Cursar($Disciplina, $obs);
 			$total = 0;
 			if($pode)
-				$Oferecimentos = Oferecimento::Consultar(array("sigla" => $sigla, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
+				$Oferecimentos = Oferecimento::Consultar(array("disciplina" => $Disciplina->getId(), "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
 			else
 				$Oferecimentos = array();
 			$tem = ($pode) && ($total > 0);
