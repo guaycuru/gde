@@ -386,10 +386,30 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			}
 		
 		} else { // Apenas uma disciplina
+			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
+			$EliminadasAdd = array();
+			if($_Usuario->getAluno(false) !== null)
+				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
+			else
+				$Atuais = array();
+
+			// Processa as disciplinas atualmente em curso
+			foreach($Atuais as $Atual) {
+				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
+					continue;
+				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
+				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
+					$EliminadasAdd[] = $Tem;
+				}
+			}
+
+			// Cria a arvore personalizada para o planejador
 			$Usr = $_Usuario;
 			$Usr->markReadOnly();
 			if($Usr->getAluno(false) !== null)
 				$Usr->getAluno()->markReadOnly();
+			foreach($EliminadasAdd as $EAdd)
+				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
 
 			$Disciplina = Disciplina::Load($_POST['d']);
 			

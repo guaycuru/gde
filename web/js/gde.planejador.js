@@ -694,7 +694,6 @@ $(document).ready(function() {
 		},
 		select: function(event, ui) {
 			var id = ui.item.raw.id;
-			console.log(id);
 			if($("#disciplina_"+id).length == 0)
 				PlanejadorAdicionarEletiva(id, function() { $("#sigla_eletiva").Padrao(); });
 			else {
