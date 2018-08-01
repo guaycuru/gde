@@ -165,7 +165,7 @@ var PlanejadorProcessarConflitos = function(O, P) {
 var PlanejadorProcessarOferecimentos = function(Oferecimentos, atualizar_conflitos) {
 	var a = 0;
 	var Adicionar = [];
-	$.each(Oferecimentos, function(id_disciplina, Dados) {
+	$.each(Oferecimentos, function(indice, Dados) {
 		PlanejadorAdicionarDisciplina(Dados.Disciplina);
 		if(Dados.Disciplina.tem == false) {
 			if(Dados.Disciplina.pode)

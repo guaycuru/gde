@@ -307,7 +307,8 @@ if($_POST['a'] == 'n') { // Nova Opcao
 							'total' => -1
 						);
 					}
-					$Ret['Oferecimentos'][$Dados['Disciplina']->getId()] = array(
+					// Faco cast pra string para nao estragar a ordem no JSON
+					$Ret['Oferecimentos']["D".$Dados['Disciplina']->getId()] = array(
 						'Disciplina' => array(
 							'id' => $Dados['Disciplina']->getId(),
 							'sigla' => $Dados['Disciplina']->getSigla(false),
@@ -332,7 +333,6 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			
 			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
-
 
 			$Usr->Substituir_Oferecimentos($Adicionados, $Planejado->getPeriodo()->getID());
 
