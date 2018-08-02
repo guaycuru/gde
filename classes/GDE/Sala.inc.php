@@ -104,14 +104,14 @@ class Sala extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Sala[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $q)."%");
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT S.id_sala) FROM ".get_class()." AS S WHERE S.nome LIKE ?1";
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -123,7 +123,7 @@ class Sala extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}

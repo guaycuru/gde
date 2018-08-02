@@ -176,14 +176,14 @@ class Professor extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Professor[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Por_Nome($nome, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -195,7 +195,7 @@ class Professor extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
@@ -207,7 +207,7 @@ class Professor extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Professor[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -256,7 +256,7 @@ class Professor extends Base {
 			$rsmt->addScalarResult('total', 'total');
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -265,7 +265,7 @@ class Professor extends Base {
 		$rsm->addRootEntityFromClassMetadata(get_class(), 'P');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}

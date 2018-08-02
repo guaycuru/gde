@@ -95,7 +95,7 @@ class Curriculo extends Base {
 		$dql .= 'AND C.catalogo = :catalogo ';
 		$dql .= 'ORDER BY C.semestre ASC';
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
@@ -105,7 +105,7 @@ class Curriculo extends Base {
 	 * @param $modalidade
 	 * @param $catalogo
 	 * @return bool
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Existe($curso, $modalidade, $catalogo) {
 		// Se for cursao, utilizar o curriculo da matematica aplicada
@@ -127,7 +127,7 @@ class Curriculo extends Base {
 		$query->setParameter(2, $catalogo);
 		if($modalidade != null)
 			$query->setParameter(3, $modalidade);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return ($query->getSingleScalarResult() > 0);
 	}
@@ -135,6 +135,9 @@ class Curriculo extends Base {
 	/**
 	 * @param bool $vazio
 	 * @return Disciplina|null
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @throws \Doctrine\ORM\ORMException
+	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function getDisciplina($vazio = true) {
 		$inicial = strtolower(substr($this->getSigla(false), 0, 4));

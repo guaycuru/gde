@@ -125,7 +125,7 @@ class Cardapio extends Base {
 		$query->setParameter(1, $data);
 		$query->setParameter(2, $tipo);
 		$query->setMaxResults(1);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		try {
 			return $query->getSingleResult();
@@ -175,19 +175,19 @@ class Cardapio extends Base {
 		$query = self::_EM()->createQuery("SELECT C FROM GDE\\Cardapio C WHERE C.data >= ?1 AND C.data <= ?2 ORDER BY C.data ASC, C.tipo ASC");
 		$query->setParameter(1, $inicio);
 		$query->setParameter(2, $fim);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
 	/**
 	 * @return int
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Ultimo_ID() {
 		$dql = "SELECT MAX(C.id_cardapio) FROM GDE\\Cardapio C";
 		$query = self::_EM()->createQuery($dql);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		try {
 			return $query->getSingleScalarResult();
@@ -207,7 +207,7 @@ class Cardapio extends Base {
 
 	/**
 	 * @return bool|int
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function ID_Proximo() {
 		if($this->getID() == null)

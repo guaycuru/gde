@@ -179,7 +179,7 @@ class Aluno extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Aluno[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar($param, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$qrs = $jns = array();
@@ -273,7 +273,7 @@ class Aluno extends Base {
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -290,7 +290,7 @@ class Aluno extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
@@ -302,7 +302,7 @@ class Aluno extends Base {
 	 * @param int $limit
 	 * @param int $start
 	 * @return Aluno[]
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		// ToDo: Pegar nome da tabela das annotations
@@ -372,7 +372,7 @@ class Aluno extends Base {
 			$rsmt->addScalarResult('total', 'total');
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -381,7 +381,7 @@ class Aluno extends Base {
 		$rsm->addRootEntityFromClassMetadata(get_class(), 'A');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}

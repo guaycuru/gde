@@ -246,7 +246,7 @@ class Oferecimento extends Base {
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -256,7 +256,7 @@ class Oferecimento extends Base {
 			$query->setMaxResults($limit);
 		if($start > -1)
 			$query->setFirstResult($start);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
@@ -365,7 +365,7 @@ class Oferecimento extends Base {
 			$rsmt->addScalarResult('total', 'total');
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
-			if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
@@ -374,7 +374,7 @@ class Oferecimento extends Base {
 		$rsm->addRootEntityFromClassMetadata(get_class(), 'O');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
@@ -520,12 +520,12 @@ class Oferecimento extends Base {
 	 * Retorna o numero de Alunos que trancaram este Oferecimento
 	 *
 	 * @return integer
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Desistencias() {
 		$dqlt = "SELECT COUNT(A) FROM ".get_class()." AS O JOIN O.alunos_trancados AS A WHERE O.id_oferecimento = :id_oferecimento";
 		$queryt = self::_EM()->createQuery($dqlt)->setParameters(array('id_oferecimento' => $this->getID()));
-		if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
+		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $queryt->getSingleScalarResult();
 	}
