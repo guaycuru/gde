@@ -139,7 +139,60 @@ class GooglCalendar{
 	 * Adiciona o calendario da UNICAMP no Calendar
 	 */
 	public function adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado){
+		$ano = explode(' ', $Periodo_Selecionado->getNome())[0];
 
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataDesistencia(),	$ano, 'Último dia para desistência de disciplinas');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataSemanaDeEstudos(), $ano, 'Semana de estudos');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataExames(), $ano, 'Semana de exames');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataMatricula(), $ano, 'Período de matriculas');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataAlteracao(), $ano, 'Período de alteração de matriculas');
+	}
+
+	/**
+	 * criarEventoAllDay
+	 *
+	 * Cria um evento de dia todo
+	 * @return Event_id
+	 */
+	private function criarEventoAllDay($idCalendario, $data, $ano, $nome) {
+		if (strlen($data) > 5) { // se são vários dias
+			$primeiro = explode('-', $data)[0];
+			$ultimo = explode('-', $data)[1];
+		} else { // se é só 1
+			$primeiro = $data;
+			$ultimo = $data;
+		}
+
+		$data_inicio = explode('/', $primeiro);
+		$data_termino = explode('/', $ultimo);
+		$inicio = $this->criaDataDia($ano, $data_inicio[1], $data_inicio[0]);
+		$termino = $this->criaDataDia($ano, $data_termino[1], $data_termino[0]);
+
+		$evento = new Google_Service_Calendar_Event(array(
+			'summary' => $nome,
+			'location' => '',
+			'start' => array(
+				'date' => $inicio,
+				'timeZone' => self::FUSO_HORARIO,
+			),
+			'end' => array(
+				'date' => $termino,
+				'timeZone' => self::FUSO_HORARIO,
+			),
+			'reminders' => array(
+				'useDefault' => FALSE,
+			),
+		));
+		return $this->servico->events->insert($idCalendario, $evento);
+	}
+
+	/**
+	 * criaDataDia
+	 *
+	 * @return string com data no formato para eventos de dia todo (all-day)
+	 */
+	private function criaDataDia($ano, $mes, $dia){
+		return date("Y-m-d", mktime(0, 0, 0, $mes, $dia, $ano));
 	}
 
 	/**
