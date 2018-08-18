@@ -50,6 +50,7 @@ class GooglCalendar{
     $this->client->setAuthConfig(self::URL_CREDENCIAIS);
     $this->client->setAccessType('offline');
     $this->client->setRedirectUri(self::URL_REDIRECIONAMENTO);
+		$this->client->setState($estado);
 	}
 
 

@@ -1,13 +1,28 @@
 <?php
- namespace GDE;
- define('NO_HTML', true);
-define('TITULO', false);
- require_once('../common/common.inc.php');
- $ra = (isset($_GET['ra'])) ? intval($_GET['ra']) : -1;
-$p = (isset($_GET['p'])) ? intval($_GET['p']) : null;
-$n = (isset($_GET['n'])) ? $_GET['n'][0] : 'G';
 
-$Calendar = new GooglCalendar;
+namespace GDE;
+
+define('NO_HTML', true);
+define('TITULO', false);
+
+require_once('../common/common.inc.php');
+
+if (isset($_GET['state'])) {
+  $state = explode(",", $_GET['state']);
+  $ra = $state[0];
+  $p = $state[1];
+  $n = $state[2];
+} else {
+  $ra = (isset($_GET['ra'])) ? intval($_GET['ra']) : -1;
+  $p = (isset($_GET['p'])) ? intval($_GET['p']) : null;
+  $n = (isset($_GET['n'])) ? $_GET['n'][0] : 'G';
+}
+
+$estado = $ra.','.$p.','.$n;
+
+
+// Client da API
+$Calendar = new GooglCalendar($estado);
 
 // Se nao temos o codigo, pedimos um
 if (!isset($_GET['code']) && empty($_GET['error'])) {
@@ -82,7 +97,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
         <br>
         <script type="text/javascript">
           function adicionaNoCalendar() {
-            alert("Clicou")
+            alert("Clicou");
           }
         </script>
 
