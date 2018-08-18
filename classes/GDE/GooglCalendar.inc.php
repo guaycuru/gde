@@ -202,6 +202,125 @@ class GooglCalendar{
    * @return null
    */
   public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado){
+		$ano = explode(' ', $Periodo_Selecionado->getNome())[0];
+		$primeiroDia = $Periodo_Selecionado->getInicioAulas().'/'.$ano;
+		$ultimoDiaPartes = explode('/', $Periodo_Selecionado->getFimAulas());
+		// $ultimoDia = $this->criaData($ano, $ultimoDiaPartes[1], $ultimoDiaPartes[0], 23);
+		$ultimoDia = new DateTime($ano.'-'.$ultimoDiaPartes[1].'-'.$ultimoDiaPartes[0]);
+		$ultimoDia->modify('+ 1 day');
 
+    for($diaSemana = 2; $diaSemana < 8; $diaSemana++) { // Percorre os dias
+      for($hora = 7; $hora < 23; $hora++) { // Percorre as horas
+        if (isset($Horario[$diaSemana][$hora])){
+					foreach ($Horario[$diaSemana][$hora] as $dados) {
+						list($Oferecimento, $sala) = $dados;
+						$titulo = $Oferecimento->getSigla(true) . " " . $Oferecimento->getTurma(true);
+
+
+	          $horaInicio = $hora;
+	          $horaTermino = $this->achaHorarioTermino($Horario, $diaSemana, $hora); // cria apenas um evento para todas aulas iguais em sequencia
+
+						$PrimeiroDiaAula = $this->primeiroDiaAula($diaSemana, $primeiroDia);
+						$comeco = $PrimeiroDiaAula->setTime($horaInicio, 0)->format(DateTime::ATOM);
+						$termino = $PrimeiroDiaAula->setTime($horaTermino, 0)->format(DateTime::ATOM);
+
+	          $evento = new Google_Service_Calendar_Event(array(
+	            'summary' => $titulo,
+	            'location' => $sala,
+	            'start' => array(
+	              'dateTime' => $comeco,
+	              'timeZone' => self::FUSO_HORARIO,
+	            ),
+	            'end' => array(
+	              'dateTime' => $termino,
+	              'timeZone' => self::FUSO_HORARIO,
+	            ),
+	            'recurrence' => array(
+	              'RRULE:FREQ=WEEKLY;UNTIL=' . $ultimoDia->format("Ymd\THim\Z") //20110701T170000Z' FIXME precisa ser nesse formato?
+	            ),
+	            'reminders' => array(
+	              'useDefault' => FALSE,
+	              'overrides' => array(
+	                //array('method' => 'email', 'minutes' => 24 * 60),
+	                //array('method' => 'popup', 'minutes' => 10),
+	              ),
+	            ),
+	          ));
+						$this->servico->events->insert($idCalendario, $evento);
+						$hora = $horaTermino-1;
+					}
+        }
+      }
+    }
+	}
+
+	/**
+	 * criaData
+	 *
+	 * @return string com data no formato para eventos
+	 */
+	private function criaData($ano, $mes, $dia, $hora){
+		return date(DATE_ATOM, mktime($hora, 0, 0, $mes, $dia, $ano));
+	}
+
+	/**
+	 * primeiroDiaAula
+	 *
+	 * parametros:
+	 *	diaAula: dia da semana da aula da materia
+	 *  primeiroDia: data do primeiro dia de aulas da unicamp
+	 *
+	 * @return DateTime data do primeiro dia de aula de uma materia
+	 */
+	public function primeiroDiaAula($diaAula, $primeiroDia){
+		list($dia, $mes, $ano) = explode('/', $primeiroDia);
+		$base = new DateTime($ano.'-'.$mes.'-'.$dia);
+
+		$diaSemana = $base->format('N') + 1;
+
+		if ($diaAula < $diaSemana){
+			$diferenca = 7 - ($diaSemana - $diaAula);
+		} else {
+			$diferenca = $diaAula - $diaSemana;
+		}
+		if ($diferenca > 0){
+			$base->modify('+ '.$diferenca.' days');
+		}
+		return $base;
+	}
+
+
+	/**
+	 * achaHorarioTermino
+	 *
+	 * Acha horário de término da aula que começa na hora e dia determinados
+	 *
+	 * @return int termino de uma sequencia de aulas
+	 */
+	public function achaHorarioTermino($Horario, $dia, $hora){
+		$horaTermino = $hora + 1;
+		if (isset($Horario[$dia][$hora])){
+			foreach ($Horario[$dia][$hora] as $dados) {
+				list($Oferecimento, $sala) = $dados;
+				$titulo = $Oferecimento->getSigla(true) . " " . $Oferecimento->getTurma(true);
+
+				if (!isset($Horario[$dia][$horaTermino])) return $horaTermino;
+				foreach ($Horario[$dia][$horaTermino] as $dadosProximo) {
+					list($ProximoOferecimento, $proximaSala) = $dadosProximo;
+					$proximoTitulo = $ProximoOferecimento->getSigla(true) . " " . $ProximoOferecimento->getTurma(true);
+
+					while ($hora < 23 && $titulo === $proximoTitulo && $sala === $proximaSala) {
+						$hora = $hora + 1;
+						$horaTermino = $horaTermino + 1;
+						if (!isset($Horario[$dia][$horaTermino])) return $horaTermino;
+						foreach ($Horario[$dia][$horaTermino] as $dadosProximo) {
+							list($ProximoOferecimento, $proximaSala) = $dadosProximo;
+							$proximoTitulo = $ProximoOferecimento->getSigla(true) . " " . $ProximoOferecimento->getTurma(true);
+						}
+					}
+				}
+			}
+		}
+		return $horaTermino;
 	}
 }
