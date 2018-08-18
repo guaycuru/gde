@@ -8,7 +8,8 @@
     "doctrine/dbal": "^2.7 || 2.5.13",
     "doctrine/common": "^2.8 || 2.7.3",
     "predis/predis": "^1.1",
-    "ircmaxell/password-compat": "^1.0"
+    "ircmaxell/password-compat": "^1.0",
+    "google/apiclient": "^2.0"
   },
   "suggest": {
     "ext-mysqli": "*",
