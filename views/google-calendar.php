@@ -32,6 +32,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
  ?>
 <html>
 <link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
+<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery-1.7.2.min.js"></script>
 <head>
 </head>
 <body style="padding: 20px;">
@@ -116,6 +117,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
             }
 
             if (autorizou){
+              // TODO colocar indicador de andamento (bolinha girando)
               let parametros = { nivel: nivel, ra: ra, nomeCalendario: nomeCalendario, idCalendario: idCalendario, periodo: periodo, datasImportantes: datasImportantes }
               $.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
                 function(data) {
@@ -125,6 +127,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
                   } else {
                     alert("Seu horário foi adicionado ao Calendar")
                   }
+                  //TODO TIRAR INDICADOR DE ANDAMENTO
                 }
               );
             } else {
