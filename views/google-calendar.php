@@ -37,7 +37,7 @@ $n = (isset($_GET['n'])) ? $_GET['n'][0] : 'G';
         <div style="clear:both;">
           <input type="checkbox" id="checkbox-datas-importantes">Adicionar datas do calendário da UNICAMP</input>
           <ul id='calendario-unicamp'>
-            <!-- TODO colocar datas importantes aqui -->
+            <?php $Periodo_Selecionado->getDatasImportantesHTML(); ?>
           </ul>
         </div>
         <br>

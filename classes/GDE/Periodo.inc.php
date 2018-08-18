@@ -37,6 +37,56 @@ class Periodo extends Base {
 	 */
 	protected $tipo = self::TIPO_NORMAL;
 
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_inicio_aulas;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_fim_aulas;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_desistencia;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_semana_estudos;
+
+	/**
+	* @var string
+	*
+	* @ORM\Column(type="string", nullable=true)
+	*/
+	protected $data_exames;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_matricula;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", nullable=true)
+	 */
+	protected $data_alteracao;
+
+
 	const PERIODO_DESCONHECIDO = 'Desconhecido';
 	const PERIODO_DESCONHECIDO_DAC = '??????';
 
@@ -70,7 +120,7 @@ class Periodo extends Base {
 	}
 
 	/**
-	 * getNOme
+	 * getNome
 	 *
 	 * Retorna o nome deste periodo
 	 *
@@ -90,6 +140,100 @@ class Periodo extends Base {
 		return ((substr($this->id_periodo, -1) != 0)
 			? substr($this->id_periodo, -1).'S'
 			: 'VE').substr($this->id_periodo, 0, 4);
+	}
+
+	/**
+	 * getInicioAulas
+	 *
+	 * Retorna a data do inicio deste periodo
+	 *
+	 * @return string
+	 */
+	public function getInicioAulas() {
+		return $this->data_inicio_aulas;
+	}
+
+	/**
+	 * getFimAulas
+	 *
+	 * Retorna a data do fim deste periodo
+	 *
+	 * @return string
+	 */
+	public function getFimAulas() {
+		return $this->data_fim_aulas;
+	}
+
+	/**
+	 * getDataDesistencia
+	 *
+	 * Retorna a data do ultimo dia para desistencia de disciplinas
+	 *
+	 * @return string
+	 */
+	public function getDataDesistencia() {
+		return $this->data_desistencia;
+	}
+
+	/**
+	 * getDataSemanaDeEstudos
+	 *
+	 * Retorna a data da semana de estudos
+	 *
+	 * @return string
+	 */
+	public function getDataSemanaDeEstudos() {
+		return $this->data_semana_estudos;
+	}
+
+	/**
+	 * getDataExames
+	 *
+	 * Retorna a data dos exames
+	 *
+	 * @return string
+	 */
+	public function getDataExames() {
+		return $this->data_exames;
+	}
+
+	/**
+	 * getDataMatricula
+	 *
+	 * Retorna a data da matricula do proximo semestre
+	 *
+	 * @return string
+	 */
+	public function getDataMatricula() {
+		return $this->data_matricula;
+	}
+
+	/**
+	 * getFimAulas
+	 *
+	 * Retorna a data da alteracao de matricula do proximo semestre
+	 *
+	 * @return string
+	 */
+	public function getDataAlteracao() {
+		return $this->data_alteracao;
+	}
+
+	/**
+	 * getDatasImportantesHTML
+	 *
+	 * Cria uma lista
+	 *
+	 * @return string
+	 */
+	public function getDatasImportantesHTML() {
+		$ano = explode(' ', $this->nome)[0];
+		$semestre = explode(' ', $this->nome)[2][0];
+		echo '<li>'.$this->getDataDesistencia().' - Último dia para desistência de matrícula em disciplinas</li>';
+		echo '<li>'.$this->getDataSemanaDeEstudos().' - Semana de estudos</li>';
+		echo '<li>'.$this->getDataExames().' - Exames Finais</li>';
+		echo '<li>'.$this->getDataMatricula().' - Matrícula em disciplinas do próximo semestre</li>';
+		echo '<li>'.$this->getDataAlteracao().' - Alteração de matrícula em disciplinas do próximo semestre</li>';
 	}
 
 	/**
