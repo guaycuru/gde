@@ -41,7 +41,8 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
     echo "<h1>Não será possível criar os horários sem autorização</h1>";
   } else {
 
-    $Calendar->setTokenAcesso($_GET['code']);
+    // coloca o token na sessao para usar na insercao
+    $_SESSION['token'] = $Calendar->setTokenAcesso($_GET['code']);
 
     // Servico da API do Calendar
     $Calendar->setServico();
@@ -97,7 +98,39 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
         <br>
         <script type="text/javascript">
           function adicionaNoCalendar() {
-            alert("Clicou");
+            let ra = <?php echo $ra; ?>;
+            let periodo = <?php echo $p; ?>;
+            let nivel = '<?php echo $n; ?>';
+
+            let select = document.getElementById('select-id-calendario')
+            let idCalendario = select[select.selectedIndex].value
+
+            let datasImportantes = $('#checkbox-datas-importantes').is(":checked")
+
+            let autorizou = true
+            let nomeCalendario = $('#input-novo-calendario').val()
+
+            if (nomeCalendario !== ''){
+              autorizou = confirm('Você deseja criar um calendario novo chamado "' + nomeCalendario + '"?')
+              idCalendario = ''
+            }
+
+            if (autorizou){
+              let parametros = { nivel: nivel, ra: ra, nomeCalendario: nomeCalendario, idCalendario: idCalendario, periodo: periodo, datasImportantes: datasImportantes }
+              $.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
+                function(data) {
+                  if(data) {
+                    console.log(data)
+                    alert("Algo deu errado")
+                  } else {
+                    alert("Seu horário foi adicionado ao Calendar")
+                  }
+                }
+              );
+            } else {
+              // alert('Se deseja usar um calendário já existente selecione-o sem digitar nada na caixa de texto')
+              document.getElementById('input-novo-calendario').value = ''
+            }
           }
         </script>
 

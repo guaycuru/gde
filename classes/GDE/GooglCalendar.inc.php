@@ -38,9 +38,9 @@ class GooglCalendar{
 
 
 	// Constantes
+	const FUSO_HORARIO = 'America/Sao_Paulo';
 	const URL_CREDENCIAIS = '../credenciais.json'; // FIXME Colocar em um lugar melhor
   const URL_REDIRECIONAMENTO = CONFIG_URL .'views/google-calendar.php';
-  const BATCH_LIMITE = 50;
 
 
 	public function __construct($estado = '') {
@@ -116,4 +116,39 @@ class GooglCalendar{
     $listaCalendarios = $this->servico->calendarList->listCalendarList();
     return $listaCalendarios;
   }
+
+	/**
+	 * criaCalendario
+	 *
+	 * Cria um novo calendario para o usuario
+	 * @return Calendar_ID
+	 */
+	public function criaCalendario($nome){
+		$calendario = new Google_Service_Calendar_Calendar();
+		$calendario->setSummary($nome);
+		$calendario->setTimeZone(self::FUSO_HORARIO);
+
+		$calendarioNovo = $this->servico->calendars->insert($calendario);
+
+		return $calendarioNovo->getId();
+	}
+
+	/**
+	 * adicionaCalendarioUnicamp
+	 *
+	 * Adiciona o calendario da UNICAMP no Calendar
+	 */
+	public function adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado){
+
+	}
+
+	/**
+   * adicionaHorario
+   *
+   * Cria os eventos das aulas no Calendario escolhido
+   * @return null
+   */
+  public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado){
+
+	}
 }
