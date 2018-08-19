@@ -61,7 +61,13 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
     $meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());
     $limpos = Util::Horarios_Livres($Horario);
   ?>
-  <div style="background-color: #FFFFFF; margin: 0 auto; width: auto; text-align: left;">
+  <div id="overlay" style="width: 100%; height: 100%; background-color: black; opacity: 0.7; display: none; padding: -20 -20 -20 -20; z-index: 1000; position: absolute; top: 0; left: 0;">
+    <div style="align: center; text-align: center; vertical-align: center; padding-top: 200px;">
+      <h1 style="align: center; text-align: center; vertical-align: center; font-size: 40px;">Processando...</h1>
+    </div>
+  </div>
+
+  <div style="background-color: #FFFFFF; margin: 0 auto; width: auto; text-align: left; position: absolute; top: 20;">
     <div id="content_bg">
       <div style="padding: 20px 15px 20px 15px; width:auto;">
         <h1 id="anoPeriodo"><?= $Periodo_Selecionado->getNome(false); ?></h1>
@@ -117,7 +123,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
             }
 
             if (autorizou){
-              // TODO colocar indicador de andamento (bolinha girando)
+              $('#overlay').show()
               let parametros = { nivel: nivel, ra: ra, nomeCalendario: nomeCalendario, idCalendario: idCalendario, periodo: periodo, datasImportantes: datasImportantes }
               $.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
                 function(data) {
@@ -126,10 +132,11 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
                     alert("Algo deu errado")
                   } else {
                     alert("Seu horário foi adicionado ao Calendar")
+                    window.close();
                   }
-                  //TODO TIRAR INDICADOR DE ANDAMENTO
                 }
               );
+              $('#overlay').hide()
             } else {
               // alert('Se deseja usar um calendário já existente selecione-o sem digitar nada na caixa de texto')
               document.getElementById('input-novo-calendario').value = ''
