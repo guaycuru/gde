@@ -145,6 +145,9 @@ class GooglCalendar{
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataSemanaDeEstudos(), $ano, 'Semana de estudos');
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataExames(), $ano, 'Semana de exames');
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataMatricula(), $ano, 'Período de matriculas');
+		if ($Periodo_Selecionado->getNome()[7] === '2') {
+			$ano = $ano + 1;
+		}
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataAlteracao(), $ano, 'Período de alteração de matriculas');
 	}
 

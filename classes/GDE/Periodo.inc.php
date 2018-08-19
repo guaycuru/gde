@@ -142,6 +142,14 @@ class Periodo extends Base {
 			: 'VE').substr($this->id_periodo, 0, 4);
 	}
 
+
+	public function temInicioEFim() {
+		if (empty($this->data_inicio_aulas) || empty($this->data_fim_aulas)){
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * getInicioAulas
 	 *
