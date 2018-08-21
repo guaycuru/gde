@@ -66,10 +66,8 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
       $meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());
       $limpos = Util::Horarios_Livres($Horario);
     ?>
-    <div id="overlay" style="width: 100%; height: 100%; background-color: black; opacity: 0.7; display: none; padding: -20 -20 -20 -20; z-index: 1000; position: absolute; top: 0; left: 0;">
-      <div style="align: center; text-align: center; vertical-align: center; padding-top: 200px;">
-        <h1 style="align: center; text-align: center; vertical-align: center; font-size: 40px;">Processando...</h1>
-      </div>
+    <div id="overlay" style="width: 100%; height: 100%; background-color: black; opacity: 0.7; display: none; z-index: 1000; position: absolute; top: 0; left: 0;">
+        <h1 style="align: center; text-align: center; vertical-align: center; font-size: 40px; user-select: none;">Processando...</h1>
     </div>
 
     <div style="background-color: #FFFFFF; margin: 0 auto; width: auto; text-align: left; position: absolute; top: 20;">
@@ -141,7 +139,6 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
                     }
                   }
                 );
-                $('#overlay').hide()
               } else {
                 // alert('Se deseja usar um calendário já existente selecione-o sem digitar nada na caixa de texto')
                 document.getElementById('input-novo-calendario').value = ''

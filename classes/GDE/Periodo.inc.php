@@ -40,51 +40,95 @@ class Periodo extends Base {
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $data_inicio_aulas;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
 	protected $data_fim_aulas;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
-	protected $data_desistencia;
+	protected $data_carderno_horarios;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
-	protected $data_semana_estudos;
+	protected $data_desistencia_inicio;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="date", nullable=true)
+	 */
+	protected $data_desistencia_fim;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="date", nullable=true)
+	 */
+	protected $data_semana_estudos_inicio;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="date", nullable=true)
+	 */
+	protected $data_semana_estudos_fim;
 
 	/**
 	* @var string
 	*
-	* @ORM\Column(type="string", nullable=true)
+	* @ORM\Column(type="date", nullable=true)
 	*/
-	protected $data_exames;
+	protected $data_exames_inicio;
+
+	/**
+	* @var string
+	*
+	* @ORM\Column(type="date", nullable=true)
+	*/
+	protected $data_exames_fim;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
-	protected $data_matricula;
+	protected $data_matricula_inicio;
 
 	/**
 	 * @var string
 	 *
-	 * @ORM\Column(type="string", nullable=true)
+	 * @ORM\Column(type="date", nullable=true)
 	 */
-	protected $data_alteracao;
+	protected $data_matricula_fim;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="date", nullable=true)
+	 */
+	protected $data_alteracao_inicio;
+
+	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="date", nullable=true)
+	 */
+	protected $data_alteracao_fim;
+
+
 
 
 	const PERIODO_DESCONHECIDO = 'Desconhecido';
@@ -158,7 +202,7 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getInicioAulas() {
-		return $this->data_inicio_aulas;
+		return $this->data_inicio_aulas->format("Y-m-d");
 	}
 
 	/**
@@ -169,7 +213,18 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getFimAulas() {
-		return $this->data_fim_aulas;
+		return $this->data_fim_aulas->format("Y-m-d");
+	}
+
+	/**
+	 * getDataCadernoHorarios
+	 *
+	 * Retorna a data da divulgaçao do caderno de horarios do proximo semestre
+	 *
+	 * @return string
+	 */
+	public function getDataCadernoHorarios() {
+		return $this->data_carderno_horarios->format("Y-m-d");
 	}
 
 	/**
@@ -179,8 +234,19 @@ class Periodo extends Base {
 	 *
 	 * @return string
 	 */
-	public function getDataDesistencia() {
-		return $this->data_desistencia;
+	public function getDataDesistenciaInicio() {
+		return $this->data_desistencia_inicio->format("Y-m-d");
+	}
+
+	/**
+	 * getDataDesistencia
+	 *
+	 * Retorna a data do ultimo dia para desistencia de disciplinas
+	 *
+	 * @return string
+	 */
+	public function getDataDesistenciaFim() {
+		return $this->data_desistencia_fim->format("Y-m-d");
 	}
 
 	/**
@@ -190,8 +256,19 @@ class Periodo extends Base {
 	 *
 	 * @return string
 	 */
-	public function getDataSemanaDeEstudos() {
-		return $this->data_semana_estudos;
+	public function getDataSemanaDeEstudosInicio() {
+		return $this->data_semana_estudos_inicio->format("Y-m-d");
+	}
+
+	/**
+	 * getDataSemanaDeEstudos
+	 *
+	 * Retorna a data da semana de estudos
+	 *
+	 * @return string
+	 */
+	public function getDataSemanaDeEstudosFim() {
+		return $this->data_semana_estudos_fim->format("Y-m-d");
 	}
 
 	/**
@@ -201,8 +278,19 @@ class Periodo extends Base {
 	 *
 	 * @return string
 	 */
-	public function getDataExames() {
-		return $this->data_exames;
+	public function getDataExamesInicio() {
+		return $this->data_exames_inicio->format("Y-m-d");
+	}
+
+	/**
+	 * getDataExames
+	 *
+	 * Retorna a data dos exames
+	 *
+	 * @return string
+	 */
+	public function getDataExamesFim() {
+		return $this->data_exames_fim->format("Y-m-d");
 	}
 
 	/**
@@ -212,8 +300,19 @@ class Periodo extends Base {
 	 *
 	 * @return string
 	 */
-	public function getDataMatricula() {
-		return $this->data_matricula;
+	public function getDataMatriculaInicio() {
+		return $this->data_matricula_inicio->format("Y-m-d");
+	}
+
+	/**
+	 * getDataMatricula
+	 *
+	 * Retorna a data da matricula do proximo semestre
+	 *
+	 * @return string
+	 */
+	public function getDataMatriculaFim() {
+		return $this->data_matricula_fim->format("Y-m-d");
 	}
 
 	/**
@@ -223,8 +322,19 @@ class Periodo extends Base {
 	 *
 	 * @return string
 	 */
-	public function getDataAlteracao() {
-		return $this->data_alteracao;
+	public function getDataAlteracaoInicio() {
+		return $this->data_alteracao_inicio->format("Y-m-d");
+	}
+
+	/**
+	 * getFimAulas
+	 *
+	 * Retorna a data da alteracao de matricula do proximo semestre
+	 *
+	 * @return string
+	 */
+	public function getDataAlteracaoFim() {
+		return $this->data_alteracao_fim->format("Y-m-d");
 	}
 
 	/**
@@ -237,11 +347,17 @@ class Periodo extends Base {
 	public function getDatasImportantesHTML() {
 		$ano = explode(' ', $this->nome)[0];
 		$semestre = explode(' ', $this->nome)[2][0];
-		echo '<li>'.$this->getDataDesistencia().' - Último dia para desistência de matrícula em disciplinas</li>';
-		echo '<li>'.$this->getDataSemanaDeEstudos().' - Semana de estudos</li>';
-		echo '<li>'.$this->getDataExames().' - Exames Finais</li>';
-		echo '<li>'.$this->getDataMatricula().' - Matrícula em disciplinas do próximo semestre</li>';
-		echo '<li>'.$this->getDataAlteracao().' - Alteração de matrícula em disciplinas do próximo semestre</li>';
+		echo '<li>'.$this->readableData($this->getDataDesistenciaInicio()).' até '.$this->readableData($this->getDataDesistenciaFim()).' - Último dia para desistência de matrícula em disciplinas</li>';
+		echo '<li>'.$this->readableData($this->getDataCadernoHorarios()).' - Divulgação do caderno de horários do próximo semestre</li>';
+		echo '<li>'.$this->readableData($this->getDataSemanaDeEstudosInicio()).' até '.$this->readableData($this->getDataSemanaDeEstudosFim()).' - Semana de estudos</li>';
+		echo '<li>'.$this->readableData($this->getDataExamesInicio()).' até '.$this->readableData($this->getDataExamesFim()).' - Exames Finais</li>';
+		echo '<li>'.$this->readableData($this->getDataMatriculaInicio()).' até '.$this->readableData($this->getDataMatriculaFim()).' - Matrícula em disciplinas do próximo semestre</li>';
+		echo '<li>'.$this->readableData($this->getDataAlteracaoInicio()).' até '.$this->readableData($this->getDataAlteracaoFim()).' - Alteração de matrícula em disciplinas do próximo semestre</li>';
+	}
+
+	private function readableData($data){
+		$partes = explode("-", $data);
+		return $partes[2]."/".$partes[1]."/".$partes[0];
 	}
 
 	/**

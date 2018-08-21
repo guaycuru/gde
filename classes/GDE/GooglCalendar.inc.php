@@ -139,16 +139,12 @@ class GooglCalendar{
 	 * Adiciona o calendario da UNICAMP no Calendar
 	 */
 	public function adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado){
-		$ano = explode(' ', $Periodo_Selecionado->getNome())[0];
-
-		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataDesistencia(),	$ano, 'Último dia para desistência de disciplinas');
-		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataSemanaDeEstudos(), $ano, 'Semana de estudos');
-		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataExames(), $ano, 'Semana de exames');
-		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataMatricula(), $ano, 'Período de matriculas');
-		if ($Periodo_Selecionado->getNome()[7] === '2') {
-			$ano = $ano + 1;
-		}
-		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataAlteracao(), $ano, 'Período de alteração de matriculas');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataCadernoHorarios(), $Periodo_Selecionado->getDataCadernoHorarios(), 'Divulgação do cardeno de horários');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataDesistenciaInicio(), $Periodo_Selecionado->getDataDesistenciaFim(), 'Período para desistência de disciplinas');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataSemanaDeEstudosInicio(), $Periodo_Selecionado->getDataSemanaDeEstudosFim(), 'Semana de estudos');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataExamesInicio(), $Periodo_Selecionado->getDataExamesFim(), 'Semana de exames');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataMatriculaInicio(), $Periodo_Selecionado->getDataMatriculaFim(), 'Período de matriculas');
+		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataAlteracaoInicio(), $Periodo_Selecionado->getDataAlteracaoFim(), 'Período de alteração de matriculas');
 	}
 
 	/**
@@ -157,29 +153,16 @@ class GooglCalendar{
 	 * Cria um evento de dia todo
 	 * @return Event_id
 	 */
-	private function criarEventoAllDay($idCalendario, $data, $ano, $nome) {
-		if (strlen($data) > 5) { // se são vários dias
-			$primeiro = explode('-', $data)[0];
-			$ultimo = explode('-', $data)[1];
-		} else { // se é só 1
-			$primeiro = $data;
-			$ultimo = $data;
-		}
-
-		$data_inicio = explode('/', $primeiro);
-		$data_termino = explode('/', $ultimo);
-		$inicio = $this->criaDataDia($ano, $data_inicio[1], $data_inicio[0]);
-		$termino = $this->criaDataDia($ano, $data_termino[1], $data_termino[0]);
-
+	private function criarEventoAllDay($idCalendario, $dataInicio, $dataFim, $nome) {
 		$evento = new Google_Service_Calendar_Event(array(
 			'summary' => $nome,
 			'location' => '',
 			'start' => array(
-				'date' => $inicio,
+				'date' => $dataInicio,
 				'timeZone' => self::FUSO_HORARIO,
 			),
 			'end' => array(
-				'date' => $termino,
+				'date' => $dataFim,
 				'timeZone' => self::FUSO_HORARIO,
 			),
 			'reminders' => array(
@@ -190,26 +173,14 @@ class GooglCalendar{
 	}
 
 	/**
-	 * criaDataDia
-	 *
-	 * @return string com data no formato para eventos de dia todo (all-day)
-	 */
-	private function criaDataDia($ano, $mes, $dia){
-		return date("Y-m-d", mktime(0, 0, 0, $mes, $dia, $ano));
-	}
-
-	/**
    * adicionaHorario
    *
    * Cria os eventos das aulas no Calendario escolhido
    * @return null
    */
   public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado){
-		$ano = explode(' ', $Periodo_Selecionado->getNome())[0];
-		$primeiroDia = $Periodo_Selecionado->getInicioAulas().'/'.$ano;
-		$ultimoDiaPartes = explode('/', $Periodo_Selecionado->getFimAulas());
-		// $ultimoDia = $this->criaData($ano, $ultimoDiaPartes[1], $ultimoDiaPartes[0], 23);
-		$ultimoDia = new DateTime($ano.'-'.$ultimoDiaPartes[1].'-'.$ultimoDiaPartes[0]);
+		$primeiroDia = $Periodo_Selecionado->getInicioAulas();
+		$ultimoDia = new DateTime($Periodo_Selecionado->getFimAulas());
 		$ultimoDia->modify('+ 1 day');
 
     for($diaSemana = 2; $diaSemana < 8; $diaSemana++) { // Percorre os dias
@@ -257,14 +228,6 @@ class GooglCalendar{
     }
 	}
 
-	/**
-	 * criaData
-	 *
-	 * @return string com data no formato para eventos
-	 */
-	private function criaData($ano, $mes, $dia, $hora){
-		return date(DATE_ATOM, mktime($hora, 0, 0, $mes, $dia, $ano));
-	}
 
 	/**
 	 * primeiroDiaAula
@@ -276,8 +239,7 @@ class GooglCalendar{
 	 * @return DateTime data do primeiro dia de aula de uma materia
 	 */
 	public function primeiroDiaAula($diaAula, $primeiroDia){
-		list($dia, $mes, $ano) = explode('/', $primeiroDia);
-		$base = new DateTime($ano.'-'.$mes.'-'.$dia);
+		$base = new DateTime($primeiroDia);
 
 		$diaSemana = $base->format('N') + 1;
 
