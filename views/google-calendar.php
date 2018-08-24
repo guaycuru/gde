@@ -7,7 +7,7 @@ define('TITULO', false);
 
 require_once('../common/common.inc.php');
 
-if (isset($_GET['state'])) {
+if(isset($_GET['state'])) {
   $state = explode(",", $_GET['state']);
   $ra = $state[0];
   $p = $state[1];
@@ -20,16 +20,15 @@ if (isset($_GET['state'])) {
 
 $estado = $ra.','.$p.','.$n;
 
-
 // Client da API
 $Calendar = new GooglCalendar($estado);
 
 // Se nao temos o codigo, pedimos um
-if (!isset($_GET['code']) && empty($_GET['error'])) {
+if(!isset($_GET['code']) && empty($_GET['error'])) {
   $Calendar->setTokenAutenticacao();
 }
 
- ?>
+?>
 <html>
 <link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery-1.7.2.min.js"></script>
@@ -38,22 +37,19 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
 <body style="padding: 20px;">
   <?php
   // Checa se o usuario negou as permissoes necessarias
-  if (!empty($_GET['error'])){
+  if(!empty($_GET['error'])) {
     echo "<h1>Não será possível criar os horários sem autorização</h1>";
   } else {
 
     $Periodo_Selecionado = ($p > 0) ? Periodo::Load($p) : Periodo::getAtual();
 
-    if (!$Periodo_Selecionado->temInicioEFim()){
+    if(!$Periodo_Selecionado->temInicioEFim()) {
       echo "<h1>O Período escolhido não está disponível para ser adicionado ao Calendar</h1>";
     } else {
-
       // coloca o token na sessao para usar na insercao
       $_SESSION['token'] = $Calendar->setTokenAcesso($_GET['code']);
-
       // Servico da API do Calendar
       $Calendar->setServico();
-
 
       $Aluno = ($ra > 0) ? Aluno::Load($ra) : $_Usuario->getAluno(true);
       $Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $n);
@@ -86,7 +82,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
                 $listaCalendarios = $Calendar->getCalendarios();
 
                 // Constroi uma lista de id para nome
-                foreach ($listaCalendarios->getItems() as $calendarioAtual) {
+                foreach($listaCalendarios->getItems() as $calendarioAtual) {
                   echo "<option value=" . $calendarioAtual->getId() . ">" . $calendarioAtual->getSummary() . "</option>";
                 }
                 ?>
@@ -99,10 +95,7 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
 
           <br><br>
           <div style="clear:both;">
-            <input type="checkbox" id="checkbox-datas-importantes">Adicionar datas do calendário da UNICAMP</input>
-            <ul id='calendario-unicamp'>
-              <?php $Periodo_Selecionado->getDatasImportantesHTML(); ?>
-            </ul>
+            <?php $Periodo_Selecionado->getDatasImportantesHTML(); ?>
           </div>
           <br>
           <br>
@@ -120,12 +113,12 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
               let autorizou = true
               let nomeCalendario = $('#input-novo-calendario').val()
 
-              if (nomeCalendario !== ''){
+              if(nomeCalendario !== '') {
                 autorizou = confirm('Você deseja criar um calendario novo chamado "' + nomeCalendario + '"?')
                 idCalendario = ''
               }
 
-              if (autorizou){
+              if(autorizou) {
                 $('#overlay').show()
                 let parametros = { nivel: nivel, ra: ra, nomeCalendario: nomeCalendario, idCalendario: idCalendario, periodo: periodo, datasImportantes: datasImportantes }
                 $.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
@@ -150,7 +143,6 @@ if (!isset($_GET['code']) && empty($_GET['error'])) {
         </div>
       </div>
     </div>
-
     <?php
     }
   }

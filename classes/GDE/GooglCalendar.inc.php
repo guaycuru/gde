@@ -2,7 +2,6 @@
 
 namespace GDE;
 
-
 require_once('../vendor/autoload.php');
 use Google_Client;
 use Google_Service_Calendar;
@@ -33,15 +32,10 @@ class GooglCalendar{
 	 */
 	protected $tokenAcesso;
 
-
-
-
-
 	// Constantes
 	const FUSO_HORARIO = 'America/Sao_Paulo';
 	const URL_CREDENCIAIS = '../credenciais.json'; // FIXME Colocar em um lugar melhor
   const URL_REDIRECIONAMENTO = CONFIG_URL .'views/google-calendar.php';
-
 
 	public function __construct($estado = '') {
 		$this->client = new Google_Client();
@@ -52,7 +46,6 @@ class GooglCalendar{
     $this->client->setRedirectUri(self::URL_REDIRECIONAMENTO);
 		$this->client->setState($estado);
 	}
-
 
   /**
    * setTokenAutenticacao
@@ -65,7 +58,6 @@ class GooglCalendar{
     header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
   }
 
-
   /**
    * setTokenAcesso
    *
@@ -73,12 +65,12 @@ class GooglCalendar{
    * @return accessToken
    */
   public function setTokenAcesso($codigo, $token = ''){
-    if (empty($token)){
+    if(empty($token)) {
       // Exchange authorization code for an access token.
       $accessToken = $this->client->fetchAccessTokenWithAuthCode($codigo);
 
       // Check to see if there was an error.
-      if (array_key_exists('error', $accessToken)) {
+      if(array_key_exists('error', $accessToken)) {
           throw new Exception(join(', ', $accessToken));
       }
     } else {
@@ -88,7 +80,7 @@ class GooglCalendar{
     $this->client->setAccessToken($accessToken);
 
     // Refresh the token if it's expired.
-    if ($this->client->isAccessTokenExpired()) {
+    if($this->client->isAccessTokenExpired()) {
         $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
     }
 		return $accessToken;
@@ -101,7 +93,7 @@ class GooglCalendar{
    * @return Google_Service_Calendar
    */
   public function setServico(){
-    if (!empty($this->client)){
+    if(!empty($this->client)) {
       $this->servico = new Google_Service_Calendar($this->client);
     }
   }
@@ -127,9 +119,7 @@ class GooglCalendar{
 		$calendario = new Google_Service_Calendar_Calendar();
 		$calendario->setSummary($nome);
 		$calendario->setTimeZone(self::FUSO_HORARIO);
-
 		$calendarioNovo = $this->servico->calendars->insert($calendario);
-
 		return $calendarioNovo->getId();
 	}
 
@@ -154,6 +144,8 @@ class GooglCalendar{
 	 * @return Event_id
 	 */
 	private function criarEventoAllDay($idCalendario, $dataInicio, $dataFim, $nome) {
+		if($dataInicio == '' || $dataFim == '')
+			return -1;
 		$evento = new Google_Service_Calendar_Event(array(
 			'summary' => $nome,
 			'location' => '',
@@ -185,15 +177,12 @@ class GooglCalendar{
 
     for($diaSemana = 2; $diaSemana < 8; $diaSemana++) { // Percorre os dias
       for($hora = 7; $hora < 23; $hora++) { // Percorre as horas
-        if (isset($Horario[$diaSemana][$hora])){
-					foreach ($Horario[$diaSemana][$hora] as $dados) {
+        if(isset($Horario[$diaSemana][$hora])) {
+					foreach($Horario[$diaSemana][$hora] as $dados) {
 						list($Oferecimento, $sala) = $dados;
 						$titulo = $Oferecimento->getSigla(true) . " " . $Oferecimento->getTurma(true);
-
-
 	          $horaInicio = $hora;
 	          $horaTermino = $this->achaHorarioTermino($Horario, $diaSemana, $hora); // cria apenas um evento para todas aulas iguais em sequencia
-
 						$PrimeiroDiaAula = $this->primeiroDiaAula($diaSemana, $primeiroDia);
 						$comeco = $PrimeiroDiaAula->setTime($horaInicio, 0)->format(DateTime::ATOM);
 						$termino = $PrimeiroDiaAula->setTime($horaTermino, 0)->format(DateTime::ATOM);
@@ -210,7 +199,7 @@ class GooglCalendar{
 	              'timeZone' => self::FUSO_HORARIO,
 	            ),
 	            'recurrence' => array(
-	              'RRULE:FREQ=WEEKLY;UNTIL=' . $ultimoDia->format("Ymd\THim\Z") //20110701T170000Z' FIXME precisa ser nesse formato?
+	              'RRULE:FREQ=WEEKLY;UNTIL=' . $ultimoDia->format("Ymd\THim\Z")
 	            ),
 	            'reminders' => array(
 	              'useDefault' => FALSE,
@@ -228,7 +217,6 @@ class GooglCalendar{
     }
 	}
 
-
 	/**
 	 * primeiroDiaAula
 	 *
@@ -240,20 +228,17 @@ class GooglCalendar{
 	 */
 	public function primeiroDiaAula($diaAula, $primeiroDia){
 		$base = new DateTime($primeiroDia);
-
 		$diaSemana = $base->format('N') + 1;
-
-		if ($diaAula < $diaSemana){
+		if($diaAula < $diaSemana) {
 			$diferenca = 7 - ($diaSemana - $diaAula);
 		} else {
 			$diferenca = $diaAula - $diaSemana;
 		}
-		if ($diferenca > 0){
+		if($diferenca > 0) {
 			$base->modify('+ '.$diferenca.' days');
 		}
 		return $base;
 	}
-
 
 	/**
 	 * achaHorarioTermino
@@ -264,21 +249,21 @@ class GooglCalendar{
 	 */
 	public function achaHorarioTermino($Horario, $dia, $hora){
 		$horaTermino = $hora + 1;
-		if (isset($Horario[$dia][$hora])){
-			foreach ($Horario[$dia][$hora] as $dados) {
+		if(isset($Horario[$dia][$hora])) {
+			foreach($Horario[$dia][$hora] as $dados) {
 				list($Oferecimento, $sala) = $dados;
 				$titulo = $Oferecimento->getSigla(true) . " " . $Oferecimento->getTurma(true);
 
-				if (!isset($Horario[$dia][$horaTermino])) return $horaTermino;
-				foreach ($Horario[$dia][$horaTermino] as $dadosProximo) {
+				if(!isset($Horario[$dia][$horaTermino])) return $horaTermino;
+				foreach($Horario[$dia][$horaTermino] as $dadosProximo) {
 					list($ProximoOferecimento, $proximaSala) = $dadosProximo;
 					$proximoTitulo = $ProximoOferecimento->getSigla(true) . " " . $ProximoOferecimento->getTurma(true);
 
-					while ($hora < 23 && $titulo === $proximoTitulo && $sala === $proximaSala) {
+					while($hora < 23 && $titulo === $proximoTitulo && $sala === $proximaSala) {
 						$hora = $hora + 1;
 						$horaTermino = $horaTermino + 1;
-						if (!isset($Horario[$dia][$horaTermino])) return $horaTermino;
-						foreach ($Horario[$dia][$horaTermino] as $dadosProximo) {
+						if(!isset($Horario[$dia][$horaTermino])) return $horaTermino;
+						foreach($Horario[$dia][$horaTermino] as $dadosProximo) {
 							list($ProximoOferecimento, $proximaSala) = $dadosProximo;
 							$proximoTitulo = $ProximoOferecimento->getSigla(true) . " " . $ProximoOferecimento->getTurma(true);
 						}

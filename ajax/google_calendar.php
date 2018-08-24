@@ -16,47 +16,30 @@ $nomeCalendario = $_POST['nomeCalendario'];
 $idCalendario = $_POST['idCalendario'];
 $datasImportantes = $_POST['datasImportantes'];
 
-
-
 // Client da API
 $Calendar = new GooglCalendar;
 
 // Se nao temos o token, deu ruim
-if (empty($_SESSION['token'])) {
+if(empty($_SESSION['token'])) {
   echo "Sem token";
 } else {
-
   $Calendar->setTokenAcesso('', $_SESSION['token']);
-
-
   // Servico da API do Calendar
   $Calendar->setServico();
-
   // Se precisa criar um calendario
-  if ($idCalendario === '') {
+  if($idCalendario === '') {
     $idCalendario = $Calendar->criaCalendario($nomeCalendario);
   }
-
 
   $Aluno = ($ra > 0) ? Aluno::Load($ra) : $_Usuario->getAluno(true);
   $Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $nivel);
 
-
   $Calendar->adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado);
-  if ($datasImportantes) {
+  if($datasImportantes) {
     $Calendar->adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado);
   }
 
   // reseta o token
   unset($_SESSION['token']);
 }
-
-
-
-
-
-
-
-
-
 ?>

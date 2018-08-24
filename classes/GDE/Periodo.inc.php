@@ -128,9 +128,6 @@ class Periodo extends Base {
 	 */
 	protected $data_alteracao_fim;
 
-
-
-
 	const PERIODO_DESCONHECIDO = 'Desconhecido';
 	const PERIODO_DESCONHECIDO_DAC = '??????';
 
@@ -186,9 +183,15 @@ class Periodo extends Base {
 			: 'VE').substr($this->id_periodo, 0, 4);
 	}
 
-
+	/**
+	 * getInicioAulas
+	 *
+	 * Retorna se é possível criar o Calendar para o periodo
+	 *
+	 * @return boolean
+	 */
 	public function temInicioEFim() {
-		if (empty($this->data_inicio_aulas) || empty($this->data_fim_aulas)){
+		if(empty($this->data_inicio_aulas) || empty($this->data_fim_aulas)) {
 			return false;
 		}
 		return true;
@@ -202,7 +205,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getInicioAulas() {
-		return $this->data_inicio_aulas->format("Y-m-d");
+		if(!empty($this->data_inicio_aulas))
+			return $this->data_inicio_aulas->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -213,7 +218,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getFimAulas() {
-		return $this->data_fim_aulas->format("Y-m-d");
+		if(!empty($this->data_fim_aulas))
+			return $this->data_fim_aulas->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -224,7 +231,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataCadernoHorarios() {
-		return $this->data_carderno_horarios->format("Y-m-d");
+		if(!empty($this->data_carderno_horarios))
+			return $this->data_carderno_horarios->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -235,7 +244,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataDesistenciaInicio() {
-		return $this->data_desistencia_inicio->format("Y-m-d");
+		if(!empty($this->data_desistencia_inicio))
+			return $this->data_desistencia_inicio->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -246,7 +257,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataDesistenciaFim() {
-		return $this->data_desistencia_fim->format("Y-m-d");
+		if(!empty($this->data_desistencia_fim))
+			return $this->data_desistencia_fim->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -257,7 +270,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataSemanaDeEstudosInicio() {
-		return $this->data_semana_estudos_inicio->format("Y-m-d");
+		if(!empty($this->data_semana_estudos_inicio))
+			return $this->data_semana_estudos_inicio->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -268,7 +283,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataSemanaDeEstudosFim() {
-		return $this->data_semana_estudos_fim->format("Y-m-d");
+		if(!empty($this->data_semana_estudos_fim))
+			return $this->data_semana_estudos_fim->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -279,7 +296,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataExamesInicio() {
-		return $this->data_exames_inicio->format("Y-m-d");
+		if(!empty($this->data_exames_inicio))
+			return $this->data_exames_inicio->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -290,7 +309,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataExamesFim() {
-		return $this->data_exames_fim->format("Y-m-d");
+		if(!empty($this->data_exames_fim))
+			return $this->data_exames_fim->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -301,7 +322,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataMatriculaInicio() {
-		return $this->data_matricula_inicio->format("Y-m-d");
+		if(!empty($this->data_matricula_inicio))
+			return $this->data_matricula_inicio->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -312,7 +335,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataMatriculaFim() {
-		return $this->data_matricula_fim->format("Y-m-d");
+		if(!empty($this->data_matricula_fim))
+			return $this->data_matricula_fim->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -323,7 +348,9 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataAlteracaoInicio() {
-		return $this->data_alteracao_inicio->format("Y-m-d");
+		if(!empty($this->data_alteracao_inicio))
+			return $this->data_alteracao_inicio->format("Y-m-d");
+		return "";
 	}
 
 	/**
@@ -334,7 +361,21 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDataAlteracaoFim() {
-		return $this->data_alteracao_fim->format("Y-m-d");
+		if(!empty($this->data_alteracao_fim))
+			return $this->data_alteracao_fim->format("Y-m-d");
+		return "";
+	}
+
+	public function temCalendario(){
+		if(!empty($this->getDataDesistenciaInicio()) || !empty($this->getDataDesistenciaFim()) ||
+			 !empty($this->getDataCadernoHorarios()) || !empty($this->getDataSemanaDeEstudosInicio()) ||
+			 !empty($this->getDataSemanaDeEstudosFim()) || !empty($this->getDataExamesInicio()) ||
+			 !empty($this->getDataExamesFim()) || !empty($this->getDataMatriculaInicio()) ||
+			 !empty($this->getDataMatriculaFim()) || !empty($this->getDataAlteracaoInicio()) ||
+			 !empty($this->getDataAlteracaoFim())) {
+				 return true;
+			 }
+		return false;
 	}
 
 	/**
@@ -345,14 +386,26 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDatasImportantesHTML() {
-		$ano = explode(' ', $this->nome)[0];
-		$semestre = explode(' ', $this->nome)[2][0];
-		echo '<li>'.$this->readableData($this->getDataDesistenciaInicio()).' até '.$this->readableData($this->getDataDesistenciaFim()).' - Último dia para desistência de matrícula em disciplinas</li>';
-		echo '<li>'.$this->readableData($this->getDataCadernoHorarios()).' - Divulgação do caderno de horários do próximo semestre</li>';
-		echo '<li>'.$this->readableData($this->getDataSemanaDeEstudosInicio()).' até '.$this->readableData($this->getDataSemanaDeEstudosFim()).' - Semana de estudos</li>';
-		echo '<li>'.$this->readableData($this->getDataExamesInicio()).' até '.$this->readableData($this->getDataExamesFim()).' - Exames Finais</li>';
-		echo '<li>'.$this->readableData($this->getDataMatriculaInicio()).' até '.$this->readableData($this->getDataMatriculaFim()).' - Matrícula em disciplinas do próximo semestre</li>';
-		echo '<li>'.$this->readableData($this->getDataAlteracaoInicio()).' até '.$this->readableData($this->getDataAlteracaoFim()).' - Alteração de matrícula em disciplinas do próximo semestre</li>';
+		if(!$this->temCalendario()){
+			echo '<input type="checkbox" id="checkbox-datas-importantes" disabled /><label for="checkbox-datas-importantes">Adicionar datas do calendário da UNICAMP</label>';
+			echo '<h2>Calendário da UNICAMP não disponível para inserção</h2>';
+		} else {
+			echo '<input type="checkbox" id="checkbox-datas-importantes" /><label for="checkbox-datas-importantes">Adicionar datas do calendário da UNICAMP</label>';
+			echo '<ul id="calendario-unicamp">';
+			if(!empty($this->getDataDesistenciaInicio()) || !empty($this->getDataDesistenciaFim()))
+				echo '<li>'.$this->readableData($this->getDataDesistenciaInicio()).' até '.$this->readableData($this->getDataDesistenciaFim()).' - Último dia para desistência de matrícula em disciplinas</li>';
+			if(!empty($this->getDataCadernoHorarios()))
+				echo '<li>'.$this->readableData($this->getDataCadernoHorarios()).' - Divulgação do caderno de horários do próximo semestre</li>';
+			if(!empty($this->getDataSemanaDeEstudosInicio()) || !empty($this->getDataSemanaDeEstudosFim()))
+				echo '<li>'.$this->readableData($this->getDataSemanaDeEstudosInicio()).' até '.$this->readableData($this->getDataSemanaDeEstudosFim()).' - Semana de estudos</li>';
+			if(!empty($this->getDataExamesInicio()) || !empty($this->getDataExamesFim()))
+				echo '<li>'.$this->readableData($this->getDataExamesInicio()).' até '.$this->readableData($this->getDataExamesFim()).' - Exames Finais</li>';
+			if(!empty($this->getDataMatriculaInicio()) || !empty($this->getDataMatriculaFim()))
+				echo '<li>'.$this->readableData($this->getDataMatriculaInicio()).' até '.$this->readableData($this->getDataMatriculaFim()).' - Matrícula em disciplinas do próximo semestre</li>';
+			if(!empty($this->getDataAlteracaoInicio()) || !empty($this->getDataAlteracaoFim()))
+				echo '<li>'.$this->readableData($this->getDataAlteracaoInicio()).' até '.$this->readableData($this->getDataAlteracaoFim()).' - Alteração de matrícula em disciplinas do próximo semestre</li>';
+			echo '</ul>';
+		}
 	}
 
 	private function readableData($data){
