@@ -27,8 +27,8 @@
 2. Vá para a página de credenciais.
 2. Nas opções da tela de consentimento OAuth colocar o nome para ser exibido.
 3. Nas opções de Credenciais preencher:
-    -Origens JavaScript autorizadas: http://localhost
-    -URIs de redirecionamento autorizados: http://localhost/gde/views/google-calendar.php
+    - Origens JavaScript autorizadas: http://localhost
+    - URIs de redirecionamento autorizados: http://localhost/gde/views/google-calendar.php
 4. Fazer download do JSON com as credenciais e colocar na pasta.
 
 ### Sobre os dados no pacote ###
