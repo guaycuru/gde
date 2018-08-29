@@ -21,6 +21,16 @@
  6. Importe o arquivo `gde_pacote.sql` com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`. Esta importação irá demorar algum tempo, então tenha paciência;
  7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas.
 
+## Configurando a API do Google ##
+
+1. Ative a API (https://console.developers.google.com)
+2. Vá para a página de credenciais.
+2. Nas opções da tela de consentimento OAuth colocar o nome para ser exibido.
+3. Nas opções de Credenciais preencher:
+    -Origens JavaScript autorizadas: http://localhost
+    -URIs de redirecionamento autorizados: http://localhost/gde/views/google-calendar.php
+4. Fazer download do JSON com as credenciais e colocar na pasta.
+
 ### Sobre os dados no pacote ###
 
  - Utilize o login `login1`
@@ -33,7 +43,7 @@
 
 P: Este é o GDE "de verdade"?  
 R: Sim. A versão 2.5 substituiu a 2.3 no dia 22/12/2017.  
-  
+
 P: Qual a diferença entre a versão 2.3 e a 2.5?  
 R: Em termos de funcionalidades: "avisos", "fóruns", "grupos" e "oportunidades" foram removidos (não eram utilizados). Em termos de backend: a versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, às vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 foi tudo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/). Além disso, a versão 2.5 suporta disciplinas com a mesma sigla e níveis diferentes, cursos com o mesmo número e níveis diferentes e oferecimentos com mais de um professor ou com turmas com mais de 2 caracteres, além de várias outras correções menores.  
 
@@ -45,7 +55,7 @@ R: Por requisição da DAC, essa parte do código não será disponibilizada.
 
 P: Por que isso foi feito?  
 R: Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu e meus amigos que me ajudaram somos capazes, por questões de tempo, conhecimento, ideias, etc.  
-  
+
 P: Posso colaborar?  
 R: Sim, por favor! Faça fork e envie seu pull request!  
 
