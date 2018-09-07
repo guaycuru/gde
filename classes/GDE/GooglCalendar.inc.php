@@ -52,7 +52,7 @@ class GooglCalendar{
    *
    * redireciona para a pagina de autenticacao do Google
    */
-  public function setTokenAutenticacao(){
+  public function setTokenAutenticacao() {
     // Pede a autorizacao do usuario
     $authUrl = $this->client->createAuthUrl();
     header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
@@ -64,7 +64,7 @@ class GooglCalendar{
    * param: tokenAutenticacao
    * @return accessToken
    */
-  public function setTokenAcesso($codigo, $token = ''){
+  public function setTokenAcesso($codigo, $token = '') {
     if(empty($token)) {
       // Exchange authorization code for an access token.
       $accessToken = $this->client->fetchAccessTokenWithAuthCode($codigo);
@@ -92,7 +92,7 @@ class GooglCalendar{
    *
    * @return Google_Service_Calendar
    */
-  public function setServico(){
+  public function setServico() {
     if(!empty($this->client)) {
       $this->servico = new Google_Service_Calendar($this->client);
     }
@@ -104,7 +104,7 @@ class GooglCalendar{
    * Devolve a lista de calendarios do usuario
    * @return Calendar_List
    */
-  public function getCalendarios(){
+  public function getCalendarios() {
     $listaCalendarios = $this->servico->calendarList->listCalendarList();
     return $listaCalendarios;
   }
@@ -115,7 +115,7 @@ class GooglCalendar{
 	 * Cria um novo calendario para o usuario
 	 * @return Calendar_ID
 	 */
-	public function criaCalendario($nome){
+	public function criaCalendario($nome) {
 		$calendario = new Google_Service_Calendar_Calendar();
 		$calendario->setSummary($nome);
 		$calendario->setTimeZone(self::FUSO_HORARIO);
@@ -128,7 +128,7 @@ class GooglCalendar{
 	 *
 	 * Adiciona o calendario da UNICAMP no Calendar
 	 */
-	public function adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado){
+	public function adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado) {
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataCadernoHorarios(), $Periodo_Selecionado->getDataCadernoHorarios(), 'Divulgação do cardeno de horários');
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataDesistenciaInicio(), $Periodo_Selecionado->getDataDesistenciaFim(), 'Período para desistência de disciplinas');
 		$this->criarEventoAllDay($idCalendario, $Periodo_Selecionado->getDataSemanaDeEstudosInicio(), $Periodo_Selecionado->getDataSemanaDeEstudosFim(), 'Semana de estudos');
@@ -170,7 +170,7 @@ class GooglCalendar{
    * Cria os eventos das aulas no Calendario escolhido
    * @return null
    */
-  public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado){
+  public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado) {
 		$primeiroDia = $Periodo_Selecionado->getInicioAulas();
 		$ultimoDia = new DateTime($Periodo_Selecionado->getFimAulas());
 		$ultimoDia->modify('+ 1 day');
@@ -226,7 +226,7 @@ class GooglCalendar{
 	 *
 	 * @return DateTime data do primeiro dia de aula de uma materia
 	 */
-	public function primeiroDiaAula($diaAula, $primeiroDia){
+	public function primeiroDiaAula($diaAula, $primeiroDia) {
 		$base = new DateTime($primeiroDia);
 		$diaSemana = $base->format('N') + 1;
 		if($diaAula < $diaSemana) {
@@ -247,7 +247,7 @@ class GooglCalendar{
 	 *
 	 * @return int termino de uma sequencia de aulas
 	 */
-	public function achaHorarioTermino($Horario, $dia, $hora){
+	public function achaHorarioTermino($Horario, $dia, $hora) {
 		$horaTermino = $hora + 1;
 		if(isset($Horario[$dia][$hora])) {
 			foreach($Horario[$dia][$hora] as $dados) {

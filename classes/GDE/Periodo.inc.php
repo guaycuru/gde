@@ -366,7 +366,7 @@ class Periodo extends Base {
 		return "";
 	}
 
-	public function temCalendario(){
+	public function temCalendario() {
 		if(!empty($this->getDataDesistenciaInicio()) || !empty($this->getDataDesistenciaFim()) ||
 			 !empty($this->getDataCadernoHorarios()) || !empty($this->getDataSemanaDeEstudosInicio()) ||
 			 !empty($this->getDataSemanaDeEstudosFim()) || !empty($this->getDataExamesInicio()) ||
@@ -386,7 +386,7 @@ class Periodo extends Base {
 	 * @return string
 	 */
 	public function getDatasImportantesHTML() {
-		if(!$this->temCalendario()){
+		if(!$this->temCalendario()) {
 			echo '<input type="checkbox" id="checkbox-datas-importantes" disabled /><label for="checkbox-datas-importantes">Adicionar datas do calendário da UNICAMP</label>';
 			echo '<h2>Calendário da UNICAMP não disponível para inserção</h2>';
 		} else {
@@ -408,7 +408,7 @@ class Periodo extends Base {
 		}
 	}
 
-	private function readableData($data){
+	private function readableData($data) {
 		$partes = explode("-", $data);
 		return $partes[2]."/".$partes[1]."/".$partes[0];
 	}
