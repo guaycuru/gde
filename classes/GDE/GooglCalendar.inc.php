@@ -2,7 +2,6 @@
 
 namespace GDE;
 
-require_once('../vendor/autoload.php');
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Calendar;
@@ -35,79 +34,79 @@ class GooglCalendar{
 	// Constantes
 	const FUSO_HORARIO = 'America/Sao_Paulo';
 	const URL_CREDENCIAIS = '../credenciais.json'; // FIXME Colocar em um lugar melhor
-  const URL_REDIRECIONAMENTO = CONFIG_URL .'views/google-calendar.php';
+	const URL_REDIRECIONAMENTO = CONFIG_URL .'views/google-calendar.php';
 
 	public function __construct($estado = '') {
 		$this->client = new Google_Client();
-    $this->client->setApplicationName('GDE');
-    $this->client->setScopes(Google_Service_Calendar::CALENDAR);
-    $this->client->setAuthConfig(self::URL_CREDENCIAIS);
-    $this->client->setAccessType('offline');
-    $this->client->setRedirectUri(self::URL_REDIRECIONAMENTO);
+		$this->client->setApplicationName('GDE');
+		$this->client->setScopes(Google_Service_Calendar::CALENDAR);
+		$this->client->setAuthConfig(self::URL_CREDENCIAIS);
+		$this->client->setAccessType('offline');
+		$this->client->setRedirectUri(self::URL_REDIRECIONAMENTO);
 		$this->client->setState($estado);
 	}
 
-  /**
-   * setTokenAutenticacao
-   *
-   * redireciona para a pagina de autenticacao do Google
-   */
-  public function setTokenAutenticacao() {
-    // Pede a autorizacao do usuario
-    $authUrl = $this->client->createAuthUrl();
-    header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
-  }
+	/**
+	 * setTokenAutenticacao
+	 *
+	 * redireciona para a pagina de autenticacao do Google
+	 */
+	public function setTokenAutenticacao() {
+		// Pede a autorizacao do usuario
+		$authUrl = $this->client->createAuthUrl();
+		header('Location: ' . filter_var($authUrl, FILTER_SANITIZE_URL));
+	}
 
-  /**
-   * setTokenAcesso
-   *
-   * param: tokenAutenticacao
-   * @return accessToken
-   */
-  public function setTokenAcesso($codigo, $token = '') {
-    if(empty($token)) {
-      // Exchange authorization code for an access token.
-      $accessToken = $this->client->fetchAccessTokenWithAuthCode($codigo);
+	/**
+	 * setTokenAcesso
+	 *
+	 * param: tokenAutenticacao
+	 * @return accessToken
+	 */
+	public function setTokenAcesso($codigo, $token = '') {
+		if(empty($token)) {
+			// Exchange authorization code for an access token.
+			$accessToken = $this->client->fetchAccessTokenWithAuthCode($codigo);
 
-      // Check to see if there was an error.
-      if(array_key_exists('error', $accessToken)) {
-          throw new Exception(join(', ', $accessToken));
-      }
-    } else {
+			// Check to see if there was an error.
+			if(array_key_exists('error', $accessToken)) {
+				throw new Exception(join(', ', $accessToken));
+			}
+		} else {
 			$accessToken = $token;
 		}
 
-    $this->client->setAccessToken($accessToken);
+		$this->client->setAccessToken($accessToken);
 
-    // Refresh the token if it's expired.
-    if($this->client->isAccessTokenExpired()) {
-        $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
-    }
+		// Refresh the token if it's expired.
+		if($this->client->isAccessTokenExpired()) {
+			$this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+		}
 		return $accessToken;
-  }
+	}
 
-  /**
-   * setServico
-   *
-   *
-   * @return Google_Service_Calendar
-   */
-  public function setServico() {
-    if(!empty($this->client)) {
-      $this->servico = new Google_Service_Calendar($this->client);
-    }
-  }
+	/**
+	 * setServico
+	 *
+	 *
+	 * @return Google_Service_Calendar
+	 */
+	public function setServico() {
+		if(!empty($this->client)) {
+			$this->servico = new Google_Service_Calendar($this->client);
+		}
+	}
 
-  /**
-   * getCalendarios
-   *
-   * Devolve a lista de calendarios do usuario
-   * @return Calendar_List
-   */
-  public function getCalendarios() {
-    $listaCalendarios = $this->servico->calendarList->listCalendarList();
-    return $listaCalendarios;
-  }
+	/**
+	 * getCalendarios
+	 *
+	 * Devolve a lista de calendarios do usuario
+	 * @return Calendar_List
+	 */
+	public function getCalendarios() {
+		$listaCalendarios = $this->servico->calendarList->listCalendarList();
+		return $listaCalendarios;
+	}
 
 	/**
 	 * criaCalendario
@@ -165,56 +164,56 @@ class GooglCalendar{
 	}
 
 	/**
-   * adicionaHorario
-   *
-   * Cria os eventos das aulas no Calendario escolhido
-   * @return null
-   */
-  public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado) {
+	 * adicionaHorario
+	 *
+	 * Cria os eventos das aulas no Calendario escolhido
+	 * @return null
+	 */
+	public function adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado) {
 		$primeiroDia = $Periodo_Selecionado->getInicioAulas();
 		$ultimoDia = new DateTime($Periodo_Selecionado->getFimAulas());
 		$ultimoDia->modify('+ 1 day');
 
-    for($diaSemana = 2; $diaSemana < 8; $diaSemana++) { // Percorre os dias
-      for($hora = 7; $hora < 23; $hora++) { // Percorre as horas
-        if(isset($Horario[$diaSemana][$hora])) {
+		for($diaSemana = 2; $diaSemana < 8; $diaSemana++) { // Percorre os dias
+			for($hora = 7; $hora < 23; $hora++) { // Percorre as horas
+				if(isset($Horario[$diaSemana][$hora])) {
 					foreach($Horario[$diaSemana][$hora] as $dados) {
 						list($Oferecimento, $sala) = $dados;
 						$titulo = $Oferecimento->getSigla(true) . " " . $Oferecimento->getTurma(true);
-	          $horaInicio = $hora;
-	          $horaTermino = $this->achaHorarioTermino($Horario, $diaSemana, $hora); // cria apenas um evento para todas aulas iguais em sequencia
+						$horaInicio = $hora;
+						$horaTermino = $this->achaHorarioTermino($Horario, $diaSemana, $hora); // cria apenas um evento para todas aulas iguais em sequencia
 						$PrimeiroDiaAula = $this->primeiroDiaAula($diaSemana, $primeiroDia);
 						$comeco = $PrimeiroDiaAula->setTime($horaInicio, 0)->format(DateTime::ATOM);
 						$termino = $PrimeiroDiaAula->setTime($horaTermino, 0)->format(DateTime::ATOM);
 
-	          $evento = new Google_Service_Calendar_Event(array(
-	            'summary' => $titulo,
-	            'location' => $sala,
-	            'start' => array(
-	              'dateTime' => $comeco,
-	              'timeZone' => self::FUSO_HORARIO,
-	            ),
-	            'end' => array(
-	              'dateTime' => $termino,
-	              'timeZone' => self::FUSO_HORARIO,
-	            ),
-	            'recurrence' => array(
-	              'RRULE:FREQ=WEEKLY;UNTIL=' . $ultimoDia->format("Ymd\THim\Z")
-	            ),
-	            'reminders' => array(
-	              'useDefault' => FALSE,
-	              'overrides' => array(
-	                //array('method' => 'email', 'minutes' => 24 * 60),
-	                //array('method' => 'popup', 'minutes' => 10),
-	              ),
-	            ),
-	          ));
+						$evento = new Google_Service_Calendar_Event(array(
+							'summary' => $titulo,
+							'location' => $sala,
+							'start' => array(
+								'dateTime' => $comeco,
+								'timeZone' => self::FUSO_HORARIO,
+							),
+							'end' => array(
+								'dateTime' => $termino,
+								'timeZone' => self::FUSO_HORARIO,
+							),
+							'recurrence' => array(
+								'RRULE:FREQ=WEEKLY;UNTIL=' . $ultimoDia->format("Ymd\THim\Z")
+							),
+							'reminders' => array(
+								'useDefault' => FALSE,
+								'overrides' => array(
+									//array('method' => 'email', 'minutes' => 24 * 60),
+									//array('method' => 'popup', 'minutes' => 10),
+								),
+							),
+						));
 						$this->servico->events->insert($idCalendario, $evento);
 						$hora = $horaTermino-1;
 					}
-        }
-      }
-    }
+				}
+			}
+		}
 	}
 
 	/**
