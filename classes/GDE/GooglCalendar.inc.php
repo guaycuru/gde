@@ -25,7 +25,7 @@ class GooglCalendar{
 	 */
 	protected $servico;
 
-  /**
+	/**
 	 * @var string
 	 *
 	 */

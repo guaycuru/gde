@@ -38,7 +38,7 @@ if(empty($_SESSION['token'])) {
 	// Servico da API do Calendar
 	$Calendar->setServico();
 	// Se precisa criar um calendario
-	if($idCalendario === null) {
+	if($idCalendario == null) {
 		$idCalendario = $Calendar->criaCalendario($nomeCalendario);
 	}
 
