@@ -89,7 +89,7 @@ $limpos = Util::Horarios_Livres($Horario);
 		<th align="center"><strong>Sexta</strong></th>
 		<th align="center"><strong>S&aacute;bado</strong></th>
 	</tr>
-<?php			
+<?php
 for($j = 7; $j < 23; $j++) {
 	if(in_array($j, $limpos))
 		continue;
@@ -118,6 +118,9 @@ if($_tipo == 'A') {
 	</tr>
 	<tr>
 		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>imprimir-horario/?ra=<?= $Aluno->getRA(true); ?>&p=<?= $Periodo_Selecionado->getID(true); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Visualizar Para Impress&atilde;o</a></td>
+	</tr>
+	<tr>
+		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>google-calendar/?ra=<?= $Aluno->getRA(true); ?>&p=<?= $Periodo_Selecionado->getID(true); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Adicionar ao Google Calendar</a></td>
 	</tr>
 <?php } if($_tipo == 'P') {
 ?>
