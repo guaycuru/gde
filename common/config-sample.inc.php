@@ -86,3 +86,5 @@ define('CONFIG_AVALIACAO_MINIMO', 3);
 define('CONFIG_NIVEL_LOG', 3);
 
 define('CONFIG_FT_MIN_LENGTH', 3);
+
+define('CONFIG_GOOGLE_CREDENTIALS', __DIR__.'/credentials.json');
