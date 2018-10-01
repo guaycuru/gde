@@ -19,6 +19,8 @@ else
 	exit();
 
 $tp = (isset($_POST['t'])) ? str_replace('tab_', '', $_POST['t']) : 'tudo';
+if(!in_array($tp, array('tudo', 'alunos', 'professores', 'disciplinas', 'oferecimentos', 'salas')))
+	exit;
 
 $total = array();
 $total['tudo'] = $total['alunos'] = $total['professores'] = $total['disciplinas'] = $total['oferecimentos'] = $total['salas'] = '?';
