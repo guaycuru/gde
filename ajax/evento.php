@@ -21,7 +21,7 @@ if($_POST['tp'] == 'a') { // Adicionar
 		$Evento->setOferecimento($Oferecimento);
 	}
 	$Evento->setNome(trim($_POST['nome']));
-	$Evento->setTipo($_POST['tipo']);
+	$Evento->setTipo($_POST['tipo'][0]);
 	if(isset($_POST['local']))
 		$Evento->setLocal($_POST['local']);
 	if(isset($_POST['descricao']))

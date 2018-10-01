@@ -28,7 +28,11 @@ if($_POST['tp'] == 'n') {
 	$Nota->setOferecimento($Oferecimento);
 	$Nota->setSigla($_POST['sigla']);
 	$Nota->setNota(floatval(str_replace(',', '.', $_POST['nota'])));
+	if($Nota->getNota() > 99999)
+		Base::Error_JSON('Nota inválida.');
 	$Nota->setPeso(floatval(str_replace(',', '.', $_POST['peso'])));
+	if($Nota->getPeso() > 99999)
+		Base::Error_JSON('Peso inválido.');
 	$Nota->Save_JSON(true);
 } elseif($_POST['tp'] == 'e') { // Exame
 	if(!empty($_POST['i'])) {

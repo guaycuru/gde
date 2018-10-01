@@ -126,12 +126,14 @@ class Aluno extends Base {
 	private static $_niveis_grad = array(
 		'G' => 'Gradua&ccedil;&atilde;o',
 		'T' => 'Tecnologia',
+		'P' => 'Aluno Especial',
 		//self::NIVEL_EGRESSADO => 'Egressado'
 	);
 	private static $_niveis_pos = array(
 		'M' => 'Mestrado',
 		'D' => 'Doutorado',
 		'P' => 'Aluno Especial',
+		'S' => 'Mestrado Profissional',
 		//self::NIVEL_EGRESSADO => 'Egressado'
 	);
 
@@ -497,8 +499,8 @@ class Aluno extends Base {
 	 * @return ArrayCollection|Oferecimento[]|string
 	 */
 	public function getTrancados($periodo = null, $niveis = array(), $formatado = false) {
-		if($niveis == self::NIVEL_GRAD)
-			$niveis = array_keys(self::$_niveis_grad);
+		if($niveis == Disciplina::NIVEL_GRAD)
+			$niveis = Disciplina::$NIVEIS_GRAD;
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 
@@ -545,8 +547,8 @@ class Aluno extends Base {
 	 * @return array
 	 */
 	public function Monta_Horario($periodo = null, $niveis = array()) {
-		if($niveis == self::NIVEL_GRAD)
-			$niveis = array_keys(self::$_niveis_grad);
+		if($niveis == Disciplina::NIVEL_GRAD)
+			$niveis = Disciplina::$NIVEIS_GRAD;
 		elseif(is_array($niveis) === false)
 			$niveis = array($niveis);
 		$Lista = array();

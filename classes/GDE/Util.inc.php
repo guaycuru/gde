@@ -25,7 +25,8 @@ class Util {
 	}
 
 	public static function Limpa_Busca($str) {
-		return str_replace(array("\\", "/", "'", "%", "#", "\$", "@", "+", "-", ".", "~"), null, $str);
+		//return str_replace(array("\\", "/", "'", "%", "#", "\$", "@", "+", "-", ".", "~"), null, $str);
+		return preg_replace('/[^\p{L}\p{N}_]+/u', ' ', $str);
 	}
 
 	public static function Fix_String_Aux($largeString){
