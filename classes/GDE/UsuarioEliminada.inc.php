@@ -80,6 +80,32 @@ class UsuarioEliminada extends Base {
 	}
 
 	/**
+	 * @param Usuario $Usuario
+	 * @param Disciplina $Disciplina
+	 * @return UsuarioEliminada
+	 */
+	public static function Nova(Usuario $Usuario, Disciplina $Disciplina) {
+		$Eliminada = new UsuarioEliminada();
+		$Eliminada->setUsuario($Usuario);
+		$Eliminada->setDisciplina($Disciplina);
+		if($Usuario->getAluno(false) !== null) {
+			// Criteria nao funciona aqui
+			// Ver https://github.com/doctrine/doctrine2/issues/5644
+			$Oferecimentos = $Usuario->getAluno()->getOferecimentos()->filter(function($Oferecimento) use ($Disciplina) {
+				return $Oferecimento->getDisciplina()->getId() == $Disciplina->getId();
+			});
+			$Periodo = null;
+			foreach($Oferecimentos as $Oferecimento) {
+				if(($Periodo === null) || ($Oferecimento->getPeriodo()->getId() > $Periodo->getId()))
+					$Periodo = $Oferecimento->getPeriodo();
+			}
+			if($Periodo !== null)
+				$Eliminada->setPeriodo($Oferecimentos->first()->getPeriodo(false));
+		}
+		return $Eliminada;
+	}
+
+	/**
 	 * Elimina
 	 *
 	 * Verifica se esta eliminada elimina $Disciplina, possivelmente junto com as $Outras

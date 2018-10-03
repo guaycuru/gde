@@ -74,31 +74,30 @@ if(isset($_GET['m'])) {
 		$("input[name='eliminada']").click(function() {
 			//opcao = $("input[name='eliminada']:checked").val();
 			opcao = $(this).val();
-			if(opcao == 1) // Normalmente
-				$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '0', r: '0'}, function(data) {
-					<?php if (!isset($_GET['v'])) { ?>
-					$.guaycuru.confirmacao("<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada normalmente do seu curr&iacute;culo!", null);
-					<?php } else ?>
-					$.guaycuru.confirmacao(false);
-				});
-			else if(opcao == 2) // Parcialmente
-				$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '1', r: '0'}, function(data) {
-					<?php if (!isset($_GET['v'])) { ?>
-					$.guaycuru.confirmacao("<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada parcialmente do seu curr&iacute;culo!", null);
-					<?php } else ?>
-					$.guaycuru.confirmacao(false);
-				});
-			else if(opcao == 3) // Proficiencia
-				$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '0', r: '1'}, function(data) {
-					<?php if (!isset($_GET['v'])) { ?>
-					$.guaycuru.confirmacao("<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada por profici&ecirc;ncia do seu curr&iacute;culo!", null);
-					<?php } else ?>
-					$.guaycuru.confirmacao(false);
-				});
-			else // Nenhuma das Anteriores
-				$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', {id: '<?= $Disciplina->getId(); ?>', e: '0'}, function(data) {
-					$.guaycuru.confirmacao("<i><?= $Disciplina->getSigla(true) ?></i> foi des-eliminada do seu curr&iacute;culo!", null);
-				});
+			var param, msg;
+			if(opcao == 1) {// Normalmente
+				param = {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '0', r: '0'};
+				msg = "<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada normalmente do seu curr&iacute;culo!";
+			} else if(opcao == 2) { // Parcialmente
+				param = {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '1', r: '0'};
+				msg = "<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada parcialmente do seu curr&iacute;culo!";
+			} else if(opcao == 3) { // Proficiencia
+				param = {id: '<?= $Disciplina->getId(); ?>', e: '1', a: '0', r: '1'};
+				msg = "<i><?= $Disciplina->getSigla(true) ?></i> foi eliminada por profici&ecirc;ncia do seu curr&iacute;culo!";
+			} else {
+				param = {id: '<?= $Disciplina->getId(); ?>', e: '0'};
+				msg = "<i><?= $Disciplina->getSigla(true) ?></i> foi des-eliminada do seu curr&iacute;culo!";
+			}
+			$.post('<?= CONFIG_URL; ?>ajax/disciplina.php', param, function(data) {
+				if(!data || !data.ok) {
+					msg = (data.error) ? data.error : 'Ocorreu um erro. Por favor, tente novamente mais tarde.';
+				}
+				<?php if (!isset($_GET['v'])) { ?>
+				$.guaycuru.confirmacao(msg, null);
+				<?php } else { ?>
+				$.guaycuru.confirmacao(false);
+				<?php } ?>
+			});
 		});
 	});
 	// ]]>
