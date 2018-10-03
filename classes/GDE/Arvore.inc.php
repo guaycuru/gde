@@ -188,6 +188,9 @@ class Arvore {
 
 		$equivalencias_adicionadas = array();
 
+		// Organiza a lista de Eletivas: Primeiro as fechadas, depois as semi-livres e por ultimo as livres
+		usort($this->Eletivas_Faltantes, array("GDE\\Arvore", "OrdenaEletivas"));
+
 		if($completa === false) {
 			// Verifica quais Disciplinas Obrigatorias do curriculo foram eliminadas pelo usuario, e faz as correcoes necessarias para Equivalencias
 			// Aqui as disciplinas do semestre atual tambem contam como eliminadas
@@ -239,9 +242,6 @@ class Arvore {
 				if(($Eliminada->getProficiencia() === true) && (!isset($equivalencias_adicionadas[$Eliminada->getDisciplina()->getSigla(false)])))
 					$this->creditos_proficiencia += $Eliminada->getDisciplina()->getCreditos();
 			}
-
-			// Organiza a lista de Eletivas: Primeiro as fechadas, depois as semi-livres e por ultimo as livres
-			usort($this->Eletivas_Faltantes, array("GDE\\Arvore", "OrdenaEletivas"));
 			// Organiza a lista de possiveis Eletivas em ordem decrescente de creditos e de periodos
 			uasort($Possiveis_Eletivas, array("GDE\\UsuarioEliminada", "Ordenar_Creditos"));
 
@@ -259,12 +259,12 @@ class Arvore {
 					continue;
 				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas, $lcreditos, $lconjuntos);
 				if($Elimina !== false) {
-					//echo "\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
+					//echo "<br>\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
 					$this->siglas_eletivas = array_merge($this->siglas_eletivas, $Elimina['siglas']);
 					$this->creditos_eletivas_eliminados += $Elimina['creditos'];
 					// Se foram eliminados mais creditos do que eram necessarios, soma creditos nos creditos totais e evita que a arvore fique incorreta
 					if($Elimina['diff_creditos'] > 0) {
-						//echo "\nFoi mais do que deveria! Volta ".$Elimina['diff_creditos']."!";
+						//echo "<br>\nFoi mais do que deveria! Volta ".$Elimina['diff_creditos']."!";
 						$this->creditos_totais += $Elimina['diff_creditos'];
 						$volta_eletivas += $Elimina['diff_creditos'];
 					}

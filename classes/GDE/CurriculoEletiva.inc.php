@@ -140,10 +140,10 @@ class CurriculoEletiva extends Base {
 	public function getTipo() {
 		if($this->getConjuntos(false)->isEmpty() === false) {
 			foreach($this->getConjuntos(false) as $Conjunto) {
-				if(strpos($Conjunto->getSigla(false), '-') !== false)
-					return self::TIPO_SEMI_LIVRE;
+				if($Conjunto->Fechada())
+					return self::TIPO_FECHADA;
 			}
-			return self::TIPO_FECHADA;
+			return self::TIPO_SEMI_LIVRE;
 		} else {
 			return self::TIPO_LIVRE;
 		}

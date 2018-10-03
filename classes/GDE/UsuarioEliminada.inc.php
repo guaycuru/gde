@@ -117,7 +117,7 @@ class UsuarioEliminada extends Base {
 	public function Elimina(Disciplina $Disciplina, $Outras) {
 		if($this->getDisciplina(false) === null)
 			return false;
-		if($this->getDisciplina()->getID() == $Disciplina->getID())
+		if($this->getDisciplina()->getId() == $Disciplina->getId())
 			return array($this);
 		// ToDo: Usar ID ao inves de sigla
 		foreach($Disciplina->Equivalencias(false) as $Conjunto) {
@@ -159,7 +159,7 @@ class UsuarioEliminada extends Base {
 			$falthash = spl_object_hash($Faltante);
 			if(!isset($lconjuntos[$falthash]))
 				$lconjuntos[$falthash] = clone $Faltante->getConjuntos(true);
-			$Conjunto =  $lconjuntos[$falthash];
+			$Conjunto = $lconjuntos[$falthash];
 			if(!isset($lcreditos[$falthash]))
 				$lcreditos[$falthash] = $Faltante->getCreditos();
 			$faltcreditos = $lcreditos[$falthash];
@@ -182,6 +182,9 @@ class UsuarioEliminada extends Base {
 							unset($Faltantes[$c]);
 						else {
 							$Conjunto->remove($indice);
+							// Atualiza quantos creditos faltam neste conjunto
+							// ToDo: Talvez isto cause problema de cascade no planejador!?
+							$Faltantes[$c]->setCreditos($creditos);
 							//$lconjuntos[$falthash]->removeElement($Bloco);
 							$lcreditos[$falthash] = $creditos;
 						}
@@ -199,8 +202,12 @@ class UsuarioEliminada extends Base {
 						if($creditos <= 0) {
 							$ret['diff_creditos'] = $creditos * -1;
 							unset($Faltantes[$c]);
-						} else
+						} else {
+							// Atualiza quantos creditos faltam neste conjunto
+							// ToDo: Talvez isto cause problema de cascade no planejador!?
+							$Faltantes[$c]->setCreditos($creditos);
 							$lcreditos[$falthash] = $creditos;
+						}
 						$ret['sobraram'] = $creditos;
 						return $ret;
 					}
