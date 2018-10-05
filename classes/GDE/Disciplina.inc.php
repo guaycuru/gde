@@ -540,14 +540,21 @@ class Disciplina extends Base {
 		$de_pos = in_array($this->getNivel(false), self::$NIVEIS_POS);
 
 		if($formatado === false) { // Se nao eh formatado, retorna soh os do Catalogo do Usuario
-			$catalogo = ($de_pos) ? self::NIVEL_POS : $Usuario->getCatalogo(false);
+			if($catalogo == null)
+				$catalogo = ($de_pos) ? self::NIVEL_POS : $Usuario->getCatalogo(false);
 			// Carrega apenas os Conjuntos do Catalogo em questao
 			$criteria = Criteria::create()->where(Criteria::expr()->eq("catalogo", $catalogo));
 			$organizados = self::Organiza_Pre_Conjuntos($this->getPre_Conjuntos()->matching($criteria));
 			return (isset($organizados[$catalogo])) ? $organizados[$catalogo] : array();
 		}
 
-		$organizados = self::Organiza_Pre_Conjuntos($this->getPre_Conjuntos());
+		if($catalogo == null) {
+			$conjuntos = $this->getPre_Conjuntos();
+		} else {
+			$criteria = Criteria::create()->where(Criteria::expr()->eq("catalogo", $catalogo));
+			$conjuntos = $this->getPre_Conjuntos()->matching($criteria);
+		}
+		$organizados = self::Organiza_Pre_Conjuntos($conjuntos);
 		$pres = array();
 		if($de_pos) {
 			if(!isset($organizados['P']))
@@ -657,6 +664,24 @@ class Disciplina extends Base {
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 
 		return $query->getSingleScalarResult();
+	}
+
+	/**
+	 * Limpar_Pre_Conjuntos
+	 *
+	 * Remove todos os pre conjuntos para o $catalogo
+	 *
+	 * @param $catalogo
+	 * @param bool $flush
+	 * @return bool
+	 * @throws \Doctrine\ORM\ORMException
+	 */
+	public function Limpar_Pre_Conjuntos($catalogo, $flush = false) {
+		foreach($this->getPre_Conjuntos() as $Conjunto) {
+			if($Conjunto->getCatalogo(false) == $catalogo)
+				$Conjunto->Delete(false);
+		}
+		return $this->Save($flush);
 	}
 
 }
