@@ -60,7 +60,7 @@ class Curso extends Base {
 	const NIVEL_DOUTORADO = 'D';
 	const NIVEL_PROFISSIONAL = 'S';
 
-	const NUMERO_EGRESSADO = 99;
+	const NUMEROS_ESPECIAIS = array(0, 99);
 
 	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
 	// Evitar de usar, pois os numeros se repetem entre mestrado e doutorado!
@@ -78,13 +78,13 @@ class Curso extends Base {
 		if(count($niveis) > 0)
 			$dql .= 'WHERE C.nivel IN (?1) ';
 		if($sem_especial)
-			$dql .= 'AND C.numero != ?2 ';
+			$dql .= 'AND C.numero NOT IN (?2) ';
 		$dql .= 'ORDER BY C.nome ASC';
 		$query = self::_EM()->createQuery($dql);
 		if(count($niveis) > 0)
 			$query->setParameter(1, $niveis);
 		if($sem_especial)
-			$query->setParameter(2, self::NUMERO_EGRESSADO);
+			$query->setParameter(2, self::NUMEROS_ESPECIAIS);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();

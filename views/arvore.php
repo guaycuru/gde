@@ -76,7 +76,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$meu = false;
 }
 
-$Cursos = Curso::Listar(array('G', 'T'));
+$Cursos = Curso::Listar(array('G', 'T'), true);
 $lista_cursos = "";
 foreach($Cursos as $Curso)
 	$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(($Curso->getNumero() == $Usr->getCurso(true)->getNumero(false))?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";

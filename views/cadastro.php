@@ -82,7 +82,7 @@ if($Usuario !== null) {
 		foreach($niveis_pos as $c => $d)
 			$lista_niveis_pos .= "<option value=\"".$c."\"".((($Aluno->getNivel_Pos() != null) && ($Aluno->getNivel_Pos() == $c))?" selected=\"selected\"":null).">".$d." (".$c.")</option>";
 
-		$Cursos = Curso::Listar(Curso::$NIVEIS_GRAD);
+		$Cursos = Curso::Listar(Curso::$NIVEIS_GRAD, true);
 		$lista_cursos = "<option value=\"\">-</option>";
 		foreach($Cursos as $Curso)
 			$lista_cursos .= "<option value=\"".$Curso->getNumero(true)."\"".(($Aluno->getCurso(true)->getID() == $Curso->getID())?" selected=\"selected\"":null).">".$Curso->getNome(true)." (".$Curso->getNumero(true).")</option>";
