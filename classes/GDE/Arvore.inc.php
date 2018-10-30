@@ -61,7 +61,7 @@ class Arvore {
 
 	static $consts = array("inicio_x" => 80, "inicio_y" => 50, "largura" => 90, "altura" => 30, "dist_x" => 55, "dist_y" => 75);
 
-	public function __construct(Usuario $Usuario, $completa = true, $periodo = null, &$times = false) {
+	public function __construct(Usuario $Usuario, $completa = true, Periodo $Periodo = null, &$times = false) {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
@@ -92,7 +92,7 @@ class Arvore {
 
 		$this->cp = 0;
 		$this->cpf = 0;
-		$this->Periodo = ($periodo != null) ? Periodo::Load($periodo) : Periodo::getAtual();
+		$this->Periodo = ($Periodo != null) ? $Periodo : Periodo::getAtual();
 		$this->periodo = $this->Periodo->getPeriodo();
 
 		if($times !== false)
