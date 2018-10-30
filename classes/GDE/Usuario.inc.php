@@ -658,6 +658,24 @@ class Usuario extends Base {
 	}
 
 	/**
+	 * getEliminadas
+	 *
+	 * @param null $niveis
+	 * @return mixed
+	 */
+	public function getEliminadas($niveis = null) {
+		if($niveis == null)
+			return parent::getEliminadas();
+		if(!is_array($niveis))
+			$niveis = array($niveis);
+		return parent::getEliminadas()->filter(
+			function($UE) use ($niveis) {
+				return in_array($UE->getDisciplina(true)->getNivel(false), $niveis);
+			}
+		);
+	}
+
+	/**
 	 * setSenha
 	 *
 	 * Define a senha do Usuario, possivelmente codificando-a
