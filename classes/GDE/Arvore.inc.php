@@ -36,6 +36,7 @@ class Arvore {
 	private $creditos_proficiencia;
 	private $creditos_atuais;
 	private $numero_semestres;
+	private $creditos_eletivas_fantantes; // Numero de creditos realmente faltantes, modificado em Usuario->Elimina_Eletiva
 
 	private $siglas_obrigatorias;
 	private $siglas_eletivas;
@@ -251,13 +252,13 @@ class Arvore {
 			$volta_eletivas = 0;
 
 			// Verifica quais das possiveis eletivas sao realmente eletivas
-			$lcreditos = array();
+			$this->creditos_eletivas_fantantes = array();
 			$lconjuntos = array();
 			foreach($Possiveis_Eletivas as $sigla => $Eliminada) {
 				//echo "\n".$sigla." possivel eletiva (".count($Possiveis_Eletivas)." restantes): ";
 				if(in_array($sigla, $this->siglas_eletivas))
 					continue;
-				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas, $lcreditos, $lconjuntos);
+				$Elimina = $Eliminada->Elimina_Eletiva($this->Eletivas_Faltantes, $Possiveis_Eletivas, $this->creditos_eletivas_fantantes, $lconjuntos);
 				if($Elimina !== false) {
 					//echo "<br>\nEletiva '".$Elimina['eliminada']."' (".$Elimina['sobraram'].") eliminada com '".implode(', ', $Elimina['siglas'])."' (".$Elimina['creditos'].")!";
 					$this->siglas_eletivas = array_merge($this->siglas_eletivas, $Elimina['siglas']);
@@ -309,7 +310,7 @@ class Arvore {
 				}
 			}
 			foreach($this->Eletivas_Faltantes as $Elet)
-				$this->creditos_faltantes_futuros += $Elet->getCreditos();
+				$this->creditos_faltantes_futuros += (isset($this->creditos_eletivas_fantantes[$Elet->getId()])) ? $this->creditos_eletivas_fantantes[$Elet->getId()] : $Elet->getCreditos();
 			$this->creditos_faltantes_atuais = $this->creditos_faltantes_futuros + $this->creditos_atuais;
 
 			// Calula o CP e o CPF
@@ -852,7 +853,7 @@ class Arvore {
 		$ret .= "\r\n\r\n  <strong>Disciplinas Eletivas que ainda devem ser cursadas:</strong>\r\n";
 
 		foreach($this->Eletivas_Faltantes as $Elet) {
-			$creditos = $Elet->getCreditos();
+			$creditos = (isset($this->creditos_eletivas_fantantes[$Elet->getId()])) ? $this->creditos_eletivas_fantantes[$Elet->getId()] : $Elet->getCreditos();
 			if($Elet->getTipo() == CurriculoEletiva::TIPO_LIVRE) {
 				//$ret .= "\r\n  OBTER  ".(($creditos<10)?' ':null).$creditos." CREDITO(S) DENTRE  -----";
 				$ret .= "  Obter ".(($creditos<10)?' ':null).$creditos." Cr&eacute;dito(s) dentre quaisquer disciplinas da Unicamp";

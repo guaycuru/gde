@@ -152,17 +152,14 @@ class UsuarioEliminada extends Base {
 		$creditos = 0;
 		$ret = array('creditos' => 0, 'diff_creditos' => 0, 'siglas' => array());
 		foreach($Faltantes as $c => $Faltante) {
-			// Cria (ou usa uma copia anterior) desta CurriculoEletiva
-			// ToDo: Adianta substituir por ->markReadOnly() ?
 			$Faltantes[$c] = $Faltante;// = $Faltante->Copia();
 			$Faltante->markReadOnly();
-			$falthash = spl_object_hash($Faltante);
-			if(!isset($lconjuntos[$falthash]))
-				$lconjuntos[$falthash] = clone $Faltante->getConjuntos(true);
-			$Conjunto = $lconjuntos[$falthash];
-			if(!isset($lcreditos[$falthash]))
-				$lcreditos[$falthash] = $Faltante->getCreditos();
-			$faltcreditos = $lcreditos[$falthash];
+			if(!isset($lconjuntos[$Faltante->getId()]))
+				$lconjuntos[$Faltante->getId()] = clone $Faltante->getConjuntos(true);
+			$Conjunto = $lconjuntos[$Faltante->getId()];
+			if(!isset($lcreditos[$Faltante->getId()]))
+				$lcreditos[$Faltante->getId()] = $Faltante->getCreditos();
+			$faltcreditos = $lcreditos[$Faltante->getId()];
 			foreach($Conjunto as $indice => $Bloco) {
 				$sigla = $Bloco->getSigla(false);
 				$Disciplina = $Bloco->getDisciplina(true);
@@ -183,10 +180,8 @@ class UsuarioEliminada extends Base {
 						else {
 							$Conjunto->remove($indice);
 							// Atualiza quantos creditos faltam neste conjunto
-							// ToDo: Talvez isto cause problema de cascade no planejador!?
-							$Faltantes[$c]->setCreditos($creditos);
 							//$lconjuntos[$falthash]->removeElement($Bloco);
-							$lcreditos[$falthash] = $creditos;
+							$lcreditos[$Faltante->getId()] = $creditos;
 						}
 						$ret['eliminada'] = $sigla;
 						$ret['sobraram'] = $creditos;
@@ -204,9 +199,7 @@ class UsuarioEliminada extends Base {
 							unset($Faltantes[$c]);
 						} else {
 							// Atualiza quantos creditos faltam neste conjunto
-							// ToDo: Talvez isto cause problema de cascade no planejador!?
-							$Faltantes[$c]->setCreditos($creditos);
-							$lcreditos[$falthash] = $creditos;
+							$lcreditos[$Faltante->getId()] = $creditos;
 						}
 						$ret['sobraram'] = $creditos;
 						return $ret;
