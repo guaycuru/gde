@@ -41,7 +41,7 @@ require_once('../common/common.inc.php');
 if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$Usr = clone $_Usuario;
 	$Usr->markReadOnly();
-	if(isset($_GET['catalogo'])) {
+	if(!empty($_GET['catalogo'])) {
 		$catalogo = intval($_GET['catalogo']);
 		$Usr->setCatalogo($catalogo);
 	} else
@@ -61,6 +61,12 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 		$curso = $Usr->getCurso(true)->getNumero(true);
 		$modalidade = $Usr->getModalidade(true)->getSigla(true);
 	}
+	if(!empty($_GET['periodo'])) {
+		$Periodo_Selecionado = Periodo::Load($_GET['periodo']);
+		if($Periodo_Selecionado === null)
+			die("<h2>Per&iacute;odo n&atilde;o encontrado!</h2>");
+	} else
+		$Periodo_Selecionado = Periodo::getAtual();
 	$completa = ((isset($_GET['cp'])) && ($_GET['cp'] == 1));
 	$meu = true;
 } else {
@@ -72,6 +78,7 @@ if((!isset($_GET['us'])) || ($_GET['us'] == $_Usuario->getLogin())) {
 	$curso = $Usr->getCurso(true)->getNumero(true);
 	$modalidade = $Usr->getModalidade(true)->getSigla(true);
 	$catalogo = $Usr->getCatalogo(true);
+	$Periodo_Selecionado = Periodo::getAtual();
 	$completa = false;
 	$meu = false;
 }
@@ -86,10 +93,15 @@ $catalogos = "";
 for($i = $lim_cat['min']; $i <= $lim_cat['max']; $i++)
 	$catalogos .= "<option value='".$i."'".(($i == $Usr->getCatalogo(true))?" selected=\"selected\"":null).">".$i."</option>";
 
+$Periodos = Periodo::Listar();
+$lista_periodos = "";
+foreach($Periodos as $Periodo)
+	$lista_periodos .= '<option value="'.$Periodo->getPeriodo().'"'.(($Periodo_Selecionado->getPeriodo() == $Periodo->getPeriodo()) ? ' selected="selected"' : null).'>'.$Periodo->getNome().'</option>';
+
 $continua = Curriculo::Existe($curso, $modalidade, $catalogo);
 if($continua) {
 	$start = microtime(true);
-	$Arvore = new Arvore($Usr, $completa);
+	$Arvore = new Arvore($Usr, $completa, $Periodo_Selecionado);
 	if($Arvore->getErro() === true)
 		die("<h2>Erro: N&atilde;o foi poss&iacute;vel montar &aacute;rvore!</h2>".$FIM);
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
@@ -157,15 +169,19 @@ if($continua) {
 		<table cellpadding="1" cellspacing="0" border="0" width="90%">
 			<tr>
 				<td width="10%">Cat&aacute;logo:</td>
-				<td><select id="catalogo" name="catalogo"><?=$catalogos;?></select></td>
+				<td><select id="catalogo" name="catalogo"><?= $catalogos; ?></select></td>
 			</tr>
 			<tr>
 				<td width="10%">Curso:</td>
-				<td><select id="curso" name="curso"><?=$lista_cursos; ?></select></td>
+				<td><select id="curso" name="curso"><?= $lista_cursos; ?></select></td>
 			</tr>
 			<tr>
 				<td width="10%">Modalidade:</td>
 				<td id="select_modalidade"><select id="modalidade" name="modalidade"><option value="">Indiferente</option></select></td>
+			</tr>
+			<tr>
+				<td width="10%">Per&iacute;odo:</td>
+				<td><select id="periodo" name="periodo"><?= $lista_periodos; ?></select></td>
 			</tr>
 			<tr>
 				<td width="10%">Completa:</td>

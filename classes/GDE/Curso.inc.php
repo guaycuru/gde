@@ -114,4 +114,19 @@ class Curso extends Base {
 		return $query->getOneOrNullResult();
 	}
 
+	/**
+	 * Prazo_Sugerido
+	 *
+	 * Retorna o numero de semestres sugerido para cumprimento do curriculo deste Curso
+	 *
+	 * @return integer
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 */
+	public function Prazo_Sugerido() {
+		$dql = 'SELECT MAX(C.semestre) from GDE\\Curriculo C WHERE C.curso = ?1';
+		$query = self::_EM()->createQuery($dql);
+		$query->setParameter(1, $this->getId());
+		return $query->getSingleScalarResult();
+	}
+
 }

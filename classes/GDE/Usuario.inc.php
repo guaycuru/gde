@@ -660,17 +660,26 @@ class Usuario extends Base {
 	/**
 	 * getEliminadas
 	 *
-	 * @param null $niveis
+	 * Retorna a lista de UsuarioEliminada deste Usuario filtradas por nivel
+	 * e opcionalmente para periodos anteriores a $Antes_De
+	 *
+	 * @param null $niveis Somente disciplinas destes niveis
+	 * @param Periodo|null $Antes_De Filtra eliminadas antes deste Periodo
 	 * @return mixed
 	 */
-	public function getEliminadas($niveis = null) {
+	public function getEliminadas($niveis = null, Periodo $Antes_De = null) {
 		if($niveis == null)
+			$niveis = array();
+		if((count($niveis) == 0) && ($Antes_De === null))
 			return parent::getEliminadas();
 		if(!is_array($niveis))
 			$niveis = array($niveis);
 		return parent::getEliminadas()->filter(
-			function($UE) use ($niveis) {
-				return in_array($UE->getDisciplina(true)->getNivel(false), $niveis);
+			function($UE) use ($niveis, $Antes_De) {
+				return (
+					((count($niveis) == 0) || (in_array($UE->getDisciplina(true)->getNivel(false), $niveis))) &&
+					(($Antes_De === null) || ($UE->getPeriodo(false) === null) || ($UE->getPeriodo()->Anterior_A($Antes_De)))
+				);
 			}
 		);
 	}
@@ -1173,6 +1182,7 @@ class Usuario extends Base {
 	 * @param Usuario $Usuario
 	 * @param bool $flush
 	 * @return bool
+	 * @throws \Doctrine\ORM\ORMException
 	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Remover_Amigo(Usuario $Usuario, $flush = true) {
@@ -1208,6 +1218,7 @@ class Usuario extends Base {
 	 * @param Usuario $Usuario
 	 * @param bool $flush
 	 * @return bool
+	 * @throws \Doctrine\ORM\ORMException
 	 * @throws \Doctrine\ORM\OptimisticLockException
 	 */
 	public function Autorizar_Amigo(Usuario $Usuario, $flush = true) {
@@ -1369,15 +1380,6 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * Conta_Eliminadas
-	 *
-	 * @return integer
-	 */
-	public function Conta_Eliminadas() {
-		return $this->getEliminadas()->count();
-	}
-
-	/**
 	 * Eliminada
 	 *
 	 * Determina se a Disciplina foi eliminada (sem contar equivalencia)
@@ -1385,9 +1387,10 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
 	 * @param bool $novo_formato
+	 * @param Periodo|null $Antes_De
 	 * @return UsuarioEliminada|false
 	 */
-	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false) {
+	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false, Periodo $Antes_De = null) {
 		if($Disciplina->getID() == null)
 			return false;
 
@@ -1395,11 +1398,13 @@ class Usuario extends Base {
 		$criteria->setMaxResults(1);
 		$Eliminadas = $this->getEliminadas()->matching($criteria);
 		$Eliminada = ($Eliminadas->count() > 0) ? $Eliminadas->first() : null;
+		if($Eliminada === null)
+			return false;
 
-		if(
-			($Eliminada !== null) &&
-			(($parcial === true) ||	($Eliminada->getParcial(false) === false))
-		) {
+		if(($Antes_De !== null) && ($Eliminada->getPeriodo(false) !== null) && ($Eliminada->getPeriodo()->Anterior_A($Antes_De) === false))
+			return false;
+
+		if(($parcial === true) || ($Eliminada->getParcial(false) === false)) {
 			return ($novo_formato)
 				? $Eliminada
 				: $Eliminada->toOld();

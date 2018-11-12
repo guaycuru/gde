@@ -133,7 +133,7 @@ class Arvore {
 		$Possiveis_Eletivas = array();
 
 		if($completa === false) {
-			$this->Eliminadas = $this->Usuario->getEliminadas(Disciplina::$NIVEIS_GRAD)->toArray();
+			$this->Eliminadas = $this->Usuario->getEliminadas(Disciplina::$NIVEIS_GRAD, $this->Periodo)->toArray();
 			$siglas_old_eliminadas = array();
 			// Organiza as eliminadas por periodo, credito e sigla
 			foreach($this->Eliminadas as $Eli) {
@@ -144,7 +144,7 @@ class Arvore {
 			$Old_Eliminadas = $this->Eliminadas;
 			// Adiciona as Atuais como se fossem Eliminadas... Sao varios motivos, nem tente entender...
 			foreach($this->Atuais as $Ofrc) {
-				if($this->Usuario->Eliminada($Ofrc->getDisciplina(), false) === false) { // Se ja nao foi eliminada completamente
+				if($this->Usuario->Eliminada($Ofrc->getDisciplina(), false, false, $this->Periodo) === false) { // Se ja nao foi eliminada completamente
 					$El = new UsuarioEliminada();
 					$El->markReadOnly();
 					//$El->setUsuario($this->Usuario);

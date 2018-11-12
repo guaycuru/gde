@@ -131,6 +131,11 @@ class Periodo extends Base {
 	const PERIODO_DESCONHECIDO = 'Desconhecido';
 	const PERIODO_DESCONHECIDO_DAC = '??????';
 
+	/**
+	 * @param null $periodo
+	 * @return Periodo
+	 * @throws \Doctrine\ORM\ORMException
+	 */
 	public static function Load($periodo = null) {
 		if($periodo == '?') {
 			$Periodo = new self;
@@ -141,6 +146,47 @@ class Periodo extends Base {
 		} else
 			$Periodo = parent::Load($periodo);
 		return $Periodo;
+	}
+
+	/**
+	 * Listar
+	 *
+	 * Retorna a lista de periodos
+	 *
+	 * @return array
+	 */
+	public static function Listar() {
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P ORDER BY P.id_periodo DESC')->getResult();
+	}
+
+	/**
+	 * getAtual
+	 *
+	 * Retorna o periodo atual
+	 *
+	 * @return self
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 */
+	public static function getAtual() {
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1')
+			->setParameter(1, self::TIPO_ATUAL)
+			->setMaxResults(1)
+			->getOneOrNullResult();
+	}
+
+	/**
+	 * getProximo
+	 *
+	 * Retorna o proximo periodo
+	 *
+	 * @return self
+	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 */
+	public static function getProximo() {
+		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1 ORDER BY P.id_periodo ASC')
+			->setParameter(1, self::TIPO_PROXIMO)
+			->setMaxResults(1)
+			->getOneOrNullResult();
 	}
 
 	// Metodo que passa no cheap check do ProxyGenerator
@@ -175,12 +221,35 @@ class Periodo extends Base {
 			return $this->nome;
 	}
 
+	/**
+	 * getNome_DAC
+	 *
+	 * @return string
+	 */
 	public function getNome_DAC() {
 		if($this->getID() == null)
 			return self::PERIODO_DESCONHECIDO_DAC;
 		return ((substr($this->id_periodo, -1) != 0)
 			? substr($this->id_periodo, -1).'S'
 			: 'VE').substr($this->id_periodo, 0, 4);
+	}
+
+	/**
+	 * getAno
+	 *
+	 * @return integer
+	 */
+	public function getAno() {
+		return intval(substr($this->getId(), 0, 4));
+	}
+
+	/**
+	 * getAno
+	 *
+	 * @return integer
+	 */
+	public function getSemestre() {
+		return intval(substr($this->getId(), 4, 1));
 	}
 
 	/**
@@ -275,53 +344,46 @@ class Periodo extends Base {
 	}
 
 	/**
-	 * Listar
+	 * Anterior_A
 	 *
-	 * Retorna a lista de periodos
+	 * Determina se este Periodo eh anterior a $Periodo
 	 *
-	 * @return array
+	 * @param Periodo $Periodo
+	 * @return bool
 	 */
-	public static function Listar() {
-		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P ORDER BY P.id_periodo DESC')->getResult();
+	public function Anterior_A(Periodo $Periodo) {
+		return (
+			($this->getAno() < $Periodo->getAno()) ||
+			(($this->getAno() == $Periodo->getAno()) && ($this->getSemestre() < $Periodo->getSemestre()))
+		);
 	}
 
 	/**
-	 * getAtual
+	 * Posterior_A
 	 *
-	 * Retorna o periodo atual
+	 * Determina se este Periodo eh posterior a $Periodo
 	 *
-	 * @return self
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @param Periodo $Periodo
+	 * @return bool
 	 */
-	public static function getAtual() {
-		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1')
-			->setParameter(1, self::TIPO_ATUAL)
-			->setMaxResults(1)
-			->getOneOrNullResult();
+	public function Posterior_A(Periodo $Periodo) {
+		return (
+			($this->getAno() > $Periodo->getAno()) ||
+			(($this->getAno() == $Periodo->getAno()) && ($this->getSemestre() > $Periodo->getSemestre()))
+		);
 	}
 
 	/**
-	 * getProximo
+	 * Adicionar_Semestres
 	 *
-	 * Retorna o proximo periodo
-	 *
-	 * @return self
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @param integer $semestres Quantos semestres a adicionar
+	 * @return Periodo
+	 * @throws \Doctrine\ORM\ORMException
 	 */
-	public static function getProximo() {
-		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1 ORDER BY P.id_periodo ASC')
-			->setParameter(1, self::TIPO_PROXIMO)
-			->setMaxResults(1)
-			->getOneOrNullResult();
+	public function Adicionar_Semestres($semestres) {
+		$adicionar_anos = floor($semestres / 2);
+		$adicionar_semestres = (($semestres / 2) - $adicionar_anos) * 2;
+		$novo = strval($this->getAno() + $adicionar_anos) . strval($this->getSemestre() + $adicionar_semestres);
+		return self::Load($novo);
 	}
-
-	/*public static function Tem_Proximo() {
-		$res = $db->Execute("SELECT ".self::$chave.", tipo FROM ".self::$tabela." WHERE tipo = 'a' OR tipo = 'p'");
-		if($res->RecordCount() >= 2) {
-			foreach($res as $linha)
-				if($linha['tipo'] == 'p')
-					return new self($linha[self::$chave], $db);
-		} else
-			return false;
-	}*/
 }
