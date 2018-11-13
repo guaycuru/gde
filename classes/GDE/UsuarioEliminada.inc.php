@@ -94,13 +94,14 @@ class UsuarioEliminada extends Base {
 			$Oferecimentos = $Usuario->getAluno()->getOferecimentos()->filter(function($Oferecimento) use ($Disciplina) {
 				return $Oferecimento->getDisciplina()->getId() == $Disciplina->getId();
 			});
+			// Seleciona o periodo mais recente
 			$Periodo = null;
 			foreach($Oferecimentos as $Oferecimento) {
 				if(($Periodo === null) || ($Oferecimento->getPeriodo()->getId() > $Periodo->getId()))
 					$Periodo = $Oferecimento->getPeriodo();
 			}
 			if($Periodo !== null)
-				$Eliminada->setPeriodo($Oferecimentos->first()->getPeriodo(false));
+				$Eliminada->setPeriodo($Periodo);
 		}
 		return $Eliminada;
 	}
