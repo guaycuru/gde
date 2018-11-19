@@ -664,21 +664,21 @@ class Usuario extends Base {
 	 * e opcionalmente para periodos anteriores a $Antes_De
 	 *
 	 * @param null $niveis Somente disciplinas destes niveis
-	 * @param Periodo|null $Antes_De Filtra eliminadas antes deste Periodo
+	 * @param Periodo|null $Ate Filtra eliminadas ate este Periodo
 	 * @return mixed
 	 */
-	public function getEliminadas($niveis = null, Periodo $Antes_De = null) {
+	public function getEliminadas($niveis = null, Periodo $Ate = null) {
 		if($niveis == null)
 			$niveis = array();
-		if((count($niveis) == 0) && ($Antes_De === null))
+		if((count($niveis) == 0) && ($Ate === null))
 			return parent::getEliminadas();
 		if(!is_array($niveis))
 			$niveis = array($niveis);
 		return parent::getEliminadas()->filter(
-			function($UE) use ($niveis, $Antes_De) {
+			function($UE) use ($niveis, $Ate) {
 				return (
 					((count($niveis) == 0) || (in_array($UE->getDisciplina(true)->getNivel(false), $niveis))) &&
-					(($Antes_De === null) || ($UE->getPeriodo(false) === null) || ($UE->getPeriodo()->Anterior_A($Antes_De)))
+					(($Ate === null) || ($UE->getPeriodo(false) === null) || ($UE->getPeriodo()->getId() == $Ate->getId()) || ($UE->getPeriodo()->Anterior_A($Ate)))
 				);
 			}
 		);
@@ -1387,10 +1387,10 @@ class Usuario extends Base {
 	 * @param Disciplina $Disciplina
 	 * @param bool $parcial
 	 * @param bool $novo_formato
-	 * @param Periodo|null $Antes_De
+	 * @param Periodo|null $Ate
 	 * @return UsuarioEliminada|false
 	 */
-	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false, Periodo $Antes_De = null) {
+	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false, Periodo $Ate = null) {
 		if($Disciplina->getID() == null)
 			return false;
 
@@ -1401,7 +1401,7 @@ class Usuario extends Base {
 		if($Eliminada === null)
 			return false;
 
-		if(($Antes_De !== null) && ($Eliminada->getPeriodo(false) !== null) && ($Eliminada->getPeriodo()->Anterior_A($Antes_De) === false))
+		if(($Ate !== null) && ($Eliminada->getPeriodo(false) !== null) && ($Eliminada->getPeriodo()->getId() != $Ate->getId()) && ($Eliminada->getPeriodo()->Anterior_A($Ate) === false))
 			return false;
 
 		if(($parcial === true) || ($Eliminada->getParcial(false) === false)) {

@@ -660,7 +660,7 @@ class Aluno extends Base {
 	 * @param Professor $Professor
 	 * @param Disciplina $Disciplina
 	 * @return bool
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Cursou_Com(Professor $Professor, Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
@@ -690,7 +690,7 @@ class Aluno extends Base {
 	 * @param Professor $Professor
 	 * @param Disciplina $Disciplina
 	 * @return bool
-	 * @throws \Doctrine\ORM\Query\QueryException
+	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Trancou_Com(Professor $Professor, Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
