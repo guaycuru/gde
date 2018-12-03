@@ -663,7 +663,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		usort($Amigos, "\GDE\UsuarioAmigo::Order_Por_Nome_Sort");
 		$lista = array();
 		foreach($Amigos as $Amigo)
-			$lista[] = "<a href=\"<?= CONFIG_URL; ?>perfil/?usuario=".$Amigo->getAmigo()->getLogin()."\" target=\"_blank\" style=\"text-decoration: none;\" title=\"".$Amigo->getAmigo()->getNome_Completo()."\">".$Amigo->Apelido_Ou_Nome(true, true)."</a>";
+			$lista[] = "<a href=\"".CONFIG_URL."perfil/?usuario=".$Amigo->getAmigo()->getLogin()."\" target=\"_blank\" style=\"text-decoration: none;\" title=\"".$Amigo->getAmigo()->getNome_Completo()."\">".$Amigo->Apelido_Ou_Nome(true, true)."</a>";
 
 		$Ret = array(
 			'Amigos' => $lista,
