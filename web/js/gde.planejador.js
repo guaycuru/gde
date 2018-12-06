@@ -594,8 +594,7 @@ $(document).ready(function() {
 			//Abre a pagina de busca de oferecimentos no horario selecionado
 			$("#buscar_oferecimentos").unbind('click');
 			$('#buscar_oferecimentos').click(function() {
-				linkBusca = 'Busca.php?t=tab_oferecimentos&periodo='+periodo+'&dia='+d+'&horario='+hr1+'&resultados_pagina=20&buscar=+#tab_oferecimentos';
-				window.open(linkBusca);
+				window.open(CONFIG_URL + 'busca/?t=tab_oferecimentos&periodo='+periodo+'&dia='+d+'&horario='+hr1+'&resultados_pagina=20&buscar=+#tab_oferecimentos');
 			});
 			
 			$("#hidden_hmenu_all").triggerHandler(jsEvent); // Abre o menu
