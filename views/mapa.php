@@ -7,7 +7,7 @@ require_once('../common/common.inc.php');
 if(isset($_GET['cm']))
 	die("<img src='".CONFIG_URL."web/images/loading.gif' /> Carregando Mapa...");
 
-$link = "http://maps.google.com/maps/ms?ie=UTF8&msa=0&msid=207972918742334384558.00049b21f38a1896b2cc5&z=15&output=embed";
+$link = "https://maps.google.com/maps/ms?ie=UTF8&msa=0&msid=207972918742334384558.00049b21f38a1896b2cc5&z=15&output=embed";
 
 ?>
 <script type="text/javascript">
