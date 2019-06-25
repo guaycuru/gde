@@ -25,7 +25,7 @@ $Calendar = new GoogleCalendar;
 
 // Se nao temos o token, deu ruim
 if(empty($_SESSION['token'])) {
-	echo "Sem token";
+	die("Sem token");
 } else {
 	$Calendar->setTokenAcesso('', $_SESSION['token']);
 	// Servico da API do Calendar
@@ -37,13 +37,15 @@ if(empty($_SESSION['token'])) {
 
 	$Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $nivel);
 
-	$Calendar->adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado);
-	if($datasImportantes) {
-		try {
+	try {
+		$Calendar->adicionaHorario($idCalendario, $Horario, $Periodo_Selecionado);
+		if($datasImportantes) {
 			$Calendar->adicionaCalendarioUnicamp($idCalendario, $Periodo_Selecionado);
-		} catch(\Exception $E) {
-			var_dump($E);
 		}
+	} catch(\Exception $E) {
+		if(function_exists('exception_handler'))
+			exception_handler($E);
+		die("Erro");
 	}
 
 	// reseta o token

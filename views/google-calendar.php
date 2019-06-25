@@ -121,7 +121,6 @@ if(empty($_GET['code']) && empty($_GET['error'])) {
 								$.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
 								function(data) {
 									if(data) {
-										console.log(data);
 										alert("Algo deu errado");
 									} else {
 										alert("Seu horário foi adicionado ao Calendar");
