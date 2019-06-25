@@ -31,6 +31,8 @@ if($_POST['tp'] == 'a') { // Adicionar
 	else
 		$hora_inicio = "00:00";
 	$Inicio = \DateTime::createFromFormat('d/m/Y H:i', $_POST['data_inicio'].' '.$hora_inicio);
+	if(!is_object($Inicio))
+		Base::Error_JSON('Data de início inválida!');
 	$Evento->setData_Inicio($Inicio);
 	if(isset($_POST['data_fim'])) {
 		if((!isset($_POST['ad']) || $_POST['ad'] != '1') && (isset($_POST['hora_fim'])))
@@ -39,6 +41,8 @@ if($_POST['tp'] == 'a') { // Adicionar
 			$hora_fim = "00:00";
 		if($_POST['data_fim'] != "Data Termino") {
 			$Fim = \DateTime::createFromFormat('d/m/Y H:i', $_POST['data_fim'].' '.$hora_fim);
+			if(!is_object($Fim))
+				Base::Error_JSON('Data de fim inválida!');
 			$Evento->setData_Fim($Fim);
 		} else
 			$Evento->setData_Fim($Inicio);
@@ -50,6 +54,8 @@ if($_POST['tp'] == 'a') { // Adicionar
 	if($Evento->Pode_Alterar($_Usuario) === false)
 		Base::Error_JSON('Acesso negado!');
 	$Inicio = \DateTime::createFromFormat('Y-m-d H:i', $_POST['data_inicio']);
+	if(!is_object($Inicio))
+		Base::Error_JSON('Data de início inválida!');
 	$Evento->setData_Inicio($Inicio);
 	$Evento->setData_Fim($_POST['data_fim']);
 	if(isset($_POST['local']))
