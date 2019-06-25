@@ -10,7 +10,7 @@ if(!isset($_POST['tp']))
 
 // Usuario Status ou Usuario Mensagem
 if(($_POST['tp'] == Acontecimento::TIPO_USUARIO_STATUS) || ($_POST['tp'] == Acontecimento::TIPO_USUARIO_MENSAGEM)) {
-	$texto = trim($_POST['txt']);
+	$texto = Util::Remover_4_Bytes_Chars(trim($_POST['txt']));
 	$Acontecimento = new Acontecimento();
 	$Acontecimento->setTipo($_POST['tp']);
 	if($_POST['tp'] == Acontecimento::TIPO_USUARIO_MENSAGEM) { // Mensagem

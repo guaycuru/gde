@@ -94,4 +94,8 @@ class Util {
 		return $dias[$d];
 	}
 
+	public static function Remover_4_Bytes_Chars($string) {
+		return preg_replace('/[\x{10000}-\x{10FFFF}]/u', "\xEF\xBF\xBD", $string);
+	}
+
 }
