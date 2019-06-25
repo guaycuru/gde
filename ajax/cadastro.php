@@ -48,6 +48,8 @@ if(isset($_POST['enviar'])) {
 					Base::Error_JSON("Por favor digite um login com no mínimo 3 e no máximo 32 caracteres.");
 				if(strpos($_POST['login'], '@') !== false)
 					Base::Error_JSON("O login não pode conter um arroba.");
+				if(preg_match('/^\d+$/i', $_POST['login']) > 0)
+					Base::Error_JSON("O login não pode conter somente números.");
 				$login = mb_strtolower($_POST['login']);
 				if(Usuario::Por_Login($login, null, false) !== null)
 					Base::Error_JSON("Já existe um usuário cadastrado com o login informado.");
