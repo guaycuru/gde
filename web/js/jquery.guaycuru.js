@@ -124,6 +124,10 @@ jQuery.guaycuru = {
 	},
 	
 	tooltip: function(id, titulo, mensagem, options) {
+
+		var $el = $("#"+id);
+		if(!$el)
+			return;
 	
 		var settings = jQuery.extend({
 			opacity: 0.9,
@@ -132,15 +136,18 @@ jQuery.guaycuru = {
 			fixed: true
 		}, options);
 		
-		var pos = $("#"+id).position();
-		var left = pos.left+$("#"+id).width()+22;
+		var pos = $el.position();
+		if (!pos)
+			return;
+
+		var left = pos.left+$el.width()+22;
 		
 		if(settings.width + left < $(window).width())
 			$("body").append("<div id='JT_"+id+"' class='JT' style='width:"+settings.width+"px; display:none'><div class='JT_arrow_left'></div><div class='JT_close_left'>"+titulo+"</div><div class='JT_copy'>"+mensagem+"</div></div>");
 		else
 			$("body").append("<div id='JT_"+id+"' class='JT' style='width:"+settings.width+"px; display:none'><div class='JT_close_right'>"+titulo+"</div><div class='JT_arrow_right' style='left: "+settings.width+"px;'></div><div class='JT_copy'>"+mensagem+"</div></div>");
-		
-		$("#"+id).jHelperTip({
+
+		$el.jHelperTip({
 			trigger: settings.trigger,
 			dC:"#JT_"+id,
 			autoClose: false,

@@ -2,8 +2,8 @@
 
 namespace GDE;
 
+// Dados para iframe de catalogos / ementas
 if(isset($_GET['e'])) {
-
 	function TrazDoCache($params) {
 		if(($params[0] != 'catalogos') && ($params[0] != 'ementas'))
 			return false;
