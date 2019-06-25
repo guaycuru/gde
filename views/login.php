@@ -60,7 +60,7 @@ $(document).ready(function(){
 		<table>
 			<tr>
 				<td><strong>RA / Email / Login:</strong></td>
-				<td><input type="text" id="login" name="login" value="<?= (isset($_GET['login'])) ? Trata_Str($_GET['login']) : null; ?>" class="required" /></td>
+				<td><input type="text" id="login" name="login" value="<?= (isset($_GET['login'])) ? htmlspecialchars($_GET['login']) : ''; ?>" class="required" /></td>
 			</tr>
 			<tr>
 				<td><strong>Senha:</strong></td>
