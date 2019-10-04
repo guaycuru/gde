@@ -411,7 +411,7 @@ if($_tipo == 'A') {
 if($Usr !== null) {
 	$_Foto = $Usr->getFoto(true, false, true);
 	$_nome = $Usr->getNome_Completo(true);
-	$_status = $Usr->getStatus();
+	$_status = $Usr->getStatus(true);
 
 	if($_Usuario->Pode_Ver($Usr, 'arvore') === true)
 		$link_arvore = '<a href="'.CONFIG_URL.'arvore/?us='.$Usr->getLogin().'">Ver</a>';

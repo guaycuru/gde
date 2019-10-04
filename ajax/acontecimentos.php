@@ -8,9 +8,6 @@ define('NO_REDIRECT', true);
 
 require_once('../common/common.inc.php');
 
-/*if(isset($_POST['ui']))
-	die(Acontecimento::Ultimo_ID($_GDE['DB']));*/
-
 $por_pagina = (isset($_GET['pp'])) ? intval($_GET['pp']) : 10;
 $start = (isset($_GET['st'])) ? intval($_GET['st']) : 0;
 $maior_que = (isset($_GET['nvs'])) ? intval($_GET['ultimo']) : false;
