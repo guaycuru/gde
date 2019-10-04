@@ -28,9 +28,6 @@ $availableCaches = array(new \Doctrine\Common\Cache\ArrayCache());
 if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
 	// Initialize the APCu caching mechanism
 	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
-} elseif((defined('CONFIG_APC_ENABLED')) && (CONFIG_APC_ENABLED === true)) {
-	// Initialize the APC caching mechanism
-	$availableCaches[] = new \Doctrine\Common\Cache\ApcCache();
 }
 
 // Initialize the Redis caching mechanism

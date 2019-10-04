@@ -14,8 +14,6 @@ define('CONFIG_DB_NAME', 'gde');
 define('CONFIG_FTS_ENABLED', false);
 define('CONFIG_DB_LOGGER', false);
 
-// APC (cache) somente para PHP < 5.5
-define('CONFIG_APC_ENABLED', false);
 // APCu (cache)
 define('CONFIG_APCU_ENABLED', false);
 
