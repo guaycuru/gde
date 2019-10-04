@@ -98,4 +98,40 @@ class Util {
 		return preg_replace('/[\x{10000}-\x{10FFFF}]/u', "\xEF\xBF\xBD", $string);
 	}
 
+	/**
+	 * Cookie_Path
+	 *
+	 * Retorna o path a ser usado no cookie
+	 *
+	 * @return string O path a ser usado no cookie
+	 */
+	public static function Cookie_Path() {
+		return parse_url(CONFIG_URL, PHP_URL_PATH);
+	}
+
+	/**
+	 * @param $chave
+	 * @param $valor
+	 * @param null $validade
+	 * @param bool $http
+	 * @param string $samesite
+	 */
+	public static function Enviar_Cookie($chave, $valor, $validade = null, $http = false, $samesite = 'Lax') {
+		$partes = array('Set-Cookie: '.$chave.'='.rawurlencode($valor), 'path='.self::Cookie_Path());
+		if($validade != null)
+			$partes[] = 'Expires='.gmdate('D, d-M-Y H:i:s T', $validade);
+		if($http === true)
+			$partes[] = "HttpOnly";
+		if($samesite != null)
+			$partes[] = "SameSite=".$samesite;
+		header(implode('; ', $partes));
+	}
+
+	/**
+	 * @param $chave
+	 */
+	public static function Remover_Cookie($chave) {
+		self::Enviar_Cookie($chave, '', strtotime('-30 days'));
+	}
+
 }

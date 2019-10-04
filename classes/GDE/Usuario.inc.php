@@ -890,27 +890,18 @@ class Usuario extends Base {
 	}
 
 	/**
-	 * Cookie_Path
-	 *
-	 * Retorna o path a ser usado no cookie
-	 *
-	 * @return string O path a ser usado no cookie
-	 */
-	public static function Cookie_Path() {
-		return parse_url(CONFIG_URL, PHP_URL_PATH);
-	}
-
-	/**
 	 * Salvar_Cookie
 	 *
 	 * Salva o cookie
 	 *
 	 * @param boolean $lembrar (Opcional) Se for true, o cookie nao expirara no final da sessao
-	 * @return boolean Se o cookie foi enviado com sucesso
+	 * @return void
 	 */
 	public function Salvar_Cookie($lembrar = false) {
 		$duracao = ($lembrar) ? time() + (86400 * CONFIG_COOKIE_DIAS) : 0;
-		return setcookie(CONFIG_COOKIE_NOME, $this->Gerar_Cookie(), $duracao, self::Cookie_Path(), '', false, true);
+		// ToDo: Ao migrar para o PHP 7.3 usar o novo parametro do setcookie pra SameSite
+		//setcookie(CONFIG_COOKIE_NOME, $this->Gerar_Cookie(), $duracao, self::Cookie_Path(), '', false, true);
+		Util::Enviar_Cookie(CONFIG_COOKIE_NOME, $this->Gerar_Cookie(), $duracao, true);
 	}
 
 	/**
@@ -923,7 +914,7 @@ class Usuario extends Base {
 	public static function Logout() {
 		if(!empty($_COOKIE[CONFIG_COOKIE_NOME]))
 			UsuarioToken::Excluir(trim($_COOKIE[CONFIG_COOKIE_NOME]));
-		setcookie(CONFIG_COOKIE_NOME, '', time() - 3600, self::Cookie_Path(), '', false, true);
+		Util::Remover_Cookie(CONFIG_COOKIE_NOME);
 		session_unset();
 		session_destroy();
 		return new self();
