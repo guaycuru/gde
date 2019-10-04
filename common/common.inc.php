@@ -23,6 +23,10 @@ mb_internal_encoding("UTF-8");
 // Ignora erros irrelevantes relativos a imagens
 ini_set('gd.jpeg_ignore_warning', 1);
 
+// Configura os parametros do cookie da sessao
+session_set_cookie_params(0, parse_url(CONFIG_URL, PHP_URL_PATH), null, false, true);
+
+// Inicia a sessao
 session_name('GDES');
 session_start();
 

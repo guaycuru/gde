@@ -25,7 +25,6 @@ if(empty($_GET['i'])) {
 	$amigos = (!empty($_GET['am']));
 	$gde = (!empty($_GET['gde']));
 	$todas_respostas = (!empty($_GET['rt']));
-	// ToDo: Testar salvar
 	if(!isset($_GET['o'])) {
 		$Usuario_Config = $_Usuario->getConfig(true);
 		$Usuario_Config->setAcontecimentos_Mensagens($mensagens);

@@ -1,14 +1,8 @@
 Options -MultiViews
 RewriteEngine On
 
-# Save the beggining of the URL
-RewriteCond %{ENV:URI} ^$
-RewriteRule ^(.*)$ - [ENV=URI:$1]
-
-# Save the beggining of the URL
-RewriteCond %{ENV:BASE} ^$
-RewriteCond %{ENV:URI}::%{REQUEST_URI} ^(.*)::(.*?)\1$
-RewriteRule ^ - [ENV=BASE:%2]
+# Force cookie setting SameSite=Lax
+Header always edit Set-Cookie (.*) "$1; SameSite=Lax"
 
 # Add trailing slash
 # RewriteCond %{REQUEST_URI} !(/$|\.)
@@ -34,36 +28,3 @@ RewriteRule ^([^/.]+)/?$ views/$1.php [L,QSA]
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-d
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} !-f
 RewriteRule ^([^/.]+)/([^/.?&]+)/?$ views/$1.php?id=$2 [L,QSA]
-
-# Old -> New
-RewriteRule ^visoes/index\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Amigos\.php$ %{ENV:BASE}amigos/ [R=302,L,QSA]
-RewriteRule ^visoes/Arvore\.php$ %{ENV:BASE}arvore/ [R=302,L,QSA]
-RewriteRule ^visoes/Avaliar\.php$ %{ENV:BASE}avaliar/ [R=302,L,QSA]
-RewriteRule ^visoes/BemVindo\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Busca\.php$ %{ENV:BASE}busca/ [R=302,L,QSA]
-RewriteRule ^visoes/CadastroGrupo\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/CadastroOportunidade\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Configuracoes\.php$ %{ENV:BASE}configuracoes/ [R=302,L,QSA]
-RewriteRule ^visoes/Contato\.php$ %{ENV:BASE}contato/ [R=302,L,QSA]
-RewriteRule ^visoes/Disciplina\.php$ %{ENV:BASE}disciplina/ [R=302,L,QSA]
-RewriteRule ^visoes/EditarPerfil\.php$ %{ENV:BASE}editar-perfil/ [R=302,L,QSA]
-RewriteRule ^visoes/Eliminador\.php$ %{ENV:BASE}eliminador/ [R=302,L,QSA]
-RewriteRule ^visoes/Estatisticas\.php$ %{ENV:BASE}estatisticas/ [R=302,L,QSA]
-RewriteRule ^visoes/FAQ\.php$ https://github.com/guaycuru/gde/wiki/FAQ [R=302,L,QSA]
-RewriteRule ^visoes/Grupo\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Grupos\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Imprimir_Horario\.php$ %{ENV:BASE}imprimirhorario/ [R=302,L,QSA]
-RewriteRule ^visoes/Mapa\.php$ %{ENV:BASE}mapa/ [R=302,L,QSA]
-RewriteRule ^visoes/MuralOportunidades\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Oferecimento\.php$ %{ENV:BASE}oferecimento/ [R=302,L,QSA]
-RewriteRule ^visoes/Perfil\.php$ %{ENV:BASE}perfil/ [R=302,L,QSA]
-RewriteRule ^visoes/Planejador\.php$ %{ENV:BASE}planejador/ [R=302,L,QSA]
-RewriteRule ^visoes/Rankings\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Recomendar\.php$ %{ENV:BASE} [R=302,L,QSA]
-RewriteRule ^visoes/Sala\.php$ %{ENV:BASE}sala/ [R=302,L,QSA]
-RewriteRule ^visoes/Sobre\.php$ %{ENV:BASE}sobre/ [R=302,L,QSA]
-RewriteRule ^visoes/Termos\.php$ %{ENV:BASE}termos/ [R=302,L,QSA]
-RewriteRule ^visoes/ValidaEmail\.php$ %{ENV:BASE}validar-email/ [R=302,L,QSA]
-RewriteRule ^visoes/VisaoCadastro\.php$ %{ENV:BASE}cadastro/ [R=302,L,QSA]
-RewriteRule ^visoes/VisaoLogin\.php$ %{ENV:BASE}login/ [R=302,L,QSA]
