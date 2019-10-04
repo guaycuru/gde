@@ -80,6 +80,9 @@ if((!defined('NO_LOGIN_CHECK')) || (NO_LOGIN_CHECK === false)) {
 				Base::Error_JSON('Login necessário.');
 			exit;
 		}
+	} else {
+		// Tenta prevenir CSRF
+		Util::CSRFP((defined('AJAX')) && (AJAX === true));
 	}
 }
 if(($_Usuario !== null) && ($_Usuario->getAdmin() === true)) {

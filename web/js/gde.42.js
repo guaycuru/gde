@@ -55,6 +55,7 @@ var auto_form_handler = function() {
 					$(form).find('button,input[type=submit]').prop('disabled', false);
 				}
 			};
+
 			var multipart = ($(form).find('input[type=file]').length > 0);
 			if(!multipart) {
 				$.post($(form).attr('action'), $(form).serialize(), parse_res)
@@ -71,6 +72,16 @@ var auto_form_handler = function() {
 						parse_res({ok: false});
 					}
 				});
+				var csrfptoken = getCookie('csrfptoken');
+				if(!csrfptoken) {
+					window.location.reload();
+					return false;
+				}
+				$('<input type="hidden">').attr({
+					id: 'csrfptoken',
+					name: 'csrfptoken',
+					value: csrfptoken
+				}).appendTo(form);
 				$(form).attr({
 					enctype: "multipart/form-data",
 					encoding: "multipart/form-data",
@@ -90,6 +101,24 @@ var auto_form_handler = function() {
 		}
 	});
 };
+
+function getCookie(name) {
+	var value = "; " + document.cookie;
+	var parts = value.split("; " + name + "=");
+	if (parts.length === 2)
+		return parts.pop().split(";").shift();
+}
+
+$(document).ajaxSend(function(event, jqxhr, settings) {
+	if(settings && settings.type && settings.type.toLowerCase() === 'post') {
+		var csrfptoken = getCookie('csrfptoken');
+		if(csrfptoken)
+			jqxhr.setRequestHeader('X-CSRFP-TOKEN', csrfptoken);
+		else
+			// Precisamos de um novo token
+			window.location.reload();
+	}
+});
 
 $(document).ready(function() {
 	// Logout

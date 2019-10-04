@@ -3,6 +3,9 @@
 namespace GDE;
 
 class Util {
+	const CSRFP_TOKEN = 'csrfptoken';
+	const CSRFP_HEADER = 'HTTP_X_CSRFP_TOKEN';
+
 	/**
 	 * Random
 	 *
@@ -132,6 +135,38 @@ class Util {
 	 */
 	public static function Remover_Cookie($chave) {
 		self::Enviar_Cookie($chave, '', strtotime('-30 days'));
+	}
+
+	public static function Forbidden($mensagem = null) {
+		http_response_code(403);
+		die($mensagem);
+	}
+
+	public static function CSRFP($ajax = false) {
+		// Gera um novo token se necessario
+		if(empty($_COOKIE[self::CSRFP_TOKEN]) || empty($_SESSION[self::CSRFP_TOKEN])) {
+			$token = bin2hex(random_bytes(16));
+			$_SESSION[self::CSRFP_TOKEN] = $token;
+			Util::Enviar_Cookie(self::CSRFP_TOKEN, $token);
+		}
+
+		// Verifica o token
+		if(strtolower($_SERVER['REQUEST_METHOD']) === 'post') {
+			// Verifica headers necessarios
+			if(empty($_SERVER['HTTP_REFERER']) || stripos($_SERVER['HTTP_REFERER'], CONFIG_URL) === false)
+				Util::Forbidden();
+
+			// Checa o token
+			$token_recebido = null;
+			if(!empty($_SERVER[self::CSRFP_HEADER]))
+				$token_recebido = $_SERVER[self::CSRFP_HEADER];
+			elseif(!empty($_POST[self::CSRFP_TOKEN]))
+				$token_recebido = $_POST[self::CSRFP_TOKEN];
+			else
+				Util::Forbidden('no token!');
+			if($token_recebido != $_SESSION[self::CSRFP_TOKEN])
+				Util::Forbidden($token_recebido.' != '.$_SESSION[self::CSRFP_TOKEN]);
+		}
 	}
 
 }
