@@ -3,7 +3,7 @@
  - Apache 2.4 ou mais novo;
    - Módulo `mod_rewrite` ativado;
    - Configuração `AllowOverride` definida como `All`;
- - PHP 5.6.36 ou mais novo (recomendável o uso do PHP 7.2);
+ - PHP 7.0 ou mais novo (recomendável o uso do PHP 7.2);
    - Extensão mysql_pdo;
    - Extensão mbstring;
    - Extensão curl;
