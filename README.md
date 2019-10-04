@@ -65,3 +65,8 @@ R: Depende:
  - Se você sabe programar em PHP, fique a vontade para corrigir um problema ou criar uma nova feature. Seu pull request será analisado com carinho!
  - Se você é designer, crie um novo layout mais moderno (quem sabe, responsivo) para o GDE, ou melhore o atual, e envie seu pull request.
  - Se você não se encaixa em nenhuma das opções anteriores, envie sugestões ou problemas encontrados criando uma [Issue](https://github.com/guaycuru/gde/issues).
+
+## Agradecimentos ##
+- [Carlos Avelar](https://github.com/carlosamds) por desenvolver uma integração com o Google Calendar.
+- [Luciano Zago](https://github.com/lcnzg) por ter corrigido um erro no planejador.
+- [Nicolas Caous](https://github.com/NicolasCaous) por algumas correções de bugs e por ter descoberto e reportado (incluindo PoCs) duas vulnerabilidades.
