@@ -2,7 +2,7 @@
 
 namespace GDE;
 
-define('REVISION', '20191004');
+define('REVISION', '20191005');
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -156,9 +156,11 @@ var CONFIG_URL = '<?= CONFIG_URL; ?>';
 // <![CDATA[
 // Informacoes para o chat
 <?php if(($_Usuario !== null) && (empty($_SESSION['admin_su']))) { ?>
-var meu_id = '<?= $_Usuario->getID(); ?>';
+var ID_USUARIO = '<?= $_Usuario->getID(); ?>';
 var meu_status = '<?= (CONFIG_CHAT_ATIVO) ? $_Usuario->getChat_Status(false, true) : 'z'; ?>';
 var minha_foto_th = '<?= $_Usuario->getFoto(true, true, true); ?>';
+<?php } else { ?>
+var ID_USUARIO = '';
 <?php } ?>
 $(document).ready(function(){
 	$('body').watcherkeys({callback: $.guaycuru.changeIt});

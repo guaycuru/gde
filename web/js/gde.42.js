@@ -73,7 +73,7 @@ var auto_form_handler = function() {
 					}
 				});
 				var csrfptoken = getCookie('csrfptoken');
-				if(!csrfptoken) {
+				if(!csrfptoken && ID_USUARIO) {
 					window.location.reload();
 					return false;
 				}
@@ -114,7 +114,7 @@ $(document).ajaxSend(function(event, jqxhr, settings) {
 		var csrfptoken = getCookie('csrfptoken');
 		if(csrfptoken)
 			jqxhr.setRequestHeader('X-CSRFP-TOKEN', csrfptoken);
-		else
+		else if(ID_USUARIO)
 			// Precisamos de um novo token
 			window.location.reload();
 	}
