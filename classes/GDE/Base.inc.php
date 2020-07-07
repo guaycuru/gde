@@ -397,6 +397,7 @@ abstract class Base {
 									$datetime = clone $this->{$property};
 									$datetime->setTimezone(self::_TZ());
 								} else
+									// No need to apply a display Timezone
 									$datetime = $this->{$property};
 								if((!isset($args[0])) || ($args[0] === false)) // Return DateTime object
 									return $datetime;
@@ -432,11 +433,11 @@ abstract class Base {
 						}
 					} else { // Value passed
 						$value = $args[0];
-						// Convert value from array to ArrayCollection
-						if(($_association['type'] & ClassMetadataInfo::TO_MANY) && (is_array($value)))
-							$value = new ArrayCollection($value);
 						$set_other_side = ((!isset($args[1])) || ($args[1] === true));
 						if($_association !== false) { // Is Association
+							// Convert value from array to ArrayCollection
+							if(($_association['type'] & ClassMetadataInfo::TO_MANY) && (is_array($value)))
+								$value = new ArrayCollection($value);
 							switch($_association['type']) {
 								case ClassMetadataInfo::ONE_TO_ONE: // OneToOne
 									if((!is_object($value)) && (!is_null($value)))
@@ -466,7 +467,7 @@ abstract class Base {
 									if((!is_object($value)) && (!is_null($value)))
 										throw new \InvalidArgumentException("Invalid argument type passed to ".$name." on ".get_class($this).'.');
 									// Determine if this is the inverse side and set the inverse relation for every object in the array
-									if(($set_other_side === true) && (!(empty($_association['inversedBy']))) && (is_object($value->{$_association['inversedBy']})) && (is_object($value)))
+									if(($set_other_side === true) && (!(empty($_association['inversedBy']))) && (is_object($value) && (is_object($value->{$_association['inversedBy']}))))
 										if($value->{$_association['inversedBy']}->contains($this) === false)
 											$value->{$_association['inversedBy']}->add($this);
 									break;
@@ -563,7 +564,7 @@ abstract class Base {
 						throw new \InvalidArgumentException("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
-						: $_association['targetEntity']::Load($args[0]);
+						: self::_EM()->find($_association['targetEntity'], $args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \InvalidArgumentException("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
@@ -585,7 +586,7 @@ abstract class Base {
 						throw new \InvalidArgumentException("No value passed for ".$name."() on class ".get_class($this).'.');
 					$Obj = (is_object($args[0]))
 						? $args[0]
-						: $_association['targetEntity']::Load($args[0]);
+						: self::_EM()->find($_association['targetEntity'], $args[0]);
 					if(!($Obj instanceof $_association['targetEntity']))
 						throw new \InvalidArgumentException("Object passed to ".$name."() is not an instance of ".$_association['targetEntity']." on class ".get_class($this).'.');
 					if(!empty($_association['mappedBy'])) {
