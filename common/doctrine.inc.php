@@ -25,14 +25,14 @@ unset($loader);
 // Initialize the caching mechanism
 $availableCaches = array(new \Doctrine\Common\Cache\ArrayCache());
 
-if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true)) {
+if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true) && (function_exists('apcu_fetch'))) {
 	// Initialize the APCu caching mechanism
 	$availableCaches[] = new \Doctrine\Common\Cache\ApcuCache();
 }
 
 // Initialize the Redis caching mechanism
 $resultCache = null;
-if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true)) {
+if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (class_exists('\Redis', false))) {
 	try {
 		$redis = new \Redis();
 		$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
