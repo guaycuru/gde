@@ -188,7 +188,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 					if(in_array($id_disciplina, $id_disciplinas) === true)
 						continue;
 					$id_disciplinas[] = $id_disciplina;
-					if(($sigla == 'ELET') || ($sigla == 'LING'))
+					if(($sigla == Curriculo::ELETIVA) || ($sigla == Curriculo::LINGUAS))
 						unset($Disciplinas[$sem][$k]);
 					$Raw[$sem][$id_disciplina]['Disciplina'] = $Disciplina;
 					$obs = null;

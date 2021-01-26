@@ -404,9 +404,9 @@ abstract class Base {
 								// Apply formatting instead
 								if((isset($args[0])) && (is_string($args[0])))
 									$format = $args[0];
-								elseif($type == 'datetime')
+								elseif($type == 'datetime' || $type == 'datetime_immutable')
 									$format = 'Y-m-d H:i:s';
-								elseif($type == 'date')
+								elseif($type == 'date' || $type == 'date_immutable')
 									$format = 'Y-m-d';
 								else
 									$format = 'H:i:s';
@@ -425,8 +425,15 @@ abstract class Base {
 								$value = new \DateTime();
 								$value->setTime(0, 0, 0);
 								break;
+							case 'date_immutable':
+								$value = new \DateTimeImmutable();
+								$value->setTime(0, 0, 0);
+								break;
 							case 'datetime':
 								$value = new \DateTime();
+								break;
+							case 'datetime_immutable':
+								$value = new \DateTimeImmutable();
 								break;
 							default:
 								throw new \InvalidArgumentException("Can't set ".$property." without a value on ".get_class($this).'.');
@@ -505,7 +512,7 @@ abstract class Base {
 											else
 												$value->setTime(0, 0, 0);
 										}
-										if($value instanceof \DateTime)
+										if($value instanceof \DateTime || $value instanceof \DateTimeImmutable)
 											$new = $value->format('d/m/Y');
 										else
 											$value = $new = null;
@@ -525,7 +532,7 @@ abstract class Base {
 											if($value === false)
 												$value = null;
 										}
-										if($value instanceof \DateTime)
+										if($value instanceof \DateTime || $value instanceof \DateTimeImmutable)
 											$new = $value->format('U');
 										else
 											$value = $new = null;
@@ -541,7 +548,7 @@ abstract class Base {
 												$format = 'H:i:s';
 											$value = \DateTime::createFromFormat($format, $value);
 										}
-										if($value instanceof \DateTime)
+										if($value instanceof \DateTime || $value instanceof \DateTimeImmutable)
 											$new = $value->format('H:i:s');
 										else
 											$value = $new = null;

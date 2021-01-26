@@ -165,16 +165,16 @@ class Arvore {
 
 		foreach($this->Curriculos as &$For_Curriculo) { // Percorre todas as Disciplinas do Curriculo
 			$maior_semestre = $For_Curriculo->getSemestre();
-			if($For_Curriculo->getSigla() == 'ELET.') {
+			if($For_Curriculo->getSigla() == Curriculo::ELETIVA) {
 				if(!isset($this->creditos_eletivas[$For_Curriculo->getSemestre()]))
 					$this->creditos_eletivas[$For_Curriculo->getSemestre()] = 0;
-				$this->creditos_eletivas[$For_Curriculo->getSemestre()]++;
-				$this->creditos_totais++;
-			} elseif($For_Curriculo->getSigla() == 'LING.') {
+				$this->creditos_eletivas[$For_Curriculo->getSemestre()] += intval($For_Curriculo->getCreditos(false));
+				$this->creditos_totais += intval($For_Curriculo->getCreditos(false));
+			} elseif($For_Curriculo->getSigla() == Curriculo::LINGUAS) {
 				if(!isset($this->creditos_linguas[$For_Curriculo->getSemestre()]))
 					$this->creditos_linguas[$For_Curriculo->getSemestre()] = 0;
-				$this->creditos_linguas[$For_Curriculo->getSemestre()]++;
-				$this->creditos_totais++;
+				$this->creditos_linguas[$For_Curriculo->getSemestre()] += intval($For_Curriculo->getCreditos(false));
+				$this->creditos_totais += intval($For_Curriculo->getCreditos(false));
 			} else { // Disciplina Obrigatoria
 				$Disciplina = $For_Curriculo->getDisciplina(true);
 				$this->Disciplinas[$For_Curriculo->getSemestre()][] = $Disciplina;
@@ -305,7 +305,7 @@ class Arvore {
 			foreach($this->Disciplinas as $Deste_Semestre) {
 				foreach($Deste_Semestre as $Disciplina) {
 					$sigla = $Disciplina->getSigla();
-					if(($sigla != 'ELET') && ($sigla != 'LING') && (in_array($sigla, $this->siglas_atuais) === false))
+					if(($sigla != Curriculo::ELETIVA) && ($sigla != Curriculo::LINGUAS) && (in_array($sigla, $this->siglas_atuais) === false))
 						$this->creditos_faltantes_futuros += $Disciplina->getCreditos();
 				}
 			}
@@ -529,7 +529,7 @@ class Arvore {
 		foreach($this->creditos_eletivas as $semestre => $creditos) {
 			$Nova = new Disciplina();
 			$Nova->markReadOnly();
-			$Nova->setSigla('ELET');
+			$Nova->setSigla(Curriculo::ELETIVA);
 			$Nova->setNome('Eletiva');
 			$Nova->setCreditos($creditos);
 			$this->Disciplinas[$semestre][] = $Nova;
@@ -539,7 +539,7 @@ class Arvore {
 		foreach($this->creditos_linguas as $semestre => $creditos) {
 			$Nova = new Disciplina();
 			$Nova->markReadOnly();
-			$Nova->setSigla('LING');
+			$Nova->setSigla(Curriculo::LINGUAS);
 			$Nova->setNome('Linguas');
 			$Nova->setCreditos($creditos);
 			$this->Disciplinas[$semestre][] = $Nova;
@@ -706,7 +706,7 @@ class Arvore {
 
 		foreach($this->Disciplinas as $semestre => $Lista) {
 			foreach($Lista as $Disciplina) {
-				if(($Disciplina->getSigla() == 'ELET') || ($Disciplina->getSigla() == 'LING'))
+				if(($Disciplina->getSigla() == Curriculo::ELETIVA) || ($Disciplina->getSigla() == Curriculo::LINGUAS))
 					continue;
 				$mapas[$Disciplina->getId()] = array($Disciplina->getNome(), array($em_x, $em_y, $em_x+$consts['largura'], $em_y+$consts['altura']));
 				$em_x += $consts['largura'] + $consts['dist_x'];
@@ -755,7 +755,7 @@ class Arvore {
 		$z = 60;
 		foreach($this->Disciplinas as $semestre => $Lista) {
 			foreach($Lista as $Disciplina) {
-				if(($Disciplina->getSigla() == 'ELET') || ($Disciplina->getSigla() == 'LING'))
+				if(($Disciplina->getSigla() == Curriculo::ELETIVA) || ($Disciplina->getSigla() == Curriculo::LINGUAS))
 					//if(in_array($Disciplina->getSigla(), $this->siglas_obrigatorias) === false)
 					continue;
 				if($meu)
@@ -840,7 +840,7 @@ class Arvore {
 		foreach($this->Disciplinas as $semestre => $Deste_Semestre) {
 			foreach($Deste_Semestre as $Disciplina) {
 				$sigla = $Disciplina->getSigla(true);
-				if(($sigla != 'ELET') && ($sigla != 'LING') && (in_array($sigla, $this->siglas_atuais) === false)) {
+				if(($sigla != Curriculo::ELETIVA) && ($sigla != Curriculo::LINGUAS) && (in_array($sigla, $this->siglas_atuais) === false)) {
 					$url = Disciplina::URL_Disciplina($Disciplina->getId(), $Disciplina->getSigla(false));
 					$ret .= "  <a href=\"".$url."\" class=\"sigla\" title=\"".$Disciplina->getNome(true)."\" target=\"_blank\">".$Disciplina->getSigla(true)."</a>(".(sprintf("%02d", $Disciplina->getCreditos(false))).")";
 					$i++;

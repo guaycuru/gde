@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Curriculo
  *
+ * Sugestao de curriculo: $curso, $modalidade e $catalogo no qual se sugere cursar $sigla em $semestre
+ *
  * @ORM\Table(
  *   name="gde_curriculos",
  *   indexes={@ORM\Index(name="curso_modalidade_catalogo", columns={"id_curso", "id_modalidade", "catalogo"})}
@@ -73,6 +75,16 @@ class Curriculo extends Base {
 	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=false)
 	 */
 	protected $semestre;
+
+	/**
+	 * @var boolean
+	 *
+	 * @ORM\Column(type="smallint", options={"unsigned"=true}, nullable=true)
+	 */
+	protected $creditos;
+
+	const ELETIVA = 'ELET.';
+	const LINGUAS = 'LING.';
 
 	/**
 	 * @param $param

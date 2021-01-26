@@ -44,5 +44,4 @@ class PreLista extends Base {
 	 */
 	protected $parcial = false;
 
-
 }
