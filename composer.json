@@ -1,18 +1,24 @@
 {
+  "autoload": {
+    "psr-4": {
+      "GDE\\": "classes/GDE/"
+    }
+  },
   "require": {
-    "php": ">=7.0",
+    "php": "^7.2",
+    "doctrine/orm": "^2.8",
+    "doctrine/dbal": "^2.12",
+    "doctrine/common": "^3.0",
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-gd": "*",
-    "doctrine/orm": "^2.6",
-    "doctrine/dbal": "^2.7",
-    "doctrine/common": "^2.8",
     "predis/predis": "^1.1",
     "ircmaxell/password-compat": "^1.0",
     "google/apiclient": "^2.0"
   },
   "suggest": {
     "ext-mysqli": "*",
-    "ext-pdo_mysql": "*"
+    "ext-pdo_mysql": "*",
+    "ext-redis": "*"
   }
 }

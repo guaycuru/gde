@@ -2,7 +2,7 @@
 
 namespace GDE;
 
-define('REVISION', '20191005');
+define('REVISION', '20210126');
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -303,7 +303,7 @@ $(document).ready(function(){
 				<div id=\"rodape\">
 					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
 					<div id=\"usuarios_online\"><span>Usu&aacute;rios online</span>: <span id=\"contador_usuarios_online\">".Usuario::Conta_Online(false)."</span></div>
-					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.5
+					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.6
 					<br /><br /><strong>Aviso:</strong> O GDE n&atilde;o &eacute; um sistema oficial da Unicamp, e tem por &uacute;nico objetivo auxiliar alunos na vida acad&ecirc;mica.
 					<br /><br /><i>".Quote::Qualquer_Uma(true)."</i>
 					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
