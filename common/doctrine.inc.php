@@ -1,14 +1,20 @@
 <?php
 
-use \Doctrine\Common\Annotations\AnnotationRegistry,
-	\Doctrine\ORM\EntityManager,
-	\Doctrine\ORM\Configuration;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Configuration;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Cache\PredisCache;
+use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -36,7 +42,7 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (clas
 	try {
 		$redis = new \Redis();
 		$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
-		$redisCache = new \Doctrine\Common\Cache\RedisCache();
+		$redisCache = new RedisCache();
 		$redisCache->setRedis($redis);
 		$availableCaches[] = $redisCache;
 		$resultCache = $redisCache;
@@ -70,23 +76,23 @@ unset($arrayCache, $redisCache, $availableCaches);
 AnnotationRegistry::registerLoader('class_exists');
 
 // Create standard annotation reader
-$reader = new Doctrine\Common\Annotations\AnnotationReader;
+$reader = new AnnotationReader;
 
 // Create the cached annotation reader
-$cachedAnnotationReader = new Doctrine\Common\Annotations\CachedReader(
+$cachedAnnotationReader = new CachedReader(
 	$reader, // use reader
 	$_cache // and a cache driver
 );
 unset($reader);
 
 // Now we want to register our application entities, for that we need another metadata driver used for Entity namespace
-$annotationDriver = new Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+$annotationDriver = new AnnotationDriver(
 	$cachedAnnotationReader, // our cached annotation reader
 	array(__DIR__.'/../classes') // paths to look in
 );
 
 // Create a driver chain for metadata reading
-$driver = new Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
+$driver = new MappingDriverChain();
 
 // Register annotation driver for our application Entity namespace
 $driver->addDriver($annotationDriver, $_namespace);
@@ -94,7 +100,7 @@ unset($annotationDriver);
 unset($cachedAnnotationReader);
 
 // Create the configuration, set the Metadata and Query caches and the Proxy dir
-$config = new Configuration;
+$config = new Configuration();
 $config->setMetadataCacheImpl($_cache);
 $config->setMetadataDriverImpl($driver);
 $config->setQueryCacheImpl($_cache);
@@ -129,12 +135,6 @@ $connection = array(
 	'dbname' => CONFIG_DB_NAME,
 	'charset' => 'utf8'
 );
-if(CONFIG_DB_DRIVER == 'mysql_pdo') {
-	$connection['driverOptions'] = array(
-		// ToDo: Remover a mudanca do SQL Mode
-		PDO::MYSQL_ATTR_INIT_COMMAND => 'sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))'
-	);
-}
 if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
 	$connection['unix_socket'] = CONFIG_DB_SOCKET;
 elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {

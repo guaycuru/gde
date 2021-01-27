@@ -23,12 +23,12 @@ abstract class Base {
 	// Display Timezone
 	protected static $_TZ = null;
 
-	/** 
+	/**
 	 * _EM
 	 *
 	 * Gets or Sets the Entity Manager
 	 *
-	 * @param EntityManager $EM (optional) Entity Manager
+	 * @param EntityManager|null $EM (optional) Entity Manager
 	 * @return EntityManager Entity Manager
 	 */
 	public static function _EM(EntityManager $EM = null) {
