@@ -95,7 +95,7 @@ class Aluno extends Base {
 	/**
 	 * @var string
 	 *
-	 * Nao podemos utilizar uma Relation com Modalidade pois Aluno nao tem Catalogo
+     * ToDo: Agora podemos utilizar uma Relation com Modalidade pois Aluno tem Catalogo
 	 *
 	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
@@ -104,11 +104,53 @@ class Aluno extends Base {
 	/**
 	 * @var string
 	 *
-	 * Nao podemos utilizar uma Relation com Modalidade pois Aluno nao tem Catalogo
+     * ToDo: Agora podemos utilizar uma Relation com Modalidade pois Aluno tem Catalogo
 	 *
 	 * @ORM\Column(type="string", length=16, nullable=true)
 	 */
 	protected $modalidade_pos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $catalogo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $catalogo_pos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $ingresso;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    protected $ingresso_pos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $situacao;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    protected $situacao_pos;
 
 	const NIVEL_EGRESSADO = 'E';
 	const NIVEL_GRAD = 'G';
