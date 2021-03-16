@@ -304,7 +304,7 @@ class Dado extends Base {
 			return false;
 		$Dados->setOferecimentos($oferecimentos['total']);
 
-		$oferecimentos_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel IN (?, ?)", array($periodo, Disciplina::NIVEL_GRAD, Disciplina::NIVEL_TEC))->fetch();
+		$oferecimentos_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_oferecimentos AS O JOIN gde_disciplinas AS D ON (D.id_disciplina = O.id_disciplina) WHERE O.id_periodo = ? AND D.nivel = ?", array($periodo, Disciplina::NIVEL_GRAD))->fetch();
 		if($oferecimentos_grad === false)
 			return false;
 		$Dados->setOferecimentos_Grad($oferecimentos_grad['total']);
@@ -319,12 +319,12 @@ class Dado extends Base {
 			return false;
 		$Dados->setDisciplinas($disciplinas['total']);
 
-		$disciplinas_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_disciplinas WHERE nivel IN (?, ?)", array(Disciplina::NIVEL_GRAD, Disciplina::NIVEL_TEC))->fetch();
+		$disciplinas_grad = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_disciplinas WHERE nivel = ?", Disciplina::NIVEL_GRAD)->fetch();
 		if($disciplinas_grad === false)
 			return false;
 		$Dados->setDisciplinas_Grad($disciplinas_grad['total']);
 
-		$disciplinas_pos = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_disciplinas WHERE nivel IN (?, ?)", array(Disciplina::NIVEL_POS, Disciplina::NIVEL_MP))->fetch();
+		$disciplinas_pos = $connection->executeQuery("SELECT COUNT(*) AS total FROM gde_disciplinas WHERE nivel IN (?, ?)", Disciplina::$NIVEIS_POS)->fetch();
 		if($disciplinas_pos === false)
 			return false;
 		$Dados->setDisciplinas_Pos($disciplinas_pos['total']);

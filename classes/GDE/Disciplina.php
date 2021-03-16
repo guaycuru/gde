@@ -155,12 +155,10 @@ class Disciplina extends Base {
 	const NIVEL_GRAD = 'G';
 	const NIVEL_POS = 'P';
 	const NIVEL_MP = 'S';
-	const NIVEL_TEC = 'T';
-	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
+	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD);
 	public static $NIVEIS_POS = array(self::NIVEL_POS, self::NIVEL_MP);
 	private static $_niveis = array(
-		self::NIVEL_TEC => 'Tecnologia',
-		self::NIVEL_GRAD => 'Gradua&ccedil;&atilde;o',
+		self::NIVEL_GRAD => 'Gradua&ccedil;&atilde;o / Tecnologia',
 		self::NIVEL_POS => 'P&oacute;s-Gradua&ccedil;&atilde;o',
 		self::NIVEL_MP => 'Mestrado Profissional'
 	);
