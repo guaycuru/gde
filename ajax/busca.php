@@ -46,11 +46,11 @@ if($tp == 'tudo') {
 
 if($simples) {
 	$ordem = array();
-	$ordem['alunos'] = (isset($_POST['ord']['alunos_s'])) ? Aluno::$ordens_inte[$_POST['ord']['alunos_s']]." ".(($_POST['em']['alunos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['professores'] = (isset($_POST['ord']['professores_s'])) ? Professor::$ordens_inte[$_POST['ord']['professores_s']]." ".(($_POST['em']['professores_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s'])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s'])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['salas'] = (isset($_POST['ord']['salas_s'])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'S.nome ASC';
+	$ordem['alunos'] = (isset($_POST['ord']['alunos_s']) && isset(Aluno::$ordens_inte[$_POST['ord']['alunos_s']])) ? Aluno::$ordens_inte[$_POST['ord']['alunos_s']]." ".(($_POST['em']['alunos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
+	$ordem['professores'] = (isset($_POST['ord']['professores_s']) && isset(Professor::$ordens_inte[$_POST['ord']['professores_s']])) ? Professor::$ordens_inte[$_POST['ord']['professores_s']]." ".(($_POST['em']['professores_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
+	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s']) && isset(Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
+	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s']) && isset(Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
+	$ordem['salas'] = (isset($_POST['ord']['salas_s']) && isset(Sala::$ordens_inte[$_POST['ord']['salas_s']])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'S.nome ASC';
 
 	$start = microtime(true);
 	$q = Util::Limpa_Busca($q);
@@ -119,7 +119,7 @@ if($simples) {
 		if((isset($_POST['gde'])) && ($_POST['gde'] != ''))
 			$parametros['gde'] = $_POST['gde'][0];
 		
-		if(isset($_POST['ord'][$tp.'_a'])) {
+		if(isset($_POST['ord'][$tp.'_a']) && isset(Aluno::$ordens_inte[$_POST['ord'][$tp.'_a']])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
 				$_POST['ord'][$tp.'_a'] = 1;
 			$ordem[$tp] = Aluno::$ordens_inte[$_POST['ord'][$tp.'_a']]." ".(($_POST['em'][$tp.'_a'] == 1) ? 'ASC' : 'DESC');
