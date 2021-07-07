@@ -9,6 +9,7 @@
     "doctrine/orm": "^2.8",
     "doctrine/dbal": "^2.12",
     "doctrine/common": "^3.0",
+    "doctrine/cache": "^1.0",
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-gd": "*",
