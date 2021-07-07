@@ -36,7 +36,7 @@ class Dimensao extends Base {
 	/**
 	 * @var Sala
 	 *
-	 * @ORM\ManyToOne(targetEntity="Sala")
+	 * @ORM\ManyToOne(targetEntity="Sala", cascade={"persist"})
 	 * @ORM\JoinColumn(name="id_sala", referencedColumnName="id_sala")
 	 */
 	protected $sala;

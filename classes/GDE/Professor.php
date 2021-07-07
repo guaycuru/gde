@@ -58,6 +58,13 @@ class Professor extends Base {
 	protected $matricula;
 
 	/**
+	 * @var integer
+	 *
+	 * @ORM\Column(type="integer", unique=true, options={"unsigned"=true}, nullable=true)
+	 */
+	protected $matricula_dac;
+
+	/**
 	 * @var string
 	 *
 	 * @ORM\Column(type="string", nullable=false)

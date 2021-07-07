@@ -34,6 +34,13 @@ class Sala extends Base {
 	protected $nome;
 
 	/**
+	 * @var string
+	 *
+	 * @ORM\Column(type="string", length=255, nullable=true)
+	 */
+	protected $descricao;
+
+	/**
 	 * @var integer
 	 *
 	 * @ORM\Column(type="integer", options={"unsigned"=true}, nullable=true)

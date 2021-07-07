@@ -130,6 +130,7 @@ class Periodo extends Base {
 
 	const PERIODO_DESCONHECIDO = 'Desconhecido';
 	const PERIODO_DESCONHECIDO_DAC = '??????';
+	const PERIODO_FERIAS_VERAO = 0;
 
 	/**
 	 * @param null $periodo
@@ -187,6 +188,19 @@ class Periodo extends Base {
 			->setParameter(1, self::TIPO_PROXIMO)
 			->setMaxResults(1)
 			->getOneOrNullResult();
+	}
+
+	/**
+	 * @param $ano
+	 * @param $semestre
+	 * @return Periodo
+	 */
+	public static function Novo($ano, $semestre) {
+		$Novo = new self();
+		$Novo->setId_Periodo($ano.$semestre);
+		$nome = ($semestre != self::PERIODO_FERIAS_VERAO) ? $ano.' - '.$semestre.'.&ordm; Semestre' : $ano.' - F&eacute;rias de Ver&atilde;o';
+		$Novo->setNome($nome);
+		return $Novo;
 	}
 
 	// Metodo que passa no cheap check do ProxyGenerator

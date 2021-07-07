@@ -62,9 +62,20 @@ class Oferecimento extends Base {
 	/**
 	 * @var ArrayCollection|OferecimentoReserva[]
 	 *
-	 * @ORM\OneToMany(targetEntity="OferecimentoReserva", mappedBy="oferecimento", orphanRemoval=true)
+	 * @ORM\OneToMany(targetEntity="OferecimentoReserva", mappedBy="oferecimento", cascade={"persist", "remove"}, orphanRemoval=true)
 	 */
 	protected $reservas;
+
+	/**
+	 * @var ArrayCollection|Dimensao[]
+	 *
+	 * @ORM\ManyToMany(targetEntity="Dimensao", inversedBy="oferecimentos")
+	 * @ORM\JoinTable(name="gde_r_oferecimentos_dimensoes",
+	 *      joinColumns={@ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")},
+	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_dimensao", referencedColumnName="id_dimensao")}
+	 * )
+	 */
+	protected $dimensoes;
 
 	/**
 	 * @var ArrayCollection|Aluno[]
@@ -79,17 +90,6 @@ class Oferecimento extends Base {
 	 * @ORM\ManyToMany(targetEntity="Aluno", mappedBy="trancados")
 	 */
 	protected $alunos_trancados;
-
-	/**
-	 * @var ArrayCollection|Dimensao[]
-	 *
-	 * @ORM\ManyToMany(targetEntity="Dimensao", inversedBy="oferecimentos")
-	 * @ORM\JoinTable(name="gde_r_oferecimentos_dimensoes",
-	 *      joinColumns={@ORM\JoinColumn(name="id_oferecimento", referencedColumnName="id_oferecimento")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(name="id_dimensao", referencedColumnName="id_dimensao")}
-	 * )
-	 */
-	protected $dimensoes;
 
 	/**
 	 * @var string
