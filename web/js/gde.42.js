@@ -1,3 +1,5 @@
+var ID_USUARIO = null;
+
 var mensagem_comum = function(mensagem, destino) {
 	if(destino)
 		$.guaycuru.confirmacao(mensagem, destino, null);
