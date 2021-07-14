@@ -63,7 +63,7 @@ class Curso extends Base {
 	const NUMEROS_ESPECIAIS = array(0, 99);
 
 	public static $NIVEIS_GRAD = array(self::NIVEL_GRAD, self::NIVEL_TEC);
-	// Evitar de usar, pois os numeros se repetem entre mestrado e doutorado!
+	// ToDo: Nao usar, pois os numeros se repetem entre mestrado e doutorado!
 	public static $NIVEIS_POS = array(self::NIVEL_MESTRADO, self::NIVEL_DOUTORADO, self::NIVEL_PROFISSIONAL);
 
 	/**

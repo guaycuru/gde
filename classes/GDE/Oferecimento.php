@@ -35,7 +35,7 @@ class Oferecimento extends Base {
 	/**
 	 * @var Disciplina
 	 *
-	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="oferecimentos")
+	 * @ORM\ManyToOne(targetEntity="Disciplina", inversedBy="oferecimentos", cascade={"persist"})
 	 * @ORM\JoinColumn(name="id_disciplina", referencedColumnName="id_disciplina")
 	 */
 	protected $disciplina;
