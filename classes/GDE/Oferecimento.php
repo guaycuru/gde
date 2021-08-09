@@ -574,4 +574,8 @@ class Oferecimento extends Base {
 		return implode($cola, $professores);
 	}
 
+	public function Atualiza_Numero_Matriculados() {
+		$this->setMatriculados($this->alunos->count());
+	}
+
 }
