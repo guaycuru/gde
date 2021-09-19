@@ -1554,3 +1554,9 @@ div.Informacao {
 .clickable {
 	cursor: pointer;
 }
+
+@media(max-width: 1280px) {
+	#fork-me-ribbon {
+		display: none;
+	}
+}
