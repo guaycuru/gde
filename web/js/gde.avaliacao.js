@@ -23,8 +23,8 @@ var Enviar_Avaliacao = function(link, idp, professor, disciplina) {
 		disciplina = '';
 	link.hide();
 	link.after('<span id="votando_aguarde_'+idp+'_'+professor+((disciplina)?"_"+disciplina:"")+'">Aguarde...</span>');
-	$.post(CONFIG_URL + 'ajax/avaliacao.php', {idp: idp, professor: professor, disciplina: disciplina, nota: $("#nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).slider("value")}, function(data) {
-		if(data == 1) {
+	$.post(CONFIG_URL + 'ajax/avaliacao.php', {idp: idp, professor: professor, disciplina: disciplina, nota: $("#nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).slider("value")}, function(res) {
+		if(res && res.ok) {
 			$("#votar_nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).before("Voto salvo com sucesso!");
 			$("#votar_nota_"+idp+"_"+professor+((disciplina)?"_"+disciplina:"")).remove();
 		} else {

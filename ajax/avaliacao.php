@@ -2,9 +2,7 @@
 
 namespace GDE;
 
-define('NO_CACHE', true);
-define('NO_HTML', true);
-define('NO_REDIRECT', true);
+define('JSON', true);
 
 require_once('../common/common.inc.php');
 
@@ -23,5 +21,8 @@ if(isset($_POST['idp'])) {
 		$Resposta->setDisciplina($Disciplina);
 	$Resposta->setResposta(intval($_POST['nota']));
 	$Resposta->setData();
-	echo ($Resposta->Save(true) !== false) ? '1' : '0';
+	if($Resposta->Save(true) !== false)
+		Base::OK_JSON();
+	else
+		Base::Error_JSON('Não foi possível salvar a avaliação.');
 }
