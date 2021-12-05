@@ -119,11 +119,7 @@ if($_tipo == 'A') {
 	<tr>
 		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>imprimir-horario/?ra=<?= $Aluno->getRA(true); ?>&p=<?= $Periodo_Selecionado->getID(true); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Visualizar Para Impress&atilde;o</a></td>
 	</tr>
-<?php if($meu) { ?>
-	<tr>
-		<td colspan="7" align="center" style="padding: 10px;"><a href="#" onclick="window.open('<?= CONFIG_URL; ?>google-calendar/?ra=<?= $Aluno->getRA(true); ?>&p=<?= $Periodo_Selecionado->getID(true); ?>&n=<?= $nivel; ?>', '_blank', 'width=700, height=550, scrollbars=yes'); return false;">Adicionar ao Google Calendar</a></td>
-	</tr>
-<?php } } if($_tipo == 'P') { ?>
+<?php } if($_tipo == 'P') { ?>
 	<tr>
 		<td colspan="2" style="padding: 10px 5px;"><strong>Oferecimentos:</strong></td>
 		<td colspan="5" style="padding: 10px 5px;"><?= $Professor->getOferecimentos($Periodo_Selecionado, $nivel, true); ?></td>

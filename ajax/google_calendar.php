@@ -2,6 +2,9 @@
 
 namespace GDE;
 
+// Desativado
+exit;
+
 define('NO_CACHE', true);
 define('NO_HTML', true);
 define('NO_REDIRECT', true);
