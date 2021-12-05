@@ -15,24 +15,22 @@ $Amigos = $_Usuario->Amigos(true);
 	// <![CDATA[
 	var remover_amigo = function(id) {
 		$.guaycuru.simnao("Tem certeza que deseja remover este Usu&aacute;rio da sua lista de Amigos?", function() {
-			$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'r'}, function(data) {
-				if(data == '1') {
+			$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'r'}, function(res) {
+				if(res && res.ok) {
 					$.guaycuru.confirmacao("Usu&aacute;rio n&atilde;o est&aacute; mais na sua lista de amigos!", null);
 					history.go(0);
-				}
-				else if(data == '2')
+				} else
 					$.guaycuru.confirmacao("N&atilde;o foi poss&iacute;vel remover o usu&aacute;rio da sua lista de amigos.");
 			});
 		}, {});
 	};
 
 	var autorizar_amigo = function(id) {
-		$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'h'}, function(data) {
-			if(data == '1') {
+		$.post(CONFIG_URL + 'ajax/amigo.php', {i: id, tipo: 'h'}, function(res) {
+			if(res && res.ok) {
 				$.guaycuru.confirmacao("O Pedido de Amizade foi aceito com sucesso!");
 				history.go(0);
-			}
-			else if(data == '2')
+			} else
 				$.guaycuru.confirmacao("N&atilde;o foi poss&iacute;vel aceitar o Pedido de Amizade.");
 		});
 	};

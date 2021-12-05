@@ -19,7 +19,7 @@ jQuery.guaycuru = {
 	*          time : time to wait before redirecting to url or false to never
 	* @return jQ
 	*/
-	confirmacao: function(msg, url, options) {
+	confirmacao: function(msg, url = null, options = null) {
 		
 		var settings = jQuery.extend({
 			fromIframe: true,
