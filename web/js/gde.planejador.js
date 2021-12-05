@@ -66,6 +66,10 @@ var PlanejadorProcessarPlanejado = function(Planejado) {
 	periodo_atual = Planejado.periodo_atual;
 	$("#planejador_periodo").html(Planejado.periodo_nome);
 	$("#planejador_periodo_atual").html(Planejado.periodo_atual_nome);
+	if(Planejado.data_matricula_inicio && Planejado.data_matricula_fim)
+		$("#planejador_periodo_datas_matricula").html(Planejado.data_matricula_inicio + ' - ' + Planejado.data_matricula_fim);
+	if(Planejado.data_alteracao_inicio && Planejado.data_alteracao_fim)
+		$("#planejador_periodo_datas_alteracao").html(Planejado.data_alteracao_inicio + ' - ' + Planejado.data_alteracao_fim);
 	$("#compartilhado_"+Planejado.compartilhado).attr('checked', true);
 	$("#simulado_"+Planejado.simulado).attr('checked', true);
 	$("#form_planejador_configurar > input.configurar_eliminada").remove();

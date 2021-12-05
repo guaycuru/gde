@@ -76,9 +76,15 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 	<table>
 		<tr>
 			<td width="20%"><b>Per&iacute;odo Planejado:</b></td>
-			<td width="30%"><span id="planejador_periodo">X</span></td>
+			<td width="30%"><span id="planejador_periodo">?</span></td>
 			<td width="20%"><b>Per&iacute;odo Atual:</b></td>
-			<td width="30%"><span id="planejador_periodo_atual">X</span></td>
+			<td width="30%"><span id="planejador_periodo_atual">?</span></td>
+		</tr>
+		<tr>
+			<td width="20%"><b>Per&iacute;odo de Matr&iacute;cula:</b></td>
+			<td width="30%"><span id="planejador_periodo_datas_matricula">?</span></td>
+			<td width="20%"><b>Per&iacute;odo de Altera&ccedil;&atilde;o:</b></td>
+			<td width="30%"><span id="planejador_periodo_datas_alteracao">?</span></td>
 		</tr>
 		<tr>
 			<td width="20%"><b>CP:</b></td>
