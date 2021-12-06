@@ -226,12 +226,12 @@ if($_POST['a'] == 'n') { // Nova Opcao
 			$Ret['Planejado'] = array(
 				'periodo' => $Planejado->getPeriodo()->getID(),
 				'periodo_nome' => $Planejado->getPeriodo()->getNome(),
+				'data_matricula_inicio' => $Planejado->getPeriodo()->getData_Matricula_Inicio('d/m/Y'),
+				'data_matricula_fim' => $Planejado->getPeriodo()->getData_Matricula_Fim('d/m/Y'),
+				'data_alteracao_inicio' => $Planejado->getPeriodo()->getData_Alteracao_Inicio('d/m/Y'),
+				'data_alteracao_fim' => $Planejado->getPeriodo()->getData_Alteracao_Fim('d/m/Y'),
 				'periodo_atual' => $Planejado->getPeriodo_Atual()->getID(),
 				'periodo_atual_nome' => $Planejado->getPeriodo_Atual()->getNome(),
-				'data_matricula_inicio' => $Planejado->getPeriodo_Atual()->getData_Matricula_Inicio('d/m/Y'),
-				'data_matricula_fim' => $Planejado->getPeriodo_Atual()->getData_Matricula_Fim('d/m/Y'),
-				'data_alteracao_inicio' => $Planejado->getPeriodo_Atual()->getData_Alteracao_Inicio('d/m/Y'),
-				'data_alteracao_fim' => $Planejado->getPeriodo_Atual()->getData_Alteracao_Fim('d/m/Y'),
 				'compartilhado' => ($Planejado->getCompartilhado()) ? 't' : 'f',
 				'simulado' => ($Planejado->getSimulado()) ? 't' : 'f',
 				'Config' => $Config
