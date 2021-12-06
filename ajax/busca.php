@@ -74,7 +74,7 @@ if($simples) {
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != ''))
 			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
 			
-		if((isset($_POST['curso'])) && ($_POST['curso'] != '-1'))
+		if((isset($_POST['curso'])) && ($_POST['curso'] != '-1') && ($_POST['curso'] != '0'))
 			$parametros['curso'] = intval($_POST['curso']);
 			
 		if((isset($_POST['modalidade'])) && ($_POST['modalidade'] != ''))
@@ -83,7 +83,7 @@ if($simples) {
 		if((isset($_POST['nivel_pos'])) && ($_POST['nivel_pos'] != ''))
 			$parametros['nivel_pos'] = trim(Util::Limpa_Busca($_POST['nivel_pos']));
 			
-		if((isset($_POST['curso_pos'])) && ($_POST['curso_pos'] != '-1'))
+		if((isset($_POST['curso_pos'])) && ($_POST['curso_pos'] != '-1')&& ($_POST['curso_pos'] != '0'))
 			$parametros['curso_pos'] = intval($_POST['curso_pos']);
 			
 		if((isset($_POST['modalidade_pos'])) && ($_POST['modalidade_pos'] != ''))
