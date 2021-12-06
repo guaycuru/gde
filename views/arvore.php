@@ -2,39 +2,6 @@
 
 namespace GDE;
 
-// Dados para iframe de catalogos / ementas
-if(isset($_GET['e'])) {
-	function TrazDoCache($params) {
-		if(($params[0] != 'catalogos') && ($params[0] != 'ementas'))
-			return false;
-		$arquivo = '../cache/'.$params[0].'/'.intval($params[1]).'/'.str_replace(array('.', '/', '\\'), null, $params[2]).'.html';
-		if(file_exists($arquivo) === false)
-			return "Curso / Modalidade inexistentes no cat&aacute;logo selecionado...";
-		$conteudo = file_get_contents($arquivo);
-		if($params[0] != 3)
-			return preg_replace(array('/\.\.\/ementas\/todas(\w{1,2})\.html/i', '/\.\.\/images\//i'), array(CONFIG_URL."arvore/?e=3&ct=".$params[1]."&sg=$1", CONFIG_URL."web/images/dac_"), $conteudo);
-		else
-			return $conteudo;
-	}
-
-	define("NO_HTML", true);
-	require_once('../common/common.inc.php');
-
-	$catalogo = intval($_GET['ct']);
-	if($catalogo < 2012)
-		$curso = isset($_GET['cr']) ? sprintf("%02d", intval($_GET['cr'])) : null;
-	else
-		$curso = isset($_GET['cr']) ? intval($_GET['cr']) : null;
-	$sigla = isset($_GET['sg']) ? $_GET['sg'] : null;
-	if($_GET['e'] == 1)
-		echo ($catalogo < 2012) ? TrazDoCache(array('catalogos', $catalogo, 'cpl'.$curso)) : TrazDoCache(array('catalogos', $catalogo, 'cp'.$curso));
-	elseif($_GET['e'] == 2)
-		echo TrazDoCache(array('catalogos', $catalogo, 'sug'.$curso));
-	else
-		echo TrazDoCache(array('ementas', $catalogo, 'todas'.$sigla));
-	exit();
-}
-
 define('TITULO', '&Aacute;rvore');
 require_once('../common/common.inc.php');
 
@@ -195,8 +162,6 @@ if($continua) {
 			</tr>
 		</table>
 	</form>
-	<br />
-	<a class="iframe" href="<?= CONFIG_URL; ?>arvore/?e=1&amp;cr=<?= $curso; ?>&amp;ct=<?= $catalogo; ?>">Curr&iacute;culo Pleno</a> | <a class="iframe" href="<?= CONFIG_URL; ?>arvore/?e=2&amp;cr=<?= $curso; ?>&amp;ct=<?= $catalogo; ?>">Sugest&otilde;es de Curr&iacute;culo</a>
 	<br /><br />
 <?php } else { ?>
 	<table cellpadding="1" cellspacing="0" border="0" width="90%">
