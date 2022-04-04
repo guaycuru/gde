@@ -126,7 +126,7 @@ class Cardapio extends Base {
 		$query->setParameter(2, $tipo);
 		$query->setMaxResults(1);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		try {
 			return $query->getSingleResult();
 		} catch(\Doctrine\ORM\NoResultException $e) {
@@ -176,7 +176,7 @@ class Cardapio extends Base {
 		$query->setParameter(1, $inicio);
 		$query->setParameter(2, $fim);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -188,7 +188,7 @@ class Cardapio extends Base {
 		$dql = "SELECT MAX(C.id_cardapio) FROM GDE\\Cardapio C";
 		$query = self::_EM()->createQuery($dql);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		try {
 			return $query->getSingleScalarResult();
 		} catch(\Doctrine\ORM\NoResultException $e) {

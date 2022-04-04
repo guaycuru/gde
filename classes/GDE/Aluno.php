@@ -318,7 +318,7 @@ class Aluno extends Base {
 			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 
@@ -335,7 +335,7 @@ class Aluno extends Base {
 		if($start > -1)
 			$query->setFirstResult($start);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -417,7 +417,7 @@ class Aluno extends Base {
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 
@@ -426,7 +426,7 @@ class Aluno extends Base {
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

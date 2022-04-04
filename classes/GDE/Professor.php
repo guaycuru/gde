@@ -191,7 +191,7 @@ class Professor extends Base {
 			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 		$dql = "SELECT DISTINCT P FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
@@ -203,7 +203,7 @@ class Professor extends Base {
 		if($start > -1)
 			$query->setFirstResult($start);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -264,7 +264,7 @@ class Professor extends Base {
 			$queryt = self::_EM()->createNativeQuery($sqlt, $rsmt);
 			$queryt->setParameter('q', $q);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-				$queryt->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 
@@ -273,7 +273,7 @@ class Professor extends Base {
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 

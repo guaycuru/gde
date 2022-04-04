@@ -108,7 +108,7 @@ class Curriculo extends Base {
 		$dql .= 'ORDER BY C.semestre ASC';
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return $query->getResult();
 	}
 
@@ -140,7 +140,7 @@ class Curriculo extends Base {
 		if($modalidade != null)
 			$query->setParameter(3, $modalidade);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->useResultCache(true, CONFIG_RESULT_CACHE_TTL);
+			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 		return ($query->getSingleScalarResult() > 0);
 	}
 
