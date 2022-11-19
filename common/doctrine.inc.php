@@ -1,10 +1,7 @@
 <?php
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Configuration;
-use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\ChainCache;
@@ -12,9 +9,7 @@ use Doctrine\Common\Cache\PredisCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\ORM\ORMSetup;
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -72,46 +67,19 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (clas
 $_cache = new ChainCache($availableCaches);
 unset($arrayCache, $redisCache, $availableCaches);
 
-// Load Annotation Registry
-AnnotationRegistry::registerLoader('class_exists');
-
-// Create standard annotation reader
-$reader = new AnnotationReader;
-
-// Create the cached annotation reader
-$cachedAnnotationReader = new CachedReader(
-	$reader, // use reader
-	$_cache // and a cache driver
-);
-unset($reader);
-
-// Now we want to register our application entities, for that we need another metadata driver used for Entity namespace
-$annotationDriver = new AnnotationDriver(
-	$cachedAnnotationReader, // our cached annotation reader
-	array(__DIR__.'/../classes') // paths to look in
-);
-
-// Create a driver chain for metadata reading
-$driver = new MappingDriverChain();
-
-// Register annotation driver for our application Entity namespace
-$driver->addDriver($annotationDriver, $_namespace);
-unset($annotationDriver);
-unset($cachedAnnotationReader);
-
 // Create the configuration, set the Metadata and Query caches and the Proxy dir
-$config = new Configuration();
-$config->setMetadataCacheImpl($_cache);
-$config->setMetadataDriverImpl($driver);
-$config->setQueryCacheImpl($_cache);
-$config->setProxyDir(__DIR__.'/../proxies');
+$modelsDir = array(__DIR__.'/../classes');
+$proxyDir = __DIR__.'/../proxies';
+$config = ORMSetup::createAnnotationMetadataConfiguration($modelsDir, CONFIG_DEV_MODE, $proxyDir);
 $config->setProxyNamespace('Proxies');
+$config->setMetadataCacheImpl($_cache);
+$config->setQueryCacheImpl($_cache);
 if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && ($resultCache !== null)) {
 	$config->setResultCacheImpl($resultCache);
 	define('RESULT_CACHE_AVAILABLE', true);
 } else
 	define('RESULT_CACHE_AVAILABLE', false);
-unset($resultCache);
+unset($modelsDir, $proxyDir, $resultCache);
 
 // Set the appropriated Proxy auto-generating method
 if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === true))
