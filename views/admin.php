@@ -67,5 +67,4 @@ $(document).ready(function() {
 </table>
 <br /><br />Erros: <a href="<?= CONFIG_URL; ?>admin-erros/" target="_blank"><?= $erros; ?></a>
 <br /><br />Result cache dispon&iacute;vel: <?= (RESULT_CACHE_AVAILABLE) ? 'Sim' : 'N&atilde;o'; ?>
-<br /><br />Caches em uso: <pre><?= print_r($_cache->getStats(), true); ?></pre>
 <?= $FIM; ?>
