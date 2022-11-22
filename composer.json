@@ -17,7 +17,6 @@
     "ext-gd": "*",
     "ext-json": "*",
     "ext-pdo": "*",
-    "predis/predis": "^2.0.3",
     "ircmaxell/password-compat": "^1.0",
     "google/apiclient": "^2.0"
   },

@@ -14,11 +14,6 @@ define('CONFIG_DB_NAME', 'gde');
 define('CONFIG_FTS_ENABLED', false);
 define('CONFIG_DB_LOGGER', false);
 
-// APCu (cache)
-define('CONFIG_APCU_ENABLED', false);
-
-// Redis (cache) com a biblioteca PRedis
-define('CONFIG_PREDIS_ENABLED', false);
 // Redis (cache) com a extensao php_redis
 define('CONFIG_REDIS_ENABLED', false);
 define('CONFIG_REDIS_HOST', '127.0.0.1');
