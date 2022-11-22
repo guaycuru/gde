@@ -2,14 +2,12 @@
 
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
-use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\ChainCache;
-use Doctrine\Common\Cache\PredisCache;
-use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\ORM\ORMSetup;
+use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -26,39 +24,19 @@ $_namespace = 'GDE';
 // Initialize the caching mechanism
 $availableCaches = array(new ArrayCache());
 
-if((defined('CONFIG_APCU_ENABLED')) && (CONFIG_APCU_ENABLED === true) && (function_exists('apcu_fetch'))) {
-	// Initialize the APCu caching mechanism
-	$availableCaches[] = new ApcuCache();
-}
-
 // Initialize the Redis caching mechanism
 $resultCache = null;
+$metadataCache = null;
 if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (class_exists('\Redis', false))) {
 	try {
 		$redis = new \Redis();
 		$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
-		$redisCache = new RedisCache();
-		$redisCache->setRedis($redis);
+		$redisCache = new RedisAdapter($redis);
 		$availableCaches[] = $redisCache;
 		$resultCache = $redisCache;
+		$metadataCache = $redisCache;
 		unset($redis);
 	} catch(\Exception $e) {
-		// Nao foi possivel conectar ao REDIS
-	}
-} elseif((defined('CONFIG_PREDIS_ENABLED')) && (CONFIG_PREDIS_ENABLED === true)) {
-	// Initialize the PRedis caching mechanism, only if Redis is not already initialized
-	try {
-		$redis = new \Predis\Client(array(
-			'scheme' => 'tcp',
-			'host' => CONFIG_REDIS_HOST,
-			'port' => CONFIG_REDIS_PORT
-		));
-		$redis->connect();
-		$redisCache = new PredisCache($redis);
-		$availableCaches[] = $redisCache;
-		$resultCache = $redisCache;
-		unset($redis);
-	} catch(\Predis\Connection\ConnectionException $e) {
 		// Nao foi possivel conectar ao REDIS
 	}
 }
@@ -70,12 +48,10 @@ unset($arrayCache, $redisCache, $availableCaches);
 // Create the configuration, set the Metadata and Query caches and the Proxy dir
 $modelsDir = array(__DIR__.'/../classes');
 $proxyDir = __DIR__.'/../proxies';
-$config = ORMSetup::createAnnotationMetadataConfiguration($modelsDir, CONFIG_DEV_MODE, $proxyDir);
+$config = ORMSetup::createAnnotationMetadataConfiguration($modelsDir, CONFIG_DEV_MODE, $proxyDir, $metadataCache);
 $config->setProxyNamespace('Proxies');
-$config->setMetadataCacheImpl($_cache);
-$config->setQueryCacheImpl($_cache);
 if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && ($resultCache !== null)) {
-	$config->setResultCacheImpl($resultCache);
+	$config->setResultCache($resultCache);
 	define('RESULT_CACHE_AVAILABLE', true);
 } else
 	define('RESULT_CACHE_AVAILABLE', false);
