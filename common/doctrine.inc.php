@@ -1,12 +1,10 @@
 <?php
 
-use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\ORM\EntityManager;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\ChainCache;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\ORM\ORMSetup;
+use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 // Composer Autoload
@@ -21,20 +19,17 @@ require_once(__DIR__.'/exceptions.inc.php');
 // Default namespace
 $_namespace = 'GDE';
 
-// Initialize the caching mechanism
-$availableCaches = array(new ArrayCache());
-
 // Initialize the Redis caching mechanism
 $resultCache = null;
 $metadataCache = null;
+$queryCache = null;
 if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (class_exists('\Redis', false))) {
 	try {
 		$redis = new \Redis();
 		$redis->connect(CONFIG_REDIS_HOST, CONFIG_REDIS_PORT);
-		$redisCache = new RedisAdapter($redis);
-		$availableCaches[] = $redisCache;
-		$resultCache = $redisCache;
-		$metadataCache = $redisCache;
+		$metadataCache = new RedisAdapter($redis, 'doctrine_metadata');
+		$queryCache = new RedisAdapter($redis, 'doctrine_queries');
+		$resultCache = new RedisAdapter($redis, 'doctrine_results');
 		unset($redis);
 	} catch(\Exception $e) {
 		// Nao foi possivel conectar ao REDIS
@@ -49,6 +44,10 @@ unset($arrayCache, $redisCache, $availableCaches);
 $modelsDir = array(__DIR__.'/../classes');
 $proxyDir = __DIR__.'/../proxies';
 $config = ORMSetup::createAnnotationMetadataConfiguration($modelsDir, CONFIG_DEV_MODE, $proxyDir, $metadataCache);
+unset($metadataCache);
+if($queryCache !== null)
+	$config->setQueryCache($queryCache);
+unset($queryCache);
 $config->setProxyNamespace('Proxies');
 if((defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && ($resultCache !== null)) {
 	$config->setResultCache($resultCache);
