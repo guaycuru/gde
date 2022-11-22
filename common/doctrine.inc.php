@@ -51,7 +51,7 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (clas
 		$redis = new \Predis\Client(array(
 			'scheme' => 'tcp',
 			'host' => CONFIG_REDIS_HOST,
-			'port' => CONFIG_REDIS_PORT,
+			'port' => CONFIG_REDIS_PORT
 		));
 		$redis->connect();
 		$redisCache = new PredisCache($redis);
