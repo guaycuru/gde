@@ -36,10 +36,6 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (clas
 	}
 }
 
-// Add all available caches to the cache chain
-$_cache = new ChainCache($availableCaches);
-unset($arrayCache, $redisCache, $availableCaches);
-
 // Create the configuration, set the Metadata and Query caches and the Proxy dir
 $modelsDir = array(__DIR__.'/../classes');
 $proxyDir = __DIR__.'/../proxies';
