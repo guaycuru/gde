@@ -5,7 +5,7 @@
     }
   },
   "require": {
-    "php": "^7.4",
+    "php": ">7.4",
     "doctrine/annotations": "~1.13.3",
     "doctrine/orm": "~2.13.3",
     "doctrine/dbal": "~2.13.9",
