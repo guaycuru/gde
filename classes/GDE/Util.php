@@ -62,6 +62,11 @@ class Util {
 		return implode(" ", $words);
 	}
 
+	public static function String_FTS($entrada) {
+		$limpo = str_replace(array('+', '-'), '', $entrada);
+		return preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $limpo);
+	}
+
 	public static function Horarios_Livres($Horario) {
 		$limpos = array();
 		for($j = 7; $j < 23; $j++) {

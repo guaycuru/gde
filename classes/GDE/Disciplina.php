@@ -359,7 +359,7 @@ class Disciplina extends Base {
 					$sql .= " LIMIT ".$limit;
 			}
 		} else {
-			$q = preg_replace('/(\p{L}{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $q);
+			$q = Util::String_FTS($q);
 			if($ordem == null)
 				$ordem = 'rank DESC';
 			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {

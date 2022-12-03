@@ -386,7 +386,7 @@ class Aluno extends Base {
 				$sqlt = "SELECT COUNT(*) AS `total` FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q";
 			$sql = "SELECT A.*".$extra_select." FROM `gde_alunos` AS A WHERE A.`nome` LIKE :q ORDER BY ".$ordem." LIMIT ".$start.",".$limit;
 		} else {
-			$q = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/', '+$1*', $q);
+			$q = Util::String_FTS($q);
 			if($ordem == null)
 				$ordem = 'rank DESC';
 			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
