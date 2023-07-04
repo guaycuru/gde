@@ -29,7 +29,6 @@ class Periodo extends Base {
 
 	const TIPO_NORMAL = 'n';
 	const TIPO_ATUAL = 'a';
-	const TIPO_PROXIMO = 'p';
 	/**
 	 * @var string
 	 *
@@ -171,21 +170,6 @@ class Periodo extends Base {
 	public static function getAtual() {
 		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1')
 			->setParameter(1, self::TIPO_ATUAL)
-			->setMaxResults(1)
-			->getOneOrNullResult();
-	}
-
-	/**
-	 * getProximo
-	 *
-	 * Retorna o proximo periodo
-	 *
-	 * @return self
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
-	public static function getProximo() {
-		return self::_EM()->createQuery('SELECT P FROM '.get_class().' P WHERE P.tipo = ?1 ORDER BY P.id_periodo ASC')
-			->setParameter(1, self::TIPO_PROXIMO)
 			->setMaxResults(1)
 			->getOneOrNullResult();
 	}
