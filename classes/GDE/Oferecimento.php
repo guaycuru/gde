@@ -276,8 +276,8 @@ class Oferecimento extends Base {
 		$start = intval($start);
 		if((preg_match('/^[a-z ]{2}\d{3}$/i', $q) > 0) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
 			$extra_join = "";
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
-				$ordem = ($ordem != 'rank DESC')
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC') {
+				$ordem = ($ordem != '`rank` DESC')
 					? 'O.`id_periodo` ASC, DI.`sigla` DESC, O.`turma` DESC'
 					: 'O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC';
 			} elseif($ordem == "P.nome ASC" || $ordem == "P.nome DESC")
@@ -299,8 +299,8 @@ class Oferecimento extends Base {
 			}
 			$q = $q . '%';
 		} elseif(CONFIG_FTS_ENABLED === false) {
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
-				$ordem = ($ordem != 'rank DESC')
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC') {
+				$ordem = ($ordem != '`rank` DESC')
 					? 'O.`id_periodo` ASC, DI.`sigla` DESC, O.`turma` DESC'
 					: 'O.`id_periodo` DESC, DI.`sigla` ASC, O.`turma` ASC';
 			} elseif(($ordem == "DI.sigla ASC") || ($ordem == "DI.sigla DESC")) {
@@ -320,8 +320,8 @@ class Oferecimento extends Base {
 			$q = '%' . str_replace(' ', '%', $q) . '%';
 		} else {
 			$q = Util::String_FTS($q);
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC') {
-				$ordem = ($ordem != 'rank DESC')
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC') {
+				$ordem = ($ordem != '`rank` DESC')
 					? "`rank` ASC, O.id_periodo ASC, O.`sigla` DESC, O.`turma` DESC"
 					: "`rank` DESC, O.`id_periodo` DESC, O.`sigla` ASC, O.`turma` ASC";
 				$extra_select1 = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`, DI.`sigla` AS `sigla`";

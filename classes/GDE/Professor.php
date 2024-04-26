@@ -221,8 +221,8 @@ class Professor extends Base {
 		$limit = intval($limit);
 		$start = intval($start);
 		if((CONFIG_FTS_ENABLED === false) || (strlen($q) < CONFIG_FT_MIN_LENGTH)) {
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem == 'rank DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC')
+				$ordem = ($ordem == '`rank` DESC') ? 'P.`nome` ASC' : 'P.`nome` DESC';
 			if(CONFIG_FTS_ENABLED === false)
 				$q = '%'.$q.'%';
 			if($total !== null)
@@ -238,10 +238,10 @@ class Professor extends Base {
 		} else {
 			$q = Util::String_FTS($q);
 			if($ordem == null)
-				$ordem = 'rank DESC';
-			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$ordem = '`rank` DESC';
+			if($ordem == '`rank` ASC' || $ordem == '`rank` DESC') {
 				$extra_select = ", MATCH(P.`nome`) AGAINST(:q) AS `rank`";
-				if($ordem == 'rank ASC')
+				if($ordem == '`rank` ASC')
 					$ordem = '`rank` ASC, P.`nome` DESC';
 				else
 					$ordem = '`rank` DESC, P.`nome` ASC';

@@ -46,10 +46,10 @@ if($tp == 'tudo') {
 
 if($simples) {
 	$ordem = array();
-	$ordem['alunos'] = (isset($_POST['ord']['alunos_s']) && isset(Aluno::$ordens_inte[$_POST['ord']['alunos_s']])) ? Aluno::$ordens_inte[$_POST['ord']['alunos_s']]." ".(($_POST['em']['alunos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['professores'] = (isset($_POST['ord']['professores_s']) && isset(Professor::$ordens_inte[$_POST['ord']['professores_s']])) ? Professor::$ordens_inte[$_POST['ord']['professores_s']]." ".(($_POST['em']['professores_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s']) && isset(Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
-	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s']) && isset(Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : 'rank DESC';
+	$ordem['alunos'] = (isset($_POST['ord']['alunos_s']) && isset(Aluno::$ordens_inte[$_POST['ord']['alunos_s']])) ? Aluno::$ordens_inte[$_POST['ord']['alunos_s']]." ".(($_POST['em']['alunos_s'] == 1) ? 'ASC' : 'DESC') : '`rank` DESC';
+	$ordem['professores'] = (isset($_POST['ord']['professores_s']) && isset(Professor::$ordens_inte[$_POST['ord']['professores_s']])) ? Professor::$ordens_inte[$_POST['ord']['professores_s']]." ".(($_POST['em']['professores_s'] == 1) ? 'ASC' : 'DESC') : '`rank` DESC';
+	$ordem['disciplinas'] = (isset($_POST['ord']['disciplinas_s']) && isset(Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']])) ? Disciplina::$ordens_inte[$_POST['ord']['disciplinas_s']]." ".(($_POST['em']['disciplinas_s'] == 1) ? 'ASC' : 'DESC') : '`rank` DESC';
+	$ordem['oferecimentos'] = (isset($_POST['ord']['oferecimentos_s']) && isset(Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']])) ? Oferecimento::$ordens_inte[$_POST['ord']['oferecimentos_s']]." ".(($_POST['em']['oferecimentos_s'] == 1) ? 'ASC' : 'DESC') : '`rank` DESC';
 	$ordem['salas'] = (isset($_POST['ord']['salas_s']) && isset(Sala::$ordens_inte[$_POST['ord']['salas_s']])) ? Sala::$ordens_inte[$_POST['ord']['salas_s']]." ".(($_POST['em']['salas_s'] == 1) ? 'ASC' : 'DESC') : 'S.nome ASC';
 
 	$start = microtime(true);
@@ -62,36 +62,36 @@ if($simples) {
 	$tempo = number_format(microtime(true) - $start, 3, ',', '.');
 } else {
 	$parametros = array();
-	
+
 	if($tp == 'alunos') {
-	
+
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
 			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
-			
+
 		if((isset($_POST['ra'])) && ($_POST['ra'] != ''))
 			$parametros['ra'] = intval($_POST['ra']);
-			
+
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != ''))
 			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
-			
+
 		if((isset($_POST['curso'])) && ($_POST['curso'] != '-1') && ($_POST['curso'] != '0'))
 			$parametros['curso'] = intval($_POST['curso']);
-			
+
 		if((isset($_POST['modalidade'])) && ($_POST['modalidade'] != ''))
 			$parametros['modalidade'] = trim(Util::Limpa_Busca($_POST['modalidade']));
-		
+
 		if((isset($_POST['nivel_pos'])) && ($_POST['nivel_pos'] != ''))
 			$parametros['nivel_pos'] = trim(Util::Limpa_Busca($_POST['nivel_pos']));
-			
+
 		if((isset($_POST['curso_pos'])) && ($_POST['curso_pos'] != '-1')&& ($_POST['curso_pos'] != '0'))
 			$parametros['curso_pos'] = intval($_POST['curso_pos']);
-			
+
 		if((isset($_POST['modalidade_pos'])) && ($_POST['modalidade_pos'] != ''))
 			$parametros['modalidade_pos'] = trim(Util::Limpa_Busca($_POST['modalidade_pos']));
-		
+
 		if((isset($_POST['id_oferecimento'])) && ($_POST['id_oferecimento'] > 0))
 			$parametros['id_oferecimento'] = intval($_POST['id_oferecimento']);
-		
+
 		if((isset($_POST['cursando_tipo'])) && (isset($_POST['cursando_sigla'])) && (isset($_POST['cursando_turma']))) {
 			$parametros['oferecimentos'][0] = ($_POST['cursando_tipo'] == 'E');
 			$parametros['oferecimentos'][1] = array();
@@ -100,121 +100,121 @@ if($simples) {
 					$parametros['oferecimentos'][1][] = array(Util::Limpa_Busca($sigla), Util::Limpa_Busca($_POST['cursando_turma'][$k]));
 			}
 		}
-		
+
 		if(isset($_POST['periodo']))
 			$parametros['periodo'] = intval($_POST['periodo']);
-		
+
 		if((isset($_POST['sexo'])) && ($_POST['sexo'] != ''))
 			$parametros['sexo'] = $_POST['sexo'][0];
-		
+
 		if((isset($_POST['relacionamento'])) && (intval($_POST['relacionamento']) != 0))
 			$parametros['relacionamento'] = intval($_POST['relacionamento']);
-		
+
 		if((isset($_POST['cidade'])) && ($_POST['cidade'] != ''))
 			$parametros['cidade'] = trim(Util::Limpa_Busca($_POST['cidade']));
-		
+
 		if((isset($_POST['estado'])) && ($_POST['estado'] != ''))
 			$parametros['estado'] = trim(Util::Limpa_Busca($_POST['estado']));
-		
+
 		if((isset($_POST['gde'])) && ($_POST['gde'] != ''))
 			$parametros['gde'] = $_POST['gde'][0];
-		
+
 		if(isset($_POST['ord'][$tp.'_a']) && isset(Aluno::$ordens_inte[$_POST['ord'][$tp.'_a']])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
 				$_POST['ord'][$tp.'_a'] = 1;
 			$ordem[$tp] = Aluno::$ordens_inte[$_POST['ord'][$tp.'_a']]." ".(($_POST['em'][$tp.'_a'] == 1) ? 'ASC' : 'DESC');
 		} else
 			$ordem[$tp] = null;
-		
+
 		if((isset($_POST['amigos'])) && ($_POST['amigos'] == 't')) {
 			$parametros['amigos'] = true;
 			$parametros['id_usuario'] = $_Usuario->getID();
 		}
-		
+
 		$start = microtime(true);
 		$Alunos = Aluno::Consultar($parametros, $ordem[$tp], $total[$tp], $qts[$tp], $sta[$tp]);
 		$tempo = number_format(microtime(true) - $start, 3, ',', '.');
-		
+
 	} elseif($tp == 'disciplinas') {
-	
+
 		if((isset($_POST['sigla'])) && ($_POST['sigla'] != ''))
 			$parametros['sigla'] = trim(Util::Limpa_Busca($_POST['sigla']));
-			
+
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
 			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
-			
+
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != '0'))
 			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
-			
+
 		if((isset($_POST['instituto'])) && ($_POST['instituto'] != '0'))
 			$parametros['instituto'] = intval($_POST['instituto']);
-		
+
 		if((isset($_POST['creditos'])) && ($_POST['creditos'] != ''))
 			$parametros['creditos'] = intval($_POST['creditos']);
-		
+
 		if((isset($_POST['periodicidade'])) && ($_POST['periodicidade'] != ''))
 			$parametros['periodicidade'] = intval($_POST['periodicidade']);
-			
+
 		if((isset($_POST['ementa'])) && ($_POST['ementa'] != ''))
 			$parametros['ementa'] = trim(Util::Limpa_Busca($_POST['ementa']));
-		
+
 		if(isset($_POST['ord'][$tp.'_a'])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
 				$_POST['ord'][$tp.'_a'] = 1;
 			$ordem[$tp] = Disciplina::$ordens_inte[$_POST['ord'][$tp.'_a']]." ".(($_POST['em'][$tp.'_a'] == 1) ? 'ASC' : 'DESC');
 		} else
 			$ordem[$tp] = null;
-		
+
 		$start = microtime(true);
 		$Disciplinas = Disciplina::Consultar($parametros, $ordem[$tp], $total[$tp], $qts[$tp], $sta[$tp]);
 		$tempo = number_format(microtime(true) - $start, 3, ',', '.');
-		
+
 	} elseif($tp == 'oferecimentos') {
-	
+
 		if((isset($_POST['periodo'])) && ($_POST['periodo'] != 0))
 			$parametros['periodo'] = intval($_POST['periodo']);
-		
+
 		if((isset($_POST['sigla'])) && ($_POST['sigla'] != ''))
 			$parametros['sigla'] = trim(Util::Limpa_Busca($_POST['sigla']));
-			
+
 		if((isset($_POST['turma'])) && ($_POST['turma'] != ''))
 			$parametros['turma'] = trim(Util::Limpa_Busca($_POST['turma']));
-			
+
 		if((isset($_POST['nome'])) && ($_POST['nome'] != ''))
 			$parametros['nome'] = trim(Util::Limpa_Busca($_POST['nome']));
-			
+
 		if((isset($_POST['professor'])) && ($_POST['professor'] != ''))
 			$parametros['professor'] = trim(Util::Limpa_Busca($_POST['professor']));
-			
+
 		if((isset($_POST['creditos'])) && ($_POST['creditos'] != ''))
 			$parametros['creditos'] = intval($_POST['creditos']);
-		
+
 		if((isset($_POST['instituto'])) && ($_POST['instituto'] != '0'))
 			$parametros['instituto'] = intval($_POST['instituto']);
-		
+
 		if((isset($_POST['nivel'])) && ($_POST['nivel'] != '0'))
 			$parametros['nivel'] = trim(Util::Limpa_Busca($_POST['nivel']));
-		
+
 		if((isset($_POST['dia'])) && ($_POST['dia'] != ''))
 			$parametros['dia'] = intval($_POST['dia']);
-		
+
 		if((isset($_POST['horario'])) && ($_POST['horario'] != ''))
 			$parametros['horario'] = intval($_POST['horario']);
-		
+
 		if((isset($_POST['sala'])) && ($_POST['sala'] != ''))
 			$parametros['sala'] = trim(Util::Limpa_Busca($_POST['sala']));
-		
+
 		if(isset($_POST['ord'][$tp.'_a'])) {
 			if($_POST['ord'][$tp.'_a'] == 0) // Nao tem relevancia nesta consulta
 				$_POST['ord'][$tp.'_a'] = 1;
 			$ordem[$tp] = Oferecimento::$ordens_inte[$_POST['ord'][$tp.'_a']]." ".(($_POST['em'][$tp.'_a'] == 1) ? 'ASC' : 'DESC');
 		} else
 			$ordem[$tp] = null;
-		
+
 		$start = microtime(true);
 		$Oferecimentos = Oferecimento::Consultar($parametros, $ordem[$tp], $total[$tp], $qts[$tp], $sta[$tp]);
 		$tempo = number_format(microtime(true) - $start, 3, ',', '.');
-	
+
 	}
 }
 
@@ -278,7 +278,7 @@ if($qts['alunos'] != 0) {
 	if($total['alunos'] == 0) {
 		if($tp != 'tudo')
 			echo '<br />Nenhum resultado encontrado!';
-	} else {	
+	} else {
 		echo ($tp == 'tudo') ? '<h2>Alunos ('.$total['alunos'].'):</h2>' : '<span class="cabecalho_resultados_busca">Exibindo resultados '.($sta['alunos']+1).' - '.$fim['alunos'].' de '.$total['alunos'].' ('.$tempo.' segundos)</span>';
 		if(isset($_POST['tpres']) && ($_POST['tpres'] == 1)) {
 ?>

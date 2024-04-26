@@ -353,8 +353,8 @@ class Aluno extends Base {
 		$limit = intval($limit);
 		$start = intval($start);
 		if(preg_match('/^[\d]+$/i', $q) > 0) {
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem != 'rank DESC') ? 'A.ra ASC' : 'A.ra DESC';
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC')
+				$ordem = ($ordem != '`rank` DESC') ? 'A.ra ASC' : 'A.ra DESC';
 			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
 				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
 				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
@@ -373,8 +373,8 @@ class Aluno extends Base {
 					$sql .= " LIMIT ".$limit;
 			}
 		} elseif((CONFIG_FTS_ENABLED === false) || (mb_strlen($q) < CONFIG_FT_MIN_LENGTH)) {
-			if($ordem == null || $ordem == 'rank ASC' || $ordem == 'rank DESC')
-				$ordem = ($ordem == 'rank DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
+			if($ordem == null || $ordem == '`rank` ASC' || $ordem == '`rank` DESC')
+				$ordem = ($ordem == '`rank` DESC') ? 'A.`nome` ASC' : 'A.`nome` DESC';
 			if($ordem == 'A.ra ASC' || $ordem == 'A.ra DESC') {
 				$extra_select =  ", (CASE WHEN A.`ra`<500000 THEN A.`ra`+1000000 ELSE A.`ra` END) AS `ordem`";
 				$ordem = ($ordem == 'A.ra ASC') ? "`ordem` ASC" : "`ordem` DESC";
@@ -388,10 +388,10 @@ class Aluno extends Base {
 		} else {
 			$q = Util::String_FTS($q);
 			if($ordem == null)
-				$ordem = 'rank DESC';
-			if($ordem == 'rank ASC' || $ordem == 'rank DESC') {
+				$ordem = '`rank` DESC';
+			if($ordem == '`rank` ASC' || $ordem == '`rank` DESC') {
 				$extra_select = ", MATCH(`nome`) AGAINST(:q) AS `rank`";
-				if($ordem == 'rank ASC')
+				if($ordem == '`rank` ASC')
 					$ordem .= ', `nome` DESC';
 				else
 					$ordem .= ', `nome` ASC';
