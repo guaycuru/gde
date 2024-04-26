@@ -54,6 +54,7 @@ class AvaliacaoPergunta extends Base {
 
 	const TIPO_PROFESSOR = 'p';
 	const TIPO_DISCIPLINA = 'd';
+	const TIPO_OFERECIMENTO = 't';
 
 	// Caches
 	private $MediaP = array(); //array('R' => 0, 'v' => 0, 'C' => 0, 'm' => 0, 'W' => 0);

@@ -83,7 +83,7 @@ class AvaliacaoRanking extends Base {
 		foreach(AvaliacaoPergunta::Listar() as $Pergunta) {
 			if($Pergunta->getTipo(false) == AvaliacaoPergunta::TIPO_PROFESSOR) {
 				$qr = "
-INSERT INTO gde_avaliacao_rankings
+INSERT IGNORE INTO gde_avaliacao_rankings
 (id_pergunta, id_professor, id_disciplina, ranking, nota, votos)
 	SELECT id_pergunta, id_professor, NULL, IF(@last_w != W, @numero := @numero + 1, @numero) AS ranking, IF(@last_w != W, @last_w := W, @last_w) AS nota, votos
 	FROM
@@ -100,9 +100,9 @@ ON DUPLICATE KEY UPDATE ranking = ranking";
 			} elseif($Pergunta->getTipo(false) == AvaliacaoPergunta::TIPO_DISCIPLINA) {
 				// ToDo
 				continue;
-			} else {
+			} elseif($Pergunta->getTipo(false) == AvaliacaoPergunta::TIPO_OFERECIMENTO) {
 				$qr = "
-INSERT INTO gde_avaliacao_rankings
+INSERT IGNORE INTO gde_avaliacao_rankings
 (id_pergunta, id_professor, ranking, id_disciplina, nota, votos)
 	SELECT id_pergunta, id_professor, IF(@last_sigla != id_disciplina, @numero := 1, IF(@last_w != W, @numero := @numero + 1, @numero)) AS ranking, IF(@last_sigla != id_disciplina, @last_sigla := id_disciplina, id_disciplina) AS id_disciplina, IF(@last_w != W, @last_w := W, @last_w) AS nota, votos
 	FROM
