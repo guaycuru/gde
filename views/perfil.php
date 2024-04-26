@@ -708,7 +708,7 @@ if($Usr !== null) {
 						<div class="gde_jquery_ui">
 							<h2>Como Professor(a)</h2>
 							<?php
-							foreach(AvaliacaoPergunta::Listar('p') as $Pergunta) {
+							foreach(AvaliacaoPergunta::Listar(AvaliacaoPergunta::TIPO_PROFESSOR) as $Pergunta) {
 								$Media = $Pergunta->getMedia($Professor->getID());
 								echo "<strong>Pergunta: ".$Pergunta->getPergunta()."</strong><br />";
 								if($Media['v'] < CONFIG_AVALIACAO_MINIMO)

@@ -140,6 +140,7 @@ if($oferecimento_pagina == null) {
 						<li><a href="#tab_informacoes" class="ativo">Informa&ccedil;&otilde;es</a></li>
 						<li><a href="#tab_disciplina">Disciplina</a></li>
 						<li><a href="#tab_horario">Hor&aacute;rio</a></li>
+						<li><a href="#tab_avaliacao">Avalia&ccedil;&atilde;o</a></li>
 					</ul>
 					<div id="tab_informacoes" class="tab_content">
 						<table cellspacing="0" class="tabela_bonyta_branca">
@@ -171,6 +172,35 @@ if($oferecimento_pagina == null) {
 							}
 							?>
 						</table>
+					</div>
+					<div id="tab_avaliacao" class="tab_content">
+						<div class="gde_jquery_ui">
+							<?php
+							$Professor = (count($Oferecimento->getProfessores()) > 0) ? $Oferecimento->getProfessores()[0] : null;
+							foreach(AvaliacaoPergunta::Listar(AvaliacaoPergunta::TIPO_OFERECIMENTO) as $Pergunta) {
+								$Media = $Pergunta->getMedia($Professor->getID(), $Oferecimento->getDisciplina()->getID());
+								echo "<strong>Pergunta: ".$Pergunta->getPergunta()."</strong><br />";
+								if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
+									echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";
+								else {
+									echo "Pontua&ccedil;&atilde;o: <span id=\"span_fixo_".$Pergunta->getID()."_".$Oferecimento->getDisciplina()->getID()."\" style=\"font-weight: bold;\">".number_format($Media['w'], 2, ',', '.')."</span> (".$Media['v']." votos)";
+									if($_Usuario->getAdmin() === true)
+										echo " - Ranking: <strong>".$Pergunta->Ranking($Professor, $Oferecimento->getDisciplina())."/".$Pergunta->Max_Ranking($Oferecimento->getDisciplina())."</strong><div id=\"fixo_".$Pergunta->getID()."_".$Oferecimento->getID()."\" class=\"nota_slider_fixo\"></div>";
+									echo "<br />";
+								}
+								$pode = $Pergunta->Pode_Votar($_Usuario, $Professor, $Oferecimento->getDisciplina());
+								if($pode === true)
+									echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Oferecimento->getID()."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Oferecimento->getID()."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Oferecimento->getID()."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Oferecimento->getID()."\" class=\"link_votar\">Votar</a></div>";
+								elseif($pode == AvaliacaoPergunta::ERRO_JA_VOTOU)
+									echo "Voc&ecirc; j&aacute; votou nesta pergunta! Seu voto: ".$Pergunta->Meu_Voto($_Usuario, $Professor, $Oferecimento->getDisciplina())."<br />";
+								elseif($pode == AvaliacaoPergunta::ERRO_NAO_CURSOU)
+									echo "Voc&ecirc; n&atilde;o pode votar pois ainda n&atilde;o cursou esta Disciplina.";
+								elseif($pode == AvaliacaoPergunta::ERRO_NAO_ALUNO)
+									echo "Voc&ecirc; n&atilde;o pode votar pois apenas Alunos podem avaliar Disciplinas.";
+								echo "<br /><br />";
+							}
+							?>
+						</div>
 					</div>
 				</div>
 			</div>

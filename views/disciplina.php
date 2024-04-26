@@ -118,6 +118,7 @@ if(isset($_GET['m'])) {
 					<li><a href="#tab_curso">Curso</a></li>
 					<li><a href="#tab_oferecimentos">Oferecimentos</a></li>
 					<!-- <li><a href="#tab_professores">Professores</a></li> -->
+					<li><a href="#tab_avaliacao">Avalia&ccedil;&atilde;o</a></li>
 				</ul>
 				<div id="tab_informacoes" class="tab_content">
 					<table id="tabela_informacoes" cellspacing="0" class="tabela_bonyta_branca">
@@ -208,6 +209,32 @@ if(isset($_GET['m'])) {
 				<!-- <div id="tab_professores" class="tab_content">
 					<img src="<?= CONFIG_URL; ?>web/images/loading.gif" alt="..." /> Carregando Professores...
 				</div> -->
+				<div id="tab_avaliacao" class="tab_content">
+					<div class="gde_jquery_ui">
+						<?php
+						foreach(AvaliacaoPergunta::Listar(AvaliacaoPergunta::TIPO_OFERECIMENTO) as $Pergunta) {
+							$Media = $Pergunta->getMedia(null, $Disciplina->getID());
+							echo "<strong>Pergunta: ".$Pergunta->getPergunta()."</strong><br />";
+							if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
+								echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";
+							else {
+								echo "Pontua&ccedil;&atilde;o: <span id=\"span_fixo_".$Pergunta->getID()."_".$Disciplina->getID()."\" style=\"font-weight: bold;\">".number_format($Media['w'], 2, ',', '.')."</span> (".$Media['v']." votos)";
+								echo "<br />";
+							}
+							$pode = $Pergunta->Pode_Votar($_Usuario, null, $Disciplina);
+							if($pode === true)
+								echo "<div id=\"votar_nota_".$Pergunta->getID()."_".$Disciplina->getID()."\" class=\"seu_voto\">Seu voto: <span id=\"span_nota_".$Pergunta->getID()."_".$Disciplina->getID()."\"></span><div id=\"nota_".$Pergunta->getID()."_".$Disciplina->getID()."\" class=\"nota_slider\"></div><a href=\"#\" id=\"votar_".$Pergunta->getID()."_".$Disciplina->getID()."\" class=\"link_votar\">Votar</a></div>";
+							elseif($pode == AvaliacaoPergunta::ERRO_JA_VOTOU)
+								echo "Voc&ecirc; j&aacute; votou nesta pergunta! Seu voto: ".$Pergunta->Meu_Voto($_Usuario, null, $Disciplina)."<br />";
+							elseif($pode == AvaliacaoPergunta::ERRO_NAO_CURSOU)
+								echo "Voc&ecirc; n&atilde;o pode votar pois ainda n&atilde;o cursou esta Disciplina.";
+							elseif($pode == AvaliacaoPergunta::ERRO_NAO_ALUNO)
+								echo "Voc&ecirc; n&atilde;o pode votar pois apenas Alunos podem avaliar Disciplinas.";
+							echo "<br /><br />";
+						}
+						?>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
