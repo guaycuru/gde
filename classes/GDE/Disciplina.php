@@ -182,7 +182,7 @@ class Disciplina extends Base {
 
 	// ToDo: Remover isto!
 	static $ordens_nome = array('Relev&acirc;ncia', 'Sigla', 'Nome', 'Cr&eacute;ditos');
-	static $ordens_inte = array('rank', 'D.sigla', 'D.nome', 'D.creditos');
+	static $ordens_inte = array('`rank`', 'D.sigla', 'D.nome', 'D.creditos');
 
 	/**
 	 * @return array

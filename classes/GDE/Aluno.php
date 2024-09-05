@@ -181,7 +181,7 @@ class Aluno extends Base {
 
 	// ToDo: Remover isso!
 	public static $ordens_nome = array('Relev&acirc;ncia', 'RA', 'Nome', 'N&iacute;vel');
-	public static $ordens_inte = array('rank', 'A.ra', 'A.nome', 'A.nivel');
+	public static $ordens_inte = array('`rank`', 'A.ra', 'A.nome', 'A.nivel');
 
 	/**
 	 * @return array

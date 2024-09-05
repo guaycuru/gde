@@ -101,7 +101,7 @@ class Professor extends Base {
 
 	// ToDo: Remover isso!
 	public static $ordens_nome = array('Relev&acirc;ncia', 'Nome');
-	public static $ordens_inte = array('rank', 'P.nome');
+	public static $ordens_inte = array('`rank`', 'P.nome');
 
 	/**
 	 * @param $matricula
