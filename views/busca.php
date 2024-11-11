@@ -251,7 +251,6 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 	$(window).load(function() { Tamanho_Abas('tabs'); });
 	// ]]>
 </script>
-<div class="tip" id="busca_tip">Dica: Para fazer uma busca rapidamente, use <span class="link">http://gde.ir/b/BUSCA</span>, por exemplo, <span class="link"><a href="http://gde.ir/b/Batata">http://gde.ir/b/Batata</a></span></div>
 <div id="tabs" class="conteudo_em_tabs">
 	<ul>
 		<li><a href="#tab_tudo">Tudo (<span id="resultados_tudo">?</span>)</a></li>

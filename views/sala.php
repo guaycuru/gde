@@ -88,7 +88,6 @@ else
 				<div id="perfil_cabecalho_nome">Sala - <?= $Sala->getNome(true); ?></div>
 			</div>
 		</div>
-		<div class="tip" id="sala_tip">Dica: Para acessar diretamente a p&aacute;gina desta sala use <span class="link"><a href="http://gde.ir/s/<?= $Sala->getNome(true); ?>">http://gde.ir/s/<?= $Sala->getNome(true); ?></a></span></div>
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>

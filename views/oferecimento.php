@@ -133,7 +133,6 @@ if($oferecimento_pagina == null) {
 					<div id="perfil_cabecalho_nome"><?=$Oferecimento->getSigla(true); ?> <?=$Oferecimento->getTurma(true); ?> - <?=$Oferecimento->getDisciplina()->getNome(true); ?></div>
 				</div>
 			</div>
-			<div class="tip" id="disciplina_tip">Dica: Para acessar diretamente a p&aacute;gina deste oferecimento use <span class="link"><a href="http://gde.ir/o/<?= $Oferecimento->getID(); ?>">http://gde.ir/o/<?= $Oferecimento->getID(); ?></a></span></div>
 			<div id="perfil_abas">
 				<div id="tabs">
 					<ul>
