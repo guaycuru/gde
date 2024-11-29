@@ -1,70 +1,144 @@
-## Pré-Requisitos ##
 
- - Apache 2.4 ou mais novo;
-   - Módulo `mod_rewrite` ativado;
-   - Configuração `AllowOverride` definida como `All`;
- - PHP 7.0 ou mais novo (recomendável o uso do PHP 7.2);
-   - Extensão mysql_pdo;
-   - Extensão mbstring;
-   - Extensão curl;
-   - Extensão GD;
- - MySQL 5.6.4 ou mais novo (recomendável o uso do MySQL 5.7) ou MariaDB 10.0.5 ou mais novo;
-   - InnoDB ativado com suporte a Full Text Indexes
+<p align="center">
+  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-%3E%3D7.0-blue" alt="PHP Version"></a>
+  <a href="https://mariadb.org/"><img src="https://img.shields.io/badge/mariadb-%3E%3D10.0.5-blue" alt="MariaDB Version"></a>
+  <a href="https://dev.mysql.com/"><img src="https://img.shields.io/badge/mysql-%3E%3D5.6.4-blue" alt="MySQL Version"></a>
+</p>
 
-## Instalação ##
+<p align="center">
+  <img src="docs/assets/img/gde-logo.jpg" alt="GDE Logo" width="300" />
+</p>
 
- 1. Instale o Composer de [getcomposer.org](https://getcomposer.org);
- 2. Acesse a pasta raiz do projeto e rode o comando `composer install`;
- 3. Copie o arquivo `common/config-sample.inc.php` para `common/config.inc.php`;
- 4. Edite o arquivo `common/config.inc.php` com os dados apropriados. As partes mais importantes que devem ser alteradas são as relacionadas ao banco de dados (DB) e à URL base do sistema;
- 5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o;
- 6. Importe o arquivo `gde_pacote.sql` com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`. Esta importação irá demorar algum tempo, então tenha paciência;
- 7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas.
+<h2 align="center">🕵️‍♂️ GDE </h2>
 
-## Configurando a API do Google ##
+## 📋 Pré-Requisitos
 
-1. Ative a API (https://console.developers.google.com)
+- **Servidor Web**: Apache 2.4 ou mais novo, com o módulo `mod_rewrite` ativado e `AllowOverride` definido como `All`;
+- **PHP**: Versão 7.0 ou mais recente (recomendado: 7.2);
+- Extensões PHP:
+  - `mysql_pdo`;
+  - `mbstring`;
+  - `curl`;
+  - `GD`;
+- **Banco de Dados**:
+  - MySQL 5.6.4 ou mais recente (recomendado: 5.7);
+  - Ou MariaDB 10.0.5 ou mais recente;
+  - InnoDB ativado com suporte a índices Full Text.
+
+## 🛠 Instalação
+
+1. **Instale o Composer**:
+   Baixe e instale o Composer diretamente de [getcomposer.org](https://getcomposer.org/).
+
+2. **Dependências do Projeto**:
+   Na pasta raiz do projeto, execute:
+   ```bash
+   composer install
+   ```
+
+3. **Configuração Inicial**:
+   - Copie `common/config-sample.inc.php` para `common/config.inc.php`:
+     ```bash
+     cp common/config-sample.inc.php common/config.inc.php
+     ```
+   - Edite o arquivo `common/config.inc.php` com suas configurações, especialmente:
+     - Banco de Dados (`DB`);
+     - URL base do sistema.
+
+4. **Dados do Pacote**:
+   - Baixe o arquivo `gde_pacote.zip` e descompacte-o.
+   - Importe o SQL para seu banco de dados:
+     ```bash
+     mysql -u USUARIO -p BANCO < gde_pacote.sql
+     ```
+     Substitua `USUARIO` pelo nome de usuário e `BANCO` pelo banco configurado.
+
+5. **Atualização de Esquema**:
+   Garanta que o esquema do banco está atualizado:
+   ```bash
+   vendor/bin/doctrine orm:schema-tool:update --force
+   ```
+
+## 🌐 Configurando a API do Google
+
+1. Ative a API no [Google Console](https://console.developers.google.com).
 2. Vá para a página de credenciais.
-2. Nas opções da tela de consentimento OAuth colocar o nome para ser exibido.
-3. Nas opções de Credenciais preencher:
-    - Origens JavaScript autorizadas: http://localhost
-    - URIs de redirecionamento autorizados: http://localhost/gde/views/google-calendar.php
-4. Fazer download do JSON com as credenciais e colocar na pasta.
+3. Configure as credenciais OAuth:
+   - **Origens JavaScript autorizadas**: `http://localhost`;
+   - **URIs de redirecionamento autorizados**: `http://localhost/gde/views/google-calendar.php`.
+4. Baixe o JSON das credenciais e adicione-o na pasta do projeto.
 
-### Sobre os dados no pacote ###
+## 🚀 Como Rodar o Projeto
 
- - Utilize o login `login1`
- - Todos os usuários possuem a senha `gde42`
- - Todos os dados de alunos e usuários são fictícios
- - O pacote possui alguns dados dos catálogos 2007 e 2016
- - Por questões de tamanho, apenas alguns cursos, modalidades, disciplinas e oferecimentos estão presentes
+### **Windows** (Usando WAMP)
+1. **Baixe e instale o WAMP**:
+   - Faça o download do [WAMP Server](https://www.wampserver.com/) e instale-o.
+   - Certifique-se de incluir o Apache, PHP e MySQL durante a instalação.
 
-## Sobre este projeto ##
+2. **Copie os arquivos do projeto para o diretório WWW**:
+   - Após a instalação do WAMP, copie os arquivos do projeto para o diretório:
+     ```
+     C:\wamp64\www\Web\gde
+     ```
 
-P: Este é o GDE "de verdade"?  
-R: Sim. A versão 2.5 substituiu a 2.3 no dia 22/12/2017.  
+3. **Configure o banco de dados**:
+   - Acesse o phpMyAdmin através de `http://localhost/phpmyadmin`.
+   - Crie um banco de dados com o mesmo nome configurado no arquivo `common/config.inc.php`.
+   - Importe o arquivo `gde_pacote.sql` no banco de dados criado.
 
-P: Qual a diferença entre a versão 2.3 e a 2.5?  
-R: Em termos de funcionalidades: "avisos", "fóruns", "grupos" e "oportunidades" foram removidos (não eram utilizados). Em termos de backend: a versão 2.3 foi escrita entre 2009 e 2012, e contém código antigo, desatualizado, potencialmente inseguro e, sinceramente, às vezes vergonhoso. Nenhuma biblioteca ou framework foi utilizada, foi tudo feito do zero. Na versão 2.5 foi tudo reescrito para utilizar o ORM [Doctrine](http://www.doctrine-project.org/). Além disso, a versão 2.5 suporta disciplinas com a mesma sigla e níveis diferentes, cursos com o mesmo número e níveis diferentes e oferecimentos com mais de um professor ou com turmas com mais de 2 caracteres, além de várias outras correções menores.  
+4. **Inicie o servidor WAMP**:
+   - Abra o painel do WAMP e inicie os serviços do Apache e MySQL.
+   - Acesse o projeto através de `http://localhost/Web/gde` no navegador.
 
-P: Cadê o chat?  
-R: O chat da forma como foi escrito consumia muitos recursos de CPU e memória do servidor, então ele não será levado para a versão 2.5, no entanto buscaremos uma alternativa mais moderna para as próximas versões.  
+5. **Teste o sistema**:
+   - Use as credenciais de exemplo:
+     - **Usuário**: `login1`
+     - **Senha**: `gde42`
 
-P: Onde encontro o código dos crawlers / robôs que pegam os dados?  
-R: Por requisição da DAC, essa parte do código não será disponibilizada.  
+### **Linux**
+Para configurar e executar o projeto no Linux, consulte o guia completo neste link:  
+[Passo a Passo para Linux](docs/LINUX_CONFIG.md).
 
-P: Por que isso foi feito?  
-R: Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu e meus amigos que me ajudaram somos capazes, por questões de tempo, conhecimento, ideias, etc.  
+---
 
-P: Posso colaborar?  
-R: Sim, por favor! Faça fork e envie seu pull request!  
+## 🗂 Sobre os Dados no Pacote
 
-P: Como posso ajudar?  
-R: Depende:
+- Login de exemplo: **`login1`**;
+- Todos os usuários possuem a senha **`gde42`**;
+- Os dados fornecidos são fictícios, incluindo alunos e usuários;
+- Contém dados de catálogos dos anos **2007** e **2016**;
+- Inclui amostras de cursos, modalidades, disciplinas e oferecimentos.
 
- - Se você sabe programar em PHP, fique a vontade para corrigir um problema ou criar uma nova feature. Seu pull request será analisado com carinho!
- - Se você é designer, crie um novo layout mais moderno (quem sabe, responsivo) para o GDE, ou melhore o atual, e envie seu pull request.
- - Se você não se encaixa em nenhuma das opções anteriores, envie sugestões ou problemas encontrados criando uma [Issue](https://github.com/guaycuru/gde/issues).
+## ❓ Perguntas Frequentes
+
+### Este é o GDE "de verdade"?
+Sim. A versão 2.5 substituiu a 2.3 em **22/12/2017**.
+
+### Quais as diferenças entre as versões 2.3 e 2.5?
+- **Funcionalidades removidas**: "avisos", "fóruns", "grupos" e "oportunidades".
+- **Melhorias**:
+  - Suporte a múltiplos níveis de disciplinas e cursos;
+  - Correções diversas no backend;
+  - Uso do ORM Doctrine.
+
+### O chat foi removido?
+Sim. O consumo excessivo de recursos levou à remoção do chat. Alternativas modernas serão consideradas no futuro.
+
+### Onde encontro o código dos crawlers / robôs que pegam os dados? 
+Por requisição da DAC, essa parte do código não será disponibilizada.
+
+### Por que isso foi feito?
+Porque eu acredito que a comunidade de alunos (e ex-alunos) da Unicamp podem colaborar com o projeto, e levá-lo muito mais longe do que eu e meus amigos que me ajudaram somos capazes, por questões de tempo, conhecimento, ideias, etc.
+
+## 🤝 Contribuições
+
+Quer colaborar? Faça um **fork** e envie um **pull request**!
+
+### Como posso ajudar?
+
+- **Programador PHP**: Resolva problemas ou crie novas funcionalidades.
+- **Designer**: Proponha layouts modernos e responsivos.
+- **Outros**: Envie sugestões ou relate problemas criando uma **Issue**.
 
 ## Agradecimentos ##
 - [Carlos Avelar](https://github.com/carlosamds) por desenvolver uma integração com o Google Calendar.
