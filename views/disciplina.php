@@ -110,7 +110,6 @@ if(isset($_GET['m'])) {
 				<div id="perfil_cabecalho_nome"><?=$Disciplina->getSigla(true); ?> - <?=$Disciplina->getNome(true); ?></div>
 			</div>
 		</div>
-		<div class="tip" id="disciplina_tip">Dica: Para acessar diretamente a p&aacute;gina desta disciplina use <span class="link"><a href="http://gde.ir/d/<?= $Disciplina->getId(); ?>">http://gde.ir/d/<?= $Disciplina->getId(); ?></a></span></div>
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>

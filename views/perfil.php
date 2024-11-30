@@ -459,11 +459,6 @@ if($Usr !== null) {
 				<?php } ?>
 			</div>
 		</div>
-		<?php if($_tipo == 'E') { ?>
-			<div class="tip" id="perfil_tip">Dica: Para acessar diretamente a p&aacute;gina deste usu&aacute;rio use <span class="link">http://gde.ir/u/<?= $Usr->getLogin(); ?></span></div>
-		<?php } else { ?>
-			<div class="tip" id="perfil_tip">Dica: Para acessar diretamente a p&aacute;gina deste <?= ($_tipo == 'A') ? 'aluno' : 'professor'; ?> use <span class="link">http://gde.ir/<?= strtolower($_tipo); ?>/<?= $_matricula; ?></span><?php if($Usr !== null) { ?> ou <span class="link">http://gde.ir/u/<?= $Usr->getLogin(); ?></span><?php } ?></div>
-		<?php } ?>
 		<div id="perfil_abas">
 			<div id="tabs">
 				<ul>

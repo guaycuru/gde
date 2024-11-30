@@ -64,7 +64,6 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 	});
 	// ]]>
 </script>
-<div class="tip" id="planejador_tip">Dica: Para acessar diretamente seu planejador, use <span class="link"><a href="http://gde.ir/planejador">http://gde.ir/planejador</a></span></div><br />
 <strong>Aten&ccedil;&atilde;o:</strong> <!-- <strong>Planejador parcial e incompleto: Estes ainda n&atilde;o s&atilde;o os dados oficiais da DAC, e poder&atilde;o sofrer altera&ccedil;&otilde;es!</strong><br /> -->Este &eacute; apenas um planejamento. Voc&ecirc; dever&aacute; fazer sua matr&iacute;cula normalmente pelo site da DAC!<br />
 <div id="planejador_opcoes" class="gde_jquery_ui">
 	<?php foreach($Planejados as $p => $Planejado) { ?>

@@ -129,7 +129,6 @@ if($continua) {
 	// ]]>
 </script>
 <?= $menus; ?>
-<div class="tip" id="arvore_tip">Dica: Para acessar diretamente sua &aacute;rvore, use <span class="link"><a href="http://gde.ir/arvore">http://gde.ir/arvore</a></span></div>
 <h2>Curr&iacute;culo de <?= $Usr->getNome_Completo(true); ?></h2>
 <?php if($meu) { ?>
 	<form method="get" action="<?= CONFIG_URL; ?>arvore/">
