@@ -71,7 +71,7 @@
 ## 🚀 Como Rodar o Projeto
 
 ### **Windows** (Utilizando WAMP)
-Para configurar e executar o projeto no Linux, consulte o guia completo neste link:
+Para configurar e executar o projeto no Linux, consulte o guia completo neste link:  
 [Passo a Passo para Windows](docs/WINDOWS_CONFIG.md).  
 
 ### **Linux**
