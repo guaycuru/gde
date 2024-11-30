@@ -70,30 +70,9 @@
 
 ## 🚀 Como Rodar o Projeto
 
-### **Windows** (Usando WAMP)
-1. **Baixe e instale o WAMP**:
-   - Faça o download do [WAMP Server](https://www.wampserver.com/) e instale-o.
-   - Certifique-se de incluir o Apache, PHP e MySQL durante a instalação.
-
-2. **Copie os arquivos do projeto para o diretório WWW**:
-   - Após a instalação do WAMP, copie os arquivos do projeto para o diretório:
-     ```
-     C:\wamp64\www\Web\gde
-     ```
-
-3. **Configure o banco de dados**:
-   - Acesse o phpMyAdmin através de `http://localhost/phpmyadmin`.
-   - Crie um banco de dados com o mesmo nome configurado no arquivo `common/config.inc.php`.
-   - Importe o arquivo `gde_pacote.sql` no banco de dados criado.
-
-4. **Inicie o servidor WAMP**:
-   - Abra o painel do WAMP e inicie os serviços do Apache e MySQL.
-   - Acesse o projeto através de `http://localhost/Web/gde` no navegador.
-
-5. **Teste o sistema**:
-   - Use as credenciais de exemplo:
-     - **Usuário**: `login1`
-     - **Senha**: `gde42`
+### **Windows** (Utilizando WAMP)
+Para configurar e executar o projeto no Linux, consulte o guia completo neste link:
+[Passo a Passo para Windows](docs/WINDOWS_CONFIG.md).  
 
 ### **Linux**
 Para configurar e executar o projeto no Linux, consulte o guia completo neste link:  
