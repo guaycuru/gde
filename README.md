@@ -20,6 +20,7 @@
  5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o;
  6. Importe o arquivo `gde_pacote.sql` com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`. Esta importação irá demorar algum tempo, então tenha paciência;
  7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas.
+ 8. Usuários de linux podem encontrar problemas para rodar o projeto dentro do Apache. Siga [essas instruções](docs/LINUX_CONFIG.md) caso você se encontre perdido.
 
 ## Configurando a API do Google ##
 
