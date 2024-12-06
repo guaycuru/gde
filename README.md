@@ -1,6 +1,6 @@
 
 <p align="center">
-  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-%3E%3D7.0-blue" alt="PHP Version"></a>
+  <a href="https://www.php.net/"><img src="https://img.shields.io/badge/php-%3E%3D7.4-blue" alt="PHP Version"></a>
   <a href="https://mariadb.org/"><img src="https://img.shields.io/badge/mariadb-%3E%3D10.0.5-blue" alt="MariaDB Version"></a>
   <a href="https://dev.mysql.com/"><img src="https://img.shields.io/badge/mysql-%3E%3D5.6.4-blue" alt="MySQL Version"></a>
 </p>
@@ -14,7 +14,7 @@
 ## 📋 Pré-Requisitos
 
 - **Servidor Web**: Apache 2.4 ou mais novo, com o módulo `mod_rewrite` ativado e `AllowOverride` definido como `All`;
-- **PHP**: Versão 7.0 ou mais recente (recomendado: 7.2);
+- **PHP**: Versão 7.4 ou mais recente (recomendado: 7.4);
 - Extensões PHP:
   - `mysql_pdo`;
   - `mbstring`;
@@ -58,15 +58,6 @@
    ```bash
    vendor/bin/doctrine orm:schema-tool:update --force
    ```
-
-## 🌐 Configurando a API do Google
-
-1. Ative a API no [Google Console](https://console.developers.google.com).
-2. Vá para a página de credenciais.
-3. Configure as credenciais OAuth:
-   - **Origens JavaScript autorizadas**: `http://localhost`;
-   - **URIs de redirecionamento autorizados**: `http://localhost/gde/views/google-calendar.php`.
-4. Baixe o JSON das credenciais e adicione-o na pasta do projeto.
 
 ## 🚀 Como Rodar o Projeto
 
