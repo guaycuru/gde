@@ -118,7 +118,7 @@ class Evento extends Base {
 	 * @return Evento[]
 	 */
 	public static function Listar_Por_Usuario_Datas(Usuario $Usuario, \DateTime $Inicio, \DateTime $Fim) {
-		$dql = "SELECT E FROM ".get_class()." E ".
+		$dql = "SELECT E FROM ".static::class." E ".
 			"WHERE (E.usuario = :usuario OR E.usuario IS NULL) AND E.data_inicio <= :fim AND E.data_fim >= :inicio";
 		$query = self::_EM()->createQuery($dql)
 			->setParameter('usuario', $Usuario)

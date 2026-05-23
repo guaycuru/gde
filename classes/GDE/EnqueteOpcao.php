@@ -58,7 +58,7 @@ class EnqueteOpcao extends Base {
 	 * @return integer
 	 */
 	public function Numero_Votos() {
-		$dql = "SELECT COUNT(DISTINCT U.id_usuario) FROM ".get_class()." AS O ".
+		$dql = "SELECT COUNT(DISTINCT U.id_usuario) FROM ".static::class." AS O ".
 			"JOIN O.usuarios AS U ".
 			"WHERE O.id_opcao = :id_opcao";
 		return self::_EM()->createQuery($dql)

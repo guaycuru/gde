@@ -244,13 +244,13 @@ class Oferecimento extends Base {
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".get_class()." AS O ".$joins.$where;
+			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".static::class." AS O ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT O".(($join_disciplina) ? ", DI" : "")." FROM ".get_class()." AS O ".$joins.$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT O".(($join_disciplina) ? ", DI" : "")." FROM ".static::class." AS O ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
@@ -370,7 +370,7 @@ class Oferecimento extends Base {
 		}
 
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'O');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'O');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
@@ -522,7 +522,7 @@ class Oferecimento extends Base {
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
 	public function Desistencias() {
-		$dqlt = "SELECT COUNT(A) FROM ".get_class()." AS O JOIN O.alunos_trancados AS A WHERE O.id_oferecimento = :id_oferecimento";
+		$dqlt = "SELECT COUNT(A) FROM ".static::class." AS O JOIN O.alunos_trancados AS A WHERE O.id_oferecimento = :id_oferecimento";
 		$queryt = self::_EM()->createQuery($dqlt)->setParameters(array('id_oferecimento' => $this->getID()));
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 			$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);

@@ -80,7 +80,7 @@ class Quote extends Base {
 		}
 		if(($rs = $rss->get($urls[$qual])) && ($rs['items_count'] > 0)) {
 			$n = mt_rand(0, $rs['items_count']-1);
-			$quote = str_ireplace("<br>", "<br />", utf8_encode(strip_tags(html_entity_decode($rs['items'][$n]['title'].((isset($rs['items'][$n]['description']))?": ".$rs['items'][$n]['description']:null)), "<br>")));
+			$quote = str_ireplace("<br>", "<br />", mb_convert_encoding(strip_tags(html_entity_decode($rs['items'][$n]['title'].((isset($rs['items'][$n]['description']))?": ".$rs['items'][$n]['description']:null)), "<br>"), 'UTF-8', 'ISO-8859-1'));
 		}
 		return $quote;
 	}
@@ -92,7 +92,7 @@ class Quote extends Base {
 	public static function Aleatoria($tipo) {
 		$sql = "SELECT Q.* FROM `gde_quotes` AS Q WHERE `tipo` = :tipo ORDER BY RAND() LIMIT 1";
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'Q');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'Q');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('tipo', $tipo);
 		return $query->getOneOrNullResult();

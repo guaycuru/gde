@@ -521,7 +521,7 @@ class Usuario extends Base {
 	 * @return null|Usuario
 	 */
 	public static function Por_Matricula($matricula, $ativo = true, $vazio = false) {
-		$dql = 'SELECT U FROM '.get_class().' U INNER JOIN U.professor P WHERE P.matricula = ?1';
+		$dql = 'SELECT U FROM '.static::class.' U INNER JOIN U.professor P WHERE P.matricula = ?1';
 		if($ativo !== null)
 			$dql .= ' AND U.ativo = ?2';
 		$query = self::_EM()->createQuery($dql)
@@ -667,7 +667,7 @@ class Usuario extends Base {
 	 * @param Periodo|null $Ate Filtra eliminadas ate este Periodo
 	 * @return mixed
 	 */
-	public function getEliminadas($niveis = null, Periodo $Ate = null) {
+	public function getEliminadas($niveis = null, ?Periodo $Ate = null) {
 		if($niveis == null)
 			$niveis = array();
 		if((count($niveis) == 0) && ($Ate === null))
@@ -966,7 +966,7 @@ class Usuario extends Base {
 
 		$Data = new \DateTime();
 		$Data->modify('-'.CONFIG_TIME_ONLINE.' seconds');
-		$online = self::_EM()->createQuery('SELECT COUNT(U) FROM '.get_class().' U WHERE U.ultimo_acesso >= ?1')
+		$online = self::_EM()->createQuery('SELECT COUNT(U) FROM '.static::class.' U WHERE U.ultimo_acesso >= ?1')
 			->setParameter(1, $Data)
 			->getSingleScalarResult();
 
@@ -1033,7 +1033,7 @@ class Usuario extends Base {
 
 
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'U');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'U');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('id_usuario', $this->getID());
 		$query->setParameter('minimo', $minimo);
@@ -1085,7 +1085,7 @@ class Usuario extends Base {
 	 */
 	public function getCompartilha($campo) {
 		$campo = 'compartilha_'.$campo;
-		if(property_exists(get_class(), $campo) === false)
+		if(property_exists(static::class, $campo) === false)
 			return false;
 		return $this->{'get'.$campo}(false);
 	}
@@ -1325,7 +1325,7 @@ class Usuario extends Base {
 	 * @param Arvore|null $Arvore
 	 * @return bool
 	 */
-	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false, Arvore $Arvore = null) {
+	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false, ?Arvore $Arvore = null) {
 		// ToDo: Na pos nao pode cursar quando ja cursou a mesma disciplina E turma!
 		if(($Disciplina->getNivel(false) != Disciplina::NIVEL_POS) && ($this->Eliminada($Disciplina, false) !== false)) {
 			if($obs !== false)
@@ -1381,7 +1381,7 @@ class Usuario extends Base {
 	 * @param Periodo|null $Ate
 	 * @return UsuarioEliminada|false
 	 */
-	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false, Periodo $Ate = null) {
+	public function Eliminada(Disciplina $Disciplina, $parcial = false, $novo_formato = false, ?Periodo $Ate = null) {
 		if($Disciplina->getID() == null)
 			return false;
 
@@ -1597,7 +1597,7 @@ class Usuario extends Base {
 	 * @param bool $links
 	 * @return string
 	 */
-	public function Formata_Horario($Horario, $dia, $hora, $meu, Periodo $Periodo = null, $links = true) {
+	public function Formata_Horario($Horario, $dia, $hora, $meu, ?Periodo $Periodo = null, $links = true) {
 		if(!isset($Horario[$dia][$hora]))
 			return "-";
 		$formatado = array();

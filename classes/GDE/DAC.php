@@ -82,7 +82,7 @@ class DAC extends Base {
 	public static function Remover_Tokens_Antigos() {
 		$Data = new \DateTime();
 		$Data->modify('-'.(self::VALIDADE_TOKEN*2).' seconds');
-		$dql = "DELETE ".get_class()." AS D WHERE D.criacao < ?1";
+		$dql = "DELETE ".static::class." AS D WHERE D.criacao < ?1";
 		self::_EM()->createQuery($dql)->setParameters(array(1 => $Data))->execute();
 	}
 }

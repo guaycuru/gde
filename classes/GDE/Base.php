@@ -19,7 +19,7 @@ abstract class Base {
 	private $_meta;
 	protected static $_EM;
 	private static $_trans_count = 0;
-	
+
 	// Display Timezone
 	protected static $_TZ = null;
 
@@ -31,7 +31,7 @@ abstract class Base {
 	 * @param EntityManager|null $EM (optional) Entity Manager
 	 * @return EntityManager Entity Manager
 	 */
-	public static function _EM(EntityManager $EM = null) {
+	public static function _EM(?EntityManager $EM = null) {
 		if($EM != null)
 			self::$_EM = $EM;
 		return self::$_EM;
@@ -130,7 +130,7 @@ abstract class Base {
 	}
 
 	/**
-	 * Erro_JSON
+	 * Error_JSON
 	 *
 	 * Outputs a JSON error and terminates the execution
 	 *
@@ -139,7 +139,7 @@ abstract class Base {
 	 * @param array $extra (Optional) Extra info to be sent with the response JSON
 	 * @return void
 	 */
-	public static function Error_JSON($message, $http = 200, $extra = array()) {
+	public static function Error_JSON($message, $http = 500, $extra = array()) {
 		die(self::To_JSON(array(
 			'ok' => false,
 			'error' => $message
@@ -154,12 +154,12 @@ abstract class Base {
 	public function __construct() {
 		$this->_meta = self::_EM()->getClassMetadata(get_class($this));
 		foreach($this->_meta->associationMappings as $property => $data) {
-			if(($this->$property === null) && ($data['type'] & ClassMetadataInfo::TO_MANY)) // OneToMany or ManyToMany
+			if((!isset($this->$property)) && ($data['type'] & ClassMetadataInfo::TO_MANY)) // OneToMany or ManyToMany
 				$this->$property = new ArrayCollection();
 		}
 	}
-	
-	/** 
+
+	/**
 	 * FindBy
 	 *
 	 * Searches the Repository for objects
@@ -170,11 +170,11 @@ abstract class Base {
 	 * @param integer $offset (optional) Results offset
 	 * @return static[]|false Array of objects found, or false on query error
 	 */
-	public static function FindBy($params = array(), array $order = null, $limit = null, $offset = null) {
+	public static function FindBy($params = array(), ?array $order = null, $limit = null, $offset = null) {
 		return self::_EM()->getRepository(get_called_class())->findBy($params, $order, $limit, $offset);
 	}
-	
-	/** 
+
+	/**
 	 * FindOneBy
 	 *
 	 * Searches the Repository for a single object by a unique field
@@ -235,6 +235,17 @@ abstract class Base {
 	}
 
 	/**
+	 * @param null $entity
+	 * @return bool
+	 * @throws ORMException
+	 */
+	public static function _EM_Flush($entity = null) {
+		if(self::_EM()->flush($entity) === false)
+			return false;
+		return true;
+	}
+
+	/**
 	 * Save
 	 *
 	 * Persists the object to the EM, optionally writing the changes to the DB
@@ -247,9 +258,9 @@ abstract class Base {
 		if(self::_EM()->persist($this) === false)
 			return false;
 
-		if(($flush) && (self::_EM()->flush() === false))
+		if(($flush) && (self::_EM_Flush() === false))
 			return false;
-		
+
 		return true;
 	}
 
@@ -268,9 +279,9 @@ abstract class Base {
 
 		self::_EM()->remove($this);
 
-		if(($flush) && (self::_EM()->flush() === false))
+		if(($flush) && (self::_EM_Flush() === false))
 			return false;
-		
+
 		return true;
 	}
 
@@ -384,7 +395,9 @@ abstract class Base {
 							return null;
 						switch($type) {
 							case 'date':
+							case 'date_immutable':
 							case 'datetime':
+							case 'datetime_immutable':
 							case 'time':
 								// Check if we need to apply the display Timezone
 								if((isset($args[1])) && ($args[1] != date_default_timezone_get())) { // Display timezone provided as argument
@@ -430,9 +443,11 @@ abstract class Base {
 								$value->setTime(0, 0, 0);
 								break;
 							case 'datetime':
+							case 'datetimetz':
 								$value = new \DateTime();
 								break;
 							case 'datetime_immutable':
+							case 'datetimetz_immutable':
 								$value = new \DateTimeImmutable();
 								break;
 							default:

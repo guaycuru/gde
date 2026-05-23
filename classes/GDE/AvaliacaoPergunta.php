@@ -137,7 +137,7 @@ class AvaliacaoPergunta extends Base {
 	 * @param Disciplina|null $Disciplina
 	 * @return bool|int
 	 */
-	public function Pode_Votar(Usuario $Usuario, Professor $Professor = null, Disciplina $Disciplina = null) {
+	public function Pode_Votar(Usuario $Usuario, ?Professor $Professor = null, ?Disciplina $Disciplina = null) {
 		if($Usuario->getAluno(false) === null)
 			return self::ERRO_NAO_ALUNO;
 		if($this->Ja_Votou($Usuario, $Professor, $Disciplina))
@@ -170,7 +170,7 @@ class AvaliacaoPergunta extends Base {
 	 * @param Disciplina|null $Disciplina
 	 * @return bool
 	 */
-	public function Ja_Votou(Usuario $Usuario, Professor $Professor = null, Disciplina $Disciplina = null) {
+	public function Ja_Votou(Usuario $Usuario, ?Professor $Professor = null, ?Disciplina $Disciplina = null) {
 		return ($this->Meu_Voto($Usuario, $Professor, $Disciplina, false) !== null);
 	}
 
@@ -181,7 +181,7 @@ class AvaliacaoPergunta extends Base {
 	 * @param bool $resposta
 	 * @return mixed
 	 */
-	public function Meu_Voto(Usuario $Usuario, Professor $Professor = null, Disciplina $Disciplina = null, $resposta = true) {
+	public function Meu_Voto(Usuario $Usuario, ?Professor $Professor = null, ?Disciplina $Disciplina = null, $resposta = true) {
 		//$criteria = Criteria::create()->where(Criteria::expr()->eq("usuario", $Usuario));
 		$criteria = Criteria::create()->where(Criteria::expr()->eq("pergunta", $this));
 		if($Professor !== null)
@@ -203,7 +203,7 @@ class AvaliacaoPergunta extends Base {
 	 * @param Disciplina|null $Disciplina
 	 * @return array|false|mixed
 	 */
-	public function Ranking(Professor $Professor = null, Disciplina $Disciplina = null) {
+	public function Ranking(?Professor $Professor = null, ?Disciplina $Disciplina = null) {
 		$param = array('pergunta' => $this->getID());
 		if($Professor !== null)
 			$param['professor'] = $Professor->getID();
@@ -236,7 +236,7 @@ class AvaliacaoPergunta extends Base {
 	 * @param Disciplina|null $Disciplina
 	 * @return mixed|string
 	 */
-	public function Max_Ranking(Disciplina $Disciplina = null) {
+	public function Max_Ranking(?Disciplina $Disciplina = null) {
 		$param = array('pergunta' => $this->getID());
 		if($Disciplina !== null)
 			$param['disciplina'] = $Disciplina->getID();

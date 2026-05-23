@@ -72,7 +72,7 @@ class CurriculoEletiva extends Base {
 	 * @return CurriculoEletiva[]
 	 */
 	public static function Consultar($param) {
-		$dql = 'SELECT E, C FROM '.get_class().' E LEFT JOIN E.conjuntos C INNER JOIN E.curso U LEFT JOIN E.modalidade M ';
+		$dql = 'SELECT E, C FROM '.static::class.' E LEFT JOIN E.conjuntos C INNER JOIN E.curso U LEFT JOIN E.modalidade M ';
 		if($param['curso'] == 51) {
 			$dql .= 'WHERE U.numero = 28 ';
 			unset($param['curso'], $param['modalidade']);

@@ -87,7 +87,7 @@ class Enquete extends Base {
 	 * @return integer
 	 */
 	public function Usuario_Quantos_Votos(Usuario $Usuario) {
-		$dql = "SELECT COUNT(O.id_opcao) FROM ".get_class()." AS E ".
+		$dql = "SELECT COUNT(O.id_opcao) FROM ".static::class." AS E ".
 			"JOIN E.opcoes AS O ".
 			"WHERE E.id_enquete = :id_enquete ".
 			"AND :usuario MEMBER OF O.usuarios";
@@ -109,7 +109,7 @@ class Enquete extends Base {
 	 * @return integer
 	 */
 	public function Numero_Votos() {
-		$dql = "SELECT COUNT(U.id_usuario) FROM ".get_class()." AS E ".
+		$dql = "SELECT COUNT(U.id_usuario) FROM ".static::class." AS E ".
 			"JOIN E.opcoes AS O JOIN O.usuarios AS U ".
 			"WHERE E.id_enquete = :id_enquete";
 		return self::_EM()->createQuery($dql)
@@ -121,7 +121,7 @@ class Enquete extends Base {
 	 * @return integer
 	 */
 	public function Numero_Usuarios() {
-		$dql = "SELECT COUNT(DISTINCT U.id_usuario) FROM ".get_class()." AS E ".
+		$dql = "SELECT COUNT(DISTINCT U.id_usuario) FROM ".static::class." AS E ".
 			"JOIN E.opcoes AS O JOIN O.usuarios AS U ".
 			"WHERE E.id_enquete = :id_enquete";
 		return self::_EM()->createQuery($dql)

@@ -74,7 +74,7 @@ class Curso extends Base {
 	 * @return Curso[]
 	 */
 	public static function Listar($niveis = array(), $sem_especial = false) {
-		$dql = 'SELECT C FROM '.get_class().' C ';
+		$dql = 'SELECT C FROM '.static::class.' C ';
 		if(count($niveis) > 0)
 			$dql .= 'WHERE C.nivel IN (?1) ';
 		if($sem_especial)
@@ -103,7 +103,7 @@ class Curso extends Base {
 			$niveis = self::$NIVEIS_GRAD;
 		elseif(!is_array($niveis))
 			$niveis = array($niveis);
-		$dql = 'SELECT C FROM '.get_class().' C WHERE C.numero = ?1';
+		$dql = 'SELECT C FROM '.static::class.' C WHERE C.numero = ?1';
 		if(count($niveis) > 0)
 			$dql .= ' AND C.nivel IN (?2)';
 		$query = self::_EM()->createQuery($dql);

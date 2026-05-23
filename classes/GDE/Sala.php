@@ -116,13 +116,13 @@ class Sala extends Base {
 	public static function Consultar_Simples($q, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $q)."%");
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT S.id_sala) FROM ".get_class()." AS S WHERE S.nome LIKE ?1";
+			$dqlt = "SELECT COUNT(DISTINCT S.id_sala) FROM ".static::class." AS S WHERE S.nome LIKE ?1";
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT S FROM ".get_class()." AS S WHERE S.nome LIKE ?1";
+		$dql = "SELECT DISTINCT S FROM ".static::class." AS S WHERE S.nome LIKE ?1";
 		if($ordem != null)
 			$dql .= " ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);

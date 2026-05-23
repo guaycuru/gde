@@ -186,7 +186,7 @@ class UsuarioToken extends Base {
 	public static function Remover_Tokens_Antigos() {
 		$Data = new \DateTime();
 		$Data->modify('-'.(CONFIG_COOKIE_DIAS+1).' days');
-		$dql = "DELETE ".get_class()." AS T WHERE T.data_criacao < ?1";
+		$dql = "DELETE ".static::class." AS T WHERE T.data_criacao < ?1";
 		self::_EM()->createQuery($dql)->setParameters(array(1 => $Data))->execute();
 	}
 }

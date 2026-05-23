@@ -38,6 +38,9 @@ class Arvore {
 	private $numero_semestres;
 	private $creditos_eletivas_fantantes; // Numero de creditos realmente faltantes, modificado em Usuario->Elimina_Eletiva
 
+	private $creditos_faltantes_atuais;
+	private $creditos_faltantes_futuros;
+
 	private $siglas_obrigatorias;
 	private $siglas_eletivas;
 	private $siglas_todas_eliminadas;
@@ -62,7 +65,8 @@ class Arvore {
 
 	static $consts = array("inicio_x" => 80, "inicio_y" => 50, "largura" => 90, "altura" => 30, "dist_x" => 55, "dist_y" => 75);
 
-	public function __construct(Usuario $Usuario, $completa = true, Periodo $Periodo = null, &$times = false) {
+
+	public function __construct(Usuario $Usuario, $completa = true, ?Periodo $Periodo = null, &$times = false) {
 		if($times !== false)
 			$times = array('start' => microtime(true));
 
@@ -354,7 +358,7 @@ class Arvore {
 	public static function OrdenaEletivas($a, $b) {
 		return ($a->getTipo() - $b->getTipo());
 	}
-	
+
 	private static function imagelinethick($image, $x1, $y1, $x2, $y2, $color, $thick = 1) {
 		/* this way it works well only for orthogonal lines
 		imagesetthickness($image, $thick);
@@ -389,7 +393,7 @@ class Arvore {
 		}
 
 		imagesetstyle($im, $style);
-		return (integer) imageline($im, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
+		return (int) imageline($im, $x1, $y1, $x2, $y2, IMG_COLOR_STYLED);
 		// imagesetstyle($im, array($color)); // Reset style - just in case...
 	}
 
@@ -568,7 +572,7 @@ class Arvore {
 			if(count($Lista) > $maximo_x)
 				$maximo_x = count($Lista);
 
-		$string_titulo = utf8_decode($this->nome_curso).(($this->modalidade != null)?" - ".utf8_decode($this->nome_modalidade)." (".$this->modalidade.")":null)." - ".$this->catalogo;
+		$string_titulo = mb_convert_encoding($this->nome_curso, 'ISO-8859-1', 'UTF-8').(($this->modalidade != null)?" - ".mb_convert_encoding($this->nome_modalidade, 'ISO-8859-1', 'UTF-8')." (".$this->modalidade.")":null)." - ".$this->catalogo;
 		$titulo_len = strlen($string_titulo)*9;
 
 		$this->largura = $consts['inicio_x'] + ($maximo_x * ($consts['largura'] + $consts['dist_x'])) + $consts['dist_x'] + 5;
@@ -674,7 +678,6 @@ class Arvore {
 			$pintados[$sigla] = array();
 			$this->PRTPosRR($sigla, $pintados[$sigla], $im_t, $transp);
 			imagepng($im_t, str_replace('.png', '_'.str_replace(' ', '_', $sigla).'.png', $saida));
-			imagedestroy($im_t);
 		}
 
 		//imagestring($im, 5, $dados['largura'] - 230, $dados['altura'] - 30, "http://GDE.guaycuru.net", $preto);
@@ -687,7 +690,6 @@ class Arvore {
 			imagepng($im);
 		}
 		$this->arquivo = $saida;
-		imagedestroy($im);
 
 		return true;
 	}

@@ -92,7 +92,7 @@ class ColaboracaoProfessor extends Base {
 	 * @return bool
 	 */
 	public static function Existe_Colaboracao($id_professor, $campo) {
-		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.get_class().' AS C '.
+		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.static::class.' AS C '.
 			'WHERE C.professor = ?1 AND C.campo = ?2 AND C.status != ?3';
 
 		$query = self::_EM()->createQuery($dql)
@@ -112,7 +112,7 @@ class ColaboracaoProfessor extends Base {
 	}
 
 	public static function Numero($status = null) {
-		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.get_class().' AS C';
+		$dql = 'SELECT COUNT(C.id_colaboracao) FROM '.static::class.' AS C';
 		if($status !== null)
 			$dql .= ' WHERE C.status = ?1';
 

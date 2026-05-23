@@ -315,7 +315,7 @@ class Aluno extends Base {
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".get_class()." AS A ".$joins.$where;
+			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".static::class." AS A ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
@@ -328,7 +328,7 @@ class Aluno extends Base {
 			$ordem = ($ordem == 'A.ra ASC') ? "ORD ASC" : "ORD DESC";
 		}
 
-		$dql = "SELECT DISTINCT A".$extra_select." FROM ".get_class()." AS A ".$joins.$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT A".$extra_select." FROM ".static::class." AS A ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
@@ -422,7 +422,7 @@ class Aluno extends Base {
 		}
 
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'A');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'A');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
@@ -704,7 +704,7 @@ class Aluno extends Base {
 	 * @return bool
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function Cursou_Com(Professor $Professor, Disciplina $Disciplina = null) {
+	public function Cursou_Com(Professor $Professor, ?Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
 			'INNER JOIN A.oferecimentos AS O ';
 		if($Disciplina !== null)
@@ -734,7 +734,7 @@ class Aluno extends Base {
 	 * @return bool
 	 * @throws \Doctrine\ORM\NonUniqueResultException
 	 */
-	public function Trancou_Com(Professor $Professor, Disciplina $Disciplina = null) {
+	public function Trancou_Com(Professor $Professor, ?Disciplina $Disciplina = null) {
 		$dql = 'SELECT COUNT(O.id_oferecimento) FROM GDE\\Aluno AS A '.
 			'INNER JOIN A.trancados AS O ';
 		if($Disciplina !== null)

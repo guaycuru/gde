@@ -102,7 +102,7 @@ class UsuarioAmigo extends Base {
 			"WHERE UA.`id_usuario` = :id_usuario AND UA.`ativo` = TRUE ".
 			"AND DATE_FORMAT(A.`data_nascimento`,'%m-%d') BETWEEN DATE_FORMAT(:inicio, '%m-%d') AND DATE_FORMAT(:fim, '%m-%d')";
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'UA');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'UA');
 		$query = self::_EM()->createNativeQuery($sql, $rsm)
 			->setParameter('id_usuario', $Usuario->getID())
 			->setParameter('inicio', $Inicio->format('Y-m-d'))

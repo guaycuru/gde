@@ -92,7 +92,7 @@ class Acontecimento extends Base {
 	 * @param Usuario|null $Usuario
 	 * @return string
 	 */
-	public function getTexto($html = false, $processa = false, $meu = false, Usuario $Usuario = null) {
+	public function getTexto($html = false, $processa = false, $meu = false, ?Usuario $Usuario = null) {
 		global $_Usuario;
 		if(!$html)
 			return $this->texto;
@@ -200,13 +200,13 @@ class Acontecimento extends Base {
 	 * @param Usuario|null $Usuario
 	 * @return Acontecimento[]
 	 */
-	public function Listar_Respostas(Usuario $Usuario = null) { // Soh usada para Usuarios (Ajax)
+	public function Listar_Respostas(?Usuario $Usuario = null) { // Soh usada para Usuarios (Ajax)
 		$todas = (
 			($Usuario === null) ||
 			(($this->getOrigem() !== null) && ($this->getOrigem()->getID() == $Usuario->getID())) ||
 			(($this->getDestino() !== null) && ($this->getDestino()->getID() == $Usuario->getID()))
 		);
-		$dql = "SELECT A FROM ".get_class()." A WHERE A.original = ?1";
+		$dql = "SELECT A FROM ".static::class." A WHERE A.original = ?1";
 		if($todas === false) {
 			$dql .= " AND (A.origem = ?2 OR A.destino = ?3";
 			if($this->getTipo(false) != self::TIPO_GDE)
@@ -269,7 +269,7 @@ class Acontecimento extends Base {
 	 * @param bool|false $gde
 	 * @return Acontecimento[]
 	 */
-	public static function Listar(Usuario $Usuario = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $amizades = false, $amigos = false, $gde = false) {
+	public static function Listar(?Usuario $Usuario = null, $limit = '-1', $start = '-1', $maior_que = false, $mensagens = true, $minhas = true, $amizades = false, $amigos = false, $gde = false) {
 		$qrs = $qrsr = array();
 		if((!$mensagens) && (!$minhas) && (!$amigos) && (!$gde))
 			return array();

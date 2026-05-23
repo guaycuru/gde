@@ -300,13 +300,13 @@ class Disciplina extends Base {
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" ".$tipo." ", $qrs) : "";
 
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM ".get_class()." AS D ".$joins.$where;
+			$dqlt = "SELECT COUNT(DISTINCT D.sigla) FROM ".static::class." AS D ".$joins.$where;
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT D FROM ".get_class()." AS D ".$joins.$where." ORDER BY ".$ordem;
+		$dql = "SELECT DISTINCT D FROM ".static::class." AS D ".$joins.$where." ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
 		if($limit > 0)
 			$query->setMaxResults($limit);
@@ -392,7 +392,7 @@ class Disciplina extends Base {
 		}
 
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'D');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'D');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))

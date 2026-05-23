@@ -134,7 +134,7 @@ class Professor extends Base {
 	 * @param bool $links
 	 * @return ArrayCollection|Oferecimento[]|string
 	 */
-	public function getOferecimentos(Periodo $Periodo = null, $formatado = false, $links = true) {
+	public function getOferecimentos(?Periodo $Periodo = null, $formatado = false, $links = true) {
 		if($Periodo === null) {
 			$Oferecimentos = parent::getOferecimentos();
 		} else {
@@ -166,7 +166,7 @@ class Professor extends Base {
 	 * @param null|Periodo $Periodo
 	 * @return array
 	 */
-	public function Monta_Horario(Periodo $Periodo = null) {
+	public function Monta_Horario(?Periodo $Periodo = null) {
 		$Lista = array();
 		foreach($this->getOferecimentos($Periodo) as $Oferecimento)
 			foreach($Oferecimento->getDimensoes() as $Dimensao)
@@ -188,13 +188,13 @@ class Professor extends Base {
 	public static function Por_Nome($nome, $ordem = null, &$total = null, $limit = -1, $start = -1) {
 		$param = array(1 => "%".str_replace(' ', '%', $nome)."%");
 		if($total !== null) {
-			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
+			$dqlt = "SELECT COUNT(DISTINCT P.id_professor) FROM ".static::class." AS P WHERE P.nome LIKE ?1";
 			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
-		$dql = "SELECT DISTINCT P FROM ".get_class()." AS P WHERE P.nome LIKE ?1";
+		$dql = "SELECT DISTINCT P FROM ".static::class." AS P WHERE P.nome LIKE ?1";
 		if($ordem != null)
 			$dql .= " ORDER BY ".$ordem;
 		$query = self::_EM()->createQuery($dql)->setParameters($param);
@@ -269,7 +269,7 @@ class Professor extends Base {
 		}
 
 		$rsm = new ResultSetMappingBuilder(self::_EM());
-		$rsm->addRootEntityFromClassMetadata(get_class(), 'P');
+		$rsm->addRootEntityFromClassMetadata(static::class, 'P');
 		$query = self::_EM()->createNativeQuery($sql, $rsm);
 		$query->setParameter('q', $q);
 		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
