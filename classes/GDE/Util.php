@@ -132,7 +132,7 @@ class Util {
 			$partes[] = "HttpOnly";
 		if($samesite != null)
 			$partes[] = "SameSite=".$samesite;
-		header(implode('; ', $partes));
+		header(implode('; ', $partes), false);
 	}
 
 	/**
@@ -148,8 +148,9 @@ class Util {
 	}
 
 	public static function CSRFP($ajax = false) {
-		// Gera um novo token se necessario
-		if(empty($_COOKIE[self::CSRFP_TOKEN]) || empty($_SESSION[self::CSRFP_TOKEN])) {
+		// Gera um novo token se necessario, inclusive se cookie e sessao estiverem fora de sincronia
+		if(empty($_COOKIE[self::CSRFP_TOKEN]) || empty($_SESSION[self::CSRFP_TOKEN])
+				|| $_COOKIE[self::CSRFP_TOKEN] !== $_SESSION[self::CSRFP_TOKEN]) {
 			$token = bin2hex(random_bytes(16));
 			$_SESSION[self::CSRFP_TOKEN] = $token;
 			Util::Enviar_Cookie(self::CSRFP_TOKEN, $token);
