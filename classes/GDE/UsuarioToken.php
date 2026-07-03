@@ -59,7 +59,7 @@ class UsuarioToken extends Base {
 	 * @return string
 	 */
 	public static function Gerar_Valor() {
-		return sha1(mt_rand()).sha1(mt_rand()).sha1(mt_rand());
+		return bin2hex(random_bytes(32));
 	}
 
 	/**
@@ -164,8 +164,8 @@ class UsuarioToken extends Base {
 		return (
 			($this->getID() != null) && // Token nao encontrado
 			($this->getUsuario(false) !== null) && // Usuario vazio!?
-			($this->getUsuario()->getID() == $id_usuario) || // ID de usuario nao confere
-			($this->getToken(false) == $token) // Token nao confere
+			($this->getUsuario()->getID() == $id_usuario) && // ID de usuario nao confere
+			(is_string($token)) && (hash_equals((string)$this->getToken(false), $token)) // Token nao confere
 		);
 	}
 

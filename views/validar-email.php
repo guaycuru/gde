@@ -9,7 +9,7 @@ require_once("../common/common.inc.php");
 if((!empty($_GET['id'])) && (!empty($_GET['token']))) {
 	if($_Usuario->getID() != $_GET['id'])
 		die("Voc&ecirc; est&aacute; logado como um usu&aacute;rio diferente do qual est&aacute; tentando validar o email!");
-	if($_Usuario->Token_Email() == $_GET['token']) {
+	if((is_string($_GET['token'])) && (hash_equals($_Usuario->Token_Email(), $_GET['token']))) {
 		$_Usuario->setEmail_Validado(true);
 		$_Usuario->Save(true);
 		echo "Seu email foi validado com sucesso!";

@@ -114,7 +114,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 	var buscar = <?= ($buscar) ? 'true' : 'false'; ?>;
 	atualiza_modalidades = function() {
 		$('#select_modalidade').addClass("ac_loading");
-		$('#select_modalidade').load('<?= CONFIG_URL; ?>ajax/modalidades.php?c='+$('#aluno_curso').val()+'&s=<?= (isset($_GET['modalidade']))?$_GET['modalidade']:null; ?>&o=0', {}, function(){$('#select_modalidade').removeClass("ac_loading");});
+		$('#select_modalidade').load('<?= CONFIG_URL; ?>ajax/modalidades.php?c='+$('#aluno_curso').val()+'&s=<?= (isset($_GET['modalidade']))?rawurlencode($_GET['modalidade']):null; ?>&o=0', {}, function(){$('#select_modalidade').removeClass("ac_loading");});
 	};
 	atualiza_turmas = function(numero, sigla, turma) {
 		if(sigla == "")
@@ -158,12 +158,12 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 			$tabs.tabs('select', tab);
 		if(!pg)
 			pg = 1;
-		if((simples || tab == '<?= $tp; ?>') && (!lod[tab] || pga[tab] != pg)) {
+		if((simples || tab == <?= json_encode((string)$tp, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); ?>) && (!lod[tab] || pga[tab] != pg)) {
 			$('#'+tab+'_resultados').Carregando('Carregando Resultados...');
 			if(simples)
-				var params = '<?= str_replace("'", "\\'", $_SERVER['QUERY_STRING']); ?>&t='+tab+'&p='+pg;
+				var params = <?= json_encode((string)$_SERVER['QUERY_STRING'], JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); ?>+'&t='+tab+'&p='+pg;
 			else
-				var params = '<?= str_replace("'", "\\'", $_SERVER['QUERY_STRING']); ?>&p='+pg;
+				var params = <?= json_encode((string)$_SERVER['QUERY_STRING'], JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); ?>+'&p='+pg;
 			$.post('<?= CONFIG_URL; ?>ajax/busca.php', params, function(data) {
 				$('#'+tab+'_resultados').html(data);
 			});
@@ -226,7 +226,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 		if($sigla != '') {
 		$adicionadas_cursando++;
 		?>
-		mais_cursando('<?= $sigla; ?>', '<?= $_GET['cursando_turma'][$k]; ?>');
+		mais_cursando(<?= json_encode((string)$sigla, JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); ?>, <?= json_encode((string)$_GET['cursando_turma'][$k], JSON_HEX_TAG|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_HEX_AMP); ?>);
 		<?php
 		}
 		}
