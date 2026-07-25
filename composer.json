@@ -1,7 +1,8 @@
 {
   "autoload": {
     "psr-4": {
-      "GDE\\": "classes/GDE/"
+      "GDE\\": "classes/GDE/",
+      "DAC\\": "classes/DAC/"
     }
   },
   "require": {
@@ -12,6 +13,7 @@
     "doctrine/dbal": "^2.13.9",
     "doctrine/common": "^3.4.3",
     "symfony/cache": "~5.4.15",
+    "symfony/console": "^6.4",
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-gd": "*",
