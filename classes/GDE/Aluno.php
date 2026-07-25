@@ -193,15 +193,15 @@ class Aluno extends Base {
 	/**
 	 * @return array
 	 */
-	public static function Listar_Niveis_Grad() {
-		return self::$_niveis_grad;
+	public static function Listar_Niveis_Grad($codigos = false) {
+		return ($codigos) ? array_keys(self::$_niveis_grad) : self::$_niveis_grad;
 	}
 
 	/**
 	 * @return array
 	 */
-	public static function Listar_Niveis_Pos() {
-		return self::$_niveis_pos;
+	public static function Listar_Niveis_Pos($codigos = false) {
+		return ($codigos) ? array_keys(self::$_niveis_pos) : self::$_niveis_pos;
 	}
 
 	/**

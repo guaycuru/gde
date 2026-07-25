@@ -4,7 +4,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\ORM\ORMSetup;
-use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
 // Composer Autoload
@@ -90,4 +89,7 @@ $_Base = ($_namespace != null) ? '\\'.$_namespace.'\\Base' : 'Base';
 $_Base::_EM($_EM);
 
 // Unset non-global variables
-unset($config, $driver, $connection);
+unset($config, $connection);
+
+// DAC (conexao somente-leitura com o banco institucional)
+require_once(__DIR__.'/doctrine_dac.inc.php');

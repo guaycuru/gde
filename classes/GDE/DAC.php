@@ -52,8 +52,9 @@ class DAC extends Base {
 	 * @return array
 	 */
 	public static function Validar_Token($token) {
-		// Retorna sempre false
-		return array(false, 0, 0);
+		if(self::Existe_Token($token) === true)
+			return array(false, 0, 0);
+		return DAC_Token::Validar($token);
 	}
 
 	/**

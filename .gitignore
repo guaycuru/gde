@@ -20,3 +20,4 @@ vendor/*
 !vendor/.htaccess
 composer.phar
 errors/*
+k8s/secret.yaml
