@@ -14,3 +14,10 @@
 *.ttf binary
 *.woff binary
 *.mp3 binary
+
+# Nesta branch (github-master), estes arquivos sao stubs redigidos.
+# merge=ours faz um futuro "git merge --squash bitbucket-master" manter
+# esta versao em vez de trazer o conteudo real. Requer, uma vez por clone:
+#   git config merge.ours.driver true
+common/doctrine_dac.inc.php merge=ours
+classes/GDE/DAC_Token.php merge=ours
