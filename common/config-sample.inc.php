@@ -81,3 +81,6 @@ define('CONFIG_NIVEL_LOG', 3);
 define('CONFIG_FT_MIN_LENGTH', 3);
 
 define('CONFIG_GOOGLE_CREDENTIALS', __DIR__.'/credentials.json');
+
+// Tag da imagem atualmente deployada (definida via env var no K8s, veja config-k8s.inc.php)
+define('CONFIG_APP_VERSION', null);

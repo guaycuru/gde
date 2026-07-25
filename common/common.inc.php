@@ -301,11 +301,15 @@ $(document).ready(function(){
 
 <?php
 }
+	$versao_tag = "";
+	if(($_Usuario !== null) && ($_Usuario->getAdmin() === true) && CONFIG_APP_VERSION) {
+		$versao_tag = " (tag: ".CONFIG_APP_VERSION.")";
+	}
 	$FIM = "
 				<div id=\"rodape\">
 					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
 					<div id=\"usuarios_online\"><span>Usu&aacute;rios online</span>: <span id=\"contador_usuarios_online\">".Usuario::Conta_Online(false)."</span></div>
-					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.6
+					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.6".$versao_tag."
 					<br /><br /><strong>Aviso:</strong> O GDE n&atilde;o &eacute; um sistema oficial da Unicamp, e tem por &uacute;nico objetivo auxiliar alunos na vida acad&ecirc;mica.
 					<br /><br /><i>".Quote::Qualquer_Uma(true)."</i>
 					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />

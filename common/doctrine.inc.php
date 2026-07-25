@@ -79,6 +79,12 @@ elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {
 	$connection['host'] = CONFIG_DB_HOST;
 	if((defined('CONFIG_DB_PORT')) && (!empty(CONFIG_DB_PORT)))
 		$connection['port'] = CONFIG_DB_PORT;
+} else {
+	// Sem host/socket configurado (ex.: build da imagem Docker, onde as env vars
+	// de runtime ainda nao existem) - informa a platform explicitamente para que
+	// comandos somente-metadados (orm:generate-proxies) nao tentem abrir uma
+	// conexao real so para descobrir a versao do servidor.
+	$connection['platform'] = new \Doctrine\DBAL\Platforms\MySqlPlatform();
 }
 
 // Create the Entity Manager

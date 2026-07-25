@@ -5,7 +5,10 @@
 .svn/
 cache/*
 !cache/.htaccess
-common/config.inc.php
+common/config*.inc.php
+common/client_secret_*.json
+common/client_secret_google.bkp
+common/*.pem
 nbproject/
 api/gen/
 web/fts/*
