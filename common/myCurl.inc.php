@@ -89,7 +89,7 @@ class myCurl {
 		curl_setopt($s, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($s, CURLOPT_AUTOREFERER, true);
 		curl_setopt($s, CURLOPT_MAXREDIRS, 10);
-		curl_setopt($s, CURLOPT_BINARYTRANSFER, $this->_binaryTransfer);
+
 		//curl_setopt($s, CURLOPT_FAILONERROR, true);
 
 		if($this->authentication == 1)
@@ -125,7 +125,6 @@ class myCurl {
 		$response = curl_getinfo($s);
 		if($headers)
 			$this->_responseHeader = get_headers($response['url']);
-		curl_close($s);
 	}
 	
 	public function doGet($url, $headers = false) {
