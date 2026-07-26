@@ -12,7 +12,7 @@ if($_Usuario->getAdmin() === false)
 $colaboracoes_professores_pendentes = ColaboracaoProfessor::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
 $colaboracoes_oferecimentos_pendentes = ColaboracaoOferecimento::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
 
-$erros = iterator_count(new \FilesystemIterator(__DIR__.'/../errors/', \FilesystemIterator::SKIP_DOTS)) - 1;
+$erros = count(array_diff(scandir(__DIR__.'/../errors/'), array('..', '.', '.htaccess')));
 ?>
 <script type="text/javascript">
 var debug = function(d) {
