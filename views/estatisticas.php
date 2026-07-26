@@ -25,7 +25,7 @@ $connection = Base::_EM()->getConnection();
 </script>
 <h1>Estat&iacute;sticas</h1>
 
-<table border='1' cellspacing='1' cellpadding='1' width='70%'>
+<table class="tabela_bonyta" width='70%'>
 	<tr>
 		<td colspan='4' align='center'><strong>Dados do Sistema:</strong></td>
 	</tr>

@@ -39,7 +39,7 @@ Antes de enviar sua mensagem, por favor consulte as "<a href="https://github.com
 			<td><textarea name="mensagem" cols="50" rows="10"></textarea></td>
 		</tr>
 		<tr>
-			<td colspan="2"><input type="submit" name="enviar" value=" " alt="Enviar" class="botao_enviar" /></td>
+			<td colspan="2"><input type="submit" name="enviar" value="Enviar" class="botao_enviar" /></td>
 		</tr>
 	</table>
 </form>

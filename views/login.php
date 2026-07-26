@@ -70,7 +70,7 @@ $(document).ready(function(){
 				<td colspan="2"><input type="checkbox" name="lembrar" value="t" id="lembrar_t" /><label for="lembrar_t">Permanecer logado</label></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" name="OK" value=" " alt="OK" class="botao_ok" /></td>
+				<td colspan="2"><input type="submit" name="OK" value="OK" class="botao_ok" /></td>
 			</tr>
 			<tr>
 				<td colspan="2"><a href="<?= CONFIG_URL_LOGIN_DAC; ?>">Fazer login pelo site da DAC</a></td>

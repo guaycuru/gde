@@ -82,7 +82,7 @@ $(document).ready(function() {
 </tbody>
 <tfoot>
 	<tr>
-		<td align="center"><input type="submit" name="votar" value=" " class="botao_salvar" /><br />
+		<td align="center"><input type="submit" name="votar" value="Votar" class="botao_salvar" /><br />
 		<a href="#" id="ver_resultados">Ver Resultados</a></td>
 	</tr>
 </tfoot>

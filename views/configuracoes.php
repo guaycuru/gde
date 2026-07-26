@@ -59,7 +59,7 @@ require_once('../common/common.inc.php');
 					</tr>
 				</table>
 				<br />
-				<input type="button" id="salvar_conta" name="salvar_conta" class="botao_salvar" value=" " alt="Excluir ou Desativar Perfil" />
+				<input type="button" id="salvar_conta" name="salvar_conta" class="botao_salvar" value="Excluir ou Desativar Perfil" />
 			</div>
 		</div>
 	</div>

@@ -54,7 +54,7 @@ if($Usuario !== null) {
 					<td><input type="password" name="conf_senha" id="conf_senha" /></td>
 				</tr>
 				<tr>
-					<td colspan="2"><input type="submit" name="enviar" value=" " alt="Enviar" class="botao_enviar" /></td>
+					<td colspan="2"><input type="submit" name="enviar" value="Enviar" class="botao_enviar" /></td>
 				</tr>
 			</table>
 		</form>
@@ -247,7 +247,7 @@ if($Usuario !== null) {
 				<td><input type="text" name="email" /> <span class="formInfo"><a href="#" id="TT_email">?</a></span></td>
 			</tr>
 			<tr>
-				<td colspan="2"><input type="submit" name="enviar" value=" " alt="Enviar" class="botao_enviar" /></td>
+				<td colspan="2"><input type="submit" name="enviar" value="Enviar" class="botao_enviar" /></td>
 			</tr>
 		</table>
 	</form>
