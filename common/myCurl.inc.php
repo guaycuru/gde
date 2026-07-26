@@ -89,7 +89,6 @@ class myCurl {
 		curl_setopt($s, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($s, CURLOPT_AUTOREFERER, true);
 		curl_setopt($s, CURLOPT_MAXREDIRS, 10);
-
 		//curl_setopt($s, CURLOPT_FAILONERROR, true);
 
 		if($this->authentication == 1)
