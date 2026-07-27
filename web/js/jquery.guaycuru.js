@@ -159,10 +159,15 @@ jQuery.guaycuru = {
 	},
 	
 	changeIt: function() {
-	
+
 		$("body").css({"background-image": "url(" + CONFIG_URL + "web/images/bodybg.png)", "background-repeat": "repeat"});
 		$("#wrapper").css("background", "transparent");
-		
+		// No layout antigo a caixa branca era o proprio #wrapper, entao deixa-lo
+		// transparente ja revelava o fundo. Agora a superficie e o #content_bg:
+		// sem isto o easter egg so apareceria nas margens da pagina.
+		$("#content_bg").css("background", "rgba(255, 255, 255, 0.82)");
+		$("#rodape").css("background", "transparent");
+
 	},
 	
 	Data: function(date, brasil) {
