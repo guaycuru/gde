@@ -2202,6 +2202,21 @@ table.tablesorter tbody tr:hover td { background-color: var(--accent-soft); }
 #planejador_calendario .fc-state-highlight { background: none !important; }
 #planejador_calendario .fc-agenda-axis { width: 42px !important; }
 
+/* O FullCalendar 1.x calcula a largura em JS e fixa inline todas as colunas
+   MENOS a ultima (.fc-last), que absorve a sobra. Isso funcionava com o
+   container de 470px fixos; como agora ele e fluido, a sobra ia toda para o
+   sabado (125px contra 70px dos demais). Com table-layout: fixed e as
+   larguras inline anuladas, os seis dias dividem o espaco em partes iguais. */
+#planejador_calendario table.fc-agenda-days {
+	table-layout: fixed;
+	width: 100%;
+}
+
+#planejador_calendario table.fc-agenda-days th[class*="fc-col"],
+#planejador_calendario table.fc-agenda-days td[class*="fc-col"] {
+	width: auto !important;
+}
+
 .fc {
 	font-size: 12px;
 	border-radius: var(--r);
