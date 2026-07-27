@@ -244,7 +244,7 @@ textarea.formtext { width: 300px; height: 80px; }
 	padding: 0 6px;
 	border-radius: 999px;
 	background: var(--accent-soft);
-	color: var(--accent);
+	color: var(--gde-800);
 	font-size: 11px;
 	font-weight: 700;
 	line-height: 1;
@@ -671,7 +671,7 @@ input.botao_excluir:hover { background: var(--danger); color: #fff; border-color
 	margin: 10px 0;
 	padding-left: 12px;
 	border-left: 2px solid var(--border-strong);
-	color: var(--text-faint);
+	color: var(--text-muted);
 	font-style: italic;
 }
 
@@ -1918,6 +1918,7 @@ a.chat_botao_minimizar, a.chat_botao_fechar { text-decoration: none; }
 	border: 1px solid var(--border);
 	border-radius: var(--r) !important;
 	background: var(--surface-2);
+	color: var(--text);
 	font-size: 13px;
 	font-weight: 600;
 	cursor: pointer;
@@ -1935,8 +1936,11 @@ a.chat_botao_minimizar, a.chat_botao_fechar { text-decoration: none; }
 .ui-accordion .ui-accordion-header.ui-state-active {
 	border-radius: var(--r) var(--r) 0 0 !important;
 	background: var(--surface-3);
+	color: var(--text);
 	border-bottom-color: var(--border);
 }
+
+.ui-accordion .ui-accordion-header.ui-state-active a { color: var(--text) !important; }
 
 .ui-accordion .ui-accordion-content {
 	padding: 12px;
@@ -1975,6 +1979,53 @@ a.chat_botao_minimizar, a.chat_botao_fechar { text-decoration: none; }
 	color: var(--text);
 }
 
+/* O jquery.ui.css escopa todo o tema em `.gde_jquery_ui` (especificidade
+   0,2,0), o que vence as regras .ui-state-* acima (0,1,0) mesmo com este
+   arquivo carregando por ultimo. Sem estas repeticoes o tema antigo vaza
+   dentro de #coluna_direita, do autocomplete e do datepicker — era de la
+   que vinha o laranja #e17009 no cabecalho do accordion. */
+.gde_jquery_ui .ui-state-default,
+.gde_jquery_ui .ui-widget-content .ui-state-default,
+.gde_jquery_ui .ui-widget-header .ui-state-default {
+	border: 1px solid var(--border-strong);
+	background: var(--surface);
+	color: var(--text);
+	font-weight: 500;
+}
+
+.gde_jquery_ui .ui-state-default a,
+.gde_jquery_ui .ui-state-default a:link,
+.gde_jquery_ui .ui-state-default a:visited { color: var(--text); }
+
+.gde_jquery_ui .ui-state-hover,
+.gde_jquery_ui .ui-widget-content .ui-state-hover,
+.gde_jquery_ui .ui-state-focus,
+.gde_jquery_ui .ui-widget-content .ui-state-focus {
+	border: 1px solid var(--accent);
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+.gde_jquery_ui .ui-state-hover a,
+.gde_jquery_ui .ui-state-hover a:hover,
+.gde_jquery_ui .ui-state-hover a:link,
+.gde_jquery_ui .ui-state-hover a:visited { color: var(--accent); }
+
+.gde_jquery_ui .ui-state-active,
+.gde_jquery_ui .ui-widget-content .ui-state-active,
+.gde_jquery_ui .ui-widget-header .ui-state-active {
+	border: 1px solid var(--accent);
+	background: var(--accent);
+	color: #fff;
+}
+
+.gde_jquery_ui .ui-state-active a,
+.gde_jquery_ui .ui-state-active a:link,
+.gde_jquery_ui .ui-state-active a:visited { color: #fff; }
+
+.gde_jquery_ui .ui-widget-content { border-color: var(--border); background: var(--surface); color: var(--text); }
+.gde_jquery_ui .ui-corner-all { border-radius: var(--r); }
+
 .ui-state-error, .ui-widget-content .ui-state-error {
 	border: 1px solid #e8c4bd;
 	background: var(--danger-bg);
@@ -2010,7 +2061,7 @@ a.chat_botao_minimizar, a.chat_botao_fechar { text-decoration: none; }
 }
 
 /* Autocomplete / jquery.autocomplete */
-.ac_results, .ui-autocomplete {
+.ac_results, .ui-autocomplete, .gde_jquery_ui .ui-autocomplete {
 	background: var(--surface);
 	border: 1px solid var(--border);
 	border-radius: var(--r);
@@ -2041,7 +2092,7 @@ a.chat_botao_minimizar, a.chat_botao_fechar { text-decoration: none; }
 }
 
 /* Datepicker */
-.ui-datepicker {
+.ui-datepicker, .gde_jquery_ui .ui-datepicker {
 	padding: 8px;
 	border: 1px solid var(--border);
 	border-radius: var(--r);
@@ -2174,7 +2225,7 @@ table.tablesorter tbody tr:hover td { background-color: var(--accent-soft); }
 }
 
 .fc .fc-agenda-axis {
-	color: var(--text-faint);
+	color: var(--text-muted);
 	font-size: 11px;
 	text-align: right;
 	padding-right: 6px;

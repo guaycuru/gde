@@ -44,7 +44,7 @@ $(document).ready(function() {
 <input type="checkbox" id="info" name="info" value="t" disabled="disabled" checked="checked" />Atualizar Informa&ccedil;&otilde;es<br />
 <input type="checkbox" id="ranks" name="ranks" value="t" />Atualizar Rankings - LENTO<br />
 <input type="checkbox" id="curss" name="curss" value="t" />Atualizar Cursa&ccedil;&otilde;es e Reprova&ccedil;&otilde;es - BEM LENTO<br />
-<input type="button" id="botao_atualizar" class="botao_ok" /><br /><br />
+<input type="button" id="botao_atualizar" class="botao_ok" value="Atualizar" /><br /><br />
 <form method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/admin.php" data-sucesso="SU executado com sucesso!" data-destino="<?= CONFIG_URL; ?>">
 	SU: <input type="text" name="su">
 </form><br /><br />
