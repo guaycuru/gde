@@ -1,0 +1,89 @@
+<?php
+
+// Config usada dentro da imagem Dockerfile.dev (docker-compose.yml) para
+// rodar o GDE localmente. Credenciais de banco aqui sao apenas do container
+// "db" do compose, descartaveis, sem relacao com nenhum ambiente real.
+
+// Dev Mode
+define('CONFIG_DEV_MODE', true);
+
+// DB
+define('CONFIG_DB_DRIVER', 'pdo_mysql');
+define('CONFIG_DB_SOCKET', '');
+define('CONFIG_DB_HOST', 'db'); // nome do servico no docker-compose.yml
+define('CONFIG_DB_PORT', '');
+define('CONFIG_DB_USER', 'gde');
+define('CONFIG_DB_PASS', 'gde');
+define('CONFIG_DB_NAME', 'gde');
+define('CONFIG_FTS_ENABLED', false);
+define('CONFIG_DB_LOGGER', false);
+
+// Redis (cache) com a extensao php_redis
+define('CONFIG_REDIS_ENABLED', false);
+define('CONFIG_REDIS_HOST', '127.0.0.1');
+define('CONFIG_REDIS_PORT', '6379');
+
+// Cache de resultados de query, ative somente se o REDIS estiver disponivel
+define('CONFIG_RESULT_CACHE', false);
+define('CONFIG_RESULT_CACHE_TTL', 3600);
+
+// URL base do sistema, tem que ter trailing slash
+define('CONFIG_URL', 'http://localhost:8080/');
+define('CONFIG_URL_LOGIN', 'login/');
+define('CONFIG_URL_LOGIN_DAC', 'https://www.daconline.unicamp.br/pckAcadGDE/AppAcadGDE.jsp');
+
+// Tempo em segundos entre atualizacoes do ultimo acesso do usuario
+define('CONFIG_ACESSSO_ATUALIZAR', 300);
+
+define('CONFIG_SALT', '');
+define('CONFIG_SALT_SENHA_ANTIGA', '');
+
+// Nome do cookie de login
+define('CONFIG_COOKIE_NOME', 'gde_token');
+
+// Tempo em dias para o cookie expirar quando "Lembrar" for selecionado
+define('CONFIG_COOKIE_DIAS', 30);
+
+define('CONFIG_COOKIE_KEY', '');
+
+define('CONFIG_OLD_LOGIN', true);
+
+// Periodo de timeout do ultimo acesso pra contagem de usuarios online
+define('CONFIG_TIME_ONLINE', 600);
+
+// Periodo de atualizacao do numero de usuarios online
+define('CONFIG_UPDATE_ONLINE', 60);
+
+// Periodo de atualizacao do ultimo acesso do usuario
+define('CONFIG_ONLINE_UPDATE', 30);
+
+// Periodo de timeout do ultimo acesso (para ser considerado offline, geralmente 3x o anterior)
+define('CONFIG_ONLINE_TIMEOUT', 90);
+
+// Periodo de espera por mensagens novas
+define('CONFIG_TIMEOUT_CHAT', 60);
+
+// Tempo de intervalo entre checagens quando tem amigos online
+define('CONFIG_CHAT_SLEEPT', 2);
+
+// Tempo de intervalo entre checagens quando NAO tem amigos online
+define('CONFIG_CHAT_SLEEPN', 15);
+
+// Periodo de espera antes que uma mensagem seja considerada offline (a.k.a. no limbo)
+define('CONFIG_TIMEOUT_MSG', 30);
+
+// Chat ativo?
+define('CONFIG_CHAT_ATIVO', false);
+
+// Multiplicador do M
+define('CONFIG_AVALIACAO_M_MUL', 0.001);
+
+define('CONFIG_AVALIACAO_MINIMO', 3);
+
+define('CONFIG_NIVEL_LOG', 3);
+
+define('CONFIG_FT_MIN_LENGTH', 3);
+
+define('CONFIG_GOOGLE_CREDENTIALS', __DIR__.'/credentials.json');
+
+define('CONFIG_APP_VERSION', null);

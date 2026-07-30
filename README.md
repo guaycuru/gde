@@ -11,6 +11,18 @@
  - MySQL 5.6.4 ou mais novo (recomendável o uso do MySQL 5.7) ou MariaDB 10.0.5 ou mais novo;
    - InnoDB ativado com suporte a Full Text Indexes
 
+## Instalação com Docker ##
+
+Forma mais rápida de rodar o GDE localmente, sem precisar instalar PHP, MySQL etc:
+
+ 1. Instale o [Docker](https://docs.docker.com/get-docker/) (com Docker Compose);
+ 2. Na pasta raiz do projeto, rode `docker compose up --build`;
+ 3. Crie as tabelas do banco: `docker compose exec app vendor/bin/doctrine orm:schema-tool:update --force`;
+ 4. (Opcional) Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip), descompacte-o e importe os dados de exemplo: `docker compose exec -T db mysql -ugde -pgde gde < gde_pacote.sql`;
+ 5. Acesse http://localhost:8080/.
+
+Login de teste (ver "Sobre os dados no pacote" abaixo): `login1` / `gde42`.
+
 ## Instalação ##
 
  1. Instale o Composer de [getcomposer.org](https://getcomposer.org);

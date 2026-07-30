@@ -1,0 +1,33 @@
+# Imagem para rodar o GDE localmente com "docker compose up" - nao e a
+# imagem de producao (essa fica em Dockerfile, que nao entra no espelho
+# publico do github). Ve docker-compose.yml.
+
+FROM php:8.5-apache
+
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libonig-dev \
+    libzip-dev \
+    libcurl4-openssl-dev \
+    unzip \
+    default-mysql-client \
+    && docker-php-ext-install pdo_mysql mysqli mbstring gd zip curl \
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
+
+# Permite .htaccess (o app usa mod_rewrite para as URLs)
+RUN sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY . .
+
+COPY common/config-docker.inc.php common/config.inc.php
+
+RUN composer install --no-interaction --optimize-autoloader
+
+RUN mkdir -p cache/arvores cache/dac_results proxies \
+    && chown -R www-data:www-data cache proxies \
+    && chmod -R 775 cache proxies

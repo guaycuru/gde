@@ -1,0 +1,30 @@
+# Sobe o GDE localmente: "docker compose up --build" e acesse
+# http://localhost:8080/
+#
+# Na primeira vez (ou apos mudar entidades Doctrine), crie o schema:
+#   docker compose exec app vendor/bin/doctrine orm:schema-tool:update --force
+#
+# Login de teste (ver README/CLAUDE.md): login1 / gde42
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: gde
+      MARIADB_USER: gde
+      MARIADB_PASSWORD: gde
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - gde-db:/var/lib/mysql
+
+volumes:
+  gde-db:
