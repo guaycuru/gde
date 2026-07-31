@@ -2290,21 +2290,26 @@ table.tablesorter tbody tr:hover td { background-color: var(--accent-soft); }
 	#form_busca_universal { order: 3; flex-basis: 100%; }
 	#top_busca_simples { max-width: none; }
 
-	/* Nav rola horizontalmente; submenu abre por toque via :focus-within */
+	/* A lista interna rola horizontalmente; a nav fica sem overflow para os
+	   paineis absolutos escaparem do scroll. Submenu abre por :focus-within */
 	#top_menu, .menu {
 		order: 4;
 		flex-basis: 100%;
+	}
+
+	.menu > ul {
+		gap: 2px;
 		overflow-x: auto;
-		overflow-y: visible;
 		scrollbar-width: none;
 	}
 
-	#top_menu::-webkit-scrollbar { display: none; }
+	.menu > ul::-webkit-scrollbar { display: none; }
 
-	.menu > ul { gap: 2px; }
 	.menu > ul > li > a { padding: 7px 10px; font-size: 13px !important; }
 
-	/* Painel fixo na largura da tela para nao ser cortado pelo scroll */
+	/* li estatico ancora o painel na nav (fora da lista que rola),
+	   fixo na esquerda para nao ser cortado pelo scroll */
+	.menu li { position: static; }
 	.menu ul ul { position: absolute; left: 0; width: 220px; }
 	.menu ul ul ul { left: 0; top: calc(100% + 4px); width: 220px; }
 
