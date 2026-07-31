@@ -359,7 +359,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 
 			</table>
 		</div>
-		<input type="submit" id="salvar" name="salvar" class="botao_salvar" value=" " alt="Salvar" />
+		<input type="submit" id="salvar" name="salvar" class="botao_salvar" value="Salvar" />
 	</div>
 </form>
 <?= $FIM; ?>

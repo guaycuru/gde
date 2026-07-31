@@ -2,7 +2,7 @@
 
 namespace GDE;
 
-define('REVISION', '20210919');
+define('REVISION', '20260727c');
 
 // Composer Autoload
 require_once(__DIR__.'/../vendor/autoload.php');
@@ -99,12 +99,14 @@ if((!defined('HTML')) || (HTML === true)) {
 	if(!defined('TITULO'))
 		define('TITULO', '');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pt-br" lang="pt-br" >
+<!DOCTYPE html>
+<html lang="pt-br">
 <head>
 <?php if((defined('NO_CACHE')) && (NO_CACHE == TRUE)) echo "	<meta http-equiv=\"Pragma\" content=\"no-cache\" />\r\n"; ?>
 	<link rel="search" type="application/opensearchdescription+xml" href="<?= CONFIG_URL; ?>opensearch.xml" title="Procurar no GDE" />
-	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="theme-color" content="#0e4c5f" />
 	<title>GDE - <?= TITULO; ?></title>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery-1.7.2.min.js"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery-ui-1.8.24.min.js"></script>
@@ -127,9 +129,7 @@ if((!defined('HTML')) || (HTML === true)) {
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.common.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.42.js?<?= REVISION; ?>"></script>
 	<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-3315545-3']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>
-	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/dropdown_menu.css?<?= REVISION; ?>" type="text/css" />
-	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
-	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/tabs.css?<?= REVISION; ?>" type="text/css" />
+	<?php /* CSS dos plugins primeiro; gde.css por ultimo para poder sobrescrever. */ ?>
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.datepicker.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.fancybox.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.jcontext.css?<?= REVISION; ?>" type="text/css" />
@@ -139,12 +139,10 @@ if((!defined('HTML')) || (HTML === true)) {
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.ui.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/fullcalendar.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.tablesorter.css?<?= REVISION; ?>" type="text/css" />
+	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="apple-touch-icon" href="<?= CONFIG_URL; ?>web/images/apple-touch-icon.png" />
 </head>
 <body id="page_bg">
-<a href="https://github.com/guaycuru/gde" target="_blank" title="Colabore com o GDE, abra seu Pull Request!" id="fork-me-ribbon">
-	<img style="position: absolute; top: 0; right: 0; border: 0; z-index: 99;" src="https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png">
-</a>
 <script type="text/javascript">
 // <![CDATA[
 var CONFIG_URL = '<?= CONFIG_URL; ?>';
@@ -203,15 +201,15 @@ $(document).ready(function(){
 </script>
 <?php } ?>
 	<iframe src="about:blank" width="0" height="0" frameborder="0" id="controle" name="controle"></iframe>
-		<div id="top">
+		<header id="top">
 			<div id="mini_logo">
-				<a href="<?=CONFIG_URL;?>" title="Home"><img src="<?= CONFIG_URL; ?>web/images/mini_logo.gif" alt="GDE" width="128" height="38" /></a>
-			</div> 
+				<a href="<?=CONFIG_URL;?>" title="Home"><span class="logo_marca">GDE</span><span class="logo_beta">&beta;</span></a>
+			</div>
 	<?php
 	if($_Usuario !== null) {
 		$ultima_atualizacao = Dado::Pega_Dados('ultima_atualizacao')->format('d/m/Y');
 	?>
-			<div id="top_menu" class="menu ui-corner-bottom">
+			<nav id="top_menu" class="menu">
 				<ul>
 		<?php if(!empty($_SESSION['admin_su'])) { ?>
 					<li><a href="#" id="admin_unsu">Un-SU</a></li>
@@ -253,15 +251,15 @@ $(document).ready(function(){
 					</li>
 					<li><a href="#" onclick="Logout(); return false;">Sair</a></li>
 				</ul>
-			</div>
+			</nav>
 			<form id="form_busca_universal" method="get" action="<?= CONFIG_URL; ?>busca/">
 				<div id="top_busca_simples">
 					<input type="text" id="menu_input_busca" name="q" />
 				</div>
 				<div id="top_botoes_busca">
-					<input type="submit" id="botao_busca_universal" name="buscar" value="OK" />
+					<input type="submit" id="botao_busca_universal" name="buscar" value="Buscar" />
 					<div id="busca_avancada_wrapper">
-						<a href="<?= CONFIG_URL; ?>busca/" title="Busca Avan&ccedil;ada" id="toggle_menu_busca_avancada"><img id="botao_busca_avancada" src="<?= CONFIG_URL; ?>web/images/menu-avancado.png" alt="+" width="11" height="38" /></a>
+						<a href="<?= CONFIG_URL; ?>busca/" title="Busca Avan&ccedil;ada" id="toggle_menu_busca_avancada"><span id="botao_busca_avancada" aria-hidden="true">&#43;</span></a>
 						<div id="div_menu_busca_avancada">
 							<a href="<?= CONFIG_URL; ?>busca/#tab_alunos">Buscar Alunos</a>
 							<a href="<?= CONFIG_URL; ?>busca/#tab_professores">Buscar Professores</a>
@@ -276,10 +274,11 @@ $(document).ready(function(){
 	$ultima_atualizacao = '-/-/-';
 		echo "&nbsp;";
 	} ?>
-		</div>
+			<a href="https://github.com/guaycuru/gde" target="_blank" rel="noopener" title="Colabore com o GDE, abra seu Pull Request!" id="fork-me-ribbon">Colabore no GitHub</a>
+		</header>
 	<div id="wrapper" class="center">
 		<div id="content_bg">
-			<div id="content">
+			<main id="content">
 <?php if((CONFIG_CHAT_ATIVO) && ($_Usuario !== null) && ((!isset($_SESSION['admin_su'])) || ($_SESSION['admin_su'] === false))) { ?>
 				<div id="chatMiguxo" class="chat_principal">
 					<div id="chatAmigos" class="chat_amigos ui-corner-top">
@@ -306,19 +305,19 @@ $(document).ready(function(){
 		$versao_tag = " (tag: ".CONFIG_APP_VERSION.")";
 	}
 	$FIM = "
-				<div id=\"rodape\">
-					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
-					<div id=\"usuarios_online\"><span>Usu&aacute;rios online</span>: <span id=\"contador_usuarios_online\">".Usuario::Conta_Online(false)."</span></div>
-					<br />&Uacute;ltima Atualiza&ccedil;&atilde;o do sistema: ".$ultima_atualizacao." - Vers&atilde;o 2.6".$versao_tag."
-					<br /><br /><strong>Aviso:</strong> O GDE n&atilde;o &eacute; um sistema oficial da Unicamp, e tem por &uacute;nico objetivo auxiliar alunos na vida acad&ecirc;mica.
-					<br /><br /><i>".Quote::Qualquer_Uma(true)."</i>
-					<hr style=\"color: #B2B2B2; background-color: #B2B2B2; height: 1px; margin: 10px 0 10px 0; border: 0 none\" />
-					<div style=\"width: 210px; height: 42px; margin: auto;\">
-						<a href=\"http://www.guaycuru.net\" title=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" target=\"_blank\" style=\"float: left; margin-top: 10px;\"><img src=\"".CONFIG_URL."web/images/logo_guaycuru.gif\" border=\"0\" alt=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" width=\"100\" height=\"21\" /></a>
-					</div>
-					<!-- <br /><div style=\"width: 125px; margin: auto;\"><a href=\"http://validator.w3.org/check?uri=referer\" target=\"_blank\"><img src=\"".CONFIG_URL."web/images/w3c_xhtml.gif\" border=\"0\" alt=\"Valid XHTML 1.0 Transitional !\" width=\"60\" height=\"21\" /></a> <a href=\"http://jigsaw.w3.org/css-validator/check/referer\" target=\"_blank\"><img src=\"".CONFIG_URL."web/images/w3c_css.gif\" alt=\"Valid CSS !\" width=\"60\" height=\"21\" /></a></div>-->
+			</main>
+			<footer id=\"rodape\">
+				<div class=\"rodape_meta\">
+					<span id=\"usuarios_online\"><span>Usu&aacute;rios online</span>: <span id=\"contador_usuarios_online\">".Usuario::Conta_Online(false)."</span></span>
+					<span>&Uacute;ltima atualiza&ccedil;&atilde;o: ".$ultima_atualizacao."</span>
+					<span>Vers&atilde;o 2.6".$versao_tag."</span>
 				</div>
-			</div>
+				<span class=\"rodape_aviso\"><strong>Aviso:</strong> O GDE n&atilde;o &eacute; um sistema oficial da Unicamp, e tem por &uacute;nico objetivo auxiliar alunos na vida acad&ecirc;mica.</span>
+				<span class=\"rodape_quote\">".Quote::Qualquer_Uma(true)."</span>
+				<span class=\"rodape_credito\">
+					<a href=\"http://www.guaycuru.net\" title=\"Desenvolvido por Felipe Guaycuru de C. B. Franco\" target=\"_blank\" rel=\"noopener\">Desenvolvido por Felipe Guaycuru de C. B. Franco</a>
+				</span>
+			</footer>
 		</div>
 	</div>
 </body>

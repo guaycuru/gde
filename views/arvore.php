@@ -157,7 +157,7 @@ if($continua) {
 		<br />
 		<table cellpadding="0" cellspacing="0" border="0" width="90%">
 			<tr>
-				<td colspan='2'><input type="submit" id="ok" value=" " alt="Consultar" class="botao_consultar" /> <input type="button" id="limpar" value=" " alt="Limpar" class="botao_limpar" /></td>
+				<td colspan='2'><input type="submit" id="ok" value="Consultar" class="botao_consultar" /> <input type="button" id="limpar" value="Limpar" class="botao_limpar" /></td>
 			</tr>
 		</table>
 	</form>

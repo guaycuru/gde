@@ -84,10 +84,10 @@ foreach($Atuais as $Atual) {
 	<tr>
 		<td colspan="2">
 			<?php if($Evento->Pode_Alterar($_Usuario)) { ?>
-			<input type="button" id="novo_evento_salvar" name="salvar" class="botao_salvar" value=" " alt="Salvar" />
-			<input type="button" id="novo_evento_cancelar" name="cancelar" class="botao_cancelar" value=" " alt="Cancelar" />
+			<input type="button" id="novo_evento_salvar" name="salvar" class="botao_salvar" value="Salvar" />
+			<input type="button" id="novo_evento_cancelar" name="cancelar" class="botao_cancelar" value="Cancelar" />
 			<?php } if(($Evento->getID() != null) && ($Evento->Pode_Alterar($_Usuario))) { ?>
-			<input type="button" id="excluir_evento" name="excluir" class="botao_excluir" value=" " alt="Excluir" />
+			<input type="button" id="excluir_evento" name="excluir" class="botao_excluir" value="Excluir" />
 			<?php } ?>
 		</td>
 	</tr>

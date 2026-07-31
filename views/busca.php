@@ -263,7 +263,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 	<div id="tab_tudo" class="tab_content">
 		<div class="form_busca">
 			<form method="get" action="<?= CONFIG_URL; ?>busca/">
-				<input type="text" class="busca_simples" name="q" value="<?php if($buscar && $simples) echo htmlspecialchars($q); ?>" /> <input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" />
+				<input type="text" class="busca_simples" name="q" value="<?php if($buscar && $simples) echo htmlspecialchars($q); ?>" /> <input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" />
 			</form>
 		</div>
 		<div id="tab_tudo_resultados" class="busca_resultados"></div>
@@ -293,7 +293,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 							<td><?= Select_Ordem('alunos', true); ?></td>
 						</tr>
 						<tr>
-							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" /></td>
+							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" /></td>
 						</tr>
 					</table>
 				</div>
@@ -384,7 +384,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value=" " alt="Consultar" /> <input type="button" class="botao_limpar" value=" " alt="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_alunos';" /></td>
+						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value="Consultar" /> <input type="button" class="botao_limpar" value="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_alunos';" /></td>
 					</tr>
 				</table>
 			</form>
@@ -408,7 +408,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						<td><?= Select_Ordem('professores', true); ?></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" /></td>
+						<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" /></td>
 					</tr>
 				</table>
 			</div>
@@ -436,7 +436,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 							<td><?= Select_Ordem('disciplinas', true); ?></td>
 						</tr>
 						<tr>
-							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" /></td>
+							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" /></td>
 						</tr>
 					</table>
 				</div>
@@ -490,7 +490,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value=" " alt="Consultar" /> <input type="button" class="botao_limpar" value=" " alt="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_disciplinas';" /></td>
+						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value="Consultar" /> <input type="button" class="botao_limpar" value="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_disciplinas';" /></td>
 					</tr>
 				</table>
 			</form>
@@ -518,7 +518,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 							<td><?= Select_Ordem('oferecimentos', true); ?></td>
 						</tr>
 						<tr>
-							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" /></td>
+							<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" /></td>
 						</tr>
 					</table>
 				</div>
@@ -588,7 +588,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						</td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value=" " alt="Consultar" /> <input type="button" class="botao_limpar" value=" " alt="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_oferecimentos';" /></td>
+						<td colspan="2"><input type="submit" name="buscar" class="botao_consultar" value="Consultar" /> <input type="button" class="botao_limpar" value="Limpar" onclick="document.location='<?= CONFIG_URL; ?>busca/#tab_oferecimentos';" /></td>
 					</tr>
 				</table>
 			</form>
@@ -609,7 +609,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 						<td><?= Select_Ordem('salas', true); ?></td>
 					</tr>
 					<tr>
-						<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value=" " alt="Consultar" /></td>
+						<td colspan="2"><input type="submit" class="botao_consultar botao_busca_simples" value="Consultar" /></td>
 					</tr>
 				</table>
 			</div>

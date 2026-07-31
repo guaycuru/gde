@@ -175,8 +175,8 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 			</tr>
 			<tr>
 				<td colspan="2">
-					<input type="button" id="novo_extra_salvar" name="salvar" class="botao_salvar" value=" " alt="Salvar" />
-					<input type="button" id="novo_extra_cancelar" name="cancelar" class="botao_cancelar" value=" " alt="Cancelar" />
+					<input type="button" id="novo_extra_salvar" name="salvar" class="botao_salvar" value="Salvar" />
+					<input type="button" id="novo_extra_cancelar" name="cancelar" class="botao_cancelar" value="Cancelar" />
 				</td>
 			</tr>
 		</table>
