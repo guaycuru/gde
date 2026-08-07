@@ -14,15 +14,18 @@ $Ret = false;
 if($_POST['a'] == 'n') { // Nova Opcao
 	$pp = intval($_POST['pp']);
 	$pa = intval($_POST['pa']);
+	$Periodo = Periodo::Load($pp);
+	if($Periodo->getId_periodo() == null)
+		die(json_encode(false));
 	if($pa == 0) {
-		$Periodo = Periodo::Load($pp);
-		if(($Periodo->getId_periodo() == null) || ($Periodo->Anterior() === null))
+		if($Periodo->Anterior() === null)
 			die(json_encode(false));
 		$pa = $Periodo->Anterior()->getPeriodo();
 	}
 	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, false);
 	if($_Usuario->getAluno(false) === null)
 		$Planejado->setSimulado(true);
+	$Ret = array();
 	$Ret['ok'] = ($Planejado->Save(true) !== false);
 	if($Ret['ok'] === true)
 		$Ret['id'] = $Planejado->getID();
@@ -30,6 +33,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	$Planejado = Planejado::Load($_POST['id']);
 	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()))
 		die(json_encode(false));
+	$Ret = array();
 	$Ret['ok'] = ($Planejado->Delete(true) != false);
 	$Planejados = null;
 	if($Ret['ok'] === true)
@@ -391,6 +395,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		
 		} else { // Apenas uma disciplina
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
+			$Ret = array();
 			$EliminadasAdd = array();
 			if($_Usuario->getAluno(false) !== null)
 				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
@@ -563,6 +568,7 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 'r') { // Remover
 		$Oferecimento = Oferecimento::Load($_POST['o']);
+		$Ret = array();
 		$Ret['ok'] = ($Planejado->Remover_Oferecimento($Oferecimento) !== false);
 		if($Ret['ok'] !== false) {
 			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro

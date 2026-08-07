@@ -379,8 +379,8 @@ class Arvore {
 			round($x2 + (1+$k)*$a), round($y2 - (1-$k)*$a),
 			round($x2 + (1-$k)*$a), round($y2 + (1+$k)*$a),
 		);
-		imagefilledpolygon($image, $points, 4, $color);
-		return imagepolygon($image, $points, 4, $color);
+		imagefilledpolygon($image, $points, $color);
+		return imagepolygon($image, $points, $color);
 	}
 
 	private static function imagelinedotted($im, $x1, $y1, $x2, $y2, $color, $dist) {
@@ -419,7 +419,7 @@ class Arvore {
 		if($largura_s1 == null) {
 			for($x = 0; $x < $dados['maximo_x']; $x++) {
 				$largura_s1 = $x2 + ($qual_x_dif * ($consts['largura'] * (9/10) / $dados['maximo_x']));
-				$rgb = imagecolorat($image, $largura_s1, $pr_y);
+				$rgb = imagecolorat($image, (int)round($largura_s1), (int)round($pr_y));
 				$r = ($rgb >> 16) & 0xFF;
 				$g = ($rgb >> 8) & 0xFF;
 				$b = $rgb & 0xFF;
@@ -453,9 +453,9 @@ class Arvore {
 		self::imagelinethick($image, $at_x, $at_y, $largura_s1, $pr_y-8, $cor, 2); // Desce pra seta
 
 		if($parcial === false)
-			imagefilledpolygon($image, array($largura_s1-4, $pr_y-8, $largura_s1+5, $pr_y-8, $largura_s1, $pr_y), 3, $cor); // A seta (integral)
+			imagefilledpolygon($image, array($largura_s1-4, $pr_y-8, $largura_s1+5, $pr_y-8, $largura_s1, $pr_y), $cor); // A seta (integral)
 		else
-			imagepolygon($image, array($largura_s1-4, $pr_y-8, $largura_s1+5, $pr_y-8, $largura_s1, $pr_y), 3, $cor); // A seta (parcial)
+			imagepolygon($image, array($largura_s1-4, $pr_y-8, $largura_s1+5, $pr_y-8, $largura_s1, $pr_y), $cor); // A seta (parcial)
 
 		return $largura_s1;
 	}
@@ -710,7 +710,7 @@ class Arvore {
 			foreach($Lista as $Disciplina) {
 				if(($Disciplina->getSigla() == Curriculo::ELETIVA) || ($Disciplina->getSigla() == Curriculo::LINGUAS))
 					continue;
-				$mapas[$Disciplina->getId()] = array($Disciplina->getNome(), array($em_x, $em_y, $em_x+$consts['largura'], $em_y+$consts['altura']));
+				$mapas[(string)$Disciplina->getId()] = array($Disciplina->getNome(), array($em_x, $em_y, $em_x+$consts['largura'], $em_y+$consts['altura']));
 				$em_x += $consts['largura'] + $consts['dist_x'];
 			}
 			$em_x = $consts['inicio_x'];
@@ -762,7 +762,7 @@ class Arvore {
 					continue;
 				if($meu)
 					$starters .= "
-	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getId())."\").showMenu({
+	\$(\"#Shape_".str_replace(" ", "_", (string)$Disciplina->getId())."\").showMenu({
 		opacity: 0.9,
 		left: true,
 		query: \"#Menu_".str_replace(" ", "_", $Disciplina->getSigla())."\"
@@ -770,7 +770,7 @@ class Arvore {
 				if(in_array($Disciplina->getSigla(), $this->siglas_obrigatorias) !== false) {
 					$img_overlay = str_replace('.png', '_'.str_replace(' ', '_', $Disciplina->getSigla()).'.png', $this->arquivo);
 					$starters .= "
-	\$(\"#Shape_".str_replace(" ", "_", $Disciplina->getId())."\").hover(function() {
+	\$(\"#Shape_".str_replace(" ", "_", (string)$Disciplina->getId())."\").hover(function() {
 		\$(\"img.img_ov_arvore\").attr(\"src\", \"".$img_overlay."\");
 		\$(\"div.div_img_ov_arvore\").fadeTo('slow', 0.9);
 	}, function () {

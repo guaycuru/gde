@@ -12,6 +12,7 @@ if((!isset($_SESSION['admin_su'])) &&  ($_Usuario->getAdmin() === false))
 $periodo = Periodo::getAtual()->getPeriodo();
 
 if(isset($_POST['info'])) {
+	set_time_limit(300);
 	if(Dado::Atualizar($periodo) === false)
 		Base::Error_JSON('Falha ao atualizar dados.');
 	if($_POST['curss'] == 1) { // Cursacoes e Reprovacoes

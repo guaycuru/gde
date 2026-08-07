@@ -61,11 +61,21 @@ abstract class Base {
 		self::$_trans_count--;
 
 		// Finish the transaction
-		if($commit) {
-			self::_EM()->getConnection()->commit();
-			return true;
-		} else {
-			self::_EM()->getConnection()->rollback();
+		try {
+			if($commit) {
+				self::_EM()->getConnection()->commit();
+				return true;
+			} else {
+				self::_EM()->getConnection()->rollback();
+			}
+		} catch(\PDOException $e) {
+			// A conexao pode ter caido e sido reconectada no meio da transacao (ex: falha de rede
+			// intermitente com o DB), perdendo o BEGIN sem que este codigo saiba - nesse caso nao ha
+			// nada de fato pra commitar/desfazer, entao so propaga o resultado sem estourar um fatal
+			if(strpos($e->getMessage(), 'no active transaction') === false)
+				throw $e;
+			if($commit)
+				return false;
 		}
 
 		return $commit;

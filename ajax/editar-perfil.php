@@ -51,7 +51,7 @@ if(isset($_POST['salvar'])) {
 	$_Usuario->setEstado_Civil($_POST['estado_civil'][0]);
 	$_Usuario->setBlog((($_POST['blog'] != "") && ($_POST['blog'] != "http://")) ? $_POST['blog'] : null);
 	$_Usuario->setFacebook((($_POST['facebook'] != "") && ($_POST['facebook'] != "http://")) ? $_POST['facebook'] : null);
-	$_Usuario->setTwitter(str_replace('@', null, $_POST['twitter']));
+	$_Usuario->setTwitter(str_replace('@', '', $_POST['twitter']));
 	$_Usuario->setMais($_POST['mais']);
 	if(isset($_POST['compartilha_arvore']))
 		$_Usuario->setCompartilha_Arvore($_POST['compartilha_arvore']);

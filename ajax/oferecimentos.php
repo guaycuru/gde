@@ -26,7 +26,7 @@ if(!isset($_POST['tp'])) {
 	$Oferecimentos = Oferecimento::Consultar($parametros, "O.turma ASC", $total);
 
 } else {
-	$Oferecimentos = Oferecimento::Consultar(array("sigla" => urldecode(str_replace("_", " ", $_POST['q'])), "periodo" => intval($_POST['p'])));
+	$Oferecimentos = Oferecimento::Consultar(array("sigla" => urldecode(str_replace("_", " ", $_POST['q'])), "periodo" => intval($_POST['p'])), null, $total_ignorado, 50);
 
 	if($_POST['tp'] == 3)
 		echo "<option value=\"*\">?</option>";

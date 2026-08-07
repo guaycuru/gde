@@ -243,15 +243,20 @@ class Oferecimento extends Base {
 		}
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
+		// So vincula os parametros que realmente viraram placeholders no DQL acima - $param pode conter
+		// chaves extras (ex: um filtro que "limpou" para vazio e nao gerou condicao), o que faz o Doctrine
+		// estourar "Too many parameters" se passarmos $param inteiro.
+		preg_match_all('/:(\w+)/', implode(" ", $qrs), $matches);
+		$bind = array_intersect_key($param, array_flip($matches[1]));
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT O.id_oferecimento) FROM ".static::class." AS O ".$joins.$where;
-			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
+			$queryt = self::_EM()->createQuery($dqlt)->setParameters($bind);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
 		}
 		$dql = "SELECT DISTINCT O".(($join_disciplina) ? ", DI" : "")." FROM ".static::class." AS O ".$joins.$where." ORDER BY ".$ordem;
-		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		$query = self::_EM()->createQuery($dql)->setParameters($bind);
 		if($limit > 0)
 			$query->setMaxResults($limit);
 		if($start > -1)
@@ -544,12 +549,12 @@ class Oferecimento extends Base {
 			sort($horarios);
 			$ch = count($horarios);
 			$fh = $lh = $horarios[0];
-			$sala = $salan = strtoupper($Resto[$horarios[0]]);
+			$sala = $salan = strtoupper((string)$Resto[$horarios[0]]);
 			$j = 1;
 			for($i = 1; $i < $ch; $i++) {
-				if(($horarios[$i] == $fh + $j) && (($agrupar === true) || (strtoupper($Resto[$horarios[$i]]) == $sala))) {
-					if(strtoupper($Resto[$horarios[$i]]) != $sala) {
-						$sala = strtoupper($Resto[$horarios[$i]]);
+				if(($horarios[$i] == $fh + $j) && (($agrupar === true) || (strtoupper((string)$Resto[$horarios[$i]]) == $sala))) {
+					if(strtoupper((string)$Resto[$horarios[$i]]) != $sala) {
+						$sala = strtoupper((string)$Resto[$horarios[$i]]);
 						$salan .= '/'.$sala;
 					}
 					$lh = $horarios[$i];
@@ -558,7 +563,7 @@ class Oferecimento extends Base {
 					$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');
 					$fh = $lh = $horarios[$i];
 					$j = 1;
-					$sala = strtoupper($Resto[$horarios[$i]]);
+					$sala = strtoupper((string)$Resto[$horarios[$i]]);
 				}
 			}
 			$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');

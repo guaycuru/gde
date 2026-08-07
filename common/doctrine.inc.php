@@ -76,7 +76,14 @@ $connection = array(
 if((defined('CONFIG_DB_SOCKET')) && (!empty(CONFIG_DB_SOCKET)))
 	$connection['unix_socket'] = CONFIG_DB_SOCKET;
 elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {
-	$connection['host'] = CONFIG_DB_HOST;
+	// CONFIG_DB_HOST costuma ter registro DNS dual-stack (A e AAAA) cujo AAAA nao
+	// e roteavel a partir dos pods (sem rota IPv6 real, so link-local) - o resolver
+	// as vezes devolve o AAAA na frente do A em lookups de host unico, causando
+	// PDOException "Network is unreachable" intermitente ao conectar. gethostbyname()
+	// so consulta registro A, entao forca IPv4 e evita a ambiguidade. Em caso de
+	// falha de resolucao ela devolve o hostname original sem alterar - mesmo
+	// comportamento de antes, deixando o driver tentar resolver na conexao.
+	$connection['host'] = gethostbyname(CONFIG_DB_HOST);
 	if((defined('CONFIG_DB_PORT')) && (!empty(CONFIG_DB_PORT)))
 		$connection['port'] = CONFIG_DB_PORT;
 } else {

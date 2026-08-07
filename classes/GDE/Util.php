@@ -24,6 +24,7 @@ class Util {
 	}
 
 	public static function Limita($texto, $tamanho) {
+		$texto = (string)$texto;
 		return (mb_strlen($texto) <= $tamanho) ? $texto : mb_substr($texto, 0, $tamanho-3).'...';
 	}
 
@@ -63,8 +64,15 @@ class Util {
 	}
 
 	public static function String_FTS($entrada) {
-		$limpo = str_replace(array('+', '-'), '', $entrada);
-		return preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $limpo);
+		// Remove caracteres fora do Basic Multilingual Plane (ex: simbolos matematicos estilizados, emoji) -
+		// alguns sao classificados como letra (\p{L}) pelo Unicode, entao sobrevivem ao Limpa_Busca, mas
+		// quebram o parser de FULLTEXT BOOLEAN MODE do MySQL (SQLSTATE[42000] syntax error).
+		$limpo = preg_replace('/[\x{10000}-\x{10FFFF}]/u', '', $entrada);
+		$limpo = str_replace(array('+', '-'), '', $limpo);
+		$formatado = preg_replace('/(\w{'.CONFIG_FT_MIN_LENGTH.',})/u', '+$1*', $limpo);
+		// Se nao sobrou nenhum termo valido (ex: busca era so de caracteres removidos acima),
+		// usa um termo que nunca da match em vez de um AGAINST(...) vazio/invalido
+		return (trim($formatado) !== '') ? $formatado : '+xxxsemresultadosxxx*';
 	}
 
 	public static function Horarios_Livres($Horario) {
@@ -81,7 +89,9 @@ class Util {
 		return $limpos;
 	}
 
-	public static function Enviar_Email($para, $assunto, $msg, $from = 'GDE <gde@guaycuru.net>', $html = false) {
+	public static function Enviar_Email($para, $assunto, $msg, $from = null, $html = false) {
+		if($from === null)
+			$from = 'GDE <' . CONFIG_MAIL_FROM . '>';
 		$html_header = ($html) ? 'MIME-Version: 1.0'."\r\n".'Content-type: text/html; charset=utf-8'."\r\n" : '';
 		return @mail(
 			$para,

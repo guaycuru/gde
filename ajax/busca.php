@@ -21,6 +21,9 @@ else
 $tp = (isset($_POST['t'])) ? str_replace('tab_', '', $_POST['t']) : 'tudo';
 if(!in_array($tp, array('tudo', 'alunos', 'professores', 'disciplinas', 'oferecimentos', 'salas')))
 	exit;
+// Busca avancada (filtros por categoria) so existe para alunos/disciplinas/oferecimentos - 'tudo', 'professores' e 'salas' so tem busca simples (via 'q')
+if((!$simples) && (!in_array($tp, array('alunos', 'disciplinas', 'oferecimentos'))))
+	exit;
 
 $total = array();
 $total['tudo'] = $total['alunos'] = $total['professores'] = $total['disciplinas'] = $total['oferecimentos'] = $total['salas'] = '?';
@@ -37,7 +40,7 @@ if($tp == 'tudo') {
 	$sta['tudo'] = $sta['alunos'] = $sta['professores'] = $sta['disciplinas'] = $sta['oferecimentos'] = $sta['salas'] = 0;
 } else {
 	if(isset($_POST['resultados_pagina']))
-		$qts[$tp] = intval($_POST['resultados_pagina']);
+		$qts[$tp] = max(1, min(intval($_POST['resultados_pagina']), 100));
 	else
 		$qts[$tp] = 20;
 	$apg[$tp] = (isset($_POST['p'])) ? intval($_POST['p'])-1 : 0;

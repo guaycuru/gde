@@ -756,7 +756,7 @@ if($Usr !== null) {
 							</div>
 							<div class="amigo_nome">
 								<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
-								<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= ($_sou_eu) ? substr($Amigo->getApelido(true), 0, 10) : $Amigo->getAmigo()->getNome() ?></a>
+								<a href="<?= CONFIG_URL; ?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin() ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true) ?>"><?= ($_sou_eu) ? substr((string)$Amigo->getApelido(true), 0, 10) : $Amigo->getAmigo()->getNome() ?></a>
 							</div>
 						</div>
 					<?php } } ?>
@@ -775,7 +775,7 @@ if($Usr !== null) {
 							</div>
 							<div class="amigo_nome">
 								<img src="<?= CONFIG_URL; ?>web/images/status_vs.png" class="status_icone status_icone_<?= $Amigo->getAmigo()->getID(); ?>" alt="?" />
-								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(true); ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true); ?>"><?= substr($Amigo->getApelido(true), 0, 10); ?></a>
+								<a href="<?= CONFIG_URL;?>perfil/?usuario=<?= $Amigo->getAmigo()->getLogin(true); ?>" class="amigo" title="<?= $Amigo->getAmigo()->getNome_Completo(true); ?>"><?= substr((string)$Amigo->getApelido(true), 0, 10); ?></a>
 							</div>
 						</div>
 					<?php } ?>

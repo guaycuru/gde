@@ -314,9 +314,15 @@ class Aluno extends Base {
 		$joins = (count($jns) > 0) ? implode(" ", $jns) : null;
 		$where = (count($qrs) > 0) ? " WHERE ".implode(" AND ", $qrs) : "";
 
+		// So vincula os parametros que realmente viraram placeholders no DQL acima - $param pode conter
+		// chaves extras (ex: um filtro que "limpou" para vazio e nao gerou condicao), o que faz o Doctrine
+		// estourar "Too many parameters" se passarmos $param inteiro.
+		preg_match_all('/:(\w+)/', implode(" ", $qrs), $matches);
+		$bind = array_intersect_key($param, array_flip($matches[1]));
+
 		if($total !== null) {
 			$dqlt = "SELECT COUNT(DISTINCT A.ra) FROM ".static::class." AS A ".$joins.$where;
-			$queryt = self::_EM()->createQuery($dqlt)->setParameters($param);
+			$queryt = self::_EM()->createQuery($dqlt)->setParameters($bind);
 			if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
 				$queryt->enableResultCache(CONFIG_RESULT_CACHE_TTL);
 			$total = $queryt->getSingleScalarResult();
@@ -329,7 +335,7 @@ class Aluno extends Base {
 		}
 
 		$dql = "SELECT DISTINCT A".$extra_select." FROM ".static::class." AS A ".$joins.$where." ORDER BY ".$ordem;
-		$query = self::_EM()->createQuery($dql)->setParameters($param);
+		$query = self::_EM()->createQuery($dql)->setParameters($bind);
 		if($limit > 0)
 			$query->setMaxResults($limit);
 		if($start > -1)

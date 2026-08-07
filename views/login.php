@@ -20,7 +20,7 @@ if(isset($_GET['login_dac'])) {
 if(isset($_GET['token'])) { ?>
 <h1>Aguarde...</h1>
 <form name="formulario" id="form_login" method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/login.php" data-destino="<?= CONFIG_URL; ?>" data-sucesso=" ">
-	<input type="hidden" name="token" id="token" value="<?php if(!empty($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
+	<input type="hidden" name="token" id="token" value="<?php if(!empty($_GET['token']) && is_string($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
 </form>
 <script type="text/javascript">
 	$.guaycuru.aguarde();
@@ -56,7 +56,7 @@ $(document).ready(function(){
 	<div id="coluna_esquerda">
 		<form name="formulario" id="form_login" method="post" class="auto-form" action="<?= CONFIG_URL; ?>ajax/login.php" data-destino="<?= CONFIG_URL; ?>" data-sucesso=" ">
 		<input type="hidden" name="old" value="1" />
-		<input type="hidden" name="token" value="<?php if(!empty($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
+		<input type="hidden" name="token" value="<?php if(!empty($_GET['token']) && is_string($_GET['token'])) echo htmlspecialchars($_GET['token']); ?>" />
 		<table>
 			<tr>
 				<td><strong>RA / Email / Login:</strong></td>

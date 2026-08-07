@@ -10,7 +10,7 @@ if((!isset($_POST['logout'])) && (!isset($_POST['login'])) && (!isset($_POST['to
 	Base::Error_JSON('Faltando acao.');
 
 $erro = $return = null;
-if(!empty($_POST['token'])) {
+if((!empty($_POST['token'])) && (is_string($_POST['token']))) {
 	$_Usuario = Usuario::Efetuar_Login_DAC($_POST['token'], $erro);
 } elseif(isset($_POST['logout'])) {
 	Usuario::Logout();

@@ -34,6 +34,9 @@ define('CONFIG_ACESSSO_ATUALIZAR', 300);
 define('CONFIG_SALT', '');
 define('CONFIG_SALT_SENHA_ANTIGA', '');
 
+// Endereco usado como From/Reply-To nos emails enviados pelo sistema (ver GDE\Util::Enviar_Email)
+define('CONFIG_MAIL_FROM', 'gde@guaycuru.net');
+
 // Nome do cookie de login
 define('CONFIG_COOKIE_NOME', 'gde_token');
 

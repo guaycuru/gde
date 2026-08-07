@@ -196,11 +196,11 @@ if($Usuario !== null) {
 			<?php } ?>
 			<tr id="tr_nome">
 				<td><strong>Nome:</strong></td>
-				<td><input type="text" id="nome" name="nome" value="<?= htmlspecialchars($nome); ?>" /></td>
+				<td><input type="text" id="nome" name="nome" value="<?= htmlspecialchars($nome ?? ''); ?>" /></td>
 			</tr>
 			<tr id="tr_sobrenome">
 				<td><strong>Sobrenome:</strong></td>
-				<td><input type="text" id="sobrenome" name="sobrenome" value="<?= htmlspecialchars($sobrenome); ?>" /></td>
+				<td><input type="text" id="sobrenome" name="sobrenome" value="<?= htmlspecialchars($sobrenome ?? ''); ?>" /></td>
 			</tr>
 			<?php
 			if($tipo == 'A') {

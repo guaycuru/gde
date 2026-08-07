@@ -181,38 +181,45 @@ class Cardapio extends Base {
 	}
 
 	/**
-	 * @return int
-	 * @throws \Doctrine\ORM\NonUniqueResultException
+	 * @return bool|int
 	 */
-	public static function Ultimo_ID() {
-		$dql = "SELECT MAX(C.id_cardapio) FROM GDE\\Cardapio C";
-		$query = self::_EM()->createQuery($dql);
-		if((!defined('FORCE_NO_CACHE')) && (defined('CONFIG_RESULT_CACHE')) && (CONFIG_RESULT_CACHE === true) && (RESULT_CACHE_AVAILABLE === true))
-			$query->enableResultCache(CONFIG_RESULT_CACHE_TTL);
+	public function ID_Anterior() {
+		if($this->getID() == null)
+			return false;
+		$data = clone $this->getData();
+		$data->setTime(0, 0, 0);
+		$query = self::_EM()->createQuery(
+			"SELECT C.id_cardapio FROM GDE\\Cardapio C WHERE (C.data < ?1) OR (C.data = ?1 AND C.tipo < ?2) ORDER BY C.data DESC, C.tipo DESC"
+		);
+		$query->setParameter(1, $data);
+		$query->setParameter(2, $this->getTipo());
+		$query->setMaxResults(1);
 		try {
 			return $query->getSingleScalarResult();
 		} catch(\Doctrine\ORM\NoResultException $e) {
-			return PHP_INT_MAX;
+			return false;
 		}
 	}
 
 	/**
 	 * @return bool|int
 	 */
-	public function ID_Anterior() {
-		if($this->getID() == null)
-			return false;
-		return ($this->getID() > 1) ? $this->getID() - 1 : false;
-	}
-
-	/**
-	 * @return bool|int
-	 * @throws \Doctrine\ORM\NonUniqueResultException
-	 */
 	public function ID_Proximo() {
 		if($this->getID() == null)
 			return false;
-		return ($this->getID() < self::Ultimo_ID()) ? $this->getID() + 1 : false;
+		$data = clone $this->getData();
+		$data->setTime(0, 0, 0);
+		$query = self::_EM()->createQuery(
+			"SELECT C.id_cardapio FROM GDE\\Cardapio C WHERE (C.data > ?1) OR (C.data = ?1 AND C.tipo > ?2) ORDER BY C.data ASC, C.tipo ASC"
+		);
+		$query->setParameter(1, $data);
+		$query->setParameter(2, $this->getTipo());
+		$query->setMaxResults(1);
+		try {
+			return $query->getSingleScalarResult();
+		} catch(\Doctrine\ORM\NoResultException $e) {
+			return false;
+		}
 	}
 
 	/**

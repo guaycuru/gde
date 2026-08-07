@@ -600,7 +600,7 @@ class Usuario extends Base {
 	 * @return string
 	 */
 	public function getEstado_Civil($html = true) {
-		return ($html && isset(self::$_estados_civis[$this->estado_civil]))
+		return ($html && ($this->estado_civil !== null) && isset(self::$_estados_civis[$this->estado_civil]))
 			? self::$_estados_civis[$this->estado_civil]
 			: $this->estado_civil;
 	}
@@ -915,8 +915,10 @@ class Usuario extends Base {
 		if(!empty($_COOKIE[CONFIG_COOKIE_NOME]))
 			UsuarioToken::Excluir(trim($_COOKIE[CONFIG_COOKIE_NOME]));
 		Util::Remover_Cookie(CONFIG_COOKIE_NOME);
-		session_unset();
-		session_destroy();
+		if(session_status() === PHP_SESSION_ACTIVE) {
+			session_unset();
+			session_destroy();
+		}
 		return new self();
 	}
 
@@ -1487,7 +1489,7 @@ class Usuario extends Base {
 		</body>
 		</html>
 		';
-		return Util::Enviar_Email($to, $subject, $message, "GDE <gde@guaycuru.net>", true);
+		return Util::Enviar_Email($to, $subject, $message, null, true);
 	}
 
 	/**

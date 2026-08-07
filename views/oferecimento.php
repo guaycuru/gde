@@ -177,7 +177,7 @@ if($oferecimento_pagina == null) {
 							<?php
 							$Professor = (count($Oferecimento->getProfessores()) > 0) ? $Oferecimento->getProfessores()[0] : null;
 							foreach(AvaliacaoPergunta::Listar(AvaliacaoPergunta::TIPO_OFERECIMENTO) as $Pergunta) {
-								$Media = $Pergunta->getMedia($Professor->getID(), $Oferecimento->getDisciplina()->getID());
+								$Media = $Pergunta->getMedia(($Professor !== null) ? $Professor->getID() : null, $Oferecimento->getDisciplina()->getID());
 								echo "<strong>Pergunta: ".$Pergunta->getPergunta()."</strong><br />";
 								if($Media['v'] < CONFIG_AVALIACAO_MINIMO)
 									echo "Ainda n&atilde;o foi atingido o n&uacute;mero m&iacute;nimo de votos.<br /><br />";

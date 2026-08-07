@@ -1555,6 +1555,36 @@ div.Informacao {
 	cursor: pointer;
 }
 
+#fork-me-ribbon {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 99;
+	overflow: hidden;
+	width: 150px;
+	height: 150px;
+	text-align: center;
+	pointer-events: none;
+}
+
+#fork-me-ribbon a {
+	display: block;
+	position: relative;
+	top: 30px;
+	right: -33px;
+	width: 200px;
+	padding: 6px 0;
+	transform: rotate(45deg);
+	background-color: #6d6d6d;
+	color: #fff;
+	text-align: center;
+	text-decoration: none;
+	font: 700 13px "Helvetica Neue", Helvetica, Arial, sans-serif;
+	text-shadow: 0 0 5px rgba(0,0,0,0.3);
+	box-shadow: 0 2px 3px rgba(0,0,0,0.3);
+	pointer-events: auto;
+}
+
 @media(max-width: 1280px) {
 	#fork-me-ribbon {
 		display: none;

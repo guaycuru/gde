@@ -2,6 +2,8 @@
 
 namespace GDE;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+
 define('JSON', true);
 
 require_once('../common/common.inc.php');
@@ -26,7 +28,12 @@ if(isset($_POST['e'])) {
 			$Eliminada = UsuarioEliminada::Nova($_Usuario, $Disciplina);
 		$Eliminada->setParcial($_POST['a'] == 1);
 		$Eliminada->setProficiencia($_POST['r'] == 1);
-		$Eliminada->Save_JSON(true, array('modo' => $modo));
+		try {
+			$Eliminada->Save_JSON(true, array('modo' => $modo));
+		} catch(UniqueConstraintViolationException $e) {
+			// Duas requisicoes concorrentes tentaram criar a mesma eliminada (ex: duplo-clique) - a outra ja salvou, entao consideramos sucesso
+			Base::OK_JSON($Disciplina->getId(), 200, array('modo' => $modo));
+		}
 	} else {
 		$Eliminada = UsuarioEliminada::Por_Unique($_Usuario, $Disciplina);
 		if(is_object($Eliminada)) {

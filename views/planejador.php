@@ -9,8 +9,8 @@ if(isset($_GET['idi'])) {
 	$_POST['p'] = true;
 	if(isset($_GET['full']))
 		$_POST['full'] = true;
-	echo "<style>* { color: #000000; } table.tabela_bonyta { border-top: 1px solid #000000; border-left: 1px solid #000000;	width: 100%;} table.tabela_bonyta td { border-right: 1px solid #000000; border-bottom: 1px solid #000000;}</style>";
 	include('../ajax/planejado_compartilhado.php');
+	echo "<style>* { color: #000000; } table.tabela_bonyta { border-top: 1px solid #000000; border-left: 1px solid #000000;	width: 100%;} table.tabela_bonyta td { border-right: 1px solid #000000; border-bottom: 1px solid #000000;}</style>";
 	echo (!isset($_GET['full'])) ? "<br /><a href=\"".CONFIG_URL."planejador/?idi=".intval($_GET['idi'])."&amp;full\">Ver Hor&aacute;rio Completo</a>" : "<br /><a href=\"".CONFIG_URL."planejador/?idi=".intval($_GET['idi'])."\">Ver Hor&aacute;rio Resumido</a>";
 	exit();
 }
@@ -27,8 +27,13 @@ $id = (isset($_GET['id'])) ? intval($_GET['id']) : null;
 
 if(!isset($_GET['p']))
 	$periodo = Dado::Pega_Dados('planejador_periodo_proximo');
-else
+else {
 	$periodo = intval($_GET['p']);
+	// Periodo::Load() retorna um objeto vazio (nao persistido) se o periodo nao existir - sem essa
+	// checagem, Planejado::Algum() tentaria salvar um Planejado apontando pra um Periodo inexistente
+	if(Periodo::Load($periodo)->getId_periodo() == null)
+		$periodo = Dado::Pega_Dados('planejador_periodo_proximo');
+}
 
 if($id == null) {
 	$Planejados = null;

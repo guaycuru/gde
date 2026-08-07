@@ -110,7 +110,7 @@ class Acontecimento extends Base {
 			else
 				$texto_pre = "";
 			$texto_pre .= ": ";
-			$texto = htmlspecialchars($this->texto);
+			$texto = htmlspecialchars((string)$this->texto);
 			if($processa)
 				$texto = self::Processar($texto);
 			$texto = nl2br(Util::Fix_String_Aux($texto));

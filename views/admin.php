@@ -12,7 +12,10 @@ if($_Usuario->getAdmin() === false)
 $colaboracoes_professores_pendentes = ColaboracaoProfessor::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
 $colaboracoes_oferecimentos_pendentes = ColaboracaoOferecimento::Numero(ColaboracaoProfessor::STATUS_PENDENTE);
 
-$erros = count(array_diff(scandir(__DIR__.'/../errors/'), array('..', '.', '.htaccess')));
+$erros_dir = __DIR__.'/../errors/';
+$erros = count(array_filter(array_diff(scandir($erros_dir), array('..', '.', '.htaccess')), function($e) use ($erros_dir) {
+	return is_file($erros_dir.$e);
+}));
 ?>
 <script type="text/javascript">
 var debug = function(d) {

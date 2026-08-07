@@ -603,17 +603,19 @@ class Disciplina extends Base {
 			$last = $last_catalogo = $primeiro = null;
 			$agrupando = false;
 			foreach($subfinal as $catalogo => $lista) {
+				// catalogo pode ser um ano (grad) ou uma letra (P/S, nivel pos) - so agrupa anos consecutivos
+				$prox_catalogo = (is_numeric($catalogo)) ? ($catalogo + 1) : '';
 				if($agrupando === true) {
 					if($last != $lista) {
 						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $last_catalogo)) ? "<tr><td nowrap><strong>De ".$primeiro." At&eacute; ".$last_catalogo."</strong></td><td nowrap><strong>".$last."</strong></td></tr>" : "<tr><td nowrap>De ".$primeiro." At&eacute; ".$last_catalogo."</td><td nowrap>".$last."</td></tr>";
 						$agrupando = false;
 					}
-					if((!isset($subfinal[$catalogo+1])) && ($agrupando === true)) {
+					if((!isset($subfinal[$prox_catalogo])) && ($agrupando === true)) {
 						$final[] = (($Usuario->getCatalogo() >= $primeiro) && ($Usuario->getCatalogo() <= $catalogo)) ? "<tr><td nowrap><strong>De ".$primeiro." At&eacute; ".$catalogo."</strong></td><td nowrap><strong>".$lista."</strong>" : "<tr><td nowrap>De ".$primeiro." At&eacute; ".$catalogo."</td><td nowrap>".$lista."</td></tr>";
 					}
 				}
 				if($agrupando === false) {
-					if((isset($subfinal[$catalogo+1])) && ($lista == $subfinal[$catalogo+1])) {
+					if((isset($subfinal[$prox_catalogo])) && ($lista == $subfinal[$prox_catalogo])) {
 						$agrupando = true;
 						$primeiro = $catalogo;
 					} else {

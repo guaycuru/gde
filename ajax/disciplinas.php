@@ -13,15 +13,17 @@ require_once('../common/common.inc.php');
 if(!isset($_POST['tp']))
 	exit();
 
+const LIMITE_RESULTADOS = 20;
+
 $res = array();
 $total = 0;
 
 if($_POST['tp'] == 1)
-	$Disciplinas = Disciplina::Consultar(array("sigla" => urldecode($_POST['q'])), null, $total);
+	$Disciplinas = Disciplina::Consultar(array("sigla" => urldecode($_POST['q'])), null, $total, LIMITE_RESULTADOS);
 elseif($_POST['tp'] == 2)
-	$Disciplinas = Disciplina::Consultar(array("nome" => urldecode($_POST['q'])), null, $total);
+	$Disciplinas = Disciplina::Consultar(array("nome" => urldecode($_POST['q'])), null, $total, LIMITE_RESULTADOS);
 else
-	$Disciplinas = Disciplina::Consultar(array("sigla" => urldecode($_POST['q']), "nome" => urldecode($_POST['q'])), null, $total, '-1', '-1', 'OR');
+	$Disciplinas = Disciplina::Consultar(array("sigla" => urldecode($_POST['q']), "nome" => urldecode($_POST['q'])), null, $total, LIMITE_RESULTADOS, '-1', 'OR');
 
 foreach($Disciplinas as $Disciplina)
 	if($_POST['tp'] == 1)

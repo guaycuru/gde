@@ -6,12 +6,14 @@ FROM php:8.5-apache
 
 RUN apt-get update && apt-get install -y \
     libpng-dev \
+    libjpeg62-turbo-dev \
     libonig-dev \
     libzip-dev \
     libcurl4-openssl-dev \
     unzip \
     default-mysql-client \
-    && docker-php-ext-install pdo_mysql mysqli mbstring gd zip curl \
+    && docker-php-ext-configure gd --with-jpeg \
+    && docker-php-ext-install pdo_mysql mysqli mbstring gd zip curl bcmath \
     && a2enmod rewrite \
     && rm -rf /var/lib/apt/lists/*
 
