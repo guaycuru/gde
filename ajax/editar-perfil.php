@@ -45,7 +45,7 @@ if(isset($_POST['salvar'])) {
 	$_Usuario->setSexo($_POST['sexo'][0]);
 	$data_nascimento = ($_POST['data_nascimento'] != "") ? implode('-', array_reverse(explode('/', $_POST['data_nascimento']))) : null;
 	$_Usuario->setData_Nascimento($data_nascimento);
-	$_Usuario->setApelido($_POST['apelido']);
+	$_Usuario->setApelido(Util::Truncar(trim($_POST['apelido']), Usuario::APELIDO_TAM_MAX));
 	$_Usuario->setCidade($_POST['cidade']);
 	$_Usuario->setEstado($_POST['estado']);
 	$_Usuario->setEstado_Civil($_POST['estado_civil'][0]);

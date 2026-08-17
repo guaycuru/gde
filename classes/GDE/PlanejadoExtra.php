@@ -80,30 +80,80 @@ class PlanejadoExtra extends Base {
 	}
 
 	/**
+	 * Cria um extra para o planejado informado, validando os dados
+	 *
+	 * O objeto e criado mesmo quando ha erros de validacao; cabe a quem chama
+	 * verificar $erros antes de salvar
+	 *
+	 * @param Planejado $Planejado
+	 * @param string $nome
+	 * @param integer $dia Dia da semana, de 1 a 7
+	 * @param string $inicio Hora no formato H:i:s
+	 * @param string $fim Hora no formato H:i:s
+	 * @param array $erros Recebe as mensagens de erro encontradas
+	 * @return PlanejadoExtra
+	 */
+	public static function Criar(Planejado $Planejado, $nome, $dia, $inicio, $fim, &$erros = null) {
+		$erros = array();
+		if(strlen($nome) < 2)
+			$erros[] = "O Nome informado &eacute; inv&aacute;lido.";
+		if(($dia < 1) || ($dia > 7))
+			$erros[] = "O dia informado &eacute; inv&aacute;lido.";
+		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $inicio) == 0)
+			$erros[] = "O in&iacute;cio informado &eacute; inv&aacute;lido.";
+		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $fim) == 0)
+			$erros[] = "O fim informado &eacute; inv&aacute;lido.";
+		$Extra = new PlanejadoExtra();
+		$Extra->setPlanejado($Planejado);
+		$Extra->setNome($nome);
+		$Extra->setDia($dia);
+		$Extra->setInicio($inicio);
+		$Extra->setFim($fim);
+		return $Extra;
+	}
+
+	/**
+	 * Verifica se este extra existe e pertence ao planejado informado
+	 *
+	 * @param Planejado $Planejado
+	 * @return boolean
+	 */
+	public function Pertence_A(Planejado $Planejado) {
+		if($this->getID() == null)
+			return false;
+		if($this->getPlanejado(false) === null)
+			return false;
+		return ($this->getPlanejado()->getID() == $Planejado->getID());
+	}
+
+	/**
 	 * @param $dias
 	 * @param $minutos
 	 * @param $inteiro
 	 */
 	public function Mover($dias, $minutos, $inteiro) {
-		if($inteiro) {
-			$h = $this->getInicio('H');
-			$m = $this->getInicio('i');
-			$s = $this->getInicio('s');
-			$h += floor($minutos / 60);
-			$m += $minutos % 60;
-			if($h < 7)
-				$h = 7;
-			$this->setInicio(sprintf("%02d", $h).':'.sprintf("%02d", $m).':'.$s);
-		}
-		$h = $this->getFim('H');
-		$m = $this->getFim('i');
-		$s = $this->getFim('s');
-		$h += floor($minutos / 60);
+		if($inteiro)
+			$this->setInicio(self::Soma_Minutos($this->getInicio('H:i:s'), $minutos));
+		$this->setFim(self::Soma_Minutos($this->getFim('H:i:s'), $minutos));
+		$this->setDia($this->getDia() + $dias);
+	}
+
+	/**
+	 * Soma $minutos (pode ser negativo) a uma hora H:i:s, sem deixar a hora
+	 * resultante ser menor que 7
+	 *
+	 * @param string $hora Hora no formato H:i:s
+	 * @param integer $minutos Minutos a somar
+	 * @return string A nova hora, no formato H:i:s
+	 */
+	private static function Soma_Minutos($hora, $minutos) {
+		list($h, $m, $s) = explode(':', $hora);
+		$total = ($h * 60) + $m + $minutos;
+		$h = (int)floor($total / 60);
+		$m = $total - ($h * 60);
 		if($h < 7)
 			$h = 7;
-		$m += $minutos % 60;
-		$this->setFim(sprintf("%02d", $h).':'.sprintf("%02d", $m).':'.$s);
-		$this->setDia($this->getDia() + $dias);
+		return sprintf('%02d:%02d:%s', $h, $m, $s);
 	}
 
 }

@@ -2,6 +2,34 @@
 
 if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 
+	// Campos que nunca podem ser gravados em claro no log de erros
+	define('EXCEPTION_CAMPOS_SIGILOSOS', array(
+		'senha',
+		'conf_senha',
+		'senha_atual',
+		'nova_senha',
+		'password',
+		'token'
+	));
+
+	/**
+	 * exception_redigir
+	 *
+	 * Substitui o valor dos campos sigilosos antes de gravar no log
+	 *
+	 * @param array $dados O array de entrada ($_GET ou $_POST)
+	 * @return array O array com os campos sigilosos ocultados
+	 */
+	function exception_redigir($dados) {
+		foreach($dados as $chave => $valor) {
+			if(in_array(strtolower((string)$chave), EXCEPTION_CAMPOS_SIGILOSOS, true))
+				$dados[$chave] = '[oculto]';
+			elseif(is_array($valor))
+				$dados[$chave] = exception_redigir($valor);
+		}
+		return $dados;
+	}
+
 	function exception_handler($exception) {
 		$base_dir = str_replace(DIRECTORY_SEPARATOR . 'common', '', __DIR__) . DIRECTORY_SEPARATOR;
 		$files_dir = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'errors' . DIRECTORY_SEPARATOR;
@@ -10,9 +38,9 @@ if((!defined('CONFIG_DEV_MODE')) || (CONFIG_DEV_MODE === false)) {
 		if(!empty($_Usuario))
 			$exception_string .= "\n\nUsuario: ".$_Usuario->getID();
 		if(!empty($_GET))
-			$exception_string .= "\n\n\$_GET: ".print_r($_GET, true);
+			$exception_string .= "\n\n\$_GET: ".print_r(exception_redigir($_GET), true);
 		if(!empty($_POST))
-			$exception_string .= "\n\n\$_POST: ".print_r($_POST, true);
+			$exception_string .= "\n\n\$_POST: ".print_r(exception_redigir($_POST), true);
 		$file = $files_dir . str_replace(array($base_dir, DIRECTORY_SEPARATOR), array('', '$'), $exception->getFile()) . '#' . $exception->getLine() . '#' . $hash . '.log';
 		if(!file_exists($file))
 			file_put_contents($file, $exception_string);

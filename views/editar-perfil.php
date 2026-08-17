@@ -225,7 +225,7 @@ foreach(Usuario::Listar_Estados_Civis() as $n => $e)
 			<table cellspacing="0" class="tabela_bonyta_branca">
 				<tr>
 					<td width="20%"><strong>Apelido:</strong></td>
-					<td><input type="text" name="apelido" value="<?=$_Usuario->getApelido(true);?>" size="40" /></td>
+					<td><input type="text" name="apelido" value="<?=$_Usuario->getApelido(true);?>" size="40" maxlength="<?=Usuario::APELIDO_TAM_MAX;?>" /></td>
 				</tr>
 				<tr>
 					<td><strong>Site / Blog:</strong></td>

@@ -28,6 +28,23 @@ class Util {
 		return (mb_strlen($texto) <= $tamanho) ? $texto : mb_substr($texto, 0, $tamanho-3).'...';
 	}
 
+	/**
+	 * Truncar
+	 *
+	 * Corta o texto no tamanho maximo da coluna, sem adicionar reticencias
+	 * Usar antes de gravar campos livres, para nao estourar a coluna do banco
+	 *
+	 * @param string $texto O texto a ser cortado
+	 * @param int $tamanho O tamanho maximo, em caracteres
+	 * @return string|null O texto cortado, ou null se a entrada for null
+	 */
+	public static function Truncar($texto, $tamanho) {
+		if($texto === null)
+			return null;
+		$texto = (string)$texto;
+		return (mb_strlen($texto) <= $tamanho) ? $texto : mb_substr($texto, 0, $tamanho);
+	}
+
 	public static function Limpa_Busca($str) {
 		//return str_replace(array("\\", "/", "'", "%", "#", "\$", "@", "+", "-", ".", "~"), null, $str);
 		return preg_replace('/[^\p{L}\p{N}_]+/u', ' ', $str);
@@ -102,7 +119,7 @@ class Util {
 	}
 
 	public static function Validar_Email($email) {
-		return (preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $email) > 0);
+		return (preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i', $email) > 0);
 	}
 
 	public static function Dia_Da_Semana($d) {

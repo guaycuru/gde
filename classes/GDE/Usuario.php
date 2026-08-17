@@ -417,6 +417,9 @@ class Usuario extends Base {
 	const PASTA_FOTOS = '/../../web/fts/';
 	const URL_FOTOS = 'web/fts/';
 
+	// Tamanho maximo do apelido, igual ao tamanho da coluna no banco
+	const APELIDO_TAM_MAX = 255;
+
 	// Estados Civis
 	const ESTADO_CIVIL_VAZIO = 0;
 	const ESTADO_CIVIL_NAO_OPINAR = 1;
@@ -736,6 +739,9 @@ class Usuario extends Base {
 	 */
 	public function Verificar_Senha($senha, $codificada = true) {
 		$hash = $this->getSenha(false);
+		if(($hash === null) || ($hash === ''))
+			// Usuario sem senha local definida (ex.: conta que so entra pela DAC)
+			return false;
 		if(($codificada === true) && ($hash !== $senha))
 			return false; // Senha ja codificada, mas incorreta
 		elseif($codificada === false) {
@@ -1153,14 +1159,14 @@ class Usuario extends Base {
 		if(($this->Quase_Amigo($Usuario) !== false) || ($this->Amigo_Pendente($Usuario) !== false)) // Ja tem uma autorizacao pendente...
 			return false;
 		$Usuario_Amigo = new UsuarioAmigo();
-		$Usuario_Amigo->setUsuario($this);
+		$this->addAmigos($Usuario_Amigo);
 		$Usuario_Amigo->setAmigo($Usuario);
 		$Usuario_Amigo->setAtivo($ativo);
 		if($Usuario_Amigo->Save(false) === false)
 			return false;
 		if($ativo === true) {
 			$Usuario_Amigo = new UsuarioAmigo();
-			$Usuario_Amigo->setUsuario($Usuario);
+			$Usuario->addAmigos($Usuario_Amigo);
 			$Usuario_Amigo->setAmigo($this);
 			$Usuario_Amigo->setAtivo(true);
 			if($Usuario_Amigo->Save(false) === false)
@@ -1226,7 +1232,7 @@ class Usuario extends Base {
 		$Reverso = $this->Quase_Amigo($Usuario);
 		if($Reverso === false) {
 			$Reverso = new UsuarioAmigo();
-			$Reverso->setUsuario($this);
+			$this->addAmigos($Reverso);
 			$Reverso->setAmigo($Usuario);
 		}
 		$Reverso->setAtivo(true);

@@ -26,5 +26,19 @@ services:
     volumes:
       - gde-db:/var/lib/mysql
 
+  # Banco efemero para os testes de integracao (composer test:integration),
+  # acessado do host em 127.0.0.1:3307. Dados em tmpfs: zera a cada restart.
+  db-test:
+    image: mariadb:10.11
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_DATABASE: gde_test
+      MARIADB_USER: gde
+      MARIADB_PASSWORD: gde
+      MARIADB_ROOT_PASSWORD: root
+    tmpfs:
+      - /var/lib/mysql
+
 volumes:
   gde-db:

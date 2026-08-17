@@ -979,6 +979,21 @@ class Arvore {
 		return $this->erro;
 	}
 
+	/**
+	 * Resumo do progresso no curso, no formato esperado pelo planejador
+	 *
+	 * @param array $tipos Tipo (obrigatoria/eletiva/extra) de cada disciplina planejada
+	 * @return array
+	 */
+	public function Dados($tipos = array()) {
+		return array(
+			'cp' => $this->getCP(4),
+			'cpf' => $this->getCPF(4),
+			'integralizacao' => $this->Integralizacao(),
+			'tipos' => $tipos
+		);
+	}
+
 	public function Pode_Cursar(Disciplina $Disciplina, &$obs = false) {
 		if(!($this->Usuario instanceof Usuario))
 			return false;

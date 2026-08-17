@@ -34,6 +34,18 @@ define('CONFIG_ACESSSO_ATUALIZAR', 300);
 define('CONFIG_SALT', '');
 define('CONFIG_SALT_SENHA_ANTIGA', '');
 
+// Segredo compartilhado com a DAC, usado por GDE\DAC_Token para gerar e
+// validar os tokens de login vindos do SIGA. Deixe vazio se voce nao tem
+// integracao com a DAC: o login por token fica desativado (falha fechada).
+define('CONFIG_DAC_TOKEN_SALT', '');
+
+// Monitoramento do cron/dac_oferecimentos.php via healthchecks.io. Deixe a
+// URL vazia (ou SKIP como true) para desligar - e o que voce quer em
+// desenvolvimento, senao um ping local mascara uma falha real em producao.
+// A URL precisa terminar com barra: o codigo concatena 'start' e '0' nela.
+define('CONFIG_DAC_SKIP_MONITOR', true);
+define('CONFIG_DAC_MONITOR_URL', '');
+
 // Endereco usado como From/Reply-To nos emails enviados pelo sistema (ver GDE\Util::Enviar_Email)
 define('CONFIG_MAIL_FROM', 'gde@guaycuru.net');
 

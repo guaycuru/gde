@@ -372,6 +372,25 @@ class Periodo extends Base {
 	}
 
 	/**
+	 * Soma_Semestres
+	 *
+	 * Calcula o id do Periodo que esta $semestres semestres regulares a frente,
+	 * virando o ano quando necessario (ex: 20242 + 1 = 20251)
+	 *
+	 * @param integer $semestres Quantos semestres a adicionar (pode ser negativo)
+	 * @return string O id do novo periodo
+	 */
+	public function Soma_Semestres($semestres) {
+		$semestre = $this->getSemestre();
+		// Ferias de verao (S=0) contam como o 1o semestre daquele ano
+		if($semestre == self::PERIODO_FERIAS_VERAO)
+			$semestre = 1;
+		// Posicao absoluta em semestres regulares (2 por ano)
+		$pos = ($this->getAno() * 2) + ($semestre - 1) + $semestres;
+		return strval(intdiv($pos, 2)).strval(($pos % 2) + 1);
+	}
+
+	/**
 	 * Adicionar_Semestres
 	 *
 	 * @param integer $semestres Quantos semestres a adicionar
@@ -379,9 +398,6 @@ class Periodo extends Base {
 	 * @throws \Doctrine\ORM\ORMException
 	 */
 	public function Adicionar_Semestres($semestres) {
-		$adicionar_anos = floor($semestres / 2);
-		$adicionar_semestres = (($semestres / 2) - $adicionar_anos) * 2;
-		$novo = strval($this->getAno() + $adicionar_anos) . strval($this->getSemestre() + $adicionar_semestres);
-		return self::Load($novo);
+		return self::Load($this->Soma_Semestres($semestres));
 	}
 }

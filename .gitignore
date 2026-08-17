@@ -24,3 +24,6 @@ vendor/*
 composer.phar
 errors/*
 k8s/secret.yaml
+.phpunit.cache/
+tests/db.local.php
+.composer-cache/

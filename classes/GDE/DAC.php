@@ -2,6 +2,7 @@
 
 namespace GDE;
 
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -66,7 +67,15 @@ class DAC extends Base {
 		$Novo = new self;
 		$Novo->setToken($token);
 		$Novo->setCriacao();
-		return $Novo->Save($flush);
+		try {
+			return $Novo->Save($flush);
+		} catch(UniqueConstraintViolationException $Exception) {
+			// Uma requisicao concorrente com o mesmo token venceu a corrida entre o
+			// Existe_Token() do Validar_Token() e este INSERT (ex.: duplo clique no
+			// retorno da DAC). O token ja esta gravado, que eh justamente o objetivo,
+			// entao nao ha erro a reportar.
+			return true;
+		}
 	}
 
 	/**

@@ -57,6 +57,9 @@ class UsuarioAmigo extends Base {
 	 */
 	protected $ativo = false;
 
+	// Tamanho maximo do apelido, igual ao tamanho da coluna no banco
+	const APELIDO_TAM_MAX = 255;
+
 	/**
 	 * @param bool $completo
 	 * @param bool $html

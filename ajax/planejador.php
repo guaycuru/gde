@@ -12,26 +12,16 @@ if(!isset($_POST['a']))
 $Ret = false;
 
 if($_POST['a'] == 'n') { // Nova Opcao
-	$pp = intval($_POST['pp']);
-	$pa = intval($_POST['pa']);
-	$Periodo = Periodo::Load($pp);
-	if($Periodo->getId_periodo() == null)
+	$Planejado = Planejado::Criar_Opcao($_Usuario, $_POST['pp'], $_POST['pa']);
+	if($Planejado === null)
 		die(json_encode(false));
-	if($pa == 0) {
-		if($Periodo->Anterior() === null)
-			die(json_encode(false));
-		$pa = $Periodo->Anterior()->getPeriodo();
-	}
-	$Planejado = Planejado::Novo($_Usuario, $pp, $pa, false);
-	if($_Usuario->getAluno(false) === null)
-		$Planejado->setSimulado(true);
 	$Ret = array();
 	$Ret['ok'] = ($Planejado->Save(true) !== false);
 	if($Ret['ok'] === true)
 		$Ret['id'] = $Planejado->getID();
 } elseif($_POST['a'] == 'x') { // Excluir Opcao
 	$Planejado = Planejado::Load($_POST['id']);
-	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()))
+	if($Planejado->Pertence_A($_Usuario) === false)
 		die(json_encode(false));
 	$Ret = array();
 	$Ret['ok'] = ($Planejado->Delete(true) != false);
@@ -46,524 +36,50 @@ if($_POST['a'] == 'n') { // Nova Opcao
 	} else
 		$times = array('arvore1' => false, 'arvore2' => false);
 
-	$cores = Planejado::getCores();
-	$nc = count($cores);
 	$cores_extras = PlanejadoExtra::getCores();
-	$nce = count($cores_extras);
 
 	if(empty($_POST['id']))
 		die('forbidden');
-	
+
 	$Planejado = Planejado::Load($_POST['id']);
-	
-	if(($Planejado->getUsuario(false) === null) || ($Planejado->getUsuario()->getID() != $_Usuario->getID()))
+
+	if($Planejado->Pertence_A($_Usuario) === false)
 		die('forbidden');
-	
+
 	if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
 		$tt += $times['load'] = microtime(true) - $times['start'] - $tt;
 
 	if($_POST['a'] == 'c') { // Carregar
-		$Raw = array();
-
 		$c = (isset($_POST['c'])) ? intval($_POST['c']) : 0;
 		$ce = (isset($_POST['ce'])) ? intval($_POST['ce']) : 0;
+		$debug = ((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1));
 
-		if(!isset($_POST['d'])) { // Planejador inteiro
-			if($Planejado->getPeriodo_Atual(false) === null) {
-				$pa = intval($_POST['pa']);
-				if($pa == 0) {
-					$PA = Periodo::Load(Dado::Pega_Dados('planejador_periodo_atual'));
-					if($PA->getID() != null) {
-						$Planejado->setPeriodo_Atual($PA);
-						$Planejado->Save(true);
-					}
-				}
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['verifica1'] = microtime(true) - $times['start'] - $tt;
-			
-			$EliminadasAdd = array();
-			if($_Usuario->getAluno(false) !== null)
-				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
-			else
-				$Atuais = array();
-			$Config = array();
-			$Disciplinas = array();
-			$Disciplinas['N'] = array();
-			$id_disciplinas = array();
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['getEliminadas'] = microtime(true) - $times['start'] - $tt;
-			
-			// Processa as disciplinas atualmente em curso
-			foreach($Atuais as $Atual) {
-				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
-					continue;
-				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
-				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
-					$EliminadasAdd[] = $Tem;
-					$Config[] = array(
-						'id' => $Atual->getDisciplina()->getId(),
-						'sigla' => $Atual->getSigla(),
-						'eliminada' => true,
-						'parcial' => $Tem->getParcial()
-					);
-				} else {
-					$Config[] = array(
-						'id' => $Atual->getDisciplina()->getId(),
-						'sigla' => $Atual->getSigla(),
-						'eliminada' => false,
-						'parcial' => false
-					);
-				}
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['processa_atuais'] = microtime(true) - $times['start'] - $tt;
-			
-			// Cria a arvore personalizada para o planejador
-			$Usr = $_Usuario;
-			$Usr->markReadOnly();
-			if($Usr->getAluno(false) !== null)
-				$Usr->getAluno()->markReadOnly();
-			foreach($EliminadasAdd as $EAdd)
-				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
-			$Planejado->setUsuario($Usr);
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(), $times['arvore1']);
-			if($Arvore->getErro() === true)
-				die(json_encode(false));
-			$Disciplinas = $Disciplinas + $Arvore->getDisciplinas();
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['cria_arvore'] = microtime(true) - $times['start'] - $tt;
-			
-			// Marca as disciplinas constantes na arvore
-			foreach($Disciplinas as $sem => $lista)
-				foreach($lista as $k => $Disciplina)
-					$id_disciplinas[] = $Disciplina->getId();
-			
-			// Adiciona as eletivas faltantes
-			$Disciplinas['E'] = array();
-			foreach($Arvore->getEletivas_Faltantes() as $Elet) {
-				if($Elet->getTipo() == CurriculoEletiva::TIPO_LIVRE) // Pula as livres
-					continue;
-				foreach($Elet->getConjuntos(false) as $Falta) {
-					if(($Falta->Fechada() === false) || (in_array($Falta->getDisciplina()->getId(), $id_disciplinas)))
-						continue;
-					$Disciplinas['E'][] = $Falta;
-					$id_disciplinas[] = $Falta->getDisciplina()->getId();
-				}
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['adiciona_eletivas'] = microtime(true) - $times['start'] - $tt;
-			
-			// Insere as eletivas ja adicionadas
-			foreach($Planejado->getOferecimentos() as $Planejada) {
-				if(in_array($Planejada->getDisciplina()->getId(), $id_disciplinas))
-					continue;
-				$Disciplinas['N'][] = $Planejada->getDisciplina();
-				$id_disciplinas[] = $Planejada->getDisciplina()->getId();
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['insere_eletivas'] = microtime(true) - $times['start'] - $tt;
-			
-			// Organiza as disciplinas em ordem alfabetica de siglas
-			foreach($Disciplinas as &$Lista)
-				usort($Lista, array('GDE\\Disciplina', 'Organiza'));
+		if(!isset($_POST['d'])) // Planejador inteiro
+			$Ret = $Planejado->Montar_Dados($_Usuario, $c, $ce, (isset($_POST['pa'])) ? $_POST['pa'] : null, $debug, $times, $tt);
+		else // Apenas uma disciplina
+			$Ret = $Planejado->Montar_Dados_Disciplina($_Usuario, Disciplina::Load($_POST['d']), $c);
 
-			// ToDo: Pra que serve $id_disciplinas se aqui eu reseto!?
-			$id_disciplinas = $nao_pode = array();
-			$total = 0;
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['disciplina_alfabetica'] = microtime(true) - $times['start'] - $tt;
-			
-			foreach($Disciplinas as $sem => $lista) {
-				foreach($lista as $k => $Disciplina) {
-					$sigla = $Disciplina->getSigla();
-					if($Disciplina instanceof CurriculoEletivaConjunto)
-						$Disciplina = $Disciplina->getDisciplina();
-					$id_disciplina = $Disciplina->getId();
-					if(!isset($Raw[$sem]))
-						$Raw[$sem] = array();
-					if(in_array($id_disciplina, $id_disciplinas) === true)
-						continue;
-					$id_disciplinas[] = $id_disciplina;
-					if(($sigla == Curriculo::ELETIVA) || ($sigla == Curriculo::LINGUAS))
-						unset($Disciplinas[$sem][$k]);
-					$Raw[$sem][$id_disciplina]['Disciplina'] = $Disciplina;
-					$obs = null;
-					$Raw[$sem][$id_disciplina]['pode'] = $Planejado->getSimulado() || $Usr->Pode_Cursar($Disciplina, $obs, $Arvore);
-					$Raw[$sem][$id_disciplina]['obs'] = $obs;
-					if($Raw[$sem][$id_disciplina]['pode'])
-						$Raw[$sem][$id_disciplina]['Oferecimentos'] = Oferecimento::Consultar(array("disciplina" => $id_disciplina, "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
-					else {
-						$Raw[$sem][$id_disciplina]['Oferecimentos'] = array();
-						$nao_pode[$id_disciplina] = true;
-					}
-					$Raw[$sem][$id_disciplina]['tem'] = (($Raw[$sem][$id_disciplina]['pode']) && ($total > 0));
-				}
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['disciplinas'] = microtime(true) - $times['start'] - $tt;
-			
-			// Processa as disciplinas ja adicionadas e cria os vetores de dados para o script
-			$Adicionados = $media_professor = $media_prof_disci = array();
-			$Perguntas = AvaliacaoPergunta::Listar();
-			$Ret = array();
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['perguntas'] = microtime(true) - $times['start'] - $tt;
-			
-			// Removo os oferecimentos que eu nao posso cursar!
-			foreach($Planejado->getOferecimentos() as $Oferecimento)
-				if(isset($nao_pode[$Oferecimento->getSigla()]))
-					$Planejado->Remover_Oferecimento($Oferecimento, true);
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['limpa_nao_pode'] = microtime(true) - $times['start'] - $tt;
-			
-			$Ret['Planejado'] = array(
-				'periodo' => $Planejado->getPeriodo()->getID(),
-				'periodo_nome' => $Planejado->getPeriodo()->getNome(),
-				'data_matricula_inicio' => $Planejado->getPeriodo()->getData_Matricula_Inicio('d/m/Y'),
-				'data_matricula_fim' => $Planejado->getPeriodo()->getData_Matricula_Fim('d/m/Y'),
-				'data_alteracao_inicio' => $Planejado->getPeriodo()->getData_Alteracao_Inicio('d/m/Y'),
-				'data_alteracao_fim' => $Planejado->getPeriodo()->getData_Alteracao_Fim('d/m/Y'),
-				'periodo_atual' => $Planejado->getPeriodo_Atual()->getID(),
-				'periodo_atual_nome' => $Planejado->getPeriodo_Atual()->getNome(),
-				'compartilhado' => ($Planejado->getCompartilhado()) ? 't' : 'f',
-				'simulado' => ($Planejado->getSimulado()) ? 't' : 'f',
-				'Config' => $Config
-			);
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['ret_planejado'] = microtime(true) - $times['start'] - $tt;
-			
-			$timesO['adicionado'] = $timesO['medias'] = $timesO['array'] = $timesO['final'] = 0;
-			
-			// Retorno dos Oferecimentos
-			$Ret['Oferecimentos'] = $siglas_arvore = array();
-			foreach($Raw as $semestre => $Lista) {
-				foreach($Lista as $id_disciplina => $Dados) {
-					$Ofs = array();
-					if(!isset($Dados['Oferecimentos'])) // Algo terrivelmente errado...
-						continue;
-					foreach($Dados['Oferecimentos'] as $Oferecimento) {
-						$adicionado = ($Planejado->Tem_Oferecimento($Oferecimento) !== false);
-						if($adicionado) {
-							$siglas_arvore[$id_disciplina] = $Oferecimento->getSigla(true);
-							$Adicionados[] = $Oferecimento;
-						}
-
-						$id_disciplina = $Oferecimento->getDisciplina()->getId_Disciplina();
-						$professores = array();
-						foreach($Oferecimento->getProfessores(false) as $Professor) {
-							if(!isset($media_professor[$Professor->getID()])) {
-								$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
-								$mediap = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_professor[$Professor->getID()] = $mediap;
-							} else
-								$mediap = $media_professor[$Professor->getID()];
-							if(!isset($media_prof_disci[$Professor->getID()][$id_disciplina])) {
-								$Media = $Perguntas[1]->getMedia($Professor->getID(), $id_disciplina);
-								$media1 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$id_disciplina][1] = $media1;
-								$Media = $Perguntas[2]->getMedia($Professor->getID(), $id_disciplina);
-								$media2 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$id_disciplina][2] = $media2;
-								$Media = $Perguntas[3]->getMedia($Professor->getID(), $id_disciplina);
-								$media3 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-								$media_prof_disci[$Professor->getID()][$id_disciplina][3] = $media3;
-							} else {
-								$media1 = $media_prof_disci[$Professor->getID()][$id_disciplina][1];
-								$media2 = $media_prof_disci[$Professor->getID()][$id_disciplina][2];
-								$media3 = $media_prof_disci[$Professor->getID()][$id_disciplina][3];
-							}
-							$professores[] = array(
-								'nome' => $Professor->getNome(true),
-								'mediap' => $mediap,
-								'media1' => $media1,
-								'media2' => $media2,
-								'media3' => $media3
-							);
-						}
-						$Ofs[$Oferecimento->getTurma()] = array(
-							'id' => $Oferecimento->getID(),
-							'siglan' => $Oferecimento->getSigla(true),
-							'turma' => $Oferecimento->getTurma(true),
-							'professor' => $Oferecimento->Professores(true),
-							'vagas' => $Oferecimento->getVagas(),
-							'fechado' => $Oferecimento->getFechado(),
-							'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas().')',
-							'horarios' => $Oferecimento->Lista_Horarios(true),
-							'professores' => $professores,
-							'possivel' => !$Oferecimento->getFechado(),
-							'adicionado' => $adicionado,
-							'viola_reserva' => $Oferecimento->Viola_Reserva($Usr),
-							'eventSources' => array(
-								'events' => $Oferecimento->Eventos(true),
-								'editable' => false,
-								'textColor' => '#000000',
-								'color' => (isset($cores[$c])) ? $cores[$c] : $cores[0]
-							),
-							'Amigos' => array(),
-							'total' => -1
-						);
-					}
-					// Faco cast pra string para nao estragar a ordem no JSON
-					$Ret['Oferecimentos']["D".$Dados['Disciplina']->getId()] = array(
-						'Disciplina' => array(
-							'id' => $Dados['Disciplina']->getId(),
-							'sigla' => $Dados['Disciplina']->getSigla(false),
-							'siglan' => str_replace(' ', '_', $Dados['Disciplina']->getSigla(false)),
-							'nome' => $Dados['Disciplina']->getNome(false, true),
-							'creditos' => $Dados['Disciplina']->getCreditos(false, true),
-							'semestre' => $semestre,
-							'quinzenal' => $Dados['Disciplina']->getQuinzenal(),
-							'c' => $c,
-							'cor' => (isset($cores[$c])) ? $cores[$c] : $cores[0],
-							'tem' => $Dados['tem'],
-							'pode' => $Dados['pode'],
-							'obs' => $Dados['obs']
-						),
-						'Oferecimentos' => $Ofs
-					);
-					$c++;
-					if($c >= $nc)
-						$c = 0;
-				}
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['retorno_oferecimentos'] = microtime(true) - $times['start'] - $tt;
-
-			$Usr->Substituir_Oferecimentos($Adicionados, $Planejado->getPeriodo()->getID());
-
-			// Re-faz a arvore porque mudei as atuais
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo(), $times['arvore2']);
-			if($Arvore->getErro() === true)
-				die(json_encode(false));
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['nova_arvore'] = microtime(true) - $times['start'] - $tt;
-			
-			$tipos = array();
-			foreach($siglas_arvore as $id_disciplina => $sigla)
-				$tipos[$id_disciplina] = $Arvore->getTipo(str_replace('_', ' ', $sigla), false);
-			
-			$Ret['Arvore'] = array(
-				'cp' => $Arvore->getCP(4),
-				'cpf' => $Arvore->getCPF(4),
-				'integralizacao' => $Arvore->Integralizacao(),
-				'tipos' => $tipos
-			);
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['Ret_Arvore'] = microtime(true) - $times['start'] - $tt;
-
-			// Indice da cor
-			$Ret['c'] = $c;
-			
-			$Ret['Extras'] = $cor_extra = array();
-			foreach($Planejado->getExtras() as $Extra) {
-				if(!isset($cor_extra[$Extra->getNome()])) {
-					$cor_extra[$Extra->getNome()] = $ce++;
-					if($ce >= $nce)
-						$ce = 0;
-				}
-				$Ret['Extras'][] = $Extra->Evento($cores_extras[$cor_extra[$Extra->getNome()]]);
-			}
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1))
-				$tt += $times['ret_extras'] = microtime(true) - $times['start'] - $tt;
-			
-			// Indice da cor
-			$Ret['ce'] = $ce;
-			
-			if((isset($_SESSION['admin']['debug'])) && ($_SESSION['admin']['debug'] >= 1)) {
-				$Ret['times_arvore1'] = $times['arvore1'];
-				$Ret['times_arvore2'] = $times['arvore2'];
-				unset($times['start'], $times['arvore1'], $times['arvore2']);
-				asort($times, SORT_NUMERIC);
-				$Ret['times'] = $times;
-			}
-		
-		} else { // Apenas uma disciplina
-			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
-			$Ret = array();
-			$EliminadasAdd = array();
-			if($_Usuario->getAluno(false) !== null)
-				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
-			else
-				$Atuais = array();
-
-			// Processa as disciplinas atualmente em curso
-			foreach($Atuais as $Atual) {
-				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
-					continue;
-				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
-				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
-					$EliminadasAdd[] = $Tem;
-				}
-			}
-
-			// Cria a arvore personalizada para o planejador
-			$Usr = $_Usuario;
-			$Usr->markReadOnly();
-			if($Usr->getAluno(false) !== null)
-				$Usr->getAluno()->markReadOnly();
-			foreach($EliminadasAdd as $EAdd)
-				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
-
-			$Disciplina = Disciplina::Load($_POST['d']);
-			
-			$obs = null;
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo());
-			if($Arvore->getErro() === true)
-				die(json_encode(false));
-			$pode = $Planejado->getSimulado() || $Arvore->Pode_Cursar($Disciplina, $obs);
-			$total = 0;
-			if($pode)
-				$Oferecimentos = Oferecimento::Consultar(array("disciplina" => $Disciplina->getId(), "periodo" => $Planejado->getPeriodo()->getID()), "O.turma ASC", $total);
-			else
-				$Oferecimentos = array();
-			$tem = ($pode) && ($total > 0);
-			$adicionado = false;
-			
-			$Perguntas = AvaliacaoPergunta::Listar();
-			
-			$Ret['Oferecimentos'] = $Ofs = $media_prof_disci = $media_professor = array();
-			foreach($Oferecimentos as $Oferecimento) {
-				$id_disciplina = $Oferecimento->getDisciplina()->getId_Disciplina();
-				$professores = array();
-				foreach($Oferecimento->getProfessores(false) as $Professor) {
-					if(!isset($media_professor[$Professor->getID()])) {
-						$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
-						$mediap = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_professor[$Professor->getID()] = $mediap;
-					} else
-						$mediap = $media_professor[$Professor->getID()];
-					if(!isset($media_prof_disci[$Professor->getID()][$id_disciplina])) {
-						$Media = $Perguntas[1]->getMedia($Professor->getID(), $id_disciplina);
-						$media1 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$id_disciplina][1] = $media1;
-						$Media = $Perguntas[2]->getMedia($Professor->getID(), $id_disciplina);
-						$media2 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$id_disciplina][2] = $media2;
-						$Media = $Perguntas[3]->getMedia($Professor->getID(), $id_disciplina);
-						$media3 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
-						$media_prof_disci[$Professor->getID()][$id_disciplina][3] = $media3;
-					} else {
-						$media1 = $media_prof_disci[$Professor->getID()][$id_disciplina][1];
-						$media2 = $media_prof_disci[$Professor->getID()][$id_disciplina][2];
-						$media3 = $media_prof_disci[$Professor->getID()][$id_disciplina][3];
-					}
-					$professores[] = array(
-						'nome' => $Professor->getNome(true),
-						'mediap' => $mediap,
-						'media1' => $media1,
-						'media2' => $media2,
-						'media3' => $media3
-					);
-				}
-				$Ofs[$Oferecimento->getTurma()] = array(
-					'id' => $Oferecimento->getID(),
-					'siglan' => $Oferecimento->getSigla(true),
-					'turma' => $Oferecimento->getTurma(true),
-					'professor' => $Oferecimento->Professores(true),
-					'vagas' => $Oferecimento->getVagas(true),
-					'fechado' => $Oferecimento->getFechado(false),
-					'link' => $Oferecimento->getSigla(false).' '.$Oferecimento->getTurma(true).' ('.$Oferecimento->getVagas(true).')',
-					'horarios' => $Oferecimento->Lista_Horarios(true),
-					'professores' => $professores,
-					'possivel' => !$Oferecimento->getFechado(false),
-					'adicionado' => $adicionado,
-					'eventSources' => array(
-						'events' => $Oferecimento->Eventos(true),
-						'editable' => false,
-						'textColor' => '#000000',
-						'color' => (isset($cores[$c])) ? $cores[$c] : $cores[0]
-					),
-					'Amigos' => array(),
-					'total' => -1
-				);
-			}
-			$Ret['Oferecimentos'][$Disciplina->getId()] = array(
-				'Disciplina' => array(
-					'id' => $Disciplina->getId(),
-					'sigla' => $Disciplina->getSigla(false),
-					'siglan' => str_replace(' ', '_', $Disciplina->getSigla(false)),
-					'nome' => $Disciplina->getNome(false, true),
-					'creditos' => $Disciplina->getCreditos(false, true),
-					'semestre' => 'N',
-					'c' => $c,
-					'cor' => (isset($cores[$c])) ? $cores[$c] : $cores[0],
-					'tem' => $tem,
-					'pode' => $pode,
-					'obs' => $obs
-				),
-				'Oferecimentos' => $Ofs
-			);
-			$c++;
-			if($c >= $nc)
-				$c = 0;
-		}
+		if($Ret === null)
+			die(json_encode(false));
 	} elseif($_POST['a'] == 'a') { // Adicionar
 		$Oferecimento = Oferecimento::Load($_POST['o']);
 		if($Oferecimento->getID() == null) {
 			$Ret = array('ok' => false, 'Removido' => false, 'motivo' => 'nao_encontrado');
 		} else {
-			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
-			$EliminadasAdd = array();
-			if($_Usuario->getAluno(false) !== null)
-				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
-			else
-				$Atuais = array();
-
-			// Processa as disciplinas atualmente em curso
-			foreach($Atuais as $Atual) {
-				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
-					continue;
-				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
-				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
-					$EliminadasAdd[] = $Tem;
-				}
-			}
-
-			// Cria a arvore personalizada para o planejador
-			$Usr = $_Usuario;
-			$Usr->markReadOnly();
-			if($Usr->getAluno(false) !== null)
-				$Usr->getAluno()->markReadOnly();
-			foreach($EliminadasAdd as $EAdd)
-				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
-			$Planejado->setUsuario($Usr);
-			$Oferecimentos = array();
-			foreach($Planejado->getOferecimentos() as $Of)
-				$Oferecimentos[] = $Of;
-			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo());
+			$Arvore = $Planejado->Montar_Arvore($_Usuario);
 			if($Arvore->getErro() === true)
 				die(json_encode(false));
 
 			$Ret = $Planejado->Adicionar_Oferecimento($Oferecimento, $Arvore, true);
 			if($Ret['ok'] !== false) {
 				// Preciso recalcular a Arvore para atualizar a integralizacao
-				$Usr->Adicionar_Oferecimentos(array($Oferecimento));
-				$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo());
+				$_Usuario->Adicionar_Oferecimentos(array($Oferecimento));
+				$Arvore = new Arvore($_Usuario, false, $Planejado->getPeriodo());
 				if($Arvore->getErro() === true)
 					die(json_encode(false));
-				$Ret['Arvore'] = array(
-					'cp' => $Arvore->getCP(4),
-					'cpf' => $Arvore->getCPF(4),
-					'integralizacao' => $Arvore->Integralizacao(),
-					'tipos' => array($Oferecimento->getSigla(true) => $Arvore->getTipo($Oferecimento->getSigla(), false))
-				);
+				$Ret['Arvore'] = $Arvore->Dados(array(
+					$Oferecimento->getSigla(true) => $Arvore->getTipo($Oferecimento->getSigla(), false)
+				));
 			}
 		}
 	} elseif($_POST['a'] == 'r') { // Remover
@@ -571,44 +87,10 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Ret = array();
 		$Ret['ok'] = ($Planejado->Remover_Oferecimento($Oferecimento) !== false);
 		if($Ret['ok'] !== false) {
-			// ToDo: Remove codigo duplicado aqui e no carregar planejador inteiro
-			$EliminadasAdd = array();
-			if($_Usuario->getAluno(false) !== null)
-				$Atuais = $_Usuario->getAluno()->getOferecimentos($Planejado->getPeriodo_Atual()->getID(), Disciplina::$NIVEIS_GRAD);
-			else
-				$Atuais = array();
-
-			// Processa as disciplinas atualmente em curso
-			foreach($Atuais as $Atual) {
-				if($_Usuario->Eliminada($Atual->getDisciplina(), false) !== false) // Foi eliminada de verdade
-					continue;
-				$Tem = $Planejado->Tem_Eliminada($Atual->getDisciplina());
-				if($Tem !== false) { // Usuario marcou que possivelmente vai passar
-					$EliminadasAdd[] = $Tem;
-				}
-			}
-
-			// Cria a arvore personalizada para o planejador
-			$Usr = $_Usuario;
-			$Usr->markReadOnly();
-			if($Usr->getAluno(false) !== null)
-				$Usr->getAluno()->markReadOnly();
-			foreach($EliminadasAdd as $EAdd)
-				$Usr->addEliminadas($EAdd->Para_UsuarioEliminada());
-			$Planejado->setUsuario($Usr);
-			$Oferecimentos = array();
-			foreach($Planejado->getOferecimentos() as $Of)
-				$Oferecimentos[] = $Of;
-			$Usr->Substituir_Oferecimentos($Oferecimentos, $Planejado->getPeriodo()->getID());
-			$Arvore = new Arvore($Usr, false, $Planejado->getPeriodo());
+			$Arvore = $Planejado->Montar_Arvore($_Usuario);
 			if($Arvore->getErro() === true)
 				die(json_encode(false));
-			$Ret['Arvore'] = array(
-				'cp' => $Arvore->getCP(4),
-				'cpf' => $Arvore->getCPF(4),
-				'integralizacao' => $Arvore->Integralizacao(),
-				'tipos' => array()
-			);
+			$Ret['Arvore'] = $Arvore->Dados();
 		}
 	} elseif($_POST['a'] == 'm') { // Mudar compartilhado
 		$Planejado->setCompartilhado(($_POST['v'] == 't'));
@@ -617,30 +99,13 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		$Planejado->setSimulado(($_POST['v'] == 't'));
 		$Ret = ($Planejado->Save(true) !== false);
 	} elseif($_POST['a'] == 'f') { // Marcar eliminadas
-		$Planejado->Limpar_Eliminadas(false);
-		if(isset($_POST['conf'])) {
-			foreach($_POST['conf'] as $id_disciplina) {
-				$D = Disciplina::Load($id_disciplina);
-				$Planejado->Adicionar_Eliminada($D, ((isset($_POST['parciais'])) && (in_array($id_disciplina, $_POST['parciais']))), false);
-			}
-		}
-		$Ret = ($Planejado->Save(true) !== false);
+		$Ret = $Planejado->Marcar_Eliminadas(
+			(isset($_POST['conf'])) ? $_POST['conf'] : null,
+			(isset($_POST['parciais'])) ? $_POST['parciais'] : null
+		);
 	} elseif($_POST['a'] == 'ae') { // Adicionar Extra
 		$erros = array();
-		if(strlen($_POST['nome']) < 2)
-			$erros[] = "O Nome informado &eacute; inv&aacute;lido.";
-		if(($_POST['dia'] < 1) || ($_POST['dia'] > 7))
-			$erros[] = "O dia informado &eacute; inv&aacute;lido.";
-		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $_POST['inicio']) == 0)
-			$erros[] = "O in&iacute;cio informado &eacute; inv&aacute;lido.";
-		if(preg_match('/^\d{1,2}:\d{2}:\d{2}$/i', $_POST['fim']) == 0)
-			$erros[] = "O fim informado &eacute; inv&aacute;lido.";
-		$Extra = new PlanejadoExtra();
-		$Extra->setPlanejado($Planejado);
-		$Extra->setNome($_POST['nome']);
-		$Extra->setDia($_POST['dia']);
-		$Extra->setInicio($_POST['inicio']);
-		$Extra->setFim($_POST['fim']);
+		$Extra = PlanejadoExtra::Criar($Planejado, $_POST['nome'], $_POST['dia'], $_POST['inicio'], $_POST['fim'], $erros);
 		if(count($erros) > 0)
 			Base::Error_JSON(implode(' ', $erros));
 		elseif($Extra->Save(true) === false)
@@ -651,13 +116,13 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 're') { // Remover Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
-		if(($Extra->getID() == null)  || ($Extra->getPlanejado(false) === null) || ($Extra->getPlanejado()->getID() != $Planejado->getID()) || ($Extra->Delete(true) === false))
+		if(($Extra->Pertence_A($Planejado) === false) || ($Extra->Delete(true) === false))
 			Base::Error_JSON('Ocorreu um erro. Por favor, tente novamente.');
 		else
 			Base::OK_JSON(null);
 	} elseif($_POST['a'] == 'ee') { // Editar Extra
 		$Extra = PlanejadoExtra::Load($_POST['ide']);
-		if(($Extra->getID() == null)  || ($Extra->getPlanejado(false) === null) || ($Extra->getPlanejado()->getID() != $Planejado->getID()))
+		if($Extra->Pertence_A($Planejado) === false)
 			Base::Error_JSON('Acesso negado.');
 		else {
 			$Extra->Mover(intval($_POST['dd']), intval($_POST['md']), ($_POST['t'] == 'd'));
@@ -668,15 +133,9 @@ if($_POST['a'] == 'n') { // Nova Opcao
 		}
 	} elseif($_POST['a'] == 'cd') { // Carregar Dados extendidos do Oferecimento
 		$Oferecimento = Oferecimento::Load($_POST['oid']);
-		
-		$Amigos = $Planejado->Amigos_Por_Oferecimento($Oferecimento);
-		usort($Amigos, "\GDE\UsuarioAmigo::Order_Por_Nome_Sort");
-		$lista = array();
-		foreach($Amigos as $Amigo)
-			$lista[] = "<a href=\"".CONFIG_URL."perfil/?usuario=".$Amigo->getAmigo()->getLogin()."\" target=\"_blank\" style=\"text-decoration: none;\" title=\"".$Amigo->getAmigo()->getNome_Completo()."\">".$Amigo->Apelido_Ou_Nome(true, true)."</a>";
 
 		$Ret = array(
-			'Amigos' => $lista,
+			'Amigos' => Planejado::Links_Amigos($Planejado->Amigos_Por_Oferecimento($Oferecimento)),
 			'total' => $Planejado::Total_Por_Oferecimento($Oferecimento)
 		);
 	}

@@ -2,7 +2,7 @@
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Proxy\AbstractProxyFactory;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
+use GDE\EchoSQLLogger;
 use Doctrine\ORM\ORMSetup;
 use Symfony\Component\Cache\Adapter\RedisAdapter;
 
@@ -36,7 +36,7 @@ if((defined('CONFIG_REDIS_ENABLED')) && (CONFIG_REDIS_ENABLED === true) && (clas
 }
 
 // Create the configuration, set the Metadata and Query caches and the Proxy dir
-$modelsDir = array(__DIR__.'/../classes');
+$modelsDir = array(__DIR__.'/../classes/GDE');
 $proxyDir = __DIR__.'/../proxies';
 $config = ORMSetup::createAnnotationMetadataConfiguration($modelsDir, CONFIG_DEV_MODE, $proxyDir, $metadataCache);
 unset($metadataCache);
@@ -91,7 +91,7 @@ elseif((defined('CONFIG_DB_HOST')) && (!empty(CONFIG_DB_HOST))) {
 	// de runtime ainda nao existem) - informa a platform explicitamente para que
 	// comandos somente-metadados (orm:generate-proxies) nao tentem abrir uma
 	// conexao real so para descobrir a versao do servidor.
-	$connection['platform'] = new \Doctrine\DBAL\Platforms\MySqlPlatform();
+	$connection['platform'] = new \Doctrine\DBAL\Platforms\MySQLPlatform();
 }
 
 // Create the Entity Manager

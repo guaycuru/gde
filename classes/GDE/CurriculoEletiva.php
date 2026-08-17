@@ -106,6 +106,8 @@ class CurriculoEletiva extends Base {
 		if($semi === false)
 			return ($sigla == $eletiva);
 		$len = strlen($eletiva);
+		if(strlen($sigla) < $len)
+			return false;
 		for($i = 0; $i < $len; $i++) {
 			if($eletiva[$i] == '-')
 				continue;

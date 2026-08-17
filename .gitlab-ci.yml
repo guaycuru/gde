@@ -1,0 +1,133 @@
+stages:
+  - test
+  - build
+  - update-manifests
+
+# Roda a suite antes de construir a imagem: os estagios sao sequenciais, entao
+# uma falha aqui impede o build e, por consequencia, o deploy.
+#
+# Diferente dos outros jobs, este roda em TODA branch - o valor de um teste e
+# pegar o erro antes do merge, nao depois.
+#
+# Usa a imagem do proprio app, que ja traz PHP 8.5, todas as extensoes (gd,
+# pdo_mysql, mbstring...) e o composer - evitando apt-get, compilacao de
+# extensao e download do composer a cada execucao. Depende da variavel
+# DOCKER_AUTH_CONFIG (Settings > CI/CD > Variables), que o runner le ANTES do
+# job comecar para autenticar o pull; ela nao pode ser Protected, senao sumiria
+# nas branches nao protegidas, que e justamente onde este job roda.
+#
+# E a imagem do build ANTERIOR: um commit que adicione uma extensao nova ao
+# Dockerfile so a enxerga aqui no pipeline seguinte.
+test:
+  stage: test
+  tags:
+    - build
+  image:
+    name: ${REGISTRY}/grade-dac-online/gde:latest
+    # A imagem sobe o Apache pelo ENTRYPOINT; aqui queremos so um shell
+    entrypoint: [""]
+  services:
+    - name: mariadb:10.11
+      alias: mariadb
+  variables:
+    MARIADB_DATABASE: gde_test
+    MARIADB_USER: gde
+    MARIADB_PASSWORD: gde
+    MARIADB_ROOT_PASSWORD: root
+    # Lidas por tests/Integration/IntegrationTestCase.php
+    TEST_DB_HOST: mariadb
+    TEST_DB_PORT: "3306"
+    TEST_DB_NAME: gde_test
+    TEST_DB_USER: gde
+    TEST_DB_PASS: gde
+    # Cache do composer dentro do projeto: o GitLab so arquiva caminhos daqui
+    COMPOSER_CACHE_DIR: ${CI_PROJECT_DIR}/.composer-cache
+  # Cacheia os downloads do composer, NAO o vendor/: arquivar as 38 mil
+  # entradas do vendor derrubou o container helper por OOM (exit 137).
+  # Aqui sao ~100 zips, e o composer install continua aproveitando tudo.
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - .composer-cache/
+  before_script:
+    # A imagem ja tem as extensoes; confere antes de gastar tempo instalando
+    # dependencias. ext-gd e obrigatoria: ArvoreAmostraTest gera um PNG.
+    - |
+      php -r 'foreach(array("pdo_mysql","mbstring","gd") as $e) if(!extension_loaded($e)) { fwrite(STDERR, "extensao ausente na imagem - $e\n"); exit(1); }'
+    # A imagem traz o vendor sem dev; aqui precisamos do phpunit
+    - composer install --no-interaction --no-progress
+    # O harness PULA os testes de integracao quando o banco nao responde. Isso e
+    # util no desktop, mas na CI mascararia um servico quebrado como pipeline
+    # verde rodando so a suite Unit - entao aqui a conexao e obrigatoria.
+    - |
+      for i in $(seq 30); do
+        php -r 'new PDO("mysql:host=".getenv("TEST_DB_HOST").";port=".getenv("TEST_DB_PORT").";dbname=".getenv("TEST_DB_NAME"), getenv("TEST_DB_USER"), getenv("TEST_DB_PASS"));' 2>/dev/null && break
+        if [ "$i" = "30" ]; then echo "MariaDB nao respondeu em 60s"; exit 1; fi
+        sleep 2
+      done
+  script:
+    - vendor/bin/phpunit --log-junit junit.xml
+  artifacts:
+    when: always
+    reports:
+      junit: junit.xml
+
+# O GitLab Container Registry NAO esta habilitado neste projeto (so aparecem
+# Package Registry / Model Registry em Deploy). Usa o registry externo
+# registry.nuvem.unicamp.br (grupo "grade-dac-online"), com 3 CI/CD variables
+# ja cadastradas pela infra (Settings > CI/CD > Variables):
+#   REGISTRY, REGISTRY_USER, REGISTRY_PASSWORD
+
+build:
+  stage: build
+  tags:
+    - build
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
+  before_script:
+    - echo "{\"auths\":{\"${REGISTRY}\":{\"auth\":\"$(printf "%s:%s" "${REGISTRY_USER}" "${REGISTRY_PASSWORD}" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+  script:
+    - /kaniko/executor --context "$CI_PROJECT_DIR" --destination "${REGISTRY}/grade-dac-online/${CI_PROJECT_NAME}:${CI_COMMIT_SHORT_SHA}" --destination "${REGISTRY}/grade-dac-online/${CI_PROJECT_NAME}:latest" --dockerfile "$CI_PROJECT_DIR/Dockerfile"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# Atualiza a tag da imagem nos manifestos do repositorio externo "gde-k8s"
+# (externo/gde-k8s, pastas hom/ e prod/) e commita direto na main de la -
+# esse repositorio so tem manifesto, entao nao precisa do truque de branch
+# "deploy-state" que usavamos quando os manifestos viviam neste mesmo repo.
+# Pra aplicar em qualquer ambiente, use os manifestos do gde-k8s (ver
+# README.md de la), nao a pasta k8s/ deste repositorio (que fica so como
+# historico ate essa pasta ser removida).
+#
+# Requer uma CI/CD variable "GITOPS_PUSH_TOKEN": um Project/Personal Access
+# Token com escopo write_repository E permissao de escrita no gde-k8s.
+update-manifests:
+  stage: update-manifests
+  tags:
+    - build
+  image: alpine/git:latest
+  needs:
+    - build
+  script:
+    - git config --global user.name "gitlab-ci"
+    - git config --global user.email "gitlab-ci@gitlab.unicamp.br"
+    - git clone "https://gitlab-ci-token:${GITOPS_PUSH_TOKEN}@${CI_SERVER_HOST}/externo/gde-k8s.git" gde-k8s
+    - |
+      for ENV in hom prod; do
+        sed -i -E "s#(/gde):(<TAG>|[0-9a-f]{6,40})#\1:${CI_COMMIT_SHORT_SHA}#g" gde-k8s/${ENV}/app-deployment.yaml gde-k8s/${ENV}/cronjobs.yaml
+        sed -i -E "s#(version: \")(<TAG>|[0-9a-f]{6,40})(\")#\1${CI_COMMIT_SHORT_SHA}\3#g" gde-k8s/${ENV}/app-deployment.yaml
+      done
+    - cd gde-k8s
+    - git add hom/app-deployment.yaml hom/cronjobs.yaml prod/app-deployment.yaml prod/cronjobs.yaml
+    - |
+      if git diff --cached --quiet; then
+        echo "Nenhuma mudanca de tag, nada a commitar"
+      else
+        git commit -m "ci: atualiza imagem para ${CI_COMMIT_SHORT_SHA} [skip ci]"
+        git push origin main
+      fi
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

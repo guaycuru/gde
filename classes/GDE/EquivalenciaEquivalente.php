@@ -62,6 +62,8 @@ class EquivalenciaEquivalente extends Base {
 		}
 
 		$Disciplina = Disciplina::Por_Sigla($this->getSigla(false), Disciplina::$NIVEIS_GRAD, $vazio);
+		if($Disciplina === null)
+			return null;
 
 		if((parent::getDisciplina(false) === null) && ($Disciplina->getID() != null)) {
 			$this->setDisciplina($Disciplina);

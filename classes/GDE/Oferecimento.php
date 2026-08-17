@@ -563,7 +563,7 @@ class Oferecimento extends Base {
 					$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');
 					$fh = $lh = $horarios[$i];
 					$j = 1;
-					$sala = strtoupper((string)$Resto[$horarios[$i]]);
+					$sala = $salan = strtoupper((string)$Resto[$horarios[$i]]);
 				}
 			}
 			$Lista[] = array('id' => $this->getID(), 'title' => $this->getSigla().' '.$this->getTurma().' '.$salan, 'start' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", $fh).':00:00-03:00', 'end' => '2003-12-0'.($dia-1).'T'.sprintf("%02d", ($lh+1)).':00:00-03:00');
@@ -576,6 +576,91 @@ class Oferecimento extends Base {
 		foreach($this->getProfessores(false) as $Professor)
 			$professores[] = $Professor->getNome($html);
 		return implode($cola, $professores);
+	}
+
+	/**
+	 * Dados dos professores deste oferecimento, com as medias das avaliacoes
+	 *
+	 * Os dois ultimos parametros funcionam como cache entre chamadas, para nao
+	 * recalcular a media do mesmo professor varias vezes
+	 *
+	 * @param AvaliacaoPergunta[] $Perguntas
+	 * @param array $media_professor Medias gerais, por id de professor
+	 * @param array $media_prof_disci Medias por id de professor e de disciplina
+	 * @return array
+	 */
+	public function Dados_Professores(array $Perguntas, array &$media_professor = array(), array &$media_prof_disci = array()) {
+		$id_disciplina = $this->getDisciplina()->getId_Disciplina();
+		$professores = array();
+		foreach($this->getProfessores(false) as $Professor) {
+			if(!isset($media_professor[$Professor->getID()])) {
+				$Media = $Perguntas[0]->getMedia($Professor->getID(), null);
+				$mediap = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
+				$media_professor[$Professor->getID()] = $mediap;
+			} else
+				$mediap = $media_professor[$Professor->getID()];
+			if(!isset($media_prof_disci[$Professor->getID()][$id_disciplina])) {
+				$Media = $Perguntas[1]->getMedia($Professor->getID(), $id_disciplina);
+				$media1 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
+				$media_prof_disci[$Professor->getID()][$id_disciplina][1] = $media1;
+				$Media = $Perguntas[2]->getMedia($Professor->getID(), $id_disciplina);
+				$media2 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
+				$media_prof_disci[$Professor->getID()][$id_disciplina][2] = $media2;
+				$Media = $Perguntas[3]->getMedia($Professor->getID(), $id_disciplina);
+				$media3 = ($Media['v'] >= CONFIG_AVALIACAO_MINIMO) ? round($Media['w'] * 10) : -1;
+				$media_prof_disci[$Professor->getID()][$id_disciplina][3] = $media3;
+			} else {
+				$media1 = $media_prof_disci[$Professor->getID()][$id_disciplina][1];
+				$media2 = $media_prof_disci[$Professor->getID()][$id_disciplina][2];
+				$media3 = $media_prof_disci[$Professor->getID()][$id_disciplina][3];
+			}
+			$professores[] = array(
+				'nome' => $Professor->getNome(true),
+				'mediap' => $mediap,
+				'media1' => $media1,
+				'media2' => $media2,
+				'media3' => $media3
+			);
+		}
+		return $professores;
+	}
+
+	/**
+	 * Dados deste oferecimento no formato esperado pelo planejador
+	 *
+	 * @param array $professores Vide Dados_Professores()
+	 * @param string $cor Cor do bloco no calendario
+	 * @param bool $adicionado Se ja faz parte do planejamento
+	 * @param Usuario|null $Usuario Se informado, inclui a checagem de reserva
+	 * @param bool $vagas_html Se as vagas devem passar por htmlspecialchars
+	 * @return array
+	 */
+	public function Dados_Planejador(array $professores, $cor, $adicionado = false, ?Usuario $Usuario = null, $vagas_html = false) {
+		$vagas = ($vagas_html) ? $this->getVagas(true) : $this->getVagas();
+		$dados = array(
+			'id' => $this->getID(),
+			'siglan' => $this->getSigla(true),
+			'turma' => $this->getTurma(true),
+			'professor' => $this->Professores(true),
+			'vagas' => $vagas,
+			'fechado' => $this->getFechado(),
+			'link' => $this->getSigla(false).' '.$this->getTurma(true).' ('.$vagas.')',
+			'horarios' => $this->Lista_Horarios(true),
+			'professores' => $professores,
+			'possivel' => !$this->getFechado(),
+			'adicionado' => $adicionado
+		);
+		if($Usuario !== null)
+			$dados['viola_reserva'] = $this->Viola_Reserva($Usuario);
+		$dados['eventSources'] = array(
+			'events' => $this->Eventos(true),
+			'editable' => false,
+			'textColor' => '#000000',
+			'color' => $cor
+		);
+		$dados['Amigos'] = array();
+		$dados['total'] = -1;
+		return $dados;
 	}
 
 	public function Atualiza_Numero_Matriculados() {
