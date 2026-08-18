@@ -1,14 +1,17 @@
+[![Testes](https://github.com/guaycuru/gde/actions/workflows/testes.yml/badge.svg)](https://github.com/guaycuru/gde/actions/workflows/testes.yml)
+
 ## Pré-Requisitos ##
 
  - Apache 2.4 ou mais novo;
    - Módulo `mod_rewrite` ativado;
    - Configuração `AllowOverride` definida como `All`;
- - PHP 7.0 ou mais novo (recomendável o uso do PHP 7.2);
-   - Extensão mysql_pdo;
+ - PHP 8.4 ou mais novo (produção roda 8.5);
+   - Extensão pdo_mysql;
    - Extensão mbstring;
    - Extensão curl;
    - Extensão GD;
- - MySQL 5.6.4 ou mais novo (recomendável o uso do MySQL 5.7) ou MariaDB 10.0.5 ou mais novo;
+   - Extensão bcmath;
+ - MySQL 5.6.4 ou mais novo ou MariaDB 10.0.5 ou mais novo (o `docker compose` e a CI usam MariaDB 10.11);
    - InnoDB ativado com suporte a Full Text Indexes
 
 ## Instalação com Docker ##
@@ -32,6 +35,21 @@ Login de teste (ver "Sobre os dados no pacote" abaixo): `login1` / `gde42`.
  5. Baixe o arquivo [gde_pacote.zip](https://gde.guaycuru.net/gde_pacote.zip) e descompacte-o;
  6. Importe o arquivo `gde_pacote.sql` com o comando `mysql -u USUARIO -p BANCO < gde_pacote.sql` no qual USUARIO é seu usuário no MySQL e BANCO é o nome do banco de dados configurado no passo `4`. Esta importação irá demorar algum tempo, então tenha paciência;
  7. Rode o comando `vendor/bin/doctrine orm:schema-tool:update --force` para ter certeza que as tabelas estão atualizadas.
+
+## Testes ##
+
+```bash
+composer test              # suíte completa
+composer test:unit         # rápidos, não precisam de banco
+composer test:integration  # precisam de um MariaDB de testes
+```
+
+Os testes de integração usam um banco **dedicado e descartável**, nunca um banco real —
+`docker compose up -d db-test` sobe um pronto. Filtros, cobertura e como escrever testes
+novos estão em [TESTING.md](TESTING.md).
+
+Três testes aparecem como *skipped* aqui: eles leem a pasta `cron/`, que não é publicada
+(ver "Onde encontro o código dos crawlers" mais abaixo).
 
 ## Configurando a API do Google ##
 

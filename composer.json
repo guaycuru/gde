@@ -11,7 +11,7 @@
     }
   },
   "require": {
-    "php": "^8.1",
+    "php": "^8.4",
     "doctrine/annotations": "^1.13.3",
     "doctrine/cache": "^1.12.1",
     "doctrine/orm": "^2.13.3",
@@ -19,6 +19,7 @@
     "doctrine/common": "^3.4.3",
     "symfony/cache": "~5.4.15",
     "symfony/console": "^6.4",
+    "ext-bcmath": "*",
     "ext-mbstring": "*",
     "ext-curl": "*",
     "ext-gd": "*",

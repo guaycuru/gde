@@ -1,0 +1,96 @@
+# Suite de testes no espelho publico do GitHub.
+#
+# O pipeline de verdade e o .gitlab-ci.yml (gitlab.unicamp.br), que roda dentro
+# da imagem do proprio app e alem de testar faz build e deploy. Aqui nao ha
+# acesso ao registry privado, entao o ambiente e montado do zero - o que torna
+# este workflow tambem uma prova de que o repositorio publico e auto-suficiente:
+# qualquer pessoa consegue clonar e rodar a suite.
+#
+# ATENCAO: a pasta cron/ NAO existe neste espelho (os pega*.php sao scrapers da
+# DAC). Tres testes detectam a ausencia e se marcam como skipped - e esperado.
+# Teste novo que leia cron/ precisa da mesma guarda, senao quebra so aqui.
+
+name: Testes
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  phpunit:
+    name: PHPUnit
+    runs-on: ubuntu-latest
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_DATABASE: gde_test
+          MARIADB_USER: gde
+          MARIADB_PASSWORD: gde
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+
+    env:
+      # Lidas por tests/Integration/IntegrationTestCase.php
+      TEST_DB_HOST: 127.0.0.1
+      TEST_DB_PORT: '3306'
+      TEST_DB_NAME: gde_test
+      TEST_DB_USER: gde
+      TEST_DB_PASS: gde
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # bcmath nao esta no "require" do composer.json mas GDE\DAC_Token::Gerar()
+      # usa bcpowmod; na CI do GitLab ela vem de graca na imagem do app.
+      # Versao unica, a mesma de producao (Dockerfile: php:8.5-apache). O
+      # composer.json declara "php": "^8.1", mas esse piso nao e testavel: o
+      # phpunit ^13.3 exige >=8.4.1, entao uma perna 8.1 da matriz morreria no
+      # composer install, nao num teste.
+      - name: Instala o PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: mbstring, curl, gd, json, pdo, pdo_mysql, bcmath
+          coverage: none
+          tools: composer:v2
+
+      - name: Localiza o cache do composer
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      # Cacheia os downloads, nao o vendor/: no GitLab arquivar as ~38 mil
+      # entradas do vendor derrubava o helper por OOM.
+      - name: Cache do composer
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-
+
+      - name: Instala as dependencias
+        run: composer install --no-interaction --no-progress
+
+      # O harness PULA os testes de integracao quando o banco nao responde.
+      # Util no desktop, mas aqui mascararia um servico quebrado como build
+      # verde rodando so a suite Unit - entao a conexao e obrigatoria.
+      - name: Exige o banco de teste
+        run: |
+          for i in $(seq 30); do
+            php -r 'new PDO("mysql:host=".getenv("TEST_DB_HOST").";port=".getenv("TEST_DB_PORT").";dbname=".getenv("TEST_DB_NAME"), getenv("TEST_DB_USER"), getenv("TEST_DB_PASS"));' 2>/dev/null && exit 0
+            sleep 2
+          done
+          echo "MariaDB nao respondeu em 60s" >&2
+          exit 1
+
+      - name: Roda a suite
+        run: vendor/bin/phpunit
