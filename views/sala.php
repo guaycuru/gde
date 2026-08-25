@@ -35,9 +35,9 @@ if($Sala->getID_Unidade() != null) {
 $mapa_encontrado = ($link != null);
 
 if($link != null)
-	$link = "https://maps.google.com/maps/ms?ie=UTF8&msa=0&msid=207972918742334384558.00049b21f38a1896b2cc5".$link."&z=17&output=embed";
+	$link = "https://www.google.com/maps/d/embed?mid=1P2EmRJ18yUjdKwqg8gbpLR0WGi3Kxug&ehbc=2E312F".$link;
 else
-	$link = "https://maps.google.com/maps/ms?ie=UTF8&msa=0&msid=207972918742334384558.00049b21f38a1896b2cc5&z=15&output=embed";
+	$link = "https://www.google.com/maps/d/embed?mid=1P2EmRJ18yUjdKwqg8gbpLR0WGi3Kxug&ehbc=2E312F";
 
 ?>
 
