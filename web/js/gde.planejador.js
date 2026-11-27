@@ -673,6 +673,18 @@ $(document).ready(function() {
 		window.open(CONFIG_URL + 'planejador/?idi='+id_planejado, '_blank', 'width=700, height=550, scrollbars=yes');
 		return false;
 	});
+	$("#btn_abrir_exportar_agenda").fancybox({
+		'autoDimensions': true,
+		'hideOnContentClick': false
+	});
+	$("#btn_exportar_agenda").click(function(e) {
+		e.preventDefault();
+		var selectedId = $('input[name="radio"]:checked').val();
+		var targetId = (selectedId && selectedId !== 'n') ? selectedId : id_planejado;
+		var incluirUnicamp = $("#chk_exportar_unicamp").is(":checked") ? 1 : 0;
+		var urlDownload = CONFIG_URL + 'ajax/google_calendar.php?id=' + encodeURIComponent(targetId) + '&unicamp=' + incluirUnicamp;
+		window.location.href = urlDownload;
+	});
 	$("#extra_lista_nomes").change(function() {
 		if($(this).val() == '-1')
 			$("#extra_novo_nome").show();
