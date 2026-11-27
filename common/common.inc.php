@@ -131,6 +131,7 @@ if((!defined('HTML')) || (HTML === true)) {
 	<script type="text/javascript">var _gaq = _gaq || []; _gaq.push(['_setAccount', 'UA-3315545-3']); _gaq.push(['_trackPageview']); (function() { var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s); })();</script>
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/dropdown_menu.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
+	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/dark-mode.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/tabs.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.datepicker.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.fancybox.css?<?= REVISION; ?>" type="text/css" />
@@ -142,6 +143,20 @@ if((!defined('HTML')) || (HTML === true)) {
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/fullcalendar.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/jquery.tablesorter.css?<?= REVISION; ?>" type="text/css" />
 	<link rel="apple-touch-icon" href="<?= CONFIG_URL; ?>web/images/apple-touch-icon.png" />
+	<script type="text/javascript">
+	(function() {
+		try {
+			var savedTheme = localStorage.getItem('gde-theme');
+			if (!savedTheme) {
+				var m = document.cookie.match(/(?:^|;\s*)gde_theme=(dark|light)/);
+				if (m) savedTheme = m[1];
+			}
+			var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+			var theme = savedTheme ? savedTheme : (prefersDark ? 'dark' : 'light');
+			document.documentElement.setAttribute('data-theme', theme);
+		} catch (e) {}
+	})();
+	</script>
 </head>
 <body id="page_bg">
 <div id="fork-me-ribbon"><a href="https://github.com/guaycuru/gde" target="_blank" title="Colabore com o GDE, abra seu Pull Request!">Fork me on GitHub</a></div>
@@ -270,11 +285,12 @@ $(document).ready(function(){
 							<a href="<?= CONFIG_URL; ?>busca/#tab_salas">Buscar Salas</a>
 						</div>
 					</div>
+					<a href="#" title="Alternar Modo Escuro / Claro" aria-label="Alternar Modo Escuro / Claro" id="btn_toggle_dark_mode"></a>
 				</div>
 			</form>
 	<?php } else {
 	$ultima_atualizacao = '-/-/-';
-		echo "&nbsp;";
+		echo '<a href="#" title="Alternar Modo Escuro / Claro" aria-label="Alternar Modo Escuro / Claro" id="btn_toggle_dark_mode" class="tema_topo_guest"></a>';
 	} ?>
 		</div>
 	<div id="wrapper" class="center">
