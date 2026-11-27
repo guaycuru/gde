@@ -51,6 +51,10 @@ novos estão em [TESTING.md](TESTING.md).
 Três testes aparecem como *skipped* aqui: eles leem a pasta `cron/`, que não é publicada
 (ver "Onde encontro o código dos crawlers" mais abaixo).
 
+## Modo Escuro ##
+
+- **Modo Escuro Nativo:** A interface conta com suporte ao tema escuro automático via `prefers-color-scheme` e alternância manual pelo ícone de tema ao lado da busca na barra superior (persistindo em `localStorage` e cookie `gde_theme`). Os tokens de cor e regras ficam centralizados em `web/css/dark-mode.css`.
+
 ## Configurando a API do Google ##
 
 1. Ative a API (https://console.developers.google.com)

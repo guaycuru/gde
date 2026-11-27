@@ -247,3 +247,26 @@ var LimpaPraRegExp = function(str) {
 		return this;
 	};
 })(jQuery);
+
+$(document).ready(function() {
+	var syncDarkModeIcon = function(theme) {
+		var isDark = (theme === 'dark');
+		var titleText = isDark ? 'Alternar para Modo Claro' : 'Alternar para Modo Escuro';
+		$('#btn_toggle_dark_mode').attr('title', titleText).attr('aria-label', titleText);
+	};
+	var initialTheme = document.documentElement.getAttribute('data-theme') || 'light';
+	syncDarkModeIcon(initialTheme);
+
+	$('#btn_toggle_dark_mode').click(function(e) {
+		e.preventDefault();
+		var currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+		var newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+		document.documentElement.setAttribute('data-theme', newTheme);
+		try {
+			localStorage.setItem('gde-theme', newTheme);
+		} catch (err) {}
+		document.cookie = "gde_theme=" + newTheme + ";path=/;max-age=31536000";
+		syncDarkModeIcon(newTheme);
+		return false;
+	});
+});
