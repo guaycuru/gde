@@ -2,149 +2,39 @@
 
 namespace GDE;
 
-// Desativado
-exit;
-
-define('NO_HTML', true);
-define('TITULO', false);
-
+define('TITULO', 'Exportar para Agenda (.ics)');
 require_once('../common/common.inc.php');
 
-if(!empty($_GET['state'])) {
-	$state = explode(",", $_GET['state']);
-	$p = (isset($state[0])) ? intval($state[0]) : '';
-	$n = (isset($state[1])) ? $state[1][0] : '';
-} else {
-	$p = (isset($_GET['p'])) ? intval($_GET['p']) : null;
-	$n = (isset($_GET['n'])) ? $_GET['n'][0] : 'G';
-}
-
-$estado = $p.','.$n;
-
-// Client da API
-$Calendar = new GoogleCalendar($estado);
-
-// Se nao temos o codigo, pedimos um
-if(empty($_GET['code']) && empty($_GET['error'])) {
-	$Calendar->setTokenAutenticacao();
-	exit;
-}
-
+$periodoId = isset($_GET['p']) ? intval($_GET['p']) : 0;
+$Periodo = ($periodoId > 0) ? Periodo::Load($periodoId) : Periodo::getAtual();
+$urlIcs = CONFIG_URL . 'ajax/google_calendar.php?unicamp=1' . (($Periodo && $Periodo->getID()) ? '&periodo=' . intval($Periodo->getID()) : '');
 ?>
-<html>
-<link rel="stylesheet" href="<?= CONFIG_URL; ?>web/css/gde.css?<?= REVISION; ?>" type="text/css" />
-<script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/jquery-1.7.2.min.js"></script>
-<head>
-</head>
-<body style="padding: 20px;">
-	<?php
-	// Checa se o usuario negou as permissoes necessarias
-	if(!empty($_GET['error'])) {
-		echo "<h1>Não será possível criar os horários sem autorização</h1>";
-	} else {
-
-		$Periodo_Selecionado = ($p > 0) ? Periodo::Load($p) : Periodo::getAtual();
-
-		if(!$Periodo_Selecionado->Tem_Inicio_E_Fim()) {
-			echo "<h1>O Período escolhido não está disponível para ser adicionado ao Calendar</h1>";
-		} else {
-			// coloca o token na sessao para usar na insercao
-			$token = $Calendar->setTokenAcesso($_GET['code']);
-			if($token === false) {
-				die('Algo deu errado. Por favor tente novamente');
-			}
-			$_SESSION['token'] = $token;
-			// Servico da API do Calendar
-			$Calendar->setServico();
-
-			$Aluno = $_Usuario->getAluno(true);
-			$Horario = $Aluno->Monta_Horario($Periodo_Selecionado->getPeriodo(), $n);
-
-			$meu = ($_Usuario->getAluno(true)->getID() == $Aluno->getID());
-			$limpos = Util::Horarios_Livres($Horario);
-			?>
-			<div id="overlay" style="width: 100%; height: 100%; background-color: black; opacity: 0.7; display: none; z-index: 1000; position: absolute; top: 0; left: 0;">
-				<h1 style="align: center; text-align: center; vertical-align: center; font-size: 40px; user-select: none;">Processando...</h1>
-			</div>
-
-			<div style="background-color: #FFFFFF; margin: 0 auto; width: auto; text-align: left; position: absolute; top: 20;">
-				<div id="content_bg">
-					<div style="padding: 20px 15px 20px 15px; width:auto;">
-						<h1 id="anoPeriodo"><?= $Periodo_Selecionado->getNome(false); ?></h1>
-						<br>
-						<h3>Selecione um Calend&aacute;rio existente ou digite algum nome para criar um novo</h3>
-						<br>
-						<br>
-						<div>
-							<div style="float: left;">
-								<select id='select-id-calendario'>
-									<?php
-									// Pega a lista de calendarios do usuario
-									$listaCalendarios = $Calendar->getCalendarios();
-
-									// Constroi uma lista de id para nome
-									foreach($listaCalendarios->getItems() as $calendarioAtual) {
-										echo "<option value=" . $calendarioAtual->getId() . ">" . $calendarioAtual->getSummary() . "</option>";
-									}
-									?>
-								</select>
-							</div>
-							<div style="float: left; padding-left: 30px;">
-								<input id='input-novo-calendario' type="text" placeholder="Nome do calendário"/>
-							</div>
-						</div>
-
-						<br><br>
-						<div style="clear:both;">
-							<?= $Periodo_Selecionado->Datas_Importantes_HTML(); ?>
-						</div>
-						<br>
-						<br>
-						<script type="text/javascript">
-						function adicionaNoCalendar() {
-							var periodo = '<?= $p; ?>';
-							var nivel = '<?= $n; ?>';
-
-							var select = document.getElementById('select-id-calendario');
-							var idCalendario = select[select.selectedIndex].value;
-
-							var datasImportantes = $('#checkbox-datas-importantes').is(":checked");
-
-							var autorizou = true;
-							var nomeCalendario = $('#input-novo-calendario').val();
-
-							if(nomeCalendario !== '') {
-								autorizou = confirm('Você deseja criar um calendario novo chamado "' + nomeCalendario + '"?');
-								idCalendario = '';
-							}
-
-							if(autorizou) {
-								$('#overlay').show();
-								var parametros = { nivel: nivel, nomeCalendario: nomeCalendario, idCalendario: idCalendario, periodo: periodo, datasImportantes: datasImportantes }
-								$.post("<?= CONFIG_URL; ?>ajax/google_calendar.php", parametros,
-								function(data) {
-									if(data) {
-										alert("Algo deu errado");
-									} else {
-										alert("Seu horário foi adicionado ao Calendar");
-										window.close();
-									}
-								}
-							);
-						} else {
-							// alert('Se deseja usar um calendário já existente selecione-o sem digitar nada na caixa de texto')
-							document.getElementById('input-novo-calendario').value = '';
-						}
-					}
-					</script>
-
-					<button id="botao-adicionar-calendario" type="button" onclick="adicionaNoCalendar()">Adicionar hor&aacute;rios no calend&aacute;rio</button>
-				</div>
-			</div>
-		</div>
-		<?php
+<style>
+	.botao_exportar_agenda {
+		display: inline-block;
+		padding: 3px 10px;
+		font-family: Tahoma, Helvetica, Arial, sans-serif;
+		font-size: 11px;
+		font-weight: bold !important;
+		border: 1px solid #C5DBEC;
+		border-radius: 3px;
+		background: #DFF6FC url(<?= CONFIG_URL; ?>web/images/ui-bg_glass_85_dff6fc_1x400.png) 50% 50% repeat-x;
+		color: #005580 !important;
+		text-decoration: none !important;
+		cursor: pointer;
 	}
-}
-?>
-</body>
-<html>
+	.botao_exportar_agenda:hover {
+		border: 1px solid #79B7E7;
+		background: #639BAC url(<?= CONFIG_URL; ?>web/images/ui-bg_glass_75_639bac_1x400.png) 50% 50% repeat-x;
+		color: #FFFFFF !important;
+	}
+</style>
+<h2>Exporta&ccedil;&atilde;o de Hor&aacute;rios para Google Calendar e Agendas (.ics)</h2>
+<p>A integra&ccedil;&atilde;o legada via OAuth da API do Google foi substitu&iacute;da pelo formato universal <strong>iCalendar (.ics / RFC 5545)</strong>, compat&iacute;vel com Google Calendar, Apple Calendar, Outlook e aplicativos m&oacute;veis sem necessidade de autoriza&ccedil;&otilde;es externas.</p>
+<p style="margin: 15px 0;">
+	<a href="<?= htmlspecialchars($urlIcs); ?>" class="botao_exportar_agenda">Baixar Hor&aacute;rios do Per&iacute;odo Atual (.ics)</a>
+	&nbsp;&nbsp;
+	<a href="<?= CONFIG_URL; ?>planejador/">Ir para o Planejador</a>
+</p>
+<p>Para importar no Google Agenda, acesse <a href="https://calendar.google.com/calendar/u/0/r/settings/export" target="_blank" rel="noopener noreferrer">Importar e Exportar no Google Calendar</a> e envie o arquivo <code>.ics</code> baixado.</p>
+<?= $FIM; ?>

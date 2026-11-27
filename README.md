@@ -51,15 +51,9 @@ novos estão em [TESTING.md](TESTING.md).
 Três testes aparecem como *skipped* aqui: eles leem a pasta `cron/`, que não é publicada
 (ver "Onde encontro o código dos crawlers" mais abaixo).
 
-## Configurando a API do Google ##
+## Exportação para Google Calendar e Agendas (.ics) ##
 
-1. Ative a API (https://console.developers.google.com)
-2. Vá para a página de credenciais.
-2. Nas opções da tela de consentimento OAuth colocar o nome para ser exibido.
-3. Nas opções de Credenciais preencher:
-    - Origens JavaScript autorizadas: http://localhost
-    - URIs de redirecionamento autorizados: http://localhost/gde/views/google-calendar.php
-4. Fazer download do JSON com as credenciais e colocar na pasta.
+- No **Planejador**, o link **Exportar Horários para Google Calendar / Agenda (.ics)** gera um arquivo universal **iCalendar (RFC 5545)** via `classes/GDE/CalendarExporter.php` e `ajax/google_calendar.php` com recorrência semanal (`RRULE`), salas, professores, atividades extras e datas do calendário acadêmico da Unicamp — sem necessidade de configurar credenciais OAuth da API do Google.
 
 ### Sobre os dados no pacote ###
 

@@ -58,6 +58,28 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 		background-color: <?= $cor; ?> !important;
 	}
 	<?php } ?>
+	.botao_exportar_agenda {
+		display: inline-block;
+		padding: 3px 10px;
+		font-family: Tahoma, Helvetica, Arial, sans-serif;
+		font-size: 11px;
+		font-weight: bold !important;
+		border: 1px solid #C5DBEC;
+		border-radius: 3px;
+		background: #DFF6FC url(<?= CONFIG_URL; ?>web/images/ui-bg_glass_85_dff6fc_1x400.png) 50% 50% repeat-x;
+		color: #005580 !important;
+		text-decoration: none !important;
+		cursor: pointer;
+	}
+	.botao_exportar_agenda:hover {
+		border: 1px solid #79B7E7;
+		background: #639BAC url(<?= CONFIG_URL; ?>web/images/ui-bg_glass_75_639bac_1x400.png) 50% 50% repeat-x;
+		color: #FFFFFF !important;
+	}
+	#div_exportar_agenda hr {
+		border: 0;
+		border-top: 1px solid #C5DBEC;
+	}
 </style>
 <script type="text/javascript" src="<?= CONFIG_URL; ?>web/js/gde.planejador.js?<?= REVISION; ?>"></script>
 <script type="text/javascript">
@@ -123,6 +145,11 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 		<tr>
 			<td width="50%" colspan="2" align="center"><a href="#" id="visualizar_impressao">Visualizar Para Impress&atilde;o</a></td>
 			<td width="50%" colspan="2" align="center"><a href="#" class="planejador_excluir">Excluir esta op&ccedil;&atilde;o</a></td>
+		</tr>
+		<tr>
+			<td colspan="4" align="center">
+				<a href="#div_exportar_agenda" id="btn_abrir_exportar_agenda">Exportar Hor&aacute;rios para Google Calendar / Agenda (.ics)</a>
+			</td>
 		</tr>
 	</table>
 </div>
@@ -219,6 +246,26 @@ $periodo = $Planejado->getPeriodo(true)->getID();
 	<div class="linha">
 		<span class="divtip_titulo">Amigos (<span id="divtip_amigos"></span>):</span>
 		<span id="divtip_lista_amigos"></span>
+	</div>
+</div>
+<div style="display: none;">
+	<div id="div_exportar_agenda" style="width: 440px; padding: 15px;">
+		<h3>Exportar para Google Calendar / Agenda (.ics)</h3>
+		<p style="margin: 10px 0;">Gere um arquivo universal <strong>.ics (iCalendar)</strong> com todas as disciplinas planejadas, salas, docentes e recorr&ecirc;ncia semanal do semestre.</p>
+		<p style="margin: 10px 0;">
+			<input type="checkbox" id="chk_exportar_unicamp" checked="checked" />
+			<label for="chk_exportar_unicamp">Incluir datas acad&ecirc;micas da Unicamp (Matr&iacute;cula, Semana de Estudos, Exames, Desist&ecirc;ncia)</label>
+		</p>
+		<p style="margin: 15px 0; text-align: center;">
+			<a href="#" id="btn_exportar_agenda" class="botao_exportar_agenda">Baixar Arquivo de Calend&aacute;rio (.ics)</a>
+		</p>
+		<hr />
+		<p style="margin-top: 10px; font-size: 11px;">
+			<strong>Como importar no Google Calendar:</strong><br />
+			1. Clique no bot&atilde;o acima para baixar o arquivo <code>.ics</code>.<br />
+			2. Acesse <a href="https://calendar.google.com/calendar/u/0/r/settings/export" target="_blank" rel="noopener noreferrer">Importar e Exportar no Google Agenda</a>.<br />
+			3. Selecione o arquivo baixado e clique em <strong>Importar</strong> (tamb&eacute;m compat&iacute;vel com Apple Calendar e Outlook).
+		</p>
 	</div>
 </div>
 <?= $FIM; ?>

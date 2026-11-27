@@ -240,7 +240,7 @@ class GoogleCalendar {
 	 * @return DateTime data do primeiro dia de aula de uma materia
 	 */
 	public function primeiroDiaAula($diaAula, $primeiroDia) {
-		$base = $primeiroDia;
+		$base = clone $primeiroDia;
 		$diaSemana = intval($base->format('N')) + 1;
 		if($diaAula < $diaSemana) {
 			$diferenca = 7 - ($diaSemana - $diaAula);
@@ -288,5 +288,20 @@ class GoogleCalendar {
 			}
 		}
 		return $horaTermino;
+	}
+
+	/**
+	 * Gera arquivo iCalendar (.ics) delegando para CalendarExporter
+	 *
+	 * @param array $Horario
+	 * @param Periodo $Periodo_Selecionado
+	 * @param bool $incluirCalendarioUnicamp
+	 * @return string
+	 */
+	public function gerarIcs(array $Horario, Periodo $Periodo_Selecionado, bool $incluirCalendarioUnicamp = false): string {
+		$exporter = new CalendarExporter();
+		return $exporter->gerarIcsDeHorario($Horario, $Periodo_Selecionado, array(
+			'incluir_calendario_unicamp' => $incluirCalendarioUnicamp,
+		));
 	}
 }
